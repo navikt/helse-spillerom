@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement } from 'react'
-import { Label, Search, Table } from '@navikt/ds-react'
+import {Heading, Label, Search, Table} from '@navikt/ds-react'
 import { useRouter } from 'next/navigation'
 
 import { hentPersonMedFnr, personer } from '@/backend/personer'

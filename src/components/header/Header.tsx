@@ -1,10 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import React from 'react'
 import { InternalHeader } from '@navikt/ds-react'
-
-import { UserMenu } from '@/components/UserMenu'
 
 export const Header = () => {
     return (
@@ -17,11 +14,9 @@ export const Header = () => {
                 } as React.CSSProperties
             }
         >
-            <InternalHeader.Title as={Link} href="/">
+            <InternalHeader.Title as={'h1'} href="/">
                 Manuell saksbehandling
             </InternalHeader.Title>
-            <div className="mx-auto"></div>
-            <UserMenu />
         </InternalHeader>
     )
 }
