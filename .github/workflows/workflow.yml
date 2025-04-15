@@ -5,7 +5,7 @@ on:
 
 jobs:
   next-app:
-    uses: ./.github/workflows/next-app.yaml@main
+    uses: ./.github/workflows/next-app.yaml
     secrets: inherit
     with:
       app: spillerom
