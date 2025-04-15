@@ -17,13 +17,10 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
     return (
         <html lang="en">
             <body>
-            <Providers>
-
-                <Header />
-                <main role={"main"}>
-                    {children}
-                </main>
-            </Providers>
+                <Providers>
+                    <Header />
+                    <main role="main">{children}</main>
+                </Providers>
             </body>
         </html>
     )

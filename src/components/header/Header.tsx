@@ -14,7 +14,7 @@ export const Header = () => {
                 } as React.CSSProperties
             }
         >
-            <InternalHeader.Title as={'h1'} href="/">
+            <InternalHeader.Title as="h1" href="/">
                 Manuell saksbehandling
             </InternalHeader.Title>
         </InternalHeader>
