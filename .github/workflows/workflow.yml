@@ -18,6 +18,9 @@ jobs:
 
   prebuild-app-for-playwright:
     name: Prebuild image for sharded playwright tests
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: ${{ github.repository }}-e2e
