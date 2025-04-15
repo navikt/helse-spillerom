@@ -13,7 +13,7 @@
         "prettier:check": "prettier --check .",
         "tsc": "tsc",
         "lint": "eslint --ext=ts,tsx src",
-        "test": "eslint --ext=ts,tsx src",
+        "test": "vitest --config vitest.config.mts",
         "lint:fix": "eslint --ext=ts,tsx src --fix",
         "format": "npm run prettier:write && npm run lint:fix"
     },
@@ -45,7 +45,8 @@
     "devDependencies": {
         "@navikt/eslint-config-teamsykmelding": "^7.1.0",
         "eslint": "8.57.1",
-        "eslint-config-next": "^15.2.4"
+        "eslint-config-next": "^15.2.4",
+        "vitest": "3.0.5"
     },
     "eslintConfig": {
         "extends": [

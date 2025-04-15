@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 
-import { hentInntektForBehandling, lagreInntekt } from '@/backend/mockdata'
 import { Inntekt } from '@typer/manuellbehandlingtypes'
+import { hentInntektForBehandling, lagreInntekt } from '@/backend/mockdata'
 
 export async function POST(
     request: Request,

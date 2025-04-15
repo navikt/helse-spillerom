@@ -1,5 +1,5 @@
-import { lagreVilkaar, slettVilkaar } from '@/backend/mockdata'
 import { Vilkarsvurdering } from '@typer/manuellbehandlingtypes'
+import { lagreVilkaar, slettVilkaar } from '@/backend/mockdata'
 
 export async function DELETE(
     request: Request,

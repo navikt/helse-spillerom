@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 
-import { hentVilkaarForBehandling, lagreVilkaar, slettVilkaar } from '@/backend/mockdata'
 import { NyVilkarsvurdering } from '@typer/manuellbehandlingtypes'
+import { hentVilkaarForBehandling, lagreVilkaar, slettVilkaar } from '@/backend/mockdata'
 
 export async function POST(
     request: Request,

@@ -1,4 +1,4 @@
-# Bakrommet
+# Spillerom
 [![Bygg og deploy Spillerom](https://github.com/navikt/helse-spillerom/actions/workflows/workflow.yml/badge.svg)](https://github.com/navikt/helse-bakrommet/actions/workflows/main.yml)
 
 ## Beskrivelse

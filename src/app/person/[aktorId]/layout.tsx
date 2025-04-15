@@ -3,10 +3,10 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { useParams } from 'next/navigation'
 
+import { Tidslinje } from '@components/tidslinje/Tidslinje'
 import { PersonHeaderWithContent } from '@/components/personheader/Personheader'
 import { Saksbilde } from '@/components/saksbilde/Saksbilde'
 import { Venstremeny } from '@/components/venstremeny/Venstremeny'
-import { Tidslinje } from '@components/tidslinje/Tidslinje'
 import { personer } from '@/backend/personer'
 
 import styles from './layout.module.css'

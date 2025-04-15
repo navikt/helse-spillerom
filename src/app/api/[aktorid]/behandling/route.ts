@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 
-import { hentPaaAktorid, lagreBehandling, lagreInntekt } from '@/backend/mockdata'
 import { Behandling } from '@typer/manuellbehandlingtypes'
+import { hentPaaAktorid, lagreBehandling, lagreInntekt } from '@/backend/mockdata'
 import { hentPerson } from '@/backend/personer'
 
 export async function POST(request: Request, { params }: { params: Promise<{ aktorid: string }> }) {
