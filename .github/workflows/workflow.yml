@@ -51,7 +51,6 @@ jobs:
       dev-only: true
     secrets: inherit
 
-
   codeql-analyse:
     if: github.ref_name == 'main' || startsWith(github.ref_name, 'dev-')
     name: codeql-analyse
@@ -74,4 +73,4 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:javascript"
+          category: '/language:javascript'
