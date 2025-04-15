@@ -22,7 +22,14 @@ spec:
     http:
       path: /api/internal/preStop
       port: 3000
-
+  azure:
+    application:
+      tenant: trygdeetaten.no
+      enabled: true
+      allowAllUsers: true # TODO sett opp brukergrupper
+    sidecar:
+      enabled: true
+      autoLogin: true # TODO heller redirecte selv fra next koden?
   resources:
     limits:
       memory: 350Mi
