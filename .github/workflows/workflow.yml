@@ -5,7 +5,7 @@ on:
 
 jobs:
   next-app:
-    uses: navikt/helse-spillerom/.github/workflows/next-app.yaml@main
+    uses: ./.github/workflows/next-app.yaml@main
     secrets: inherit
     with:
       app: spillerom
