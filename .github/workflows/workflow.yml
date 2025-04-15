@@ -4,14 +4,74 @@ on:
   push:
 
 jobs:
-  felles-workflow:
-    uses: navikt/flex-github-actions-workflows/.github/workflows/next-js-lightweight.yml@main
+  build-and-publish:
+    name: Bygg, test og publiser docker image
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
     permissions:
       packages: read
       contents: read
       id-token: write
-      security-events: write
-      actions: read
-    secrets: inherit
-    with:
-      dev-only: true
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install npm dependencies
+        run: npm ci
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run prettier
+        run: npm run prettier:check
+      - name: Run lint
+        run: npm run lint
+      - name: Build application
+        run: npm run build
+      - name: prune dev dependencies
+        run: npm prune --production
+      - name: docker-build-push
+        if: github.ref_name == 'main' || startsWith(github.ref_name, 'dev-')  || startsWith(github.ref_name, 'demo-')
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: speilvendt
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+    nais-deploy:
+      needs: build-and-publish
+      uses: navikt/flex-github-actions-workflows/.github/workflows/nais-deploy-dev-og-prod.yml@main
+      with:
+        image: ${{ needs.build-and-publish.outputs.image }}
+        app: spillerom
+        dev-only: true
+      secrets: inherit
+
+
+    codeql-analyse:
+      if: github.ref_name == 'main' || startsWith(github.ref_name, 'dev-')
+      name: codeql-analyse
+      timeout-minutes: 15
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        actions: read
+        security-events: write
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Initialize CodeQL
+          uses: github/codeql-action/init@v3
+          with:
+            queries: security-and-quality
+            languages: 'javascript'
+        - name: Autobuild
+          uses: github/codeql-action/autobuild@v3
+        - name: Perform CodeQL Analysis
+          uses: github/codeql-action/analyze@v3
+          with:
+            category: "/language:javascript"
