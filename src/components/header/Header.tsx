@@ -1,12 +1,13 @@
 'use client'
 
 import React from 'react'
+import NextLink from 'next/link'
 import { InternalHeader } from '@navikt/ds-react'
 
 export const Header = () => {
     return (
         <InternalHeader
-            className="h-14 "
+            className="h-14"
             style={
                 {
                     '--ac-internalheader-hover-bg': 'var(--a-green-700)',
@@ -14,7 +15,7 @@ export const Header = () => {
                 } as React.CSSProperties
             }
         >
-            <InternalHeader.Title as="h1" href="/">
+            <InternalHeader.Title as={NextLink} href="/">
                 Manuell saksbehandling
             </InternalHeader.Title>
         </InternalHeader>
