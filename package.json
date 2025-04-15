@@ -13,6 +13,7 @@
         "prettier:check": "prettier --check .",
         "tsc": "tsc",
         "lint": "eslint --ext=ts,tsx src",
+        "test": "eslint --ext=ts,tsx src",
         "lint:fix": "eslint --ext=ts,tsx src --fix",
         "format": "npm run prettier:write && npm run lint:fix"
     },

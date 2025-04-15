@@ -25,18 +25,12 @@ jobs:
     name: Test and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/actions/yarn-cached@main
+      - uses: navikt/helse-spillerom/actions/npm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: yarn lint
-      - run: yarn test
-      - name: Report debt
-        run: |
-
-          FILE=./scripts/debt.sh
-          if [ -f "$FILE" ]; then
-            ./scripts/debt.sh >> $GITHUB_STEP_SUMMARY
-          fi
+      - run: npm run prettier:check
+      - run: npm run lint
+      - run: npm run test
 
   build-dependabot:
     if: github.actor == 'dependabot[bot]'

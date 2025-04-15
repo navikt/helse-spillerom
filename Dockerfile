@@ -1,12 +1,14 @@
-FROM gcr.io/distroless/nodejs20-debian12@sha256:a6c0e95f6f70fb21586757a846d8b8d287609f2414bcc2399895adb055768648
+FROM gcr.io/distroless/nodejs22-debian12@sha256:dfc74b29486c7f75b32b7c97acf078cfce6665336fb2f08e0946ec77042b5fe3
 
-ENV NODE_ENV production
+WORKDIR /app
 
-COPY /next.config.js ./
-COPY /.next ./.next
-COPY /node_modules ./node_modules
-COPY /public ./public
+COPY package.json /app/
+COPY next-logger.config.js /app/
+COPY .next/standalone /app/
+COPY public /app/public/
 
-ENV PORT=3000
+EXPOSE 3000
 
-CMD ["./node_modules/next/dist/bin/next", "start"]
+ENV NODE_ENV=production
+
+CMD ["server.js"]
