@@ -1,0 +1,8 @@
+.UserMenu {
+    width: max-content;
+    z-index: 1001;
+}
+
+.MenuItem {
+    padding: 0.5rem 1rem;
+}

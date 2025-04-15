@@ -1,0 +1,17 @@
+name: workflow
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  felles-workflow:
+    uses: navikt/flex-github-actions-workflows/.github/workflows/next-js-lightweight.yml@main
+    permissions:
+      packages: read
+      contents: read
+      id-token: write
+      security-events: write
+      actions: read
+    secrets: inherit
+    with:
+      dev-only: true

@@ -1,0 +1,11 @@
+.tableCellWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--a-spacing-2);
+}
+
+.ikonWrapper {
+    width: 20px;
+}
