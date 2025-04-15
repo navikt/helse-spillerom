@@ -66,9 +66,9 @@ jobs:
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps
+        run: npx playwright install
       - name: Run Playwright
-        run: yarn e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
