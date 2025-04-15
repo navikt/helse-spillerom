@@ -7,6 +7,9 @@ jobs:
   next-app:
     uses: ./.github/workflows/next-app.yaml
     secrets: inherit
+    permissions:
+      packages: write
+      id-token: write
     with:
       app: spillerom
       base-path: /
