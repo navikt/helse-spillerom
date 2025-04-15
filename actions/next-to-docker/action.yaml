@@ -36,9 +36,9 @@ runs:
       run: |
         echo "Copying .nais/envs/.env.${{ inputs.env }}..."
         cp .nais/envs/.env.${{ inputs.env }} .env.production
-    - id: yarn-build
+    - id: npm-run-build
       shell: bash
-      run: yarn build
+      run: npm run build
       env:
         NEXT_PUBLIC_VERSION: ${{ github.sha }}
     - name: Upload static files to NAV CDN
