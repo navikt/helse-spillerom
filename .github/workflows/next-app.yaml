@@ -77,16 +77,6 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  trivy-docker:
-    name: Trivy
-    permissions:
-      id-token: 'write'
-      security-events: 'write'
-    needs: build-dev
-    uses: navikt/helse-spillerom/gha-common/.github/workflows/trivy-docker.yml@main
-    with:
-      image: ${{ needs.build-dev.outputs.image }}
-    secrets: inherit
 
   deploy-dev:
     if: ${{ !startsWith(github.ref_name, 'demo') }}
