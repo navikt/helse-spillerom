@@ -25,7 +25,7 @@ jobs:
     name: Test and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/gha-common/actions/yarn-cached@main
+      - uses: navikt/helse-spillerom/actions/yarn-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: yarn lint
@@ -43,7 +43,7 @@ jobs:
     name: Build for dependabot PR
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/gha-common/actions/yarn-cached@main
+      - uses: navikt/helse-spillerom/actions/yarn-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Copy appropriate env file to root
@@ -68,7 +68,7 @@ jobs:
     outputs:
       image: ${{ steps.build-and-publish.outputs.image }}
     steps:
-      - uses: navikt/helse-spillerom/gha-common/actions/next-to-docker@main
+      - uses: navikt/helse-spillerom/actions/next-to-docker@main
         id: build-and-publish
         with:
           app: ${{ inputs.app }}
@@ -109,7 +109,7 @@ jobs:
     outputs:
       image: ${{ steps.build-and-publish.outputs.image }}
     steps:
-      - uses: navikt/helse-spillerom/gha-common/actions/next-to-docker@main
+      - uses: navikt/helse-spillerom/actions/next-to-docker@main
         id: build-and-publish
         with:
           app: ${{ inputs.app }}
@@ -165,7 +165,7 @@ jobs:
     outputs:
       image: ${{ steps.build-and-publish.outputs.image }}
     steps:
-      - uses: navikt/helse-spillerom/gha-common/actions/next-to-docker@main
+      - uses: navikt/helse-spillerom/actions/next-to-docker@main
         id: build-and-publish
         with:
           app: ${{ inputs.app }}
