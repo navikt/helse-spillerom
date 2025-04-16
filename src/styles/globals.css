@@ -1,11 +1,7 @@
-@import 'tailwindcss/base';
-@import '@navikt/ds-css';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss';
+@import '@navikt/ds-css' layer(components);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config '../../tailwind.config.ts';
 
 :root {
     --speil-total-min-width: 1000px;
