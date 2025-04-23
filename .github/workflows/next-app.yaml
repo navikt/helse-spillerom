@@ -49,7 +49,7 @@ jobs:
     name: Build for dependabot PR
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/actions/yarn-cached@main
+      - uses: navikt/helse-spillerom/actions/npm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Copy appropriate env file to root
@@ -57,9 +57,9 @@ jobs:
         run: |
           echo "Copying .nais/envs/.env.prod..."
           cp .nais/envs/.env.prod .env.production
-      - id: yarn-build
+      - id: npm-build
         shell: bash
-        run: yarn build
+        run: npm run build
         env:
           NEXT_PUBLIC_VERSION: ${{ github.sha }}
 

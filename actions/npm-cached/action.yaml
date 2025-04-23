@@ -1,4 +1,4 @@
-name: "Installs node, installs yarn dependencies with chache"
+name: "Installs node, installs npm dependencies with cache"
 description: "Builds a Next.JS App, creates a docker image and uploads it to GAR"
 
 inputs:
