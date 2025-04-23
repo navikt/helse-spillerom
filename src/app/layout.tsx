@@ -1,8 +1,8 @@
+import '../styles/globals.css'
 import type { Metadata } from 'next'
 import React, { PropsWithChildren, ReactElement } from 'react'
 
 import { erLokal } from '@/env'
-import '../styles/globals.css'
 import { Header } from '@/components/header/Header'
 import Providers from '@/app/providers'
 

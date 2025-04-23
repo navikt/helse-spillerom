@@ -1,10 +1,9 @@
-'use client'
-
-import React from 'react'
+import React, { ReactElement } from 'react'
 import NextLink from 'next/link'
 import { InternalHeader } from '@navikt/ds-react'
+import { InternalHeaderTitle } from '@navikt/ds-react/InternalHeader'
 
-export const Header = () => {
+export function Header(): ReactElement {
     return (
         <InternalHeader
             className="h-14"
@@ -15,9 +14,9 @@ export const Header = () => {
                 } as React.CSSProperties
             }
         >
-            <InternalHeader.Title as={NextLink} href="/">
+            <InternalHeaderTitle as={NextLink} href="/">
                 Manuell saksbehandling
-            </InternalHeader.Title>
+            </InternalHeaderTitle>
         </InternalHeader>
     )
 }
