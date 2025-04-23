@@ -37,23 +37,24 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "remeda": "^2.21.3",
-        "uuid": "^11.1.0",
-        "tailwind-merge": "^3.2.0"
+        "tailwind-merge": "^3.2.0",
+        "uuid": "^11.1.0"
     },
     "devDependencies": {
-        "@types/node": "^22.14.1",
-        "@types/react": "^19.1.2",
-        "@types/react-dom": "^19.1.2",
-        "typescript": "^5.8.3",
-        "postcss": "^8.5.3",
         "@axe-core/playwright": "^4.10.1",
         "@navikt/eslint-config-teamsykmelding": "^7.1.0",
         "@playwright/test": "^1.51.1",
+        "@tailwindcss/postcss": "^4.1.4",
+        "@types/node": "^22.14.1",
+        "@types/react": "^19.1.2",
+        "@types/react-dom": "^19.1.2",
         "eslint": "^8.57.1",
         "eslint-config-next": "^15.3.0",
         "playwright-core": "^1.51.1",
+        "postcss": "^8.5.3",
+        "prettier-plugin-tailwindcss": "^0.6.11",
         "tailwindcss": "^4.1.4",
-        "@tailwindcss/postcss": "^4.1.4",
+        "typescript": "^5.8.3",
         "vitest": "^3.1.1"
     },
     "eslintConfig": {
@@ -64,6 +65,5 @@
         "rules": {
             "@typescript-eslint/explicit-function-return-type": "off"
         }
-    },
-    "prettier": "@navikt/eslint-config-teamsykmelding/prettier"
+    }
 }
