@@ -4,7 +4,8 @@ import React, { PropsWithChildren, ReactElement } from 'react'
 
 import { erLokal } from '@/env'
 import { Header } from '@/components/header/Header'
-import Providers from '@/app/providers'
+import { Preload } from '@/app/preload'
+import { Providers } from '@/app/providers'
 
 export const metadata: Metadata = {
     title: `Speil ${erLokal ? ' - localhost' : ''}`,
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: Readonly<PropsWithChildren>): Promise<ReactElement> {
     return (
-        <html lang="en">
+        <html lang="nb">
+            <Preload />
             <body>
                 <Providers>
                     <Header />

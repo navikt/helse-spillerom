@@ -2,7 +2,3 @@
 @import '@navikt/ds-css' layer(components);
 
 @config '../../tailwind.config.ts';
-
-:root {
-    --speil-total-min-width: 1000px;
-}
