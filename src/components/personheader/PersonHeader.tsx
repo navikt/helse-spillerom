@@ -16,30 +16,30 @@ export function PersonHeader(): ReactElement {
     if (isError || !personinfo) return <></> // vis noe fornuftig
 
     return (
-        <Header>
+        <PersonHeaderContainer>
             <FigureCombinationIcon fontSize="1.5rem" className="mr-2" />
             <NavnOgAlder navn={personinfo.navn} alder={personinfo.alder} />
             <Seperator />
             <Fødselsnummer fødselsnummer={personinfo.fødselsnummer} />
             <Seperator />
             <AktørId aktørId={personinfo.aktørId} />
-        </Header>
+        </PersonHeaderContainer>
     )
 }
 
 function PersonHeaderSkeleton(): ReactElement {
     return (
-        <Header>
+        <PersonHeaderContainer>
             <Skeleton width={210} />
             <Seperator />
-            <Skeleton width={120} />
+            <Skeleton width={127} />
             <Seperator />
             <Skeleton width={210} />
-        </Header>
+        </PersonHeaderContainer>
     )
 }
 
-function Header({ children }: PropsWithChildren): ReactElement {
+function PersonHeaderContainer({ children }: PropsWithChildren): ReactElement {
     return (
         <HStack as="header" className="h-12 border-b bg-[#f8f8f8] px-8" align="center">
             {children}
