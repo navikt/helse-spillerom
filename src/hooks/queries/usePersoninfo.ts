@@ -11,13 +11,13 @@ export function usePersoninfo() {
     return useQuery<Personinfo, Error>({
         queryKey: ['personinfo', params.personId],
         queryFn: async () => {
-            const personInfoJson = await (
+            const json = await (
                 await fetch(`/api/bakrommet/v1/${params.personId}/personinfo`, {
                     method: 'GET',
                 })
             ).json()
 
-            return personinfoSchema.parse(personInfoJson)
+            return personinfoSchema.parse(json)
         },
     })
 }
