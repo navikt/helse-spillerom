@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import type { Metadata } from 'next'
 import React, { PropsWithChildren, ReactElement } from 'react'
+import { Page } from '@navikt/ds-react'
 
 import { erDemo, erDev, erLokal } from '@/env'
 import { Header } from '@/components/header/Header'
@@ -29,10 +30,12 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
         <html lang="nb">
             <Preload />
             <body>
-                <Providers>
-                    <Header />
-                    <main role="main">{children}</main>
-                </Providers>
+                <Page>
+                    <Providers>
+                        <Header />
+                        {children}
+                    </Providers>
+                </Page>
             </body>
         </html>
     )
