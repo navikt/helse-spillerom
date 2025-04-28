@@ -14,7 +14,7 @@ export async function beskyttetApi<T>(
     handler: (payload: Partial<AzurePayload>) => NextResponse<T>,
 ): Promise<NextResponse<ErrorResponse | T>> {
     if (erLokalEllerDemo) {
-        return handler({ NAVident: 'D123456' })
+        return handler({ NAVident: 'D123456', name: 'Saks Behandlersen', preferred_username: 'test.testesen@nav.no' })
     }
 
     const bearerToken = getToken(req)
