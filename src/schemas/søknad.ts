@@ -1,39 +1,39 @@
 import { z } from 'zod'
 
 export type Søknadstype = z.infer<typeof søknadstypeSchema>
-const søknadstypeSchema = z.union([
-    z.literal('SELVSTENDIGE_OG_FRILANSERE'),
-    z.literal('OPPHOLD_UTLAND'),
-    z.literal('ARBEIDSTAKERE'),
-    z.literal('ARBEIDSLEDIG'),
-    z.literal('BEHANDLINGSDAGER'),
-    z.literal('ANNET_ARBEIDSFORHOLD'),
-    z.literal('REISETILSKUDD'),
-    z.literal('GRADERT_REISETILSKUDD'),
-    z.literal('FRISKMELDT_TIL_ARBEIDSFORMIDLING'),
+const søknadstypeSchema = z.enum([
+    'SELVSTENDIGE_OG_FRILANSERE',
+    'OPPHOLD_UTLAND',
+    'ARBEIDSTAKERE',
+    'ARBEIDSLEDIG',
+    'BEHANDLINGSDAGER',
+    'ANNET_ARBEIDSFORHOLD',
+    'REISETILSKUDD',
+    'GRADERT_REISETILSKUDD',
+    'FRISKMELDT_TIL_ARBEIDSFORMIDLING',
 ])
 
 export type Søknadstatus = z.infer<typeof søknadstatusSchema>
-const søknadstatusSchema = z.union([
-    z.literal('NY'),
-    z.literal('SENDT'),
-    z.literal('FREMTIDIG'),
-    z.literal('UTKAST_TIL_KORRIGERING'),
-    z.literal('KORRIGERT'),
-    z.literal('AVBRUTT'),
-    z.literal('SLETTET'),
-    z.literal('UTGAATT'),
+const søknadstatusSchema = z.enum([
+    'NY',
+    'SENDT',
+    'FREMTIDIG',
+    'UTKAST_TIL_KORRIGERING',
+    'KORRIGERT',
+    'AVBRUTT',
+    'SLETTET',
+    'UTGAATT',
 ])
 
 export type Arbeidssituasjon = z.infer<typeof arbeidssituasjonSchema>
-const arbeidssituasjonSchema = z.union([
-    z.literal('NAERINGSDRIVENDE'),
-    z.literal('FRILANSER'),
-    z.literal('ARBEIDSTAKER'),
-    z.literal('ARBEIDSLEDIG'),
-    z.literal('ANNET'),
-    z.literal('FISKER'),
-    z.literal('JORDBRUKER'),
+const arbeidssituasjonSchema = z.enum([
+    'NAERINGSDRIVENDE',
+    'FRILANSER',
+    'ARBEIDSTAKER',
+    'ARBEIDSLEDIG',
+    'ANNET',
+    'FISKER',
+    'JORDBRUKER',
 ])
 
 export type Arbeidsgiver = z.infer<typeof arbeidssituasjonSchema>

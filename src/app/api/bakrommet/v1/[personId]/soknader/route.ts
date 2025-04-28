@@ -11,7 +11,7 @@ export async function GET(): Promise<NextResponse<Søknad[] | ErrorResponse>> {
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
             fom: '2025-01-01',
-            tom: '2025-31-01',
+            tom: '2025-01-31',
             korrigerer: null,
             korrigertAv: null,
             avbruttDato: null,
@@ -27,7 +27,7 @@ export async function GET(): Promise<NextResponse<Søknad[] | ErrorResponse>> {
             søknadsPerioder: [
                 {
                     fom: '2025-01-01',
-                    tom: '2025-31-01',
+                    tom: '2025-01-31',
                     grad: 100,
                     sykmeldingstype: 'Sykemldingstype',
                 },
