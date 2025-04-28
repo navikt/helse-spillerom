@@ -21,7 +21,35 @@ export async function GET(): Promise<NextResponse<Søknad[] | ErrorResponse>> {
             sendtTilNAVDato: '2025-01-01',
             sendtTilArbeidsgiverDato: '2025-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgiver navn',
+                navn: 'Annen Arbeidsgiver',
+                orgnummer: '987654321',
+            },
+            søknadsPerioder: [
+                {
+                    fom: '2025-01-01',
+                    tom: '2025-01-31',
+                    grad: 100,
+                    sykmeldingstype: 'Sykemldingstype',
+                },
+            ],
+        },
+        {
+            id: '1',
+            søknadstype: 'ARBEIDSTAKERE',
+            status: 'NY',
+            arbeidssituasjon: 'ARBEIDSTAKER',
+            fom: '2025-01-01',
+            tom: '2025-01-31',
+            korrigerer: null,
+            korrigertAv: null,
+            avbruttDato: null,
+            sykmeldingUtskrevet: '2025-01-01',
+            startSykeforlop: '2025-01-01',
+            opprettetDato: '2025-01-01',
+            sendtTilNAVDato: '2025-01-01',
+            sendtTilArbeidsgiverDato: '2025-01-01',
+            arbeidsgiver: {
+                navn: 'Arbeidsgiver Navn',
                 orgnummer: '123456789',
             },
             søknadsPerioder: [
