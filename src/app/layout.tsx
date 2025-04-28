@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
         <html lang="nb">
             <Preload />
             <body>
-                <Page>
+                <Page contentBlockPadding="none">
                     <Providers>
                         <Header />
                         {children}
