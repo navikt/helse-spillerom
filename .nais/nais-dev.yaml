@@ -51,3 +51,7 @@ spec:
   startup:
     path: /api/internal/isAlive
     initialDelay: 10
+  accessPolicy:
+    outbound:
+      rules:
+        - application: bakrommet
