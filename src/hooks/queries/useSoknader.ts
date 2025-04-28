@@ -1,19 +1,24 @@
+'use client'
+
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
 
-import { RSSoknad } from '@typer/soknad'
+import { Søknad, søknadSchema } from '@/schemas/søknad'
 
 export function useSoknader() {
     const params = useParams()
 
-    return useQuery<RSSoknad[], Error>({
-        queryKey: ['soknad', params.aktorId],
+    return useQuery<Søknad[], Error>({
+        queryKey: ['soknader', params.personId],
         queryFn: async () => {
-            return (await (
-                await fetch(`/api/${params.aktorId}/soknad`, {
+            const json = await (
+                await fetch(`/api/bakrommet/v1/${params.personId}/soknader`, {
                     method: 'GET',
                 })
-            ).json()) as RSSoknad[]
+            ).json()
+
+            return z.array(søknadSchema).parse(json)
         },
     })
 }
