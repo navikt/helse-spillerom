@@ -37,9 +37,10 @@ export function Personsøk(): ReactElement {
                             {...field}
                             error={fieldState.error?.message}
                             label="Fødselsnummer/Aktør-ID"
-                            size="small"
+                            size="medium"
                             variant="primary"
                             placeholder="Søk"
+                            hideLabel={false}
                         />
                     )}
                 />
