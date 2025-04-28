@@ -1,16 +1,14 @@
 import React, { ReactElement } from 'react'
-import { Heading } from '@navikt/ds-react'
+import { BodyLong, Heading } from '@navikt/ds-react'
 import { PageBlock } from '@navikt/ds-react/Page'
-
-import { Personsøk } from '@components/personsøk/Personsøk'
 
 export default async function Page(): Promise<ReactElement> {
     return (
         <PageBlock as="main" className="p-8">
-            <Heading level="1" size="large">
-                Personsøk
+            <Heading level="1" size="medium">
+                Du er logget ut
             </Heading>
-            <Personsøk />
+            <BodyLong>Denne siden ser du kun i demo.</BodyLong>
         </PageBlock>
     )
 }
