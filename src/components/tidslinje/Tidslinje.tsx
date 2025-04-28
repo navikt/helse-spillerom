@@ -73,7 +73,7 @@ function TimelineRowSkeleton(): ReactElement {
     return (
         <HStack gap="4" align="center">
             <Skeleton variant="text" width={176} className="size-10" />
-            <Skeleton variant="text" width="92%" className="size-10" />
+            <Skeleton variant="text" className="size-10 flex-1" />
         </HStack>
     )
 }
