@@ -1,6 +1,6 @@
 import { proxyRouteHandler } from '@navikt/next-api-proxy'
 import { logger } from '@navikt/next-logger'
-import { getToken, requestOboToken } from '@navikt/oasis'
+import { getToken, requestOboToken, validateAzureToken } from '@navikt/oasis'
 
 import { erLokalEllerDemo, getServerEnv } from '@/env'
 import { mocketBakrommetData } from '@/mock-api/mock-handler'
@@ -30,6 +30,12 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
     const accessToken = getToken(request)
     if (!accessToken) {
         logger.error('No access token found in request')
+        return new Response('Not logged in', { status: 401 })
+    }
+
+    const result = await validateAzureToken(accessToken)
+    if (!result.ok) {
+        logger.warn('kunne ikke validere azuretoken i bakrommet proxy')
         return new Response('Not logged in', { status: 401 })
     }
 
