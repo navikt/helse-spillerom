@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement } from 'react'
-import { BodyShort, Timeline } from '@navikt/ds-react'
+import { BodyShort, HStack, Skeleton, Timeline, VStack } from '@navikt/ds-react'
 import { TimelinePeriod, TimelineRow } from '@navikt/ds-react/Timeline'
 import { BriefcaseIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
@@ -12,7 +12,7 @@ import { Søknad } from '@/schemas/søknad'
 export function Tidslinje(): ReactElement {
     const { data: søknader, isLoading, isError } = useSoknader()
 
-    if (isLoading) return <></> // skeleton
+    if (isLoading) return <TimelineSkeleton />
     if (isError || !søknader) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
@@ -37,10 +37,9 @@ export function Tidslinje(): ReactElement {
         >
             {Object.entries(søknaderGruppert || {}).map(([label, søknader]) => (
                 <TimelineRow
-                    className="w-[5000px]"
                     key={label}
                     label={'Søknader ' + label}
-                    icon={<BriefcaseIcon aria-hidden />}
+                    icon={<BriefcaseIcon aria-hidden fontSize="1.5rem" />}
                 >
                     {søknader.map((søknad, i) => (
                         <TimelinePeriod
@@ -58,5 +57,23 @@ export function Tidslinje(): ReactElement {
                 </TimelineRow>
             ))}
         </Timeline>
+    )
+}
+
+function TimelineSkeleton(): ReactElement {
+    return (
+        <VStack className="mt-7 border-b-1 border-border-divider p-8 pb-6" gap="4">
+            <TimelineRowSkeleton />
+            <TimelineRowSkeleton />
+        </VStack>
+    )
+}
+
+function TimelineRowSkeleton(): ReactElement {
+    return (
+        <HStack gap="4" align="center">
+            <Skeleton variant="text" width={176} className="size-10" />
+            <Skeleton variant="text" width="92%" className="size-10" />
+        </HStack>
     )
 }
