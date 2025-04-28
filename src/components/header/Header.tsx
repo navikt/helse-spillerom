@@ -39,7 +39,7 @@ export function Header(): ReactElement {
                             </dl>
                             <Dropdown.Menu.Divider />
                             <Dropdown.Menu.List>
-                                <Dropdown.Menu.List.Item>
+                                <Dropdown.Menu.List.Item as="a" href="/oauth2/logout">
                                     Logg ut <Spacer /> <LeaveIcon aria-hidden fontSize="1.5rem" />
                                 </Dropdown.Menu.List.Item>
                             </Dropdown.Menu.List>
