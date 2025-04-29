@@ -7,9 +7,7 @@ const opts: OptionsType = process.env.CI
     ? {
           baseURL: `http://localhost:3000`,
           timeout: 30 * 1000,
-          server: {
-              command: 'node e2e/proxy.mjs',
-          },
+          server: undefined,
       }
     : process.env.FAST
       ? {

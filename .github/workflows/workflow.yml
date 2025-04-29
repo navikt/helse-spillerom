@@ -34,6 +34,7 @@ jobs:
         run: |
           cp .nais/envs/.env.playwright .env.production
           npm run build:e2e
+      - run: cp -R .next/static .next/standalone/.next
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
