@@ -1,8 +1,7 @@
-import process from 'process'
-
 import { z, ZodError } from 'zod'
 
 export type PublicEnv = z.infer<typeof browserEnvSchema>
+
 export const browserEnvSchema = z.object({
     NEXT_PUBLIC_RUNTIME_ENV: z.union([z.literal('dev'), z.literal('lokal'), z.literal('demo'), z.literal('prod')]),
     NEXT_PUBLIC_ASSET_PREFIX: z.string().optional(),
@@ -18,7 +17,7 @@ export const browserEnv = browserEnvSchema.parse({
     NEXT_PUBLIC_ASSET_PREFIX: process.env.NEXT_PUBLIC_ASSET_PREFIX,
 } satisfies Record<keyof PublicEnv, string | undefined>)
 
-export const erLokal = process.env.NODE_ENV !== 'production'
+export const erLokal = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'lokal'
 export const erDev = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'dev'
 export const erDemo = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'demo'
 export const erLokalEllerDemo = erLokal || erDemo

@@ -7,6 +7,7 @@ import { erDemo, erDev, erLokal } from '@/env'
 import { Header } from '@/components/header/Header'
 import { Preload } from '@/app/preload'
 import { Providers } from '@/app/providers'
+import { DemoPersonsok } from '@/mock-api/demoPersonsok'
 
 function title() {
     function postfix() {
@@ -15,6 +16,7 @@ function title() {
         if (erLokal) return ' - localhost'
         return ''
     }
+
     return `Spillerom${postfix()}`
 }
 
@@ -32,8 +34,10 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
             <body>
                 <Page contentBlockPadding="none">
                     <Providers>
-                        <Header />
-                        {children}
+                        <DemoPersonsok>
+                            <Header />
+                            {children}
+                        </DemoPersonsok>
                     </Providers>
                 </Page>
             </body>
