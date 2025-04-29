@@ -17,7 +17,7 @@ export function PersonHeader(): ReactElement {
 
     return (
         <PersonHeaderContainer>
-            <FigureCombinationIcon fontSize="1.5rem" className="mr-2" />
+            <FigureCombinationIcon aria-hidden fontSize="1.5rem" className="mr-2" />
             <NavnOgAlder navn={personinfo.navn} alder={personinfo.alder} />
             <Seperator />
             <Fødselsnummer fødselsnummer={personinfo.fødselsnummer} />

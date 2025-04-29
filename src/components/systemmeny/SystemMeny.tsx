@@ -18,7 +18,7 @@ export function SystemMeny(): ReactElement {
     return (
         <Dropdown>
             <InternalHeaderButton as={DropdownToggle}>
-                <MenuGridIcon title="Systemmeny" fontSize="2.25rem" />
+                <MenuGridIcon title="Systemer og oppslagsverk" fontSize="2.25rem" />
             </InternalHeaderButton>
             <DropdownMenu className="w-max">
                 <DropdownMenuGroupedList>
