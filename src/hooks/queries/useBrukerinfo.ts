@@ -5,7 +5,7 @@ import { fetchAndParse } from '@utils/fetch'
 
 export function useBrukerinfo() {
     return useQuery<Bruker, Error>({
-        queryKey: ['personinfo'],
+        queryKey: ['brukerinfo'],
         queryFn: async () => fetchAndParse('/api/v1/bruker', brukerSchema),
     })
 }
