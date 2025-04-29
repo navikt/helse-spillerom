@@ -4,6 +4,7 @@ import { InternalHeader, Spacer } from '@navikt/ds-react'
 import { InternalHeaderTitle } from '@navikt/ds-react/InternalHeader'
 
 import { BrukerMeny } from '@components/header/BrukerMeny'
+import { SystemMeny } from '@components/systemmeny/SystemMeny'
 
 export function Header(): ReactElement {
     return (
@@ -20,6 +21,7 @@ export function Header(): ReactElement {
                 Manuell saksbehandling
             </InternalHeaderTitle>
             <Spacer />
+            <SystemMeny />
             <BrukerMeny />
         </InternalHeader>
     )
