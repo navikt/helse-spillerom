@@ -2,6 +2,7 @@ import { logger } from '@navikt/next-logger'
 import { NextResponse } from 'next/server'
 
 import { raise } from '@utils/tsUtils'
+import { personsok } from '@/mock-api/personsok'
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
@@ -92,7 +93,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 },
             ])
         case 'POST /v1/personsok':
-            return NextResponse.json({ personId: 'abc45' })
+            return personsok(request)
         default:
             raise(new Error(`Unknown path: ${path}`))
     }
