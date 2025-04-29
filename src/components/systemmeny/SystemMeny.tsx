@@ -6,6 +6,7 @@ import {
     DropdownMenu,
     DropdownMenuGroupedList,
     DropdownMenuGroupedListHeading,
+    DropdownMenuGroupedListItem,
     DropdownToggle,
 } from '@navikt/ds-react/Dropdown'
 import { ExternalLinkIcon, MenuGridIcon } from '@navikt/aksel-icons'
@@ -102,21 +103,15 @@ type ButtonLink = CommonLinkProps & { action: () => void }
 type HrefLink = CommonLinkProps & { href: string }
 
 const Link = ({ tekst, href }: HrefLink): ReactElement => (
-    <Dropdown.Menu.GroupedList.Item
-        key={tekst}
-        as="a"
-        href={href}
-        target="_blank"
-        className="px-4 py-2 whitespace-nowrap"
-    >
+    <DropdownMenuGroupedListItem key={tekst} as="a" href={href} target="_blank" className="px-4 py-2 whitespace-nowrap">
         <Lenkeinnhold tekst={tekst} />
-    </Dropdown.Menu.GroupedList.Item>
+    </DropdownMenuGroupedListItem>
 )
 
 const Button = ({ tekst, action }: ButtonLink): ReactElement => (
-    <Dropdown.Menu.GroupedList.Item key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
+    <DropdownMenuGroupedListItem key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
         <Lenkeinnhold tekst={tekst} />
-    </Dropdown.Menu.GroupedList.Item>
+    </DropdownMenuGroupedListItem>
 )
 
 type LenkeinnholdProps = {
