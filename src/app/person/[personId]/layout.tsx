@@ -12,7 +12,7 @@ export default async function PersonLayout({ children }: PropsWithChildren): Pro
         <PageBlock as="main">
             <PersonHeader />
             <Tidslinje />
-            <HStack justify="space-between" className="min-h-[calc(100vh-18rem)]">
+            <HStack justify="space-between" wrap={false} className="min-h-[calc(100vh-18rem)]">
                 <Venstremeny />
                 {children}
                 <Høyremeny />

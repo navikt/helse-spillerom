@@ -73,6 +73,24 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                     ],
                 },
             ])
+        case 'GET /v1/[personId]/dokumenter':
+            return NextResponse.json([
+                {
+                    id: '1',
+                    type: 'SYKMELDING',
+                    sendtTilNAVTidsunkt: '2025-01-01T07:30:00',
+                },
+                {
+                    id: '2',
+                    type: 'SØKNAD',
+                    sendtTilNAVTidsunkt: '2025-01-01T08:06:30',
+                },
+                {
+                    id: '3',
+                    type: 'INNTEKTSMELDING',
+                    sendtTilNAVTidsunkt: '2025-01-01T09:12:10',
+                },
+            ])
         case 'POST /v1/personsok':
             return NextResponse.json({ personId: 'abc45' })
         default:

@@ -1,0 +1,50 @@
+import { PropsWithChildren, ReactElement } from 'react'
+import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
+
+import { Dokument as _Dokument, Dokumenttype } from '@/schemas/dokument'
+import { getFormattedDatetimeString } from '@utils/date-format'
+import { DokumentTag } from '@components/sidemenyer/høyremeny/DokumentTag'
+
+interface DokumentProps {
+    dokument: _Dokument
+}
+
+export function Dokument({ dokument }: DokumentProps): ReactElement {
+    return (
+        <DokumentContainer>
+            <DokumentTag type={dokument.type} />
+            <VStack>
+                <BodyShort className="font-bold">{dokumentVisningstekst[dokument.type]}</BodyShort>
+                <BodyShort className="text-medium text-gray-500">
+                    {getFormattedDatetimeString(dokument.sendtTilNAVTidsunkt)}
+                </BodyShort>
+            </VStack>
+        </DokumentContainer>
+    )
+}
+
+const dokumentVisningstekst: Record<Dokumenttype, string> = {
+    SØKNAD: 'Søknad mottatt',
+    INNTEKTSMELDING: 'Inntektsmelding mottatt',
+    SYKMELDING: 'Sykmelding mottatt',
+}
+
+export function DokumentSkeleton(): ReactElement {
+    return (
+        <DokumentContainer>
+            <Skeleton width={24} height={30} />
+            <VStack>
+                <Skeleton width={180} className="text-lg" />
+                <Skeleton width={130} className="text-medium" />
+            </VStack>
+        </DokumentContainer>
+    )
+}
+
+function DokumentContainer({ children }: PropsWithChildren): ReactElement {
+    return (
+        <HStack as="li" className="border-b-1 border-border-divider py-2" gap="2">
+            {children}
+        </HStack>
+    )
+}

@@ -7,5 +7,5 @@ interface StartBehandlingProps {
 }
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
-    return <SaksbildePanel value={value}>Saksbilde</SaksbildePanel>
+    return <SaksbildePanel value={value}>Start behandling</SaksbildePanel>
 }
