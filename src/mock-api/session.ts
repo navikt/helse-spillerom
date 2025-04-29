@@ -3,9 +3,12 @@ import { nextleton } from 'nextleton'
 import { v4 as uuidv4 } from 'uuid'
 import { cookies } from 'next/headers'
 
-interface Person {
+import { Personinfo } from '@/schemas/personinfo'
+
+export interface Person {
     fnr: string
     personId: string
+    personinfo: Personinfo
 }
 
 type session = {
@@ -43,7 +46,18 @@ export async function getSession(): Promise<session> {
     if (!sessionStore[sessionId] || sessionStore[sessionId].expires.isBefore(dayjs())) {
         sessionStore[sessionId] = {
             expires: dayjs().add(1, 'hour'),
-            testpersoner: [],
+            testpersoner: [
+                {
+                    fnr: '12345678901',
+                    personId: '8j4ns',
+                    personinfo: {
+                        fødselsnummer: '12345678901',
+                        aktørId: '1234567891011',
+                        navn: 'Kalle Kranfører',
+                        alder: 47,
+                    },
+                },
+            ],
         }
     }
 
@@ -58,6 +72,12 @@ export async function hentEllerOpprettPerson(fnr: string) {
         person = {
             fnr: fnr,
             personId: Math.random().toString(36).substring(2, 7),
+            personinfo: {
+                fødselsnummer: fnr,
+                aktørId: '1234567891011',
+                navn: 'Kalle Kranfører',
+                alder: 47,
+            },
         }
         session.testpersoner.push(person)
     }
