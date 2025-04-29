@@ -12,13 +12,14 @@ export function Header(): ReactElement {
             className="h-14"
             style={
                 {
-                    '--ac-internalheader-hover-bg': 'var(--a-green-700)',
-                    '--ac-internalheader-bg': 'var(--a-green-500)',
+                    '--ac-internalheader-hover-bg': 'var(--a-blue-700)',
+                    '--ac-internalheader-bg': 'var(--a-blue-800)',
+                    '--ac-internalheader-active-bg': 'var(--a-blue-600)',
                 } as React.CSSProperties
             }
         >
             <InternalHeaderTitle as={NextLink} href="/">
-                Manuell saksbehandling
+                Spillerom
             </InternalHeaderTitle>
             <Spacer />
             <SystemMeny />
