@@ -13,3 +13,5 @@ export function notNull<T>(value: T): value is NonNullable<T> {
 export type Nullable<T> = {
     [P in keyof T]: T[P] | null
 }
+
+export type Maybe<T> = T | null

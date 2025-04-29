@@ -10,5 +10,6 @@ export function usePersoninfo() {
     return useQuery<Personinfo, Error>({
         queryKey: ['personinfo', params.personId],
         queryFn: () => fetchAndParse(`/api/bakrommet/v1/${params.personId}/personinfo`, personinfoSchema),
+        enabled: !!params.personId,
     })
 }
