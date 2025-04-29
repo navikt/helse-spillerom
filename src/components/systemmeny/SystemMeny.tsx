@@ -17,7 +17,7 @@ import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 export function SystemMeny(): ReactElement {
     return (
         <Dropdown>
-            <InternalHeaderButton as={DropdownToggle} aria-label="Toggle dropdown">
+            <InternalHeaderButton as={DropdownToggle}>
                 <MenuGridIcon title="Systemmeny" fontSize="2.25rem" />
             </InternalHeaderButton>
             <DropdownMenu className="w-max">

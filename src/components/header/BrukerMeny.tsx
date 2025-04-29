@@ -4,7 +4,13 @@ import { BodyShort, Detail, Dropdown, Skeleton, Spacer } from '@navikt/ds-react'
 import { LeaveIcon } from '@navikt/aksel-icons'
 import React, { ReactElement } from 'react'
 import { InternalHeaderUserButton } from '@navikt/ds-react/InternalHeader'
-import { DropdownMenu, DropdownMenuDivider, DropdownMenuList, DropdownMenuListItem } from '@navikt/ds-react/Dropdown'
+import {
+    DropdownMenu,
+    DropdownMenuDivider,
+    DropdownMenuList,
+    DropdownMenuListItem,
+    DropdownToggle,
+} from '@navikt/ds-react/Dropdown'
 
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 
@@ -16,7 +22,7 @@ export function BrukerMeny(): ReactElement {
             {laster && <Skeleton className="m-2" variant="rectangle" width={180} height={40} />}
             {!laster && (
                 <>
-                    <InternalHeaderUserButton as={Dropdown.Toggle} name={brukerinfo.navn} />
+                    <InternalHeaderUserButton as={DropdownToggle} name={brukerinfo.navn} />
                     <DropdownMenu>
                         <dl>
                             <BodyShort as="dt" size="small">
