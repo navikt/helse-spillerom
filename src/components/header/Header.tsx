@@ -5,6 +5,7 @@ import { InternalHeaderTitle } from '@navikt/ds-react/InternalHeader'
 
 import { BrukerMeny } from '@components/header/BrukerMeny'
 import { SystemMeny } from '@components/systemmeny/SystemMeny'
+import { Personsøk } from '@components/personsøk/Personsøk'
 
 export function Header(): ReactElement {
     return (
@@ -21,6 +22,7 @@ export function Header(): ReactElement {
             <InternalHeaderTitle as={NextLink} href="/">
                 Spillerom
             </InternalHeaderTitle>
+            <Personsøk size="small" variant="secondary" hideLabel />
             <Spacer />
             <SystemMeny />
             <BrukerMeny />

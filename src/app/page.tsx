@@ -10,7 +10,9 @@ export default async function Page(): Promise<ReactElement> {
             <Heading level="1" size="large" className="sr-only">
                 Personsøk
             </Heading>
-            <Personsøk />
+            <div className="w-md">
+                <Personsøk />
+            </div>
         </PageBlock>
     )
 }
