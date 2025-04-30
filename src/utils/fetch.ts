@@ -14,7 +14,7 @@ export async function fetchAndParse<T>(url: string, schema: z.ZodType<T>, option
     } catch (error) {
         if (error instanceof ZodError) {
             /* eslint-disable-next-line no-console */
-            console.error('Zod parsing error:', error.flatten())
+            console.error('Zod parsing error:', error)
             throw new Error('Invalid response format from server')
         }
         throw error
