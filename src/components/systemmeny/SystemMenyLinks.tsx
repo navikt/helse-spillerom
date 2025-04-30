@@ -1,8 +1,8 @@
 'use client'
 
-import { ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
-import { HStack } from '@navikt/ds-react'
+import { HStack, Spacer } from '@navikt/ds-react'
 import { DropdownMenuGroupedListItem } from '@navikt/ds-react/Dropdown'
 
 import { useGlobalHandlers } from '@components/tastatursnarveier/useGlobalHandlers'
@@ -35,7 +35,8 @@ const ExternalLinkButton = ({ tekst, action, shortcut }: ExternalLinkButtonProps
     <DropdownMenuGroupedListItem key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
         {tekst}
         <ExternalLinkIcon fontSize="1.1rem" title="Åpne ekstern lenke" />
-        <HStack gap="05" className="ml-auto pl-4 text-medium text-text-subtle">
+        <Spacer />
+        <HStack gap="05" className="text-medium text-text-subtle">
             {shortcut.map((shortcutKey, index) => (
                 <span key={index} className="flex w-4 justify-center">
                     {shortcutKey}

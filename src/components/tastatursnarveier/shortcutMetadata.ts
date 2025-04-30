@@ -133,7 +133,7 @@ export const shortcutMetadata: ShortcutMetadata[] = [
         key: 'KeyO',
         modifier: 'Shift',
         visningssnarvei: ['⇧', 'O'],
-        visningstekst: 'Åpne oppdrag',
+        visningstekst: 'Åpne Oppdrag',
         externalLinkTekst: 'Oppdrag',
         ignoreIfModifiers: false,
     },
