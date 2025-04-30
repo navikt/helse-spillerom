@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 
-import { ShortcutHandler, useTastatursnarveierContext } from '@components/tastatursnarveier/context'
+import { ShortcutHandler, useShortcutContext } from '@components/tastatursnarveier/context'
 import { ShortcutId, shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
 
 export function useRegisterShortcutHandler(id: ShortcutId, handler: ShortcutHandler) {
-    const { registerHandler } = useTastatursnarveierContext()
+    const { registerHandler } = useShortcutContext()
 
     useEffect(() => {
         registerHandler(id, handler)

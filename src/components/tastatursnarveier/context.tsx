@@ -37,7 +37,7 @@ export function ShortcutProvider({ children }: PropsWithChildren): ReactElement 
     return <ShortcutContext.Provider value={{ registerHandler, getHandler }}>{children}</ShortcutContext.Provider>
 }
 
-export function useTastatursnarveierContext(): ShortcutContextType {
+export function useShortcutContext(): ShortcutContextType {
     const context = useContext(ShortcutContext)
     if (!context) {
         throw new Error('useTastatursnarveierContext must be used within a TastatursnarveierProvider')
