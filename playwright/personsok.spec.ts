@@ -9,7 +9,7 @@ test.describe('Førstesiden', () => {
     })
 
     test('Har innhold', async ({ page }) => {
-        const main = page.locator('main') // or any other container
+        const main = page.locator('main')
         const hello = main.getByText('Fødselsnummer/Aktør-ID')
         await expect(hello).toHaveCount(1)
     })
