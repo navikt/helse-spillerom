@@ -21,13 +21,13 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
     const form = useForm<PersonsøkSchema>({
         resolver: zodResolver(personsøkSchema),
         defaultValues: {
-            fødselsnummer: '',
+            ident: '',
         },
     })
 
     async function onSubmit(values: PersonsøkSchema) {
         mutation.mutate({
-            request: { fødselsnummer: values.fødselsnummer },
+            request: { ident: values.ident },
             callback: (personId) => router.push(`/person/${personId.personId}`),
         })
     }
@@ -37,7 +37,7 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
             <form role="search" onSubmit={form.handleSubmit(onSubmit)} className="self-center px-5">
                 <Controller
                     control={form.control}
-                    name="fødselsnummer"
+                    name="ident"
                     render={({ field, fieldState }) => (
                         <Search
                             {...field}

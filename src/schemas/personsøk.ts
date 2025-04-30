@@ -7,5 +7,5 @@ export const personIdSchema = z.object({
 
 export type PersonsøkSchema = z.infer<typeof personsøkSchema>
 export const personsøkSchema = z.object({
-    fødselsnummer: z.string(),
+    ident: z.string(),
 })

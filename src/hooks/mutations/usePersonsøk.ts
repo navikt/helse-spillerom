@@ -5,7 +5,7 @@ import { postAndParse } from '@utils/fetch'
 
 interface MutationProps {
     request: {
-        fødselsnummer: string
+        ident: string
     }
     callback: (personId: PersonId) => void
 }
