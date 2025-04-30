@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 
 import { raise } from '@utils/tsUtils'
 import { personsok } from '@/mock-api/personsok'
+import { Søknad } from '@/schemas/søknad'
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
@@ -16,27 +17,26 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 alder: 47,
             })
         case 'GET /v1/[personId]/soknader':
-            return NextResponse.json([
+            const soknader: Søknad[] = [
                 {
                     id: '1',
-                    søknadstype: 'ARBEIDSTAKERE',
+                    type: 'ARBEIDSTAKERE',
                     status: 'NY',
                     arbeidssituasjon: 'ARBEIDSTAKER',
                     fom: '2025-01-01',
                     tom: '2025-01-31',
                     korrigerer: null,
                     korrigertAv: null,
-                    avbruttDato: null,
-                    sykmeldingUtskrevet: '2025-01-01',
-                    startSykeforlop: '2025-01-01',
-                    opprettetDato: '2025-01-01',
-                    sendtTilNAVDato: '2025-01-01',
-                    sendtTilArbeidsgiverDato: '2025-01-01',
+                    sykmeldingSkrevet: '2025-01-01',
+                    startSyketilfelle: '2025-01-01',
+                    opprettet: '2025-01-01',
+                    sendtNav: '2025-01-01',
+                    sendtArbeidsgiver: '2025-01-01',
                     arbeidsgiver: {
                         navn: 'Annen Arbeidsgiver',
                         orgnummer: '987654321',
                     },
-                    søknadsPerioder: [
+                    soknadsperioder: [
                         {
                             fom: '2025-01-01',
                             tom: '2025-01-31',
@@ -47,24 +47,23 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 },
                 {
                     id: '1',
-                    søknadstype: 'ARBEIDSTAKERE',
+                    type: 'ARBEIDSTAKERE',
                     status: 'NY',
                     arbeidssituasjon: 'ARBEIDSTAKER',
                     fom: '2025-01-01',
                     tom: '2025-01-31',
                     korrigerer: null,
                     korrigertAv: null,
-                    avbruttDato: null,
-                    sykmeldingUtskrevet: '2025-01-01',
-                    startSykeforlop: '2025-01-01',
-                    opprettetDato: '2025-01-01',
-                    sendtTilNAVDato: '2025-01-01',
-                    sendtTilArbeidsgiverDato: '2025-01-01',
+                    sykmeldingSkrevet: '2025-01-01',
+                    startSyketilfelle: '2025-01-01',
+                    opprettet: '2025-01-01',
+                    sendtNav: '2025-01-01',
+                    sendtArbeidsgiver: '2025-01-01',
                     arbeidsgiver: {
                         navn: 'Arbeidsgiver Navn',
                         orgnummer: '123456789',
                     },
-                    søknadsPerioder: [
+                    soknadsperioder: [
                         {
                             fom: '2025-01-01',
                             tom: '2025-01-31',
@@ -73,7 +72,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                         },
                     ],
                 },
-            ])
+            ]
+            return NextResponse.json(soknader)
         case 'GET /v1/[personId]/dokumenter':
             return NextResponse.json([
                 {
