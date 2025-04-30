@@ -11,15 +11,15 @@ export interface Person {
     personinfo: Personinfo
 }
 
-type session = {
+type Session = {
     expires: dayjs.Dayjs
     testpersoner: Person[]
 }
 export const sessionStore = nextleton('sessionStore', () => {
-    return {} as Record<string, session>
+    return {} as Record<string, Session>
 })
 
-export async function getSession(): Promise<session> {
+export async function getSession(): Promise<Session> {
     const cookieStore = await cookies()
 
     function getSessionId(): string {

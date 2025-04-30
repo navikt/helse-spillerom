@@ -7,7 +7,6 @@ import { erDemo, erDev, erLokal } from '@/env'
 import { Header } from '@/components/header/Header'
 import { Preload } from '@/app/preload'
 import { Providers } from '@/app/providers'
-import { DemoPersonsok } from '@/mock-api/demoPersonsok'
 
 function title() {
     function postfix() {
@@ -34,10 +33,8 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
             <body>
                 <Page contentBlockPadding="none">
                     <Providers>
-                        <DemoPersonsok>
-                            <Header />
-                            {children}
-                        </DemoPersonsok>
+                        <Header />
+                        {children}
                     </Providers>
                 </Page>
             </body>

@@ -1,18 +1,16 @@
 'use client'
 
 import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
-import React, { useState } from 'react'
+import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { SandboxIcon } from '@navikt/aksel-icons'
+import { ModalBody } from '@navikt/ds-react/Modal'
+import { TableBody, TableDataCell, TableRow } from '@navikt/ds-react/Table'
 
 import { erLokalEllerDemo } from '@/env'
 import { useTestdata } from '@hooks/queries/useTestdata'
 
-type LayoutWrapperProps = {
-    children: React.ReactNode
-}
-
-export const DemoPersonsok: React.FC<LayoutWrapperProps> = ({ children }) => {
-    const [openState, setOpenState] = useState(false)
+export function DemoPersonsøk({ children }: PropsWithChildren): ReactElement {
+    const [showModal, setShowModal] = useState(false)
 
     if (!erLokalEllerDemo) {
         return <>{children}</>
@@ -25,29 +23,31 @@ export const DemoPersonsok: React.FC<LayoutWrapperProps> = ({ children }) => {
                 <Tooltip content="Testpersoner">
                     <Button
                         type="button"
-                        onClick={() => setOpenState((b) => !b)}
+                        onClick={() => setShowModal((b) => !b)}
                         icon={<SandboxIcon title="Åpne testdataverktøy" aria-hidden />}
                         variant="tertiary-neutral"
                     />
                 </Tooltip>
             </div>
-            <Modal
-                open={openState}
-                onClose={() => {
-                    setOpenState(false)
-                }}
-                header={{ heading: 'Testdata', closeButton: true }}
-                className="left-auto m-0 h-screen max-h-max max-w-[369px] rounded-none p-0"
-            >
-                <Modal.Body>
-                    <TestpersonTabell />
-                </Modal.Body>
-            </Modal>
+            {showModal && (
+                <Modal
+                    open={showModal}
+                    onClose={() => {
+                        setShowModal(false)
+                    }}
+                    header={{ heading: 'Testdata', closeButton: true }}
+                    className="left-auto m-0 h-screen max-h-max max-w-[369px] rounded-none p-0"
+                >
+                    <ModalBody>
+                        <TestpersonTabell />
+                    </ModalBody>
+                </Modal>
+            )}
         </div>
     )
 }
 
-const TestpersonTabell = () => {
+function TestpersonTabell() {
     const testdata = useTestdata()
     if (testdata.isLoading) {
         return <div>Loading...</div>
@@ -58,20 +58,20 @@ const TestpersonTabell = () => {
     if (testdata.isSuccess) {
         return (
             <Table className="w-full">
-                <Table.Body>
+                <TableBody>
                     {testdata.data.map((person) => (
-                        <Table.Row
+                        <TableRow
                             key={person.fnr}
                             className="hover:cursor-pointer"
                             onClick={() => {
                                 window.location.href = `/person/${person.personId}`
                             }}
                         >
-                            <Table.DataCell>{person.personinfo.navn}</Table.DataCell>
-                            <Table.DataCell>{person.fnr}</Table.DataCell>
-                        </Table.Row>
+                            <TableDataCell>{person.personinfo.navn}</TableDataCell>
+                            <TableDataCell>{person.fnr}</TableDataCell>
+                        </TableRow>
                     ))}
-                </Table.Body>
+                </TableBody>
             </Table>
         )
     }
