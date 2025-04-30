@@ -25,7 +25,7 @@ export function TastatursnarveierModal({ closeModal, showModal }: Tastatursnarve
                         {shortcutMetadata.map((shortcut) => (
                             <TableRow key={shortcut.id}>
                                 <TableDataCell>
-                                    <Shortcut shortcut={shortcut.visningssnarvei} />
+                                    <Shortcut keyCode={shortcut.key} modifier={shortcut.modifier} />
                                 </TableDataCell>
                                 <TableDataCell>{shortcut.visningstekst}</TableDataCell>
                             </TableRow>

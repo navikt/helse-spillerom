@@ -6,7 +6,7 @@ import { Spacer } from '@navikt/ds-react'
 import { DropdownMenuGroupedListItem } from '@navikt/ds-react/Dropdown'
 
 import { useGlobalHandlers } from '@components/tastatursnarveier/useGlobalHandlers'
-import { shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
+import { KeyCode, ModifierKey, shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
 import { Shortcut } from '@components/header/Shortcut'
 
 export function SystemMenyLinks(): ReactElement[] {
@@ -20,7 +20,8 @@ export function SystemMenyLinks(): ReactElement[] {
                     key={meta.id}
                     tekst={meta.externalLinkTekst ?? meta.id}
                     action={externalLinks[meta.id]!}
-                    shortcut={meta.visningssnarvei}
+                    keyCode={meta.key}
+                    modifier={meta.modifier}
                 />
             )
         })
@@ -29,14 +30,15 @@ export function SystemMenyLinks(): ReactElement[] {
 interface ExternalLinkButtonProps {
     action: () => void
     tekst: string
-    shortcut: string[]
+    keyCode: KeyCode
+    modifier?: ModifierKey
 }
 
-const ExternalLinkButton = ({ tekst, action, shortcut }: ExternalLinkButtonProps): ReactElement => (
+const ExternalLinkButton = ({ tekst, action, keyCode, modifier }: ExternalLinkButtonProps): ReactElement => (
     <DropdownMenuGroupedListItem key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
         {tekst}
         <ExternalLinkIcon fontSize="1.1rem" title="Åpne ekstern lenke" />
         <Spacer />
-        <Shortcut shortcut={shortcut} />
+        <Shortcut keyCode={keyCode} modifier={modifier} />
     </DropdownMenuGroupedListItem>
 )
