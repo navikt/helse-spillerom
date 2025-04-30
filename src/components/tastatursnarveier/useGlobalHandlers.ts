@@ -1,7 +1,6 @@
 import { ShortcutId } from '@components/tastatursnarveier/shortcutMetadata'
 import { ShortcutHandler } from '@components/tastatursnarveier/context'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
-import { Maybe } from '@utils/tsUtils'
 
 type GlobalHandlersResponse = {
     allGlobalHandlers: Partial<Record<ShortcutId, ShortcutHandler>>
@@ -9,9 +8,9 @@ type GlobalHandlersResponse = {
 }
 
 export function useGlobalHandlers(): GlobalHandlersResponse {
-    const { data: personinfo, isLoading } = usePersoninfo()
-    const fødselsnummer = !isLoading && personinfo ? personinfo.fødselsnummer : null
-    const aktørId = !isLoading && personinfo ? personinfo.aktørId : null
+    const { data: personinfo } = usePersoninfo()
+    const fødselsnummer = personinfo?.fødselsnummer
+    const aktørId = personinfo?.aktørId
 
     const externalLinks: Partial<Record<ShortcutId, ShortcutHandler>> = {
         open_aa_reg: () =>
@@ -62,7 +61,7 @@ export function useGlobalHandlers(): GlobalHandlersResponse {
     }
 }
 
-async function redirigerTilArbeidOgInntektUrl(url: string, fødselsnummer: Maybe<string>) {
+async function redirigerTilArbeidOgInntektUrl(url: string, fødselsnummer?: string) {
     if (!fødselsnummer) {
         window.open('https://arbeid-og-inntekt.nais.adeo.no')
         return
@@ -83,7 +82,7 @@ async function redirigerTilArbeidOgInntektUrl(url: string, fødselsnummer: Maybe
     }
 }
 
-async function hoppTilModia(url: string, fødselsnummer: Maybe<string>) {
+async function hoppTilModia(url: string, fødselsnummer?: string) {
     const forbered = () => (fødselsnummer ? settModiaContext(fødselsnummer) : nullstillModiaContext())
     try {
         await forbered()
