@@ -8,7 +8,8 @@ import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useReg
 
 export function Tastatursnarveier(): ReactElement {
     const [showModal, setShowModal] = useState(false)
-    useRegisterShortcutHandler('open_tastatursnarveier', () => setShowModal(!showModal))
+    useRegisterShortcutHandler('open_tastatursnarveier', () => setShowModal((prev) => !prev))
+
     return (
         <>
             <DropdownMenuList>

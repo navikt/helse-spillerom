@@ -8,9 +8,11 @@ import { TableBody, TableDataCell, TableRow } from '@navikt/ds-react/Table'
 
 import { erLokalEllerDemo } from '@/env'
 import { useTestdata } from '@hooks/queries/useTestdata'
+import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 
 export function DemoPersonsøk({ children }: PropsWithChildren): ReactElement {
     const [showModal, setShowModal] = useState(false)
+    useRegisterShortcutHandler('open_testdata', () => setShowModal((prev) => !prev))
 
     if (!erLokalEllerDemo) {
         return <>{children}</>
@@ -23,7 +25,7 @@ export function DemoPersonsøk({ children }: PropsWithChildren): ReactElement {
                 <Tooltip content="Testpersoner">
                     <Button
                         type="button"
-                        onClick={() => setShowModal((b) => !b)}
+                        onClick={() => setShowModal((prev) => !prev)}
                         icon={<SandboxIcon title="Åpne testdataverktøy" aria-hidden />}
                         variant="tertiary-neutral"
                     />

@@ -10,7 +10,7 @@ interface ShortcutProps {
 
 export function Shortcut({ keyCode, modifier }: ShortcutProps): ReactElement {
     return (
-        <HStack gap="05" className="justify-center text-medium text-text-subtle">
+        <HStack gap="05" className="justify-center text-medium text-text-subtle" wrap={false}>
             {modifier && <span className="flex w-4 justify-center">{modifierLabels[modifier]}</span>}
             <span className="flex w-4 justify-center">{keyCodeLabel(keyCode)}</span>
         </HStack>

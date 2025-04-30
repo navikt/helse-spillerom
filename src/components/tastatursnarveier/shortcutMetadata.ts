@@ -1,3 +1,5 @@
+import { erLokalEllerDemo } from '@/env'
+
 export type KeyCode =
     | 'F1'
     | 'KeyA'
@@ -12,6 +14,7 @@ export type KeyCode =
     | 'KeyO'
     | 'KeyR'
     | 'KeyS'
+    | 'KeyT'
 
 export type ModifierKey = 'Alt' | 'Shift' | 'Meta'
 
@@ -30,6 +33,7 @@ export type ShortcutId =
     | 'open_oppdrag'
     | 'open_rutiner'
     | 'open_modia_sykefraværsoppfølging'
+    | 'open_testdata'
 
 export type ShortcutMetadata = {
     id: ShortcutId
@@ -38,6 +42,7 @@ export type ShortcutMetadata = {
     visningstekst?: string
     externalLinkTekst?: string
     ignoreIfModifiers?: boolean
+    utviklerOnly?: boolean
 }
 
 export const shortcutMetadata: ShortcutMetadata[] = [
@@ -149,6 +154,18 @@ export const shortcutMetadata: ShortcutMetadata[] = [
         externalLinkTekst: 'Modia Sykefraværsoppfølging',
         ignoreIfModifiers: false,
     },
+    ...(erLokalEllerDemo
+        ? ([
+              {
+                  id: 'open_testdata',
+                  key: 'KeyT',
+                  modifier: 'Shift',
+                  visningstekst: 'Åpne testdata',
+                  ignoreIfModifiers: false,
+                  utviklerOnly: true,
+              },
+          ] satisfies ShortcutMetadata[])
+        : []),
 ]
 
 export const modifierLabels: Record<ModifierKey, string> = {
