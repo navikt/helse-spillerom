@@ -3,6 +3,8 @@
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+import { ShortcutProvider } from '@components/tastatursnarveier/context'
+
 export function Providers({ children }: PropsWithChildren): ReactElement {
     const [queryClient] = useState(
         () =>
@@ -18,5 +20,9 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
             }),
     )
 
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ShortcutProvider>{children}</ShortcutProvider>
+        </QueryClientProvider>
+    )
 }
