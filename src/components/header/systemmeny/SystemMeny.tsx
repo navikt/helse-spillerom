@@ -9,7 +9,7 @@ import {
 import { MenuGridIcon } from '@navikt/aksel-icons'
 import { InternalHeaderButton } from '@navikt/ds-react/InternalHeader'
 
-import { SystemMenyLinks } from '@components/systemmeny/SystemMenyLinks'
+import { SystemMenyLinks } from '@components/header/systemmeny/SystemMenyLinks'
 
 export function SystemMeny(): ReactElement {
     return (

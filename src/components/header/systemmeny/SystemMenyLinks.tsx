@@ -2,11 +2,12 @@
 
 import React, { ReactElement } from 'react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
-import { HStack, Spacer } from '@navikt/ds-react'
+import { Spacer } from '@navikt/ds-react'
 import { DropdownMenuGroupedListItem } from '@navikt/ds-react/Dropdown'
 
 import { useGlobalHandlers } from '@components/tastatursnarveier/useGlobalHandlers'
 import { shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
+import { Shortcut } from '@components/header/Shortcut'
 
 export function SystemMenyLinks(): ReactElement[] {
     const { externalLinks } = useGlobalHandlers()
@@ -36,12 +37,6 @@ const ExternalLinkButton = ({ tekst, action, shortcut }: ExternalLinkButtonProps
         {tekst}
         <ExternalLinkIcon fontSize="1.1rem" title="Åpne ekstern lenke" />
         <Spacer />
-        <HStack gap="05" className="text-medium text-text-subtle">
-            {shortcut.map((shortcutKey, index) => (
-                <span key={index} className="flex w-4 justify-center">
-                    {shortcutKey}
-                </span>
-            ))}
-        </HStack>
+        <Shortcut shortcut={shortcut} />
     </DropdownMenuGroupedListItem>
 )

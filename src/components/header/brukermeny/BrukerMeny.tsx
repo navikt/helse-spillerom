@@ -13,6 +13,7 @@ import {
 } from '@navikt/ds-react/Dropdown'
 
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
+import { Tastatursnarveier } from '@components/header/brukermeny/Tastatursnarveier'
 
 export function BrukerMeny(): ReactElement {
     const { data: brukerinfo, isLoading } = useBrukerinfo()
@@ -30,6 +31,8 @@ export function BrukerMeny(): ReactElement {
                             </BodyShort>
                             <Detail as="dd">{brukerinfo.navIdent}</Detail>
                         </dl>
+                        <DropdownMenuDivider />
+                        <Tastatursnarveier />
                         <DropdownMenuDivider />
                         <DropdownMenuList>
                             <DropdownMenuListItem as="a" href="/oauth2/logout">
