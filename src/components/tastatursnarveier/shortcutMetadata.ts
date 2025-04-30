@@ -1,4 +1,5 @@
 export type KeyCode =
+    | 'F1'
     | 'KeyA'
     | 'KeyB'
     | 'KeyC'
@@ -15,6 +16,7 @@ export type KeyCode =
 export type ModifierKey = 'Alt' | 'Shift' | 'Meta'
 
 export type ShortcutId =
+    | 'open_tastatursnarveier'
     | 'copy_aktør_id'
     | 'copy_fødselsnummer'
     | 'open_aa_reg'
@@ -39,6 +41,12 @@ export type ShortcutMetadata = {
 }
 
 export const shortcutMetadata: ShortcutMetadata[] = [
+    {
+        id: 'open_tastatursnarveier',
+        key: 'F1',
+        visningstekst: 'Åpne denne modalen med tastatursnarveiene',
+        ignoreIfModifiers: false,
+    },
     {
         id: 'copy_aktør_id',
         key: 'KeyA',
@@ -152,6 +160,8 @@ export const modifierLabels: Record<ModifierKey, string> = {
 export function keyCodeLabel(code: KeyCode): string {
     if (code.includes('Key')) {
         return code.replace('Key', '')
+    } else if (['F1'].includes(code)) {
+        return code
     } else {
         return 'Du må oppdatere keyCodeLabel for å støtte denne KeyCode-en'
     }
