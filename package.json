@@ -22,6 +22,7 @@
         "format": "npm run prettier:write && npm run lint:fix"
     },
     "dependencies": {
+        "@faker-js/faker": "^9.7.0",
         "@hookform/resolvers": "^5.0.1",
         "@navikt/aksel-icons": "^7.20.0",
         "@navikt/ds-css": "^7.20.0",

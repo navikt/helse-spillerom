@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { nextleton } from 'nextleton'
 import { v4 as uuidv4 } from 'uuid'
 import { cookies } from 'next/headers'
+import { faker } from '@faker-js/faker/locale/nb_NO'
 
 import { Personinfo } from '@/schemas/personinfo'
 
@@ -57,6 +58,9 @@ export async function getSession(): Promise<Session> {
                         alder: 47,
                     },
                 },
+                skapPerson('12345678902'),
+                skapPerson('12345678903'),
+                skapPerson('33423422323'),
             ],
         }
     }
@@ -64,23 +68,34 @@ export async function getSession(): Promise<Session> {
     return sessionStore[sessionId]
 }
 
+function skapPerson(fnr: string): Person {
+    faker.seed(Number(fnr))
+    return {
+        fnr: fnr,
+        personId: Math.random().toString(36).substring(2, 7),
+        personinfo: {
+            fødselsnummer: fnr,
+            aktørId: fnr + '00',
+            navn: faker.person.firstName() + ' ' + faker.person.lastName(),
+            alder: faker.number.int({ min: 14, max: 80 }),
+        },
+    }
+}
+
 export async function hentEllerOpprettPerson(fnr: string) {
     const session = await getSession()
-    let person = session.testpersoner.find((p) => p.fnr === fnr)
-
-    if (!person) {
-        person = {
-            fnr: fnr,
-            personId: Math.random().toString(36).substring(2, 7),
-            personinfo: {
-                fødselsnummer: fnr,
-                aktørId: '1234567891011',
-                navn: 'Kalle Kranfører',
-                alder: 47,
-            },
-        }
-        session.testpersoner.push(person)
+    const person = session.testpersoner.find((p) => p.fnr === fnr)
+    if (person) {
+        return person
     }
 
-    return person
+    const nyPerson = skapPerson(fnr)
+    session.testpersoner.push(nyPerson)
+
+    return nyPerson
+}
+
+export async function hentPerson(personid: string) {
+    const session = await getSession()
+    return session.testpersoner.find((p) => p.personId === personid)
 }

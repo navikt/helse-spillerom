@@ -4,17 +4,28 @@ import { NextResponse } from 'next/server'
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
 import { Søknad } from '@/schemas/søknad'
+import { hentPerson } from '@/mock-api/session'
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
+    const personIdFraRequest = request.url.split('/').slice(-2)[0]
 
     switch (path) {
         case 'GET /v1/[personId]/personinfo':
+            const person = await hentPerson(personIdFraRequest)
+            if (!person) {
+                return NextResponse.json(
+                    {
+                        message: 'Person not found',
+                    },
+                    { status: 404 },
+                )
+            }
             return NextResponse.json({
-                fødselsnummer: '62345678906',
-                aktørId: '1234567891011',
-                navn: 'Kalle Kranfører',
-                alder: 47,
+                fødselsnummer: person.fnr,
+                aktørId: person.personinfo.aktørId,
+                navn: person.personinfo.navn,
+                alder: person.personinfo.alder,
             })
         case 'GET /v1/[personId]/soknader':
             const soknader: Søknad[] = [
