@@ -16,7 +16,8 @@ export function Tidslinje(): ReactElement {
     if (isError || !søknader) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
-        const key = soknad.arbeidsgiver?.orgnummer || '' + soknad.arbeidssituasjon || '' + soknad.type
+        const key = soknad.arbeidsgiver?.orgnummer || soknad.arbeidssituasjon || soknad.type
+
         acc[key] = acc[key] || []
         acc[key].push(soknad)
         return acc
