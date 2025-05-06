@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
         await kallModia('/api/context', request.method, token)
         return new Response(null, { status: 200 })
     } catch (error) {
-        logger.warn(`Nullstilling av person i modiacontext feilet: ${error}`)
+        logger.warn(`Setting av person i modiacontext feilet: ${error}`)
         return new Response(null, { status: 500 })
     }
 }
