@@ -61,3 +61,7 @@ spec:
       value: api://dev-gcp.speilvendt.bakrommet/.default
     - name: BAKROMMET_HOST
       value: bakrommet
+    - name: MODIA_BASE_URL
+      value: http://modiacontextholder.personoversikt
+    - name: MODIA_SCOPE
+      value: api://dev-gcp.personoversikt.modiacontextholder/.default

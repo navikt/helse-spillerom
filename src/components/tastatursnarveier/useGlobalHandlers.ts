@@ -96,8 +96,8 @@ async function hoppTilModia(url: string, fødselsnummer?: string) {
     window.open(url)
 }
 async function settModiaContext(fødselsnummer: string) {
-    const response = await fetch(`/api/modia/velgBruker`, {
-        method: 'post',
+    const response = await fetch(`/api/modia/velg-bruker`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -110,6 +110,6 @@ async function settModiaContext(fødselsnummer: string) {
 }
 
 async function nullstillModiaContext() {
-    const response = await fetch(`/api/modia/aktivBruker`, { method: 'delete' })
+    const response = await fetch(`/api/modia/aktiv-bruker`, { method: 'DELETE' })
     if (!response.ok) throw Error('Nullstilling av context feilet')
 }

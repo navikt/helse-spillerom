@@ -33,6 +33,8 @@ export const serverEnvSchema = z.object({
     AZURE_APP_PRE_AUTHORIZED_APPS: z.string(),
     BAKROMMET_SCOPE: z.string(),
     BAKROMMET_HOST: z.string(),
+    MODIA_SCOPE: z.string(),
+    MODIA_BASE_URL: z.string(),
 })
 
 const getRawServerConfig = (): Partial<unknown> =>
@@ -44,6 +46,8 @@ const getRawServerConfig = (): Partial<unknown> =>
         AZURE_APP_PRE_AUTHORIZED_APPS: process.env.AZURE_APP_PRE_AUTHORIZED_APPS,
         BAKROMMET_SCOPE: process.env.BAKROMMET_SCOPE,
         BAKROMMET_HOST: process.env.BAKROMMET_HOST,
+        MODIA_SCOPE: process.env.MODIA_SCOPE,
+        MODIA_BASE_URL: process.env.MODIA_BASE_URL,
     }) satisfies Record<keyof ServerEnv, string | undefined>
 
 export function getServerEnv(): ServerEnv & PublicEnv {
