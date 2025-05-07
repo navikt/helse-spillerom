@@ -1,24 +1,35 @@
 import { z, ZodError } from 'zod'
 
+import { problemDetailsSchema } from '@/schemas/problemDetails'
+import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+
 export async function fetchAndParse<T>(url: string, schema: z.ZodType<T>, options?: RequestInit): Promise<T> {
     const res = await fetch(url, options)
+    const isJson = (res.headers.get('content-type') ?? '').includes('json')
+    const payload: unknown = isJson ? await res.json() : await res.text()
 
-    if (!res.ok) {
-        throw new Error(`Failed to fetch ${url}: ${res.status}`)
-    }
-
-    const json = await res.json()
-
-    try {
-        return schema.parse(json)
-    } catch (error) {
-        if (error instanceof ZodError) {
-            /* eslint-disable-next-line no-console */
-            console.error('Zod parsing error:', error)
-            throw new Error('Invalid response format from server')
+    if (res.ok) {
+        try {
+            return schema.parse(payload)
+        } catch (error) {
+            if (error instanceof ZodError) {
+                /* eslint-disable-next-line no-console */
+                console.error('Zod parsing error:', error)
+                throw new Error('Invalid response format from server')
+            }
+            throw error
         }
-        throw error
     }
+    if (res.ok) {
+        return schema.parse(payload)
+    }
+
+    const maybeProblem = problemDetailsSchema.safeParse(payload)
+    if (maybeProblem.success) {
+        throw new ProblemDetailsError(maybeProblem.data)
+    }
+
+    throw new Error(`Failed to fetch ${url}: ${res.status}`)
 }
 
 export async function postAndParse<T>(url: string, schema: z.ZodType<T>, body: unknown): Promise<T> {

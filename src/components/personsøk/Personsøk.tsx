@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 import { usePersonsøk } from '@hooks/mutations/usePersonsøk'
 import { PersonsøkSchema, personsøkSchema } from '@/schemas/personsøk'
+import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 
 interface PersonsøkProps {
     hideLabel?: boolean
@@ -32,6 +33,16 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
         })
     }
 
+    function error() {
+        if (mutation.isError) {
+            if (mutation.error instanceof ProblemDetailsError) {
+                return mutation.error.problem.detail || mutation.error.problem.title || 'Det oppstod en feil'
+            }
+            return 'Det oppstod en feil'
+        }
+        return undefined
+    }
+
     return (
         <FormProvider {...form}>
             <form role="search" onSubmit={form.handleSubmit(onSubmit)} className="self-center px-5">
@@ -41,7 +52,7 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
                     render={({ field, fieldState }) => (
                         <Search
                             {...field}
-                            error={fieldState.error?.message}
+                            error={fieldState.error?.message || error()}
                             label="Fødselsnummer/Aktør-ID"
                             size={size}
                             variant={variant}
