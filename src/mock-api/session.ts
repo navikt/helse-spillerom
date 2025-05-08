@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
 import { nextleton } from 'nextleton'
 import { v4 as uuidv4 } from 'uuid'
 import { cookies } from 'next/headers'
 import { faker } from '@faker-js/faker/locale/nb_NO'
+import dayjs, { Dayjs } from 'dayjs'
 
 import { Personinfo } from '@/schemas/personinfo'
 
@@ -13,7 +13,7 @@ export interface Person {
 }
 
 type Session = {
-    expires: dayjs.Dayjs
+    expires: Dayjs
     testpersoner: Person[]
 }
 export const sessionStore = nextleton('sessionStore', () => {

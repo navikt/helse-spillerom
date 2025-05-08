@@ -1,13 +1,15 @@
 'use client'
 
 import { ReactElement } from 'react'
-import { BodyShort, HStack, Skeleton, Timeline, VStack } from '@navikt/ds-react'
-import { TimelinePeriod, TimelineRow } from '@navikt/ds-react/Timeline'
-import { BriefcaseIcon } from '@navikt/aksel-icons'
+import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
+import { getFormattedDateString } from '@utils/date-format'
+import { Timeline } from '@components/tidslinje/timeline/Timeline'
+import { TimelinePeriod } from '@components/tidslinje/timeline/TimelinePeriod'
+import { TimelineRow } from '@components/tidslinje/timeline/TimelineRow'
 
 export function Tidslinje(): ReactElement {
     const { data: søknader, isLoading, isError } = useSoknader()
@@ -16,43 +18,32 @@ export function Tidslinje(): ReactElement {
     if (isError || !søknader) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
-        const key = soknad.arbeidsgiver?.orgnummer || soknad.arbeidssituasjon || soknad.type
+        const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
 
         acc[key] = acc[key] || []
         acc[key].push(soknad)
         return acc
     }, {})
 
-    const alleDatoer: string[] = søknader.flatMap((s) => [s.fom!, s.tom!])
-    const sortert = alleDatoer.sort()
-
-    const først = dayjs(sortert[0] || '2025-01-01').subtract(2, 'month')
-    const sist = dayjs(sortert[sortert.length - 1] || '2025-03-31').add(1, 'week')
-
     return (
-        <Timeline
-            className="border-b-1 border-border-divider p-8"
-            direction="right"
-            startDate={først.toDate()}
-            endDate={sist.toDate()}
-        >
-            {Object.entries(søknaderGruppert || {}).map(([label, søknader]) => (
-                <TimelineRow
-                    key={label}
-                    label={'Søknader ' + label}
-                    icon={<BriefcaseIcon aria-hidden fontSize="1.5rem" />}
-                >
+        // TODO Skrive om til å ta i mot behandling
+        <Timeline søknaderGruppert={søknaderGruppert}>
+            {Object.values(søknaderGruppert || {}).map((søknader, i) => (
+                <TimelineRow key={i}>
                     {søknader.map((søknad, i) => (
                         <TimelinePeriod
                             key={i}
-                            start={new Date(søknad.fom!)}
-                            end={new Date(søknad.tom!)}
-                            status="success"
-                            statusLabel="Sendt"
+                            startDate={dayjs(søknad.fom!)}
+                            endDate={dayjs(søknad.tom!)}
+                            prevPeriodTom={søknader[i - 1]?.tom}
+                            nextPeriodFom={søknader[i + 1]?.fom}
                         >
-                            <BodyShort>{søknad.arbeidssituasjon}</BodyShort>
-                            <BodyShort>{søknad.arbeidsgiver?.navn}</BodyShort>
-                            <BodyShort>{søknad.fom + ' ' + søknad.tom}</BodyShort>
+                            <BodyShort size="small">{søknad.arbeidssituasjon}</BodyShort>
+                            <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
+                            <BodyShort size="small">
+                                Periode:{' '}
+                                {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
+                            </BodyShort>
                         </TimelinePeriod>
                     ))}
                 </TimelineRow>

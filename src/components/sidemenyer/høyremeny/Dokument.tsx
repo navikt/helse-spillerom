@@ -2,8 +2,8 @@ import { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 
 import { Dokument as _Dokument, Dokumenttype } from '@/schemas/dokument'
-import { getFormattedDatetimeString } from '@utils/date-format'
 import { DokumentTag } from '@components/sidemenyer/høyremeny/DokumentTag'
+import { getFormattedDatetimeString } from '@utils/date-format'
 
 interface DokumentProps {
     dokument: _Dokument
