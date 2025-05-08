@@ -9,7 +9,7 @@ export async function personsøk(req: Request) {
     if (!(ident.length == 11 || ident.length == 13)) {
         const detail: ProblemDetails = {
             type: 'https://spillerom.ansatt.nav.no/validation/input',
-            title: 'Bad Request',
+            title: 'Ident må være 11 eller 13 siffer lang',
             status: 400,
             detail: 'Ident må være 11 eller 13 siffer lang',
             instance: '/v1/personsok',
