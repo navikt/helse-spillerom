@@ -47,8 +47,8 @@ const søknadsperiodeSchema = z.object({
     fom: z.string(),
     tom: z.string(),
     grad: z.number().nullable(),
-    sykmeldingsgrad: z.number().nullable(),
-    faktiskGrad: z.number().nullable(),
+    sykmeldingsgrad: z.number().nullable().optional(),
+    faktiskGrad: z.number().nullable().optional(),
     sykmeldingstype: z.string(),
 })
 
