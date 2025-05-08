@@ -34,7 +34,7 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
 
     function error() {
         if (mutation.isError) {
-            return mutation.error.problem.title || 'Det oppstod en feil'
+            return mutation.error.problem?.title || 'Det oppstod en feil'
         }
         return undefined
     }

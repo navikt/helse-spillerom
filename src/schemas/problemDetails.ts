@@ -7,7 +7,7 @@ export const problemDetailsSchema = z
         type: z.string(), // «about:blank» eller absolutt URI
         title: z.string().optional(),
         status: z.number(), // må være HTTP-kode
-        detail: z.string().optional(),
+        detail: z.string().optional().nullable(),
         instance: z.string().optional().nullable(),
     })
     .passthrough()
