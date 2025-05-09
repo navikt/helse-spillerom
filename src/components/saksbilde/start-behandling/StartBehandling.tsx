@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactElement } from 'react'
-import { Button, Checkbox, CheckboxGroup, Label, Select } from '@navikt/ds-react'
+import { ReactElement, useState } from 'react'
+import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Select, useDatepicker } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
@@ -14,12 +14,20 @@ interface StartBehandlingProps {
 }
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
-    const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
+    const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
+    const { data: søknader, isError } = useSoknader(validFromDate)
+    const { datepickerProps, inputProps } = useDatepicker({
+        onDateChange: (d) => {
+            const parsedDate = dayjs(d)
+            if (parsedDate.isValid()) {
+                setValidFromDate(parsedDate)
+            }
+        },
+        defaultSelected: validFromDate.toDate(),
+    })
+    if (isError) return <></> // vis noe fornuftig
 
-    if (isLoading) return <></>
-    if (isError || !søknader) return <></> // vis noe fornuftig
-
-    const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
+    const søknaderGruppert = søknader?.reduce((acc: Record<string, Søknad[]>, soknad) => {
         const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
 
         acc[key] = acc[key] || []
@@ -27,20 +35,27 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         return acc
     }, {})
     //TODO form
+
     return (
         <SaksbildePanel value={value}>
+            <div className="mb-8">
+                <DatePicker {...datepickerProps}>
+                    <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
+                </DatePicker>
+            </div>
             <Label spacing>Velg hvilken søknad som skal behandles</Label>
-            {Object.entries(søknaderGruppert).map(([key, gruppe]) => (
-                <div key={key} className="mt-4">
-                    <CheckboxGroup legend={key}>
-                        {gruppe.map((søknad, j) => (
-                            <Checkbox key={j}>
-                                {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
-                            </Checkbox>
-                        ))}
-                    </CheckboxGroup>
-                </div>
-            ))}
+            {søknaderGruppert &&
+                Object.entries(søknaderGruppert).map(([key, gruppe]) => (
+                    <div key={key} className="mt-4">
+                        <CheckboxGroup legend={key}>
+                            {gruppe.map((søknad, j) => (
+                                <Checkbox key={j} value={søknad.id}>
+                                    {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
+                                </Checkbox>
+                            ))}
+                        </CheckboxGroup>
+                    </div>
+                ))}
             <Select label="Hvilken inntektskategori tilhører søkeren?" className="my-8">
                 {arbeidssituasjoner.map((situasjon) => (
                     <option key={situasjon} value={situasjon}>
