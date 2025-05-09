@@ -1,10 +1,12 @@
 import { logger } from '@navikt/next-logger'
 import { NextResponse } from 'next/server'
+import { v4 as uuidv4 } from 'uuid'
 
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
 import { Søknad } from '@/schemas/søknad'
 import { hentPerson } from '@/mock-api/session'
+import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
@@ -27,6 +29,40 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 navn: person.personinfo.navn,
                 alder: person.personinfo.alder,
             })
+        case 'GET /v1/[personId]/saksbehandlingsperioder':
+            const perioder: Saksbehandlingsperiode[] = [
+                {
+                    id: uuidv4(),
+                    spilleromPersonId: personIdFraRequest,
+                    opprettet: new Date().toISOString(),
+                    opprettetAvNavIdent: 'Z123456',
+                    opprettetAvNavn: 'Test Testesen',
+                    fom: '2024-03-01',
+                    tom: '2024-03-31',
+                },
+                {
+                    id: uuidv4(),
+                    spilleromPersonId: personIdFraRequest,
+                    opprettet: new Date().toISOString(),
+                    opprettetAvNavIdent: 'Z123456',
+                    opprettetAvNavn: 'Test Testesen',
+                    fom: '2024-04-01',
+                    tom: '2024-04-30',
+                },
+            ]
+            return NextResponse.json(perioder)
+        case 'POST /v1/[personId]/saksbehandlingsperioder':
+            const body = await request.json()
+            const nyPeriode: Saksbehandlingsperiode = {
+                id: uuidv4(),
+                spilleromPersonId: personIdFraRequest,
+                opprettet: new Date().toISOString(),
+                opprettetAvNavIdent: 'Z123456',
+                opprettetAvNavn: 'Test Testesen',
+                fom: body.fom,
+                tom: body.tom,
+            }
+            return NextResponse.json(nyPeriode, { status: 201 })
         case 'GET /v1/[personId]/soknader':
             const url = new URL(request.url)
             const fom = url.searchParams.get('fom')
