@@ -2,6 +2,7 @@
 
 import { ReactElement } from 'react'
 import { Button, Checkbox, CheckboxGroup, Label, Select } from '@navikt/ds-react'
+import dayjs from 'dayjs'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -13,7 +14,7 @@ interface StartBehandlingProps {
 }
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
-    const { data: søknader, isLoading, isError } = useSoknader()
+    const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
 
     if (isLoading) return <></>
     if (isError || !søknader) return <></> // vis noe fornuftig

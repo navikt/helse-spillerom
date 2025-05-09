@@ -12,7 +12,7 @@ import { TimelinePeriod } from '@components/tidslinje/timeline/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/TimelineRow'
 
 export function Tidslinje(): ReactElement {
-    const { data: søknader, isLoading, isError } = useSoknader()
+    const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
 
     if (isLoading) return <TimelineSkeleton />
     if (isError || !søknader) return <></> // vis noe fornuftig
