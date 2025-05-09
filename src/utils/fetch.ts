@@ -29,7 +29,12 @@ export async function fetchAndParse<T>(url: string, schema: z.ZodType<T>, option
         throw new ProblemDetailsError(maybeProblem.data)
     }
 
-    throw new Error(`Failed to fetch ${url}: ${res.status}`)
+    throw new ProblemDetailsError({
+        title: 'Ukjent feil',
+        status: res.status,
+        detail: `Failed to fetch ${url}: ${res.status}`,
+        type: 'about:blank',
+    })
 }
 
 export async function postAndParse<T>(url: string, schema: z.ZodType<T>, body: unknown): Promise<T> {
