@@ -7,9 +7,9 @@ import dayjs from 'dayjs'
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
-import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { TimelinePeriod } from '@components/tidslinje/timeline/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/TimelineRow'
+import { Timeline } from '@components/tidslinje/timeline/Timeline'
 
 export function Tidslinje(): ReactElement {
     const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
@@ -26,10 +26,9 @@ export function Tidslinje(): ReactElement {
     }, {})
 
     return (
-        // TODO Skrive om til å ta i mot behandling
-        <Timeline søknaderGruppert={søknaderGruppert}>
-            {Object.values(søknaderGruppert || {}).map((søknader, i) => (
-                <TimelineRow key={i}>
+        <Timeline>
+            {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
+                <TimelineRow key={i} label={label}>
                     {søknader.map((søknad, i) => (
                         <TimelinePeriod
                             key={i}

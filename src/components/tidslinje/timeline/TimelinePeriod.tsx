@@ -6,22 +6,22 @@ import { PopoverContent } from '@navikt/ds-react/Popover'
 import { Maybe } from '@utils/tsUtils'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 import { cn } from '@utils/tw'
-import { getNumberOfDays } from '@components/tidslinje/timeline/Timeline'
+import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeline/index'
 
-interface TimelinePeriodProps extends PropsWithChildren {
+export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
     endDate: Dayjs
     prevPeriodTom?: Maybe<string>
     nextPeriodFom?: Maybe<string>
 }
 
-export function TimelinePeriod({
+export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = ({
     startDate,
     endDate,
     prevPeriodTom,
     nextPeriodFom,
     children,
-}: TimelinePeriodProps): ReactElement {
+}: TimelinePeriodProps): ReactElement => {
     const { onMouseOver, onMouseOut, ...popoverProps } = usePopoverAnchor()
     const { dayLength, startDate: timelineStart } = useTimelineContext()
     const buttonRef = useRef<HTMLButtonElement>(null)
@@ -53,6 +53,8 @@ export function TimelinePeriod({
         </>
     )
 }
+
+TimelinePeriod.componentType = 'TimelinePeriod'
 
 type PopoverAnchor = {
     anchorEl: Maybe<HTMLElement>
