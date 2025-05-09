@@ -28,6 +28,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 alder: person.personinfo.alder,
             })
         case 'GET /v1/[personId]/soknader':
+            const url = new URL(request.url)
+            const fom = url.searchParams.get('fom')
             const soknader: Søknad[] = [
                 {
                     id: '1',
@@ -219,7 +221,15 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                     ],
                 },
             ]
-            return NextResponse.json(soknader)
+            return NextResponse.json(
+                soknader.filter((soknad) => {
+                    //soknad fom er lik eller større enn fom
+                    if (!fom) return true
+                    const fomDate = new Date(fom)
+                    const soknadFomDate = new Date(soknad.fom!)
+                    return soknadFomDate >= fomDate
+                }),
+            )
         case 'GET /v1/[personId]/dokumenter':
             return NextResponse.json([
                 {
