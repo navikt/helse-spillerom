@@ -49,13 +49,31 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     <div key={key} className="mt-4">
                         <CheckboxGroup legend={key}>
                             {gruppe.map((søknad, j) => (
-                                <Checkbox key={j} value={søknad.id}>
-                                    {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
-                                </Checkbox>
+                                <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <Checkbox value={søknad.id}>
+                                        {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
+                                    </Checkbox>
+                                    <Button
+                                        as="a"
+                                        href={`#`} // TODO: Bytt til faktisk søknadslenke
+                                        variant="tertiary"
+                                        size="small"
+                                    >
+                                        Se søknad
+                                    </Button>
+                                </div>
                             ))}
                         </CheckboxGroup>
                     </div>
                 ))}
+            <Button
+                variant="tertiary"
+                size="small"
+                className="mt-2 mb-6"
+                type="button"
+            >
+                Legg inn søknadsperiode manuelt
+            </Button>
             <Select label="Hvilken inntektskategori tilhører søkeren?" className="my-8">
                 {arbeidssituasjoner.map((situasjon) => (
                     <option key={situasjon} value={situasjon}>
