@@ -51,11 +51,13 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                             {gruppe.map((søknad, j) => (
                                 <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <Checkbox value={søknad.id}>
-                                        {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
+                                        {getFormattedDateString(søknad.fom) +
+                                            ' - ' +
+                                            getFormattedDateString(søknad.tom)}
                                     </Checkbox>
                                     <Button
                                         as="a"
-                                        href={`#`} // TODO: Bytt til faktisk søknadslenke
+                                        href="#" // TODO: Bytt til faktisk søknadslenke
                                         variant="tertiary"
                                         size="small"
                                     >
@@ -66,12 +68,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                         </CheckboxGroup>
                     </div>
                 ))}
-            <Button
-                variant="tertiary"
-                size="small"
-                className="mt-2 mb-6"
-                type="button"
-            >
+            <Button variant="tertiary" size="small" className="mt-2 mb-6" type="button">
                 Legg inn søknadsperiode manuelt
             </Button>
             <Select label="Hvilken inntektskategori tilhører søkeren?" className="my-8">

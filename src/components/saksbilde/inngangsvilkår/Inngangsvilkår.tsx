@@ -130,7 +130,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                         Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn.
                                     </BodyShort>
                                     <Textarea
-                                        label={`Notat`}
+                                        label="Notat"
                                         id={`notat-${v.id}`}
                                         value={vilkår[v.id].notat}
                                         onChange={(e) => handleNotat(v.id, e.target.value)}
