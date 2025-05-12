@@ -60,16 +60,6 @@ export async function getSession(): Promise<Session> {
         sessionStore[sessionId] = {
             expires: dayjs().add(1, 'hour'),
             testpersoner: [
-                {
-                    fnr: '12345678901',
-                    personId: '8j4ns',
-                    personinfo: {
-                        fødselsnummer: '12345678901',
-                        aktørId: '1234567891011',
-                        navn: 'Kalle Kranfører',
-                        alder: 47,
-                    },
-                },
                 ...personer,
                 skapPerson('12345678902'),
                 skapPerson('12345678903'),
