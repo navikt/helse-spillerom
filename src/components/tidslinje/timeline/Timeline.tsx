@@ -5,11 +5,13 @@ import { HStack, VStack } from '@navikt/ds-react'
 import { getNumberOfDays, useParsedRows } from '@components/tidslinje/timeline/index'
 import { TimelineRowLabels } from '@components/tidslinje/timeline/TimelineRowLabels'
 import { TimelineScrollableRows } from '@components/tidslinje/timeline/TimelineScrollableRows'
+import { RowContext } from '@components/tidslinje/timeline/row/context'
+import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 
 import { TimelineContext } from './context'
 
 export function Timeline({ children }: PropsWithChildren): ReactElement {
-    const { rowLabels, earliestDate, latestDate } = useParsedRows(children)
+    const { rowLabels, earliestDate, latestDate, parsedRows } = useParsedRows(children)
 
     const [startDate, setStartDate] = useState<Dayjs>(earliestDate)
     const [endDate, setEndDate] = useState<Dayjs>(latestDate)
@@ -32,7 +34,18 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
             <VStack className="w-full border-b-1 border-border-divider p-8">
                 <HStack gap="2" wrap={false}>
                     <TimelineRowLabels labels={rowLabels} />
-                    <TimelineScrollableRows>{children}</TimelineScrollableRows>
+                    <TimelineScrollableRows>
+                        {parsedRows.map((row, i) => (
+                            <RowContext.Provider
+                                key={i}
+                                value={{
+                                    periods: row.periods,
+                                }}
+                            >
+                                <TimelineRow label={row.label} />
+                            </RowContext.Provider>
+                        ))}
+                    </TimelineScrollableRows>
                 </HStack>
             </VStack>
         </TimelineContext.Provider>

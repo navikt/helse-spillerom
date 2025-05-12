@@ -1,12 +1,14 @@
 import React, { PropsWithChildren, ReactElement, useRef, useState } from 'react'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import { Popover } from '@navikt/ds-react'
 import { PopoverContent } from '@navikt/ds-react/Popover'
 
 import { Maybe } from '@utils/tsUtils'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 import { cn } from '@utils/tw'
-import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeline/index'
+import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeline'
+import { useRowContext } from '@components/tidslinje/timeline/row/context'
+import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
@@ -15,22 +17,21 @@ export interface TimelinePeriodProps extends PropsWithChildren {
     nextPeriodFom?: Maybe<string>
 }
 
-export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = ({
-    startDate,
-    endDate,
-    prevPeriodTom,
-    nextPeriodFom,
-    children,
-}: TimelinePeriodProps): ReactElement => {
+export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
+    const buttonRef = useRef<HTMLButtonElement>(null)
     const { onMouseOver, onMouseOut, ...popoverProps } = usePopoverAnchor()
     const { dayLength, startDate: timelineStart } = useTimelineContext()
-    const buttonRef = useRef<HTMLButtonElement>(null)
+    const { periods } = useRowContext()
+    const { periodId } = usePeriodContext()
+
+    const period = periods.find((p) => p.id === periodId)
+    if (!period) return <></>
+    const { startDate, endDate, cropLeft, cropRight, children } = period
+
+    // TODO ordne bredde og plassering et annet sted
     const width = getNumberOfDays(startDate, endDate) * dayLength
     const daysFromStart = startDate.diff(timelineStart, 'day')
     const placement = daysFromStart * dayLength
-
-    const cropLeft = nextPeriodFom && dayjs(endDate).add(1, 'day').isSame(nextPeriodFom, 'day')
-    const cropRight = prevPeriodTom && dayjs(prevPeriodTom).add(1, 'day').isSame(startDate, 'day')
 
     return (
         <>

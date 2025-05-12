@@ -1,14 +1,16 @@
 import dayjs, { Dayjs } from 'dayjs'
 import React, { ReactElement, ReactNode, useMemo } from 'react'
 
-import { TimelineRowProps } from '@components/tidslinje/timeline/TimelineRow'
-import { TimelinePeriodProps } from '@components/tidslinje/timeline/TimelinePeriod'
+import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
+import { TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
 
 export interface ComponentWithType<P = unknown> extends React.FC<P> {
     componentType: string
 }
 
 type Period = {
+    id: string
+    children: ReactNode
     startDate: Dayjs
     endDate: Dayjs
     cropLeft: boolean
@@ -41,29 +43,31 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
     return { rowLabels, earliestDate, latestDate, parsedRows }
 }
 
-type ParsedRow = {
+export type ParsedRow = {
     label: string
     periods: Period[]
 }
 
 export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
     const parsedRow: ParsedRow[] = []
-    rows.forEach((row) => {
+    rows.forEach((row, rowIndex) => {
         const periods: ParsedRow['periods'] = []
         const periodChildren: ReactElement<TimelinePeriodProps>[] = React.Children.toArray(row.props.children).filter(
             (child: ReactNode) =>
                 React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelinePeriod',
         ) as ReactElement<TimelinePeriodProps>[]
 
-        periodChildren.forEach((period, i) => {
+        periodChildren.forEach((period, periodIndex) => {
             const startDate = period.props.startDate
             const endDate = period.props.endDate
-            const prevPeriodEndDate = periodChildren[i - 1]?.props.endDate
-            const nextPeriodStartDate = periodChildren[i + 1]?.props.startDate
+            const prevPeriodEndDate = periodChildren[periodIndex - 1]?.props.endDate
+            const nextPeriodStartDate = periodChildren[periodIndex + 1]?.props.startDate
             const cropLeft = !!nextPeriodStartDate && dayjs(endDate).add(1, 'day').isSame(nextPeriodStartDate, 'day')
             const cropRight = !!prevPeriodEndDate && dayjs(prevPeriodEndDate).add(1, 'day').isSame(startDate, 'day')
 
             periods.push({
+                id: `r-${rowIndex}-p-${periodIndex}`,
+                children: period.props.children,
                 startDate,
                 endDate,
                 cropLeft,

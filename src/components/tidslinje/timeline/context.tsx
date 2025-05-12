@@ -19,7 +19,7 @@ export const TimelineContext = createContext<Maybe<TimelineContextType>>(null)
 export function useTimelineContext(): TimelineContextType {
     const context = useContext(TimelineContext)
     if (!context) {
-        throw new Error('useTastatursnarveierContext must be used within a TastatursnarveierProvider')
+        throw new Error('useTimelineContext must be used within a TimelineContext.Provider')
     }
     return context
 }

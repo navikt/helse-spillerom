@@ -7,8 +7,8 @@ import dayjs from 'dayjs'
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
-import { TimelinePeriod } from '@components/tidslinje/timeline/TimelinePeriod'
-import { TimelineRow } from '@components/tidslinje/timeline/TimelineRow'
+import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
+import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 
 export function Tidslinje(): ReactElement {
@@ -30,13 +30,7 @@ export function Tidslinje(): ReactElement {
             {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
                 <TimelineRow key={i} label={label}>
                     {søknader.map((søknad, i) => (
-                        <TimelinePeriod
-                            key={i}
-                            startDate={dayjs(søknad.fom!)}
-                            endDate={dayjs(søknad.tom!)}
-                            prevPeriodTom={søknader[i - 1]?.tom}
-                            nextPeriodFom={søknader[i + 1]?.fom}
-                        >
+                        <TimelinePeriod key={i} startDate={dayjs(søknad.fom!)} endDate={dayjs(søknad.tom!)}>
                             <BodyShort size="small">{søknad.arbeidssituasjon}</BodyShort>
                             <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
                             <BodyShort size="small">
