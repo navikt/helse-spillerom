@@ -3,6 +3,7 @@
 import { ReactElement, useState } from 'react'
 import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Select, useDatepicker } from '@navikt/ds-react'
 import dayjs from 'dayjs'
+import { useParams, useRouter } from 'next/navigation'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -14,6 +15,9 @@ interface StartBehandlingProps {
 }
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
+    const router = useRouter()
+    const params = useParams()
+
     const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
     const { data: søknader, isError } = useSoknader(validFromDate)
     const { datepickerProps, inputProps } = useDatepicker({
@@ -78,7 +82,14 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     </option>
                 ))}
             </Select>
-            <Button size="small">Start behandling</Button>
+            <Button
+                size="small"
+                onClick={() => {
+                    router.push('/person/' + params.personId + '/1234567')
+                }}
+            >
+                Start behandling
+            </Button>
         </SaksbildePanel>
     )
 }
