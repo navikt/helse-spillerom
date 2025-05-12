@@ -63,15 +63,22 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
 
         if (!minFom || !maxTom) return
 
-        opprettSaksbehandlingsperiode({
-            request: {
-                fom: minFom,
-                tom: maxTom,
+        opprettSaksbehandlingsperiode(
+            {
+                request: {
+                    fom: minFom,
+                    tom: maxTom,
+                },
+                callback: (periode) => {
+                    router.push(`/person/${params.personId}/${periode.id}`)
+                },
             },
-            callback: (periode) => {
-                router.push(`/person/${params.personId}/${periode.id}`)
+            {
+                onSuccess: () => {
+                    // Navigasjon skjer i callback
+                },
             },
-        })
+        )
     }
 
     return (

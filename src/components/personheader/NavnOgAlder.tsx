@@ -13,8 +13,8 @@ export function NavnOgAlder({ navn, alder }: NavnOgAlderProps): ReactElement {
 
     return (
         <HStack gap="1" align="center">
-            <BodyShort 
-                weight="semibold" 
+            <BodyShort
+                weight="semibold"
                 className="cursor-pointer hover:underline"
                 onClick={() => router.push(`/person/${params.personId}`)}
             >

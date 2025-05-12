@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
@@ -15,6 +15,7 @@ interface MutationProps {
 
 export function useOpprettSaksbehandlingsperiode() {
     const params = useParams()
+    const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ request }) =>
@@ -23,6 +24,9 @@ export function useOpprettSaksbehandlingsperiode() {
                 saksbehandlingsperiodeSchema,
                 request,
             ),
-        onSuccess: (periode, r) => r.callback(periode),
+        onSuccess: async (periode, r) => {
+            await queryClient.refetchQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
+            r.callback(periode)
+        },
     })
 }
