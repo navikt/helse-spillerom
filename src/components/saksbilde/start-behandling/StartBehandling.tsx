@@ -9,6 +9,7 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
+import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
 
 interface StartBehandlingProps {
     value: string
@@ -19,7 +20,11 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const params = useParams()
 
     const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
+    const [selectedSøknader, setSelectedSøknader] = useState<string[]>([])
+    const [arbeidssituasjon, setArbeidssituasjon] = useState<string>('')
     const { data: søknader, isError } = useSoknader(validFromDate)
+    const { mutate: opprettSaksbehandlingsperiode } = useOpprettSaksbehandlingsperiode()
+
     const { datepickerProps, inputProps } = useDatepicker({
         onDateChange: (d) => {
             const parsedDate = dayjs(d)
@@ -29,6 +34,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         },
         defaultSelected: validFromDate.toDate(),
     })
+
     if (isError) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader?.reduce((acc: Record<string, Søknad[]>, soknad) => {
@@ -38,58 +44,106 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         acc[key].push(soknad)
         return acc
     }, {})
-    //TODO form
+
+    const handleSubmit = () => {
+        if (selectedSøknader.length === 0 || !arbeidssituasjon) return
+
+        const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
+        if (valgteSøknader.length === 0) return
+
+        const minFom = valgteSøknader.reduce((min, søknad) => {
+            if (!søknad.fom) return min
+            return !min || dayjs(søknad.fom).isBefore(dayjs(min)) ? søknad.fom : min
+        }, '')
+
+        const maxTom = valgteSøknader.reduce((max, søknad) => {
+            if (!søknad.tom) return max
+            return !max || dayjs(søknad.tom).isAfter(dayjs(max)) ? søknad.tom : max
+        }, '')
+
+        if (!minFom || !maxTom) return
+
+        opprettSaksbehandlingsperiode({
+            request: {
+                fom: minFom,
+                tom: maxTom,
+            },
+            callback: (periode) => {
+                router.push(`/person/${params.personId}/${periode.id}`)
+            },
+        })
+    }
 
     return (
         <SaksbildePanel value={value}>
-            <div className="mb-8">
-                <DatePicker {...datepickerProps}>
-                    <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
-                </DatePicker>
-            </div>
-            <Label spacing>Velg hvilken søknad som skal behandles</Label>
-            {søknaderGruppert &&
-                Object.entries(søknaderGruppert).map(([key, gruppe]) => (
-                    <div key={key} className="mt-4">
-                        <CheckboxGroup legend={key}>
-                            {gruppe.map((søknad, j) => (
-                                <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Checkbox value={søknad.id}>
-                                        {getFormattedDateString(søknad.fom) +
-                                            ' - ' +
-                                            getFormattedDateString(søknad.tom)}
-                                    </Checkbox>
-                                    <Button
-                                        as="a"
-                                        href="#" // TODO: Bytt til faktisk søknadslenke
-                                        variant="tertiary"
-                                        size="small"
-                                    >
-                                        Se søknad
-                                    </Button>
-                                </div>
-                            ))}
-                        </CheckboxGroup>
-                    </div>
-                ))}
-            <Button variant="tertiary" size="small" className="mt-2 mb-6" type="button">
-                Legg inn søknadsperiode manuelt
-            </Button>
-            <Select label="Hvilken inntektskategori tilhører søkeren?" className="my-8">
-                {arbeidssituasjoner.map((situasjon) => (
-                    <option key={situasjon} value={situasjon}>
-                        {situasjon}
-                    </option>
-                ))}
-            </Select>
-            <Button
-                size="small"
-                onClick={() => {
-                    router.push('/person/' + params.personId + '/1234567')
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSubmit()
                 }}
             >
-                Start behandling
-            </Button>
+                <div className="mb-8">
+                    <DatePicker {...datepickerProps}>
+                        <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
+                    </DatePicker>
+                </div>
+                <Label spacing>Velg hvilken søknad som skal behandles</Label>
+                {søknaderGruppert &&
+                    Object.entries(søknaderGruppert).map(([key, gruppe]) => (
+                        <div key={key} className="mt-4">
+                            <CheckboxGroup legend={key}>
+                                {gruppe.map((søknad, j) => (
+                                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                        <Checkbox
+                                            value={søknad.id}
+                                            checked={selectedSøknader.includes(søknad.id)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    setSelectedSøknader([...selectedSøknader, søknad.id])
+                                                } else {
+                                                    setSelectedSøknader(
+                                                        selectedSøknader.filter((id) => id !== søknad.id),
+                                                    )
+                                                }
+                                            }}
+                                        >
+                                            {getFormattedDateString(søknad.fom) +
+                                                ' - ' +
+                                                getFormattedDateString(søknad.tom)}
+                                        </Checkbox>
+                                        <Button
+                                            as="a"
+                                            href="#" // TODO: Bytt til faktisk søknadslenke
+                                            variant="tertiary"
+                                            size="small"
+                                        >
+                                            Se søknad
+                                        </Button>
+                                    </div>
+                                ))}
+                            </CheckboxGroup>
+                        </div>
+                    ))}
+                <Button variant="tertiary" size="small" className="mt-2 mb-6" type="button">
+                    Legg inn søknadsperiode manuelt
+                </Button>
+                <Select
+                    label="Hvilken inntektskategori tilhører søkeren?"
+                    className="my-8"
+                    value={arbeidssituasjon}
+                    onChange={(e) => setArbeidssituasjon(e.target.value)}
+                >
+                    <option value="">Velg inntektskategori</option>
+                    {arbeidssituasjoner.map((situasjon) => (
+                        <option key={situasjon} value={situasjon}>
+                            {situasjon}
+                        </option>
+                    ))}
+                </Select>
+                <Button size="small" type="submit" disabled={selectedSøknader.length === 0 || !arbeidssituasjon}>
+                    Start behandling
+                </Button>
+            </form>
         </SaksbildePanel>
     )
 }

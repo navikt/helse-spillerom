@@ -6,11 +6,13 @@ import dayjs, { Dayjs } from 'dayjs'
 
 import { Personinfo } from '@/schemas/personinfo'
 import { testpersoner } from '@/mock-api/testpersoner/testpersoner'
+import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 
 export interface Person {
     fnr: string
     personId: string
     personinfo: Personinfo
+    saksbehandlingsperioder: Saksbehandlingsperiode[]
 }
 
 type Session = {
@@ -46,16 +48,19 @@ export async function getSession(): Promise<Session> {
     const sessionId = getSessionId()
 
     if (!sessionStore[sessionId] || sessionStore[sessionId].expires.isBefore(dayjs())) {
-        const personer = testpersoner.map((p) => ({
-            fnr: p.personinfo.fødselsnummer,
-            personId: p.personId,
-            personinfo: {
-                fødselsnummer: p.personinfo.fødselsnummer,
-                aktørId: p.personinfo.aktørId,
-                navn: p.personinfo.navn,
-                alder: p.personinfo.alder,
-            },
-        }))
+        const personer = testpersoner.map(
+            (p): Person => ({
+                fnr: p.personinfo.fødselsnummer,
+                personId: p.personId,
+                personinfo: {
+                    fødselsnummer: p.personinfo.fødselsnummer,
+                    aktørId: p.personinfo.aktørId,
+                    navn: p.personinfo.navn,
+                    alder: p.personinfo.alder,
+                },
+                saksbehandlingsperioder: [],
+            }),
+        )
 
         sessionStore[sessionId] = {
             expires: dayjs().add(1, 'hour'),
@@ -82,6 +87,7 @@ function skapPerson(fnr: string): Person {
             navn: faker.person.firstName() + ' ' + faker.person.lastName(),
             alder: faker.number.int({ min: 14, max: 80 }),
         },
+        saksbehandlingsperioder: [],
     }
 }
 
