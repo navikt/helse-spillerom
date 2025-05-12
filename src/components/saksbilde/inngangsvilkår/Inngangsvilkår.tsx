@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Accordion, BodyShort, Button, Heading, Radio, RadioGroup, Textarea } from '@navikt/ds-react'
+import { Accordion, Button, Heading, Radio, RadioGroup, Textarea } from '@navikt/ds-react'
 import { CheckmarkCircleFillIcon, XMarkOctagonFillIcon, ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
@@ -123,14 +123,9 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                     <Radio value="uavklart">Uavklart</Radio>
                                 </RadioGroup>
                                 <div className="mt-6">
-                                    <BodyShort as="label" htmlFor={`notat-${v.id}`} className="mb-2 block">
-                                        Notat til beslutter
-                                    </BodyShort>
-                                    <BodyShort className="mb-2 text-text-subtle">
-                                        Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn.
-                                    </BodyShort>
                                     <Textarea
-                                        label="Notat"
+                                        label="Notat til beslutter"
+                                        description="Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn."
                                         id={`notat-${v.id}`}
                                         value={vilkår[v.id].notat}
                                         onChange={(e) => handleNotat(v.id, e.target.value)}
