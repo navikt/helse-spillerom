@@ -13,8 +13,6 @@ import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
     endDate: Dayjs
-    prevPeriodTom?: Maybe<string>
-    nextPeriodFom?: Maybe<string>
 }
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
