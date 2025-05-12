@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker/locale/nb_NO'
 import dayjs, { Dayjs } from 'dayjs'
 
 import { Personinfo } from '@/schemas/personinfo'
+import { testpersoner } from '@/mock-api/testpersoner/testpersoner'
 
 export interface Person {
     fnr: string
@@ -45,6 +46,17 @@ export async function getSession(): Promise<Session> {
     const sessionId = getSessionId()
 
     if (!sessionStore[sessionId] || sessionStore[sessionId].expires.isBefore(dayjs())) {
+        const personer = testpersoner.map((p) => ({
+            fnr: p.personinfo.fødselsnummer,
+            personId: p.personId,
+            personinfo: {
+                fødselsnummer: p.personinfo.fødselsnummer,
+                aktørId: p.personinfo.aktørId,
+                navn: p.personinfo.navn,
+                alder: p.personinfo.alder,
+            },
+        }))
+
         sessionStore[sessionId] = {
             expires: dayjs().add(1, 'hour'),
             testpersoner: [
@@ -58,6 +70,7 @@ export async function getSession(): Promise<Session> {
                         alder: 47,
                     },
                 },
+                ...personer,
                 skapPerson('12345678902'),
                 skapPerson('12345678903'),
                 skapPerson('33423422323'),
