@@ -5,6 +5,7 @@ export const allowedAPIs = [
     'POST /v1/personsok',
     'GET /v1/[personId]/saksbehandlingsperioder',
     'POST /v1/[personId]/saksbehandlingsperioder',
+    'GET /v1/[personId]/arbeidsforhold',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
