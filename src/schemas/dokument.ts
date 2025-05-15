@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
-export const dokumenttypeSchema = z.enum(['SØKNAD', 'INNTEKTSMELDING', 'SYKMELDING'])
+export const dokumenttypeSchema = z.enum(['SØKNAD', 'INNTEKTSMELDING', 'SYKMELDING', 'AAREG'])
 
 export type Dokument = z.infer<typeof dokumentSchema>
 export const dokumentSchema = z.object({

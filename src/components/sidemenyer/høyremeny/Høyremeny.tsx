@@ -1,16 +1,20 @@
 import { ReactElement } from 'react'
-import { Heading } from '@navikt/ds-react'
+import { Heading, VStack } from '@navikt/ds-react'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/Dokumenter'
+import { AaregKnapp } from '@components/sidemenyer/høyremeny/AaregKnapp'
 
 export function Høyremeny(): ReactElement {
     return (
         <Sidemeny side="right">
-            <Heading level="1" size="xsmall" className="mb-4 font-medium text-gray-600">
-                Dokumenter
-            </Heading>
-            <Dokumenter />
+            <VStack gap="4">
+                <Heading level="1" size="xsmall" className="font-medium text-gray-600">
+                    Dokumenter
+                </Heading>
+                <Dokumenter />
+                <AaregKnapp />
+            </VStack>
         </Sidemeny>
     )
 }

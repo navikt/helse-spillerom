@@ -27,6 +27,7 @@ const dokumentVisningstekst: Record<Dokumenttype, string> = {
     SØKNAD: 'Søknad mottatt',
     INNTEKTSMELDING: 'Inntektsmelding mottatt',
     SYKMELDING: 'Sykmelding mottatt',
+    AAREG: 'Aa-reg',
 }
 
 export function DokumentSkeleton(): ReactElement {

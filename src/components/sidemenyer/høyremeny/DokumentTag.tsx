@@ -17,6 +17,7 @@ const dokumentTag: Record<Dokumenttype, ComponentType> = {
     SØKNAD: SøknadTag,
     INNTEKTSMELDING: InntektsmeldingTag,
     SYKMELDING: SykmeldingTag,
+    AAREG: AaregTag,
 }
 
 function SøknadTag(): ReactElement {
@@ -33,6 +34,10 @@ function InntektsmeldingTag(): ReactElement {
 
 function SykmeldingTag(): ReactElement {
     return <ExtendedTag variant="info">SM</ExtendedTag>
+}
+
+function AaregTag(): ReactElement {
+    return <ExtendedTag variant="neutral">AA</ExtendedTag>
 }
 
 interface ExtendedTagProps extends ComponentPropsWithoutRef<'div'> {
