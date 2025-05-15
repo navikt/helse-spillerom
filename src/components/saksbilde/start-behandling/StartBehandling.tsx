@@ -95,6 +95,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     </DatePicker>
                 </div>
                 <Label spacing>Velg hvilken søknad som skal behandles</Label>
+                {søknader?.length === 0 && <div>Ingen søknader etter valgt dato</div>}
                 {søknaderGruppert &&
                     Object.entries(søknaderGruppert).map(([key, gruppe]) => (
                         <div key={key} className="mt-4">

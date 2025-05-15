@@ -41,7 +41,6 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                         'rounded-r-none': cropRight,
                     },
                 )}
-                aria-label="TODO"
                 style={{ right: placement, width }}
                 ref={buttonRef}
                 onMouseOver={onMouseOver}

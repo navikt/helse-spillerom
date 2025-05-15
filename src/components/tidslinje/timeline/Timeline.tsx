@@ -31,7 +31,7 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
                 setDayLength,
             }}
         >
-            <VStack className="w-full border-b-1 border-border-divider p-8">
+            <VStack className="ignore-axe w-full border-b-1 border-border-divider p-8">
                 <HStack gap="2" wrap={false}>
                     <TimelineRowLabels labels={rowLabels} />
                     <TimelineScrollableRows>

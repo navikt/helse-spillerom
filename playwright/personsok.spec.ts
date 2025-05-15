@@ -46,4 +46,26 @@ test.describe('Førstesiden', () => {
         const navn = header.getByText('Kalle Kranfører')
         await expect(navn).toBeVisible()
     })
+
+    test('Kan søke opp person uten søknader', async ({ page }) => {
+        await søkPerson(page, '12345678902')
+
+        // Vent på at vi kommer til person-siden
+        await page.waitForURL('**/person/*')
+
+        // Sjekk at vi kommer til person-siden
+        const header = page.getByRole('main')
+        await expect(header).toBeVisible()
+
+        const navn = header.getByText('Martin Hansen')
+        await expect(navn).toBeVisible()
+
+        // Klikk på "Start behandling" knappen
+        const startBehandlingButton = page.getByRole('button', { name: 'Start ny behandling' })
+        await startBehandlingButton.click()
+
+        // Sjekk at "Ingen søknader" vises
+        const ingenSoknader = page.getByText('Ingen søknader etter valgt dato')
+        await expect(ingenSoknader).toBeVisible()
+    })
 })
