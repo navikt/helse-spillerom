@@ -37,8 +37,8 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
     const rowLabels = parsedRows.map((row) => row.label)
     const allPeriods = parsedRows.map((row) => row.periods).flat()
 
-    const earliestDate = useEarliestDate(allPeriods)
-    const latestDate = useLatestDate(allPeriods)
+    const earliestDate = useEarliestDate(allPeriods) ?? dayjs().subtract(1, 'year')
+    const latestDate = useLatestDate(allPeriods) ?? dayjs().add(1, 'month')
 
     return { rowLabels, earliestDate, latestDate, parsedRows }
 }
@@ -86,20 +86,24 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
 
 export const getNumberOfDays = (start: Dayjs, end: Dayjs): number => end.diff(start, 'day') + 1
 
-function useEarliestDate(periods: ParsedRow['periods']): Dayjs {
+function useEarliestDate(periods: ParsedRow['periods']): Dayjs | undefined {
     return useMemo(() => {
-        return periods
-            .filter((period) => period.startDate)
-            .map((period) => period.startDate)
-            .reduce((earliestDate, currentDate) => (currentDate.isBefore(earliestDate) ? currentDate : earliestDate))
+        const dates = periods.filter((period) => period.startDate).map((period) => period.startDate)
+
+        if (dates.length === 0) return undefined
+
+        return dates.reduce((earliestDate, currentDate) =>
+            currentDate.isBefore(earliestDate) ? currentDate : earliestDate,
+        )
     }, [periods])
 }
 
-function useLatestDate(periods: ParsedRow['periods']): Dayjs {
+function useLatestDate(periods: ParsedRow['periods']): Dayjs | undefined {
     return useMemo(() => {
-        return periods
-            .filter((period) => period.endDate)
-            .map((period) => period.endDate)
-            .reduce((latestDate, currentDate) => (currentDate.isAfter(latestDate) ? currentDate : latestDate))
+        const dates = periods.filter((period) => period.endDate).map((period) => period.endDate)
+
+        if (dates.length === 0) return undefined
+
+        return dates.reduce((latestDate, currentDate) => (currentDate.isAfter(latestDate) ? currentDate : latestDate))
     }, [periods])
 }
