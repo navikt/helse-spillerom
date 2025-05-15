@@ -157,6 +157,16 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
 
     const totalVilkårCount = vilkårData.length
 
+    const getOpptjeningstidStatus = (): Vurdering => {
+        if (!opptjeningstidValg) return undefined
+        if (opptjeningstidValg === 'uavklart') return 'uavklart'
+        if (!opptjeningstidSubvalg) return undefined
+        if (opptjeningstidValg === 'ja') return 'oppfylt'
+        if (opptjeningstidValg === 'nei') return 'ikke_oppfylt'
+        if (opptjeningstidValg === 'unntak') return 'oppfylt'
+        return undefined
+    }
+
     return (
         <SaksbildePanel value={value}>
             <Heading level="2" size="medium" className="mb-8">
@@ -172,7 +182,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                 >
                     <Accordion.Header>
                         <span className="flex items-center gap-4 text-lg font-semibold">
-                            {statusIcon(vilkår['opptjeningstid'].vurdering)}§ 8-2 Opptjeningstid
+                            {statusIcon(getOpptjeningstidStatus())}§ 8-2 Opptjeningstid
                         </span>
                     </Accordion.Header>
                     <Accordion.Content>
@@ -241,7 +251,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                             </Radio>
                                             <Radio value="verneplikt">
                                                 Et medlem som har utført militærtjeneste, har rett til sykepenger ved
-                                                arbeidsuførhet uten hensyn til vilkårene i §§ 8-2 og 8-3 dersom
+                                                arbeidsuførhet uten hensyn til vilkårene i §§ 8-2 og 8-3 dersom
                                                 arbeidsuførheten oppstår under tjenesten
                                             </Radio>
                                         </RadioGroup>
