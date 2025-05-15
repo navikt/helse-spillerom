@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState, Fragment } from 'react'
 import { Button, Modal, Table, BodyShort, Detail, HStack, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
@@ -56,7 +56,7 @@ export function AaregKnapp(): ReactElement {
                             </Table.Header>
                             <Table.Body>
                                 {arbeidsforhold.map((forhold) => (
-                                    <>
+                                    <Fragment key={forhold.id}>
                                         <Table.Row
                                             key={forhold.id}
                                             className={cn(
@@ -160,7 +160,7 @@ export function AaregKnapp(): ReactElement {
                                                 </Table.DataCell>
                                             </Table.Row>
                                         )}
-                                    </>
+                                    </Fragment>
                                 ))}
                             </Table.Body>
                         </Table>
