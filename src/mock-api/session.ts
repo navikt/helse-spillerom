@@ -27,14 +27,15 @@ export async function getSession(): Promise<Session> {
     const cookieStore = await cookies()
 
     function getSessionId(): string {
-        const sessionIdCookie = cookieStore.get('mock-session')?.value
+        const cookieName = 'spillerom-testdata-session'
+        const sessionIdCookie = cookieStore.get(cookieName)?.value
 
         if (sessionIdCookie) {
             return sessionIdCookie
         }
         const sessionId = uuidv4()
 
-        cookieStore.set('mock-session', sessionId, {
+        cookieStore.set(cookieName, sessionId, {
             httpOnly: false,
             path: '/',
             expires: new Date(Date.now() + 60 * 60 * 1000),

@@ -15,7 +15,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
             <DokumentTag type={dokument.type} />
             <VStack>
                 <BodyShort className="font-bold">{dokumentVisningstekst[dokument.type]}</BodyShort>
-                <BodyShort className="text-medium text-gray-500">
+                <BodyShort className="text-medium text-gray-600">
                     {getFormattedDatetimeString(dokument.sendtTilNAVTidsunkt)}
                 </BodyShort>
             </VStack>

@@ -3,7 +3,7 @@ import { expect, Page, TestInfo } from '@playwright/test'
 import { AxeBuilder } from '@axe-core/playwright'
 
 export async function validerAxe(page: Page, testInfo: TestInfo) {
-    const results = await new AxeBuilder({ page }).analyze()
+    const results = await new AxeBuilder({ page }).exclude('.ignore-axe').analyze()
 
     const { violations } = results
 

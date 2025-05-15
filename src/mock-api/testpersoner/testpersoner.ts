@@ -9,7 +9,7 @@ export interface Testperson {
     soknader: Søknad[]
 }
 
-export const testpersoner: Testperson[] = [Mattis, Kalle]
+export const testpersoner: Testperson[] = [Kalle, Mattis]
 
 export function finnPerson(personId: string) {
     return testpersoner.find((p) => p.personId === personId)

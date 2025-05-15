@@ -7,7 +7,7 @@ import { Dokumenter } from '@components/sidemenyer/høyremeny/Dokumenter'
 export function Høyremeny(): ReactElement {
     return (
         <Sidemeny side="right">
-            <Heading level="1" size="xsmall" className="mb-4 font-medium text-gray-500">
+            <Heading level="1" size="xsmall" className="mb-4 font-medium text-gray-600">
                 Dokumenter
             </Heading>
             <Dokumenter />
