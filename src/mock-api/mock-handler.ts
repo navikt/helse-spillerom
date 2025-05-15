@@ -8,6 +8,7 @@ import { Søknad } from '@/schemas/søknad'
 import { hentPerson } from '@/mock-api/session'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
+import { mockArbeidsforhold } from '@/mock-api/aareg'
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
@@ -78,6 +79,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                     sendtTilNAVTidsunkt: '2025-01-01T07:30:00',
                 },
             ])
+        case 'GET /v1/[personId]/arbeidsforhold':
+            return NextResponse.json(mockArbeidsforhold)
         case 'POST /v1/personsok':
             return personsøk(request)
         default:

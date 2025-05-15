@@ -24,7 +24,8 @@
             "@components/*": ["./src/components/*"],
             "@hooks/*": ["./src/hooks/*"],
             "@typer/*": ["./src/types/*"],
-            "@utils/*": ["./src/utils/*"]
+            "@utils/*": ["./src/utils/*"],
+            "@schemas/*": ["./src/schemas/*"]
         }
     },
     "include": ["src", ".next/types/**/*.ts"],
