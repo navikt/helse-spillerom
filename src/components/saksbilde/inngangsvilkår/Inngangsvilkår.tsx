@@ -91,20 +91,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
             </Heading>
             <Accordion className="max-w-2xl" indent={false}>
                 {vilkårData.map((v) => (
-                    <Accordion.Item
-                        key={v.id}
-                        open={vilkår[v.id].open}
-                        onOpenChange={(open) => handleOpen(v.id, open)}
-                        className={
-                            vilkår[v.id].vurdering === 'oppfylt'
-                                ? 'border-success bg-surface-success-subtle'
-                                : vilkår[v.id].vurdering === 'ikke_oppfylt'
-                                  ? 'border-danger bg-surface-danger-subtle'
-                                  : vilkår[v.id].vurdering === 'uavklart'
-                                    ? 'border-warning bg-surface-warning-subtle'
-                                    : ''
-                        }
-                    >
+                    <Accordion.Item key={v.id} open={vilkår[v.id].open} onOpenChange={(open) => handleOpen(v.id, open)}>
                         <Accordion.Header>
                             <span className="flex items-center gap-4 text-lg font-semibold">
                                 {statusIcon(vilkår[v.id].vurdering)}
