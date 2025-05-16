@@ -24,6 +24,8 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const { data: søknader, isError } = useSoknader(validFromDate)
     const { mutate: opprettSaksbehandlingsperiode } = useOpprettSaksbehandlingsperiode()
 
+    const [errorTekst, setErrorTekst] = useState<string | undefined>(undefined)
+
     const { datepickerProps, inputProps } = useDatepicker({
         onDateChange: (d) => {
             const parsedDate = dayjs(d)
@@ -45,7 +47,11 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     }, {})
 
     const handleSubmit = () => {
-        if (selectedSøknader.length === 0) return
+        setErrorTekst(undefined)
+        if (selectedSøknader.length === 0) {
+            setErrorTekst('Ingen søknader valgt')
+            return
+        }
 
         const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
         if (valgteSøknader.length === 0) return
@@ -98,7 +104,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 {søknaderGruppert &&
                     Object.entries(søknaderGruppert).map(([key, gruppe]) => (
                         <div key={key} className="mt-4">
-                            <CheckboxGroup legend={key}>
+                            <CheckboxGroup legend={key} error={errorTekst}>
                                 {gruppe.map((søknad, j) => (
                                     <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                         <Checkbox
@@ -132,9 +138,9 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                         </div>
                     ))}
                 <Button variant="tertiary" size="small" className="mt-4 mb-6" type="button">
-                    Legg inn søknadsperiode manuelt
+                    Velg saksbehandlingsperiode manuelt
                 </Button>
-                <Button className="block" size="small" type="submit" disabled={selectedSøknader.length === 0}>
+                <Button className="block" size="small" type="submit">
                     Start behandling
                 </Button>
             </form>
