@@ -17,6 +17,7 @@ export function Tidslinje(): ReactElement {
 
     if (isLoading) return <TimelineSkeleton />
     if (isError || !søknader) return <></> // vis noe fornuftig
+    if (søknader.length === 0) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
         const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
