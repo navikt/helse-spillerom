@@ -10,6 +10,8 @@ import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
 
+import { ainntektData } from './ainntekt'
+
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
     const personIdFraRequest = request.url.split('/').slice(-2)[0]
@@ -81,6 +83,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             ])
         case 'GET /v1/[personId]/arbeidsforhold':
             return NextResponse.json(mockArbeidsforhold)
+        case 'GET /v1/[personId]/ainntekt':
+            return NextResponse.json(ainntektData)
         case 'POST /v1/personsok':
             return personsøk(request)
         default:
