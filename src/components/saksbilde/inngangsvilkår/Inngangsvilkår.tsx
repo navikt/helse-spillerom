@@ -245,7 +245,9 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                             <Radio value="verneplikt">
                                                 Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten
                                             </Radio>
-                                            <Radio value="yrkessakde">Arbeidsufør på grunn av en yrkesskade</Radio>
+                                            <Radio value="yrkessakde">
+                                                Arbeidsufør på grunn av en godkjent yrkesskade
+                                            </Radio>
                                         </RadioGroup>
                                     </div>
                                 )}
