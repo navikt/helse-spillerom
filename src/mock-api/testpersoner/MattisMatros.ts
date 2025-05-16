@@ -37,4 +37,15 @@ export const Mattis: Testperson = {
             ],
         },
     ],
+    saksbehandlingsperioder: [
+        {
+            id: 'c81515ce-b803-4043-aa77-38d0aca9c4d6',
+            spilleromPersonId: 'jf74h',
+            opprettet: '2025-03-01T10:00:00Z',
+            opprettetAvNavIdent: 'Z123456',
+            opprettetAvNavn: 'Test Testesen',
+            fom: '2025-03-01',
+            tom: '2025-03-31',
+        },
+    ],
 }

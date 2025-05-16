@@ -59,7 +59,7 @@ export async function getSession(): Promise<Session> {
                     navn: p.personinfo.navn,
                     alder: p.personinfo.alder,
                 },
-                saksbehandlingsperioder: [],
+                saksbehandlingsperioder: [...p.saksbehandlingsperioder],
             }),
         )
 

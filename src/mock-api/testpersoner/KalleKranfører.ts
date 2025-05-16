@@ -199,4 +199,15 @@ export const Kalle: Testperson = {
             ],
         },
     ],
+    saksbehandlingsperioder: [
+        {
+            id: 'fd8b0600-a589-4249-acbf-d746be738a93',
+            spilleromPersonId: '8j4ns',
+            opprettet: '2024-08-02T10:00:00Z',
+            opprettetAvNavIdent: 'Z123456',
+            opprettetAvNavn: 'Test Testesen',
+            fom: '2024-08-02',
+            tom: '2024-08-09',
+        },
+    ],
 }
