@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Modal } from '@navikt/ds-react'
+import { Button, Modal, Table } from '@navikt/ds-react'
 
 import { useAinntekt } from '@hooks/queries/useAinntekt'
 
@@ -21,7 +21,30 @@ export function AinntektKnapp(): ReactElement {
                     ) : !ainntekt ? (
                         <div>Ingen A-inntekt funnet</div>
                     ) : (
-                        <pre className="whitespace-pre-wrap">{JSON.stringify(ainntekt, null, 2)}</pre>
+                        <Table>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Måned</Table.HeaderCell>
+                                    <Table.HeaderCell>Type</Table.HeaderCell>
+                                    <Table.HeaderCell>Beløp</Table.HeaderCell>
+                                    <Table.HeaderCell>Beskrivelse</Table.HeaderCell>
+                                    <Table.HeaderCell>Status</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {ainntekt.arbeidsInntektMaaned.map((maaned) =>
+                                    maaned.arbeidsInntektInformasjon.inntektListe.map((inntekt, index) => (
+                                        <Table.Row key={`${maaned.aarMaaned}-${index}`}>
+                                            <Table.DataCell>{maaned.aarMaaned}</Table.DataCell>
+                                            <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
+                                            <Table.DataCell>{inntekt.beloep.toLocaleString('nb-NO')} kr</Table.DataCell>
+                                            <Table.DataCell>{inntekt.beskrivelse}</Table.DataCell>
+                                            <Table.DataCell>{inntekt.inntektsstatus}</Table.DataCell>
+                                        </Table.Row>
+                                    )),
+                                )}
+                            </Table.Body>
+                        </Table>
                     )}
                 </Modal.Body>
             </Modal>
