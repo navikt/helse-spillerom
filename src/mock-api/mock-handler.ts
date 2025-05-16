@@ -39,7 +39,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         case 'POST /v1/[personId]/saksbehandlingsperioder':
             const body = await request.json()
-            const nyPeriode: Saksbehandlingsperiode = {
+            const nyPeriode = {
                 id: uuidv4(),
                 spilleromPersonId: personIdFraRequest,
                 opprettet: new Date().toISOString(),
