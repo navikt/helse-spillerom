@@ -199,16 +199,16 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                 {opptjeningstidValg === 'ja' && (
                                     <div className="my-4 ml-10">
                                         <RadioGroup
-                                            legend="Velg regel for ja"
+                                            legend="Velg årsak"
                                             value={opptjeningstidSubvalg ?? ''}
                                             onChange={setOpptjeningstidSubvalg}
                                         >
                                             <Radio value="hovedregel">
-                                                Hovedregel: Må ha arbeidet i 28 dager før arbeidsuførhet inntreffer
+                                                Har arbeidet i 28 dager før arbeidsuførhet inntreffer
                                             </Radio>
                                             <Radio value="aap">
-                                                Unntak fra 8-2.1 ved mottatt dagpenger, omsorgspenger, pleiepenger,
-                                                opplæringspenger, svangerskapspenger eller foreldrepenger
+                                                Har mottatt dagpenger, omsorgspenger, pleiepenger, opplæringspenger,
+                                                svangerskapspenger eller foreldrepenger
                                             </Radio>
                                         </RadioGroup>
                                     </div>
@@ -217,25 +217,24 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                 {opptjeningstidValg === 'nei' && (
                                     <div className="my-4 ml-10">
                                         <RadioGroup
-                                            legend="Velg regel for nei"
+                                            legend="Velg årsak"
                                             value={opptjeningstidSubvalg ?? ''}
                                             onChange={setOpptjeningstidSubvalg}
                                         >
                                             <Radio value="hovedregel">
-                                                Hovedregel: Må ha arbeidet i 28 dager før arbeidsuførhet inntreffer
+                                                Har ikke arbeidet i 28 dager før arbeidsuførhet inntreffer
                                             </Radio>
                                             <Radio value="aap_fp">
-                                                Hvis AAP før FP og retten var brukt opp uten ny opptjening gjelder ikke
-                                                8-2.2.1
+                                                Har AAP før foreldrepenger og retten var brukt opp uten ny opptjening
                                             </Radio>
                                         </RadioGroup>
                                     </div>
                                 )}
-                                <Radio value="unntak">Unntak</Radio>
+                                <Radio value="unntak">Ikke relevant</Radio>
                                 {opptjeningstidValg === 'unntak' && (
                                     <div className="my-4 ml-10">
                                         <RadioGroup
-                                            legend="Velg unntak"
+                                            legend="Velg årsak"
                                             value={opptjeningstidSubvalg ?? ''}
                                             onChange={setOpptjeningstidSubvalg}
                                         >
@@ -253,6 +252,11 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                                 Et medlem som har utført militærtjeneste, har rett til sykepenger ved
                                                 arbeidsuførhet uten hensyn til vilkårene i §§ 8-2 og 8-3 dersom
                                                 arbeidsuførheten oppstår under tjenesten
+                                            </Radio>
+                                            <Radio value="yrkessakde">
+                                                Til den som er arbeidsufør på grunn av en skade eller sykdom som går inn
+                                                under kapittel 13, ytes det sykepenger etter følgende særbestemmelser:
+                                                Vilkåret i §§ 8-2, 8-18, 8-36 og 8-39 om opptjeningstid gjelder ikke.
                                             </Radio>
                                         </RadioGroup>
                                     </div>
