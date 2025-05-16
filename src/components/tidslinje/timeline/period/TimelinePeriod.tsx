@@ -18,7 +18,7 @@ export interface TimelinePeriodProps extends PropsWithChildren {
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
     const buttonRef = useRef<HTMLButtonElement>(null)
     const { onMouseOver, onMouseOut, ...popoverProps } = usePopoverAnchor()
-    const { dayLength, startDate: timelineStart } = useTimelineContext()
+    const { dayLength, endDate: timelineEnd } = useTimelineContext()
     const { periods } = useRowContext()
     const { periodId } = usePeriodContext()
 
@@ -28,8 +28,8 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
     // TODO ordne bredde og plassering et annet sted
     const width = getNumberOfDays(startDate, endDate) * dayLength
-    const daysFromStart = startDate.diff(timelineStart, 'day')
-    const placement = daysFromStart * dayLength
+    const daysFromEnd = timelineEnd.diff(endDate, 'day')
+    const placement = daysFromEnd * dayLength
 
     return (
         <>
@@ -41,7 +41,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                         'rounded-r-none': cropRight,
                     },
                 )}
-                style={{ right: placement, width }}
+                style={{ left: placement, width }}
                 ref={buttonRef}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}

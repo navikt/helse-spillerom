@@ -16,10 +16,10 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
     const { periods } = useRowContext()
 
     return (
-        <HStack className="relative my-4 h-[24px] bg-surface-subtle" style={{ width }}>
-            {periods.map((period, i) => (
+        <HStack className="relative my-4 h-[24px] grow bg-surface-subtle" style={{ width }}>
+            {periods.map((period) => (
                 <PeriodContext.Provider
-                    key={i}
+                    key={period.id}
                     value={{
                         periodId: period.id,
                     }}

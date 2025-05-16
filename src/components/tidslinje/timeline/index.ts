@@ -3,6 +3,7 @@ import React, { ReactElement, ReactNode, useMemo } from 'react'
 
 import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
+import { TimelineZoomProps } from '@components/tidslinje/timeline/TimelineZoom'
 
 export interface ComponentWithType<P = unknown> extends React.FC<P> {
     componentType: string
@@ -22,6 +23,7 @@ type ParsedRowsResult = {
     earliestDate: Dayjs
     latestDate: Dayjs
     parsedRows: ParsedRow[]
+    zoomComponent: ReactNode
 }
 
 export function useParsedRows(children: ReactNode): ParsedRowsResult {
@@ -29,6 +31,11 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
         (child: ReactNode) =>
             React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelineRow',
     ) as ReactElement<TimelineRowProps>[]
+
+    const zoomComponent: ReactElement<TimelineZoomProps>[] = React.Children.toArray(children).filter(
+        (child: ReactNode) =>
+            React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelineZoom',
+    ) as ReactElement<TimelineZoomProps>[]
 
     const parsedRows = useMemo(() => {
         return parseRows(rowChildren)
@@ -40,7 +47,7 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
     const earliestDate = useEarliestDate(allPeriods) ?? dayjs().subtract(1, 'year')
     const latestDate = useLatestDate(allPeriods) ?? dayjs().add(1, 'month')
 
-    return { rowLabels, earliestDate, latestDate, parsedRows }
+    return { rowLabels, earliestDate, latestDate, parsedRows, zoomComponent }
 }
 
 export type ParsedRow = {

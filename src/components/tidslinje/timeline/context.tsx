@@ -2,6 +2,7 @@ import { createContext, Dispatch, SetStateAction, useContext } from 'react'
 import { Dayjs } from 'dayjs'
 
 import { Maybe } from '@utils/tsUtils'
+import { ZoomLevel } from '@components/tidslinje/timeline/TimelineZoom'
 
 type TimelineContextType = {
     startDate: Dayjs
@@ -12,6 +13,9 @@ type TimelineContextType = {
     setWidth: Dispatch<SetStateAction<number>>
     dayLength: number
     setDayLength: Dispatch<SetStateAction<number>>
+    zoomLevel: ZoomLevel
+    setZoomLevel: Dispatch<SetStateAction<ZoomLevel>>
+    setZoomSpanInDays: Dispatch<SetStateAction<number>>
 }
 
 export const TimelineContext = createContext<Maybe<TimelineContextType>>(null)

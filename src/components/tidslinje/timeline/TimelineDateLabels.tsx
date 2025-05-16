@@ -5,19 +5,20 @@ import { HStack } from '@navikt/ds-react'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 
 export function TimelineDateLabels(): ReactElement {
-    const { startDate, endDate, width, dayLength } = useTimelineContext()
+    const { startDate, endDate, width, dayLength, zoomLevel } = useTimelineContext()
 
-    const months = generateMonthsBetween(startDate, endDate)
+    const showYears = zoomLevel.includes('år')
+    const dateLabels = generateLabelsBetween(startDate, endDate, showYears)
 
     return (
-        <HStack className="relative h-[20px] text-small text-text-subtle" justify="space-between" style={{ width }}>
-            {months.map((month, i) => {
-                const daysFromEnd = endDate.diff(month, 'day')
+        <HStack className="relative h-[20px] text-small text-text-subtle" style={{ width }}>
+            {dateLabels.map((date, i) => {
+                const daysFromEnd = endDate.diff(date, 'day')
                 const placement = daysFromEnd * dayLength
 
                 return (
                     <span key={i} className="absolute -translate-x-full whitespace-nowrap" style={{ left: placement }}>
-                        {month.format('MMM YY')}
+                        {date.format(showYears ? 'YYYY' : 'MMM YY')}
                     </span>
                 )
             })}
@@ -25,14 +26,16 @@ export function TimelineDateLabels(): ReactElement {
     )
 }
 
-function generateMonthsBetween(start: Dayjs, end: Dayjs): Dayjs[] {
-    const months: Dayjs[] = []
-    let current = start.startOf('month')
+function generateLabelsBetween(start: Dayjs, end: Dayjs, showYears: boolean): Dayjs[] {
+    const labels: Dayjs[] = []
+    const increment = showYears ? 'year' : 'month'
 
-    while (current.isBefore(end)) {
-        months.push(current)
-        current = current.add(1, 'month')
+    let current = showYears ? end.startOf('year') : end.startOf('month')
+
+    while (current.isSameOrAfter(start)) {
+        labels.push(current)
+        current = current.subtract(1, increment)
     }
 
-    return months
+    return labels
 }
