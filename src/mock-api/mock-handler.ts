@@ -6,7 +6,6 @@ import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
 import { Søknad } from '@/schemas/søknad'
 import { hentPerson } from '@/mock-api/session'
-import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
 
