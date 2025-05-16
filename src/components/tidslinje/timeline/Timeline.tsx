@@ -1,11 +1,12 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { HStack, VStack } from '@navikt/ds-react'
 
-import { useParsedRows, useTimelineState } from '@components/tidslinje/timeline/index'
+import { useParsedRows } from '@components/tidslinje/timeline/index'
 import { TimelineRowLabels } from '@components/tidslinje/timeline/TimelineRowLabels'
 import { TimelineScrollableRows } from '@components/tidslinje/timeline/TimelineScrollableRows'
 import { RowContext } from '@components/tidslinje/timeline/row/context'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
+import { useTimelineState } from '@components/tidslinje/timeline/state'
 
 import { TimelineContext } from './context'
 
