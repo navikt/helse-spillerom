@@ -238,26 +238,14 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                             value={opptjeningstidSubvalg ?? ''}
                                             onChange={setOpptjeningstidSubvalg}
                                         >
-                                            <Radio value="skip">
-                                                Når man er ansatt på et norsk skip i utenriksfart, ytes det sykepenger
-                                                etter bestemmelsene om sykepenger til arbeidstakere i §§ 8-15 til 8-33,
-                                                og etter følgende særbestemmelser: Bestemmelsen om opptjeningstid for
-                                                rett til sykepenger i § 8-2 gjelder ikke
-                                            </Radio>
+                                            <Radio value="skip">Ansatt på et norsk skip i utenriksfart</Radio>
                                             <Radio value="fisker">
-                                                En fisker som er tatt opp på blad B i fiskermanntallet, har rett til
-                                                sykepenger uten hensyn til bestemmelsene i § 8-2 om opptjeningstid
+                                                Fisker som er tatt opp på blad B i fiskermanntallet
                                             </Radio>
                                             <Radio value="verneplikt">
-                                                Et medlem som har utført militærtjeneste, har rett til sykepenger ved
-                                                arbeidsuførhet uten hensyn til vilkårene i §§ 8-2 og 8-3 dersom
-                                                arbeidsuførheten oppstår under tjenesten
+                                                Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten
                                             </Radio>
-                                            <Radio value="yrkessakde">
-                                                Til den som er arbeidsufør på grunn av en skade eller sykdom som går inn
-                                                under kapittel 13, ytes det sykepenger etter følgende særbestemmelser:
-                                                Vilkåret i §§ 8-2, 8-18, 8-36 og 8-39 om opptjeningstid gjelder ikke.
-                                            </Radio>
+                                            <Radio value="yrkessakde">Arbeidsufør på grunn av en yrkesskade</Radio>
                                         </RadioGroup>
                                     </div>
                                 )}
