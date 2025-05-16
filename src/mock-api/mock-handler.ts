@@ -47,6 +47,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 opprettetAvNavn: 'Test Testesen',
                 fom: body.fom,
                 tom: body.tom,
+                sykepengesoknadIder: body.sykepengesoknadIder || [],
             }
             person?.saksbehandlingsperioder.push(nyPeriode)
             return NextResponse.json(nyPeriode, { status: 201 })

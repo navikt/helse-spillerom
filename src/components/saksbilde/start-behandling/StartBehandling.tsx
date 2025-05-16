@@ -73,6 +73,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 request: {
                     fom: minFom,
                     tom: maxTom,
+                    sykepengesoknadIder: selectedSøknader,
                 },
                 callback: (periode) => {
                     router.push(`/person/${params.personId}/${periode.id}`)

@@ -9,6 +9,7 @@ interface MutationProps {
     request: {
         fom: string
         tom: string
+        sykepengesoknadIder: string[] // Array of søknad IDs
     }
     callback: (periode: Saksbehandlingsperiode) => void
 }
