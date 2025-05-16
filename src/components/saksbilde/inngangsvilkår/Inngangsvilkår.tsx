@@ -257,7 +257,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                         </RadioGroup>
                                     </div>
                                 )}
-                                <Radio value="uavklart">Uavklart</Radio>
+                                <Radio value="uavklart">Ikke vurdert</Radio>
                             </RadioGroup>
                         </div>
                     </Accordion.Content>
@@ -290,7 +290,7 @@ export function Inngangsvilkår({ value }: { value: string }): ReactElement {
                                     >
                                         <Radio value="oppfylt">Ja</Radio>
                                         <Radio value="ikke_oppfylt">Nei</Radio>
-                                        <Radio value="uavklart">Uavklart</Radio>
+                                        <Radio value="uavklart">Ikke vurdert</Radio>
                                     </RadioGroup>
                                     <div className="mt-6">
                                         <Textarea
