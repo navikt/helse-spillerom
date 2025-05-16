@@ -12,6 +12,8 @@ export interface ComponentWithType<P = unknown> extends React.FC<P> {
 type Period = {
     id: string
     children: ReactNode
+    isActive?: boolean
+    onSelectPeriod?: () => void
     startDate: Dayjs
     endDate: Dayjs
     cropLeft: boolean
@@ -75,6 +77,8 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
             periods.push({
                 id: `r-${rowIndex}-p-${periodIndex}`,
                 children: period.props.children,
+                isActive: period.props.activePeriod,
+                onSelectPeriod: period.props.onSelectPeriod,
                 startDate,
                 endDate,
                 cropLeft,

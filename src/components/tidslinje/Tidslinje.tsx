@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
@@ -13,6 +13,7 @@ import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 
 export function Tidslinje(): ReactElement {
+    const [activePeriod, setActivePeriod] = useState<string>('')
     const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
 
     if (isLoading) return <TimelineSkeleton />
@@ -32,7 +33,13 @@ export function Tidslinje(): ReactElement {
             {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
                 <TimelineRow key={i} label={label}>
                     {søknader.map((søknad, i) => (
-                        <TimelinePeriod key={i} startDate={dayjs(søknad.fom!)} endDate={dayjs(søknad.tom!)}>
+                        <TimelinePeriod
+                            key={i}
+                            startDate={dayjs(søknad.fom!)}
+                            endDate={dayjs(søknad.tom!)}
+                            onSelectPeriod={() => setActivePeriod(søknad.id)}
+                            activePeriod={activePeriod === søknad.id}
+                        >
                             <BodyShort size="small">{søknad.arbeidssituasjon}</BodyShort>
                             <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
                             <BodyShort size="small">

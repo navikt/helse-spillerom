@@ -37,7 +37,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '1',
+            id: '2',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
@@ -64,7 +64,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '1',
+            id: '3',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
@@ -91,7 +91,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '2',
+            id: '4',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
@@ -118,7 +118,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '3',
+            id: '5',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
@@ -145,7 +145,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '4',
+            id: '6',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',
@@ -172,7 +172,7 @@ export const Kalle: Testperson = {
             ],
         },
         {
-            id: '5',
+            id: '7',
             type: 'ARBEIDSTAKERE',
             status: 'NY',
             arbeidssituasjon: 'ARBEIDSTAKER',

@@ -13,6 +13,8 @@ import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
     endDate: Dayjs
+    activePeriod?: boolean
+    onSelectPeriod?: () => void
 }
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
@@ -24,7 +26,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
     const period = periods.find((p) => p.id === periodId)
     if (!period) return <></>
-    const { startDate, endDate, cropLeft, cropRight, children } = period
+    const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, children } = period
 
     // TODO ordne bredde og plassering et annet sted
     const width = getNumberOfDays(startDate, endDate) * dayLength
@@ -35,16 +37,18 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
         <>
             <button
                 className={cn(
-                    'absolute h-[24px] rounded-full border-1 border-border-success bg-surface-success-subtle hover:cursor-pointer hover:bg-surface-success-subtle-hover',
+                    'absolute h-[24px] rounded-full bg-surface-success-subtle inset-shadow-[0_0_0_1px] inset-shadow-border-success hover:cursor-pointer hover:bg-surface-success-subtle-hover',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
+                        'inset-shadow-[0_0_0_2px] inset-shadow-border-action-selected': isActive,
                     },
                 )}
                 style={{ left: placement, width }}
                 ref={buttonRef}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
+                onClick={() => onSelectPeriod?.()}
             />
             <Popover strategy="fixed" {...popoverProps}>
                 <PopoverContent>{children}</PopoverContent>
