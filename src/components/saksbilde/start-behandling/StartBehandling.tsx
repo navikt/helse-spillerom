@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Select, useDatepicker } from '@navikt/ds-react'
+import { Button, Checkbox, CheckboxGroup, DatePicker, Label, useDatepicker } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -21,7 +21,6 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
 
     const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
     const [selectedSøknader, setSelectedSøknader] = useState<string[]>([])
-    const [arbeidssituasjon, setArbeidssituasjon] = useState<string>('')
     const { data: søknader, isError } = useSoknader(validFromDate)
     const { mutate: opprettSaksbehandlingsperiode } = useOpprettSaksbehandlingsperiode()
 
@@ -46,7 +45,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     }, {})
 
     const handleSubmit = () => {
-        if (selectedSøknader.length === 0 || !arbeidssituasjon) return
+        if (selectedSøknader.length === 0) return
 
         const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
         if (valgteSøknader.length === 0) return
@@ -132,49 +131,13 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                             </CheckboxGroup>
                         </div>
                     ))}
-                <Button variant="tertiary" size="small" className="mt-2 mb-6" type="button">
+                <Button variant="tertiary" size="small" className="mt-4 mb-6" type="button">
                     Legg inn søknadsperiode manuelt
                 </Button>
-                <Select
-                    label="Hvilken inntektskategori tilhører søkeren?"
-                    className="my-8"
-                    value={arbeidssituasjon}
-                    onChange={(e) => setArbeidssituasjon(e.target.value)}
-                >
-                    <option value="">Velg inntektskategori</option>
-                    {arbeidssituasjoner.map((situasjon) => (
-                        <option key={situasjon} value={situasjon}>
-                            {situasjon}
-                        </option>
-                    ))}
-                </Select>
-                <Button size="small" type="submit" disabled={selectedSøknader.length === 0 || !arbeidssituasjon}>
+                <Button className="block" size="small" type="submit" disabled={selectedSøknader.length === 0}>
                     Start behandling
                 </Button>
             </form>
         </SaksbildePanel>
     )
 }
-
-const arbeidssituasjoner = [
-    'ARBEIDSTAKER',
-    'SELVSTENDIG NÆRINGSDRIVENDE',
-    'SJØMANN',
-    'JORDBRUKER',
-    'ARBEIDSLEDIG',
-    'INAKTIV',
-    'MILITÆR (BEFAL)',
-    'VERNEPLIKTIG',
-    'ARBEIDSTAKER M/SJØMANN',
-    'INAKTIVT M/SJØMANN',
-    'SVALBARDARBEIDER',
-    'AMBASSADEPERSONELL',
-    'UTØVER AV REINDRIFT',
-    'FISKE/ARBEIDSTAKER',
-    'FRILANSER M/FORSIKRING FOR TILLEGGSSYKEPENGER',
-    'FFU',
-    'ARBEIDSTAKER / A-LØYSE',
-    'FRILANSER UTEN FORSIKRING',
-    'SELVSTENDIG DAGMAMMA/DAGPAPPA',
-    'FISKER M/HYRE',
-]
