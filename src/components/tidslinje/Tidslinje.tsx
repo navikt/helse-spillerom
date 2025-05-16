@@ -9,7 +9,7 @@ import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
 import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
-import { TimelineZoom } from '@components/tidslinje/timeline/TimelineZoom'
+import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 
 export function Tidslinje(): ReactElement {

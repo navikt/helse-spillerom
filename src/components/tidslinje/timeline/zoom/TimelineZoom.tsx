@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactElement } from 'react'
 import { HStack } from '@navikt/ds-react'
 
-import { ComponentWithType } from '@components/tidslinje/timeline/index'
+import { ComponentWithType } from '@components/tidslinje/timeline'
 import { cn } from '@utils/tw'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 
