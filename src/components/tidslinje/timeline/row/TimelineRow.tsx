@@ -24,7 +24,12 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
                         periodId: period.id,
                     }}
                 >
-                    <TimelinePeriod startDate={period.startDate} endDate={period.endDate} />
+                    <TimelinePeriod
+                        startDate={period.startDate}
+                        endDate={period.endDate}
+                        icon={period.icon}
+                        status={period.status}
+                    />
                 </PeriodContext.Provider>
             ))}
         </HStack>

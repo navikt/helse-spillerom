@@ -1,20 +1,22 @@
-import React, { PropsWithChildren, ReactElement, useRef, useState } from 'react'
+import React, { PropsWithChildren, ReactElement, useRef } from 'react'
 import { Dayjs } from 'dayjs'
 import { Popover } from '@navikt/ds-react'
 import { PopoverContent } from '@navikt/ds-react/Popover'
 
-import { Maybe } from '@utils/tsUtils'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 import { cn } from '@utils/tw'
 import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeline'
 import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
+import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
     endDate: Dayjs
     activePeriod?: boolean
     onSelectPeriod?: () => void
+    icon: ReactElement
+    status: string
 }
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
@@ -26,7 +28,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
     const period = periods.find((p) => p.id === periodId)
     if (!period) return <></>
-    const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, children } = period
+    const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, icon, status, children } = period
 
     // TODO ordne bredde og plassering et annet sted
     const width = getNumberOfDays(startDate, endDate) * dayLength
@@ -37,19 +39,22 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
         <>
             <button
                 className={cn(
-                    'absolute h-[24px] rounded-full bg-surface-success-subtle inset-shadow-[0_0_0_1px] inset-shadow-border-success hover:cursor-pointer hover:bg-surface-success-subtle-hover',
+                    'absolute h-[24px] rounded-full hover:cursor-pointer',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
-                        'inset-shadow-[0_0_0_2px] inset-shadow-border-action-selected': isActive,
+                        'navds-timeline__period--selected': isActive,
                     },
+                    periodColors[status],
                 )}
                 style={{ left: placement, width }}
                 ref={buttonRef}
                 onMouseOver={onMouseOver}
                 onMouseOut={onMouseOut}
                 onClick={() => onSelectPeriod?.()}
-            />
+            >
+                <span className={cn('navds-timeline__period--inner', iconColors[status])}>{icon}</span>
+            </button>
             <Popover strategy="fixed" {...popoverProps}>
                 <PopoverContent>{children}</PopoverContent>
             </Popover>
@@ -59,30 +64,14 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
 TimelinePeriod.componentType = 'TimelinePeriod'
 
-type PopoverAnchor = {
-    anchorEl: Maybe<HTMLElement>
-    open: boolean
-    onClose: () => void
-    onMouseOver: (event: React.MouseEvent<HTMLElement>) => void
-    onMouseOut: (event: React.MouseEvent<HTMLElement>) => void
+// TODO utvide - avhengig av hvordan "behandling" blir seendes ut, og hvilke statuser vi ser for oss
+const iconColors: Record<string, string> = {
+    test: 'text-icon-default',
+    utbetalt: 'text-border-success',
 }
 
-function usePopoverAnchor(): PopoverAnchor {
-    const [anchor, setAnchor] = useState<Maybe<HTMLElement>>(null)
-
-    const assignAnchor = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchor(event.currentTarget)
-    }
-
-    const removeAnchor = () => {
-        setAnchor(null)
-    }
-
-    return {
-        anchorEl: anchor,
-        open: anchor !== null,
-        onClose: removeAnchor,
-        onMouseOver: assignAnchor,
-        onMouseOut: removeAnchor,
-    }
+// TODO utvide - avhengig av hvordan "behandling" blir seendes ut, og hvilke statuser vi ser for oss
+const periodColors: Record<string, string> = {
+    test: 'navds-timeline__period--neutral hover:bg-surface-neutral-subtle-hover',
+    utbetalt: 'navds-timeline__period--success hover:bg-surface-success-subtle-hover',
 }

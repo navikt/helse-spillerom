@@ -16,6 +16,8 @@ type Period = {
     onSelectPeriod?: () => void
     startDate: Dayjs
     endDate: Dayjs
+    icon: ReactElement
+    status: string // finne ut hvilke statuser vi skal ha på behandlinger
     cropLeft: boolean
     cropRight: boolean
 }
@@ -79,6 +81,8 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
                 children: period.props.children,
                 isActive: period.props.activePeriod,
                 onSelectPeriod: period.props.onSelectPeriod,
+                icon: period.props.icon,
+                status: period.props.status,
                 startDate,
                 endDate,
                 cropLeft,
