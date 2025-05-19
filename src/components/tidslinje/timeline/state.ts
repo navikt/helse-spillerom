@@ -10,7 +10,6 @@ export function useTimelineState(earliestDate: Dayjs, latestDate: Dayjs) {
     const [zoomLevel, setZoomLevel] = useState<ZoomLevel>('6 måneder')
     const [zoomSpanInDays, setZoomSpanInDays] = useState<number>(zoomLevels[zoomLevel])
     const [startDate, setStartDate] = useState<Dayjs>(earliestDate)
-    const [endDate, setEndDate] = useState<Dayjs>(latestDate)
     const [dayLength, setDayLength] = useState<number>(0)
     const [width, setWidth] = useState<number>(0)
 
@@ -38,13 +37,9 @@ export function useTimelineState(earliestDate: Dayjs, latestDate: Dayjs) {
 
     return {
         startDate,
-        setStartDate,
-        endDate,
-        setEndDate,
+        endDate: latestDate,
         width,
-        setWidth,
         dayLength,
-        setDayLength,
         zoomLevel,
         setZoomLevel,
         setZoomSpanInDays,
