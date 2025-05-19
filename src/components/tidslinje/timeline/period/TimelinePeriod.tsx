@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, useRef } from 'react'
+import React, { PropsWithChildren, ReactElement, RefObject, useEffect, useRef, useState } from 'react'
 import { Dayjs } from 'dayjs'
 import { Popover } from '@navikt/ds-react'
 import { PopoverContent } from '@navikt/ds-react/Popover'
@@ -9,6 +9,7 @@ import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeli
 import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
+import { Maybe } from '@/utils/tsUtils'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
@@ -25,6 +26,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
     const { dayLength, endDate: timelineEnd } = useTimelineContext()
     const { periods } = useRowContext()
     const { periodId } = usePeriodContext()
+    const showIcon = useIsWiderThan(buttonRef, 32)
 
     const period = periods.find((p) => p.id === periodId)
     if (!period) return <></>
@@ -53,7 +55,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                 onMouseOut={onMouseOut}
                 onClick={() => onSelectPeriod?.()}
             >
-                <span className={cn('navds-timeline__period--inner', iconColors[status])}>{icon}</span>
+                {showIcon && <span className={cn('navds-timeline__period--inner', iconColors[status])}>{icon}</span>}
             </button>
             <Popover strategy="fixed" {...popoverProps}>
                 <PopoverContent>{children}</PopoverContent>
@@ -74,4 +76,21 @@ const iconColors: Record<string, string> = {
 const periodColors: Record<string, string> = {
     test: 'navds-timeline__period--neutral hover:bg-surface-neutral-subtle-hover',
     utbetalt: 'navds-timeline__period--success hover:bg-surface-success-subtle-hover',
+}
+
+const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {
+    const [isWider, setIsWider] = useState(false)
+
+    useEffect(() => {
+        if (!ref.current) return
+
+        const observer = new ResizeObserver(([entry]) => {
+            setIsWider(entry.contentRect.width >= targetWidth)
+        })
+
+        observer.observe(ref.current)
+        return () => observer.disconnect()
+    }, [ref, targetWidth])
+
+    return isWider
 }
