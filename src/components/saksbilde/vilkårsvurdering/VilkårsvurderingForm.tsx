@@ -52,7 +52,7 @@ export function VilkårsvurderingForm({ vilkår }: { vilkår: Vilkår }): ReactE
                         </RadioGroup>
                     )}
                 />
-                {selectedVurdering !== 'IKKE_RELEVANT' && (
+                {selectedVurdering !== 'IKKE_RELEVANT' && selectedVurdering !== '' && (
                     <Controller
                         control={form.control}
                         name="årsak"
