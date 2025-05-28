@@ -4,7 +4,7 @@ import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 
 import { Inngangsvilkår } from '@components/saksbilde/inngangsvilkår/Inngangsvilkår'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
-import { Vilkårsgrunnlag } from '@components/saksbilde/vilkårsgrunnlag/Vilkårsgrunnlag'
+import { Vilkårsvurdering } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
 
 export default async function PersonPage(): Promise<ReactElement> {
@@ -14,12 +14,12 @@ export default async function PersonPage(): Promise<ReactElement> {
                 <TabsList>
                     <TabsTab value="inngangsvilkår" label="Inngangsvilkår" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
-                    <TabsTab value="vilkårsgrunnlag" label="Vilkårsgrunnlag" />
+                    <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
                 <Inngangsvilkår value="inngangsvilkår" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
-                <Vilkårsgrunnlag value="vilkårsgrunnlag" />
+                <Vilkårsvurdering value="vilkårsvurdering" />
                 <Dagoversikt value="dagoversikt" />
             </Tabs>
         </section>
