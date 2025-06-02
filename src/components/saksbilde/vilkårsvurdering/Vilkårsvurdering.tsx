@@ -57,7 +57,7 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                                     {vilkår.beskrivelse}
                                                 </HStack>
                                             </TableDataCell>
-                                            <TableDataCell className="whitespace-nowrap">-</TableDataCell>
+                                            <TableDataCell className="whitespace-nowrap">Ikke vurdert</TableDataCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

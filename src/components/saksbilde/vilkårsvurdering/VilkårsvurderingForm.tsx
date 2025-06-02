@@ -95,7 +95,7 @@ export function VilkårsvurderingForm({ vilkår }: { vilkår: Vilkår }): ReactE
                     <Button variant="primary" size="small" type="submit">
                         Lagre
                     </Button>
-                    <Button variant="tertiary" size="small" onClick={() => form.reset()}>
+                    <Button variant="tertiary" size="small" type="button" onClick={() => form.reset()}>
                         Avbryt
                     </Button>
                 </HStack>
