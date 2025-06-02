@@ -2,7 +2,6 @@ import { ReactElement } from 'react'
 import { Tabs } from '@navikt/ds-react'
 import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 
-import { Inngangsvilkår } from '@components/saksbilde/inngangsvilkår/Inngangsvilkår'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { Vilkårsvurdering } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
@@ -12,12 +11,10 @@ export default async function PersonPage(): Promise<ReactElement> {
         <section className="flex-auto">
             <Tabs defaultValue="inngangsvilkår">
                 <TabsList>
-                    <TabsTab value="inngangsvilkår" label="Inngangsvilkår" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
-                <Inngangsvilkår value="inngangsvilkår" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <Vilkårsvurdering value="vilkårsvurdering" />
                 <Dagoversikt value="dagoversikt" />
