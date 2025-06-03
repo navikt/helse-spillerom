@@ -8,12 +8,33 @@ import { Søknad } from '@/schemas/søknad'
 import { hentPerson } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
+import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 
 import { ainntektData } from './ainntekt'
 
+function hentPersonIdFraUrl(url: string): string {
+    const parts = url.split('/')
+    // Finn indeksen til 'v1' og ta neste del som er personId
+    const v1Index = parts.findIndex((part) => part === 'v1')
+    if (v1Index === -1 || v1Index + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne personId i URL')
+    }
+    return parts[v1Index + 1]
+}
+
+function hentUuidFraUrl(url: string): string {
+    const parts = url.split('/')
+    // Finn indeksen til 'saksbehandlingsperioder' og ta neste del som er uuid
+    const periodeIndex = parts.findIndex((part) => part === 'saksbehandlingsperioder')
+    if (periodeIndex === -1 || periodeIndex + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne UUID i URL')
+    }
+    return parts[periodeIndex + 1]
+}
+
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
-    const personIdFraRequest = request.url.split('/').slice(-2)[0]
+    const personIdFraRequest = hentPersonIdFraUrl(request.url)
     const person = await hentPerson(personIdFraRequest)
 
     switch (path) {
@@ -87,6 +108,45 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             return NextResponse.json(ainntektData)
         case 'POST /v1/personsok':
             return personsøk(request)
+        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const uuid = hentUuidFraUrl(request.url)
+            if (!person?.vilkaarsvurderinger) {
+                person.vilkaarsvurderinger = {}
+            }
+            return NextResponse.json(person.vilkaarsvurderinger[uuid] || [])
+        }
+        case 'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const uuid = hentUuidFraUrl(request.url)
+            const kode = request.url.split('/').pop()!
+            const body = await request.json()
+            const nyVurdering: Vilkaarsvurdering = {
+                kode,
+                vurdering: body.vurdering,
+                begrunnelse: body.begrunnelse,
+            }
+
+            if (!person?.vilkaarsvurderinger) {
+                person.vilkaarsvurderinger = {}
+            }
+            if (!person.vilkaarsvurderinger[uuid]) {
+                person.vilkaarsvurderinger[uuid] = []
+            }
+
+            const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
+            if (existingIndex >= 0) {
+                person.vilkaarsvurderinger[uuid][existingIndex] = nyVurdering
+            } else {
+                person.vilkaarsvurderinger[uuid].push(nyVurdering)
+            }
+
+            return NextResponse.json(nyVurdering, { status: 201 })
+        }
         default:
             raise(new Error(`Unknown path: ${path}`))
     }

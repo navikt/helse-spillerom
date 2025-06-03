@@ -11,6 +11,7 @@ import dayjs from 'dayjs'
 
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
 import { DemoPersonsøk } from '@/mock-api/DemoPersonsøk'
+import { VilkarsvurderingDebugging } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingDebug'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -36,7 +37,9 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
     return (
         <QueryClientProvider client={queryClient}>
             <ShortcutProvider>
-                <DemoPersonsøk>{children}</DemoPersonsøk>
+                <VilkarsvurderingDebugging>
+                    <DemoPersonsøk>{children}</DemoPersonsøk>
+                </VilkarsvurderingDebugging>
             </ShortcutProvider>
         </QueryClientProvider>
     )

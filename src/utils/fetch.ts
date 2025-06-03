@@ -44,3 +44,11 @@ export async function postAndParse<T>(url: string, schema: z.ZodType<T>, body: u
         body: JSON.stringify(body),
     })
 }
+
+export async function putAndParse<T>(url: string, schema: z.ZodType<T>, body: unknown): Promise<T> {
+    return fetchAndParse(url, schema, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    })
+}

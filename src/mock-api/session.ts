@@ -7,12 +7,14 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Personinfo } from '@/schemas/personinfo'
 import { testpersoner } from '@/mock-api/testpersoner/testpersoner'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
+import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 
 export interface Person {
     fnr: string
     personId: string
     personinfo: Personinfo
     saksbehandlingsperioder: Saksbehandlingsperiode[]
+    vilkaarsvurderinger: Record<string, Vilkaarsvurdering[]>
 }
 
 type Session = {
@@ -60,6 +62,7 @@ export async function getSession(): Promise<Session> {
                     alder: p.personinfo.alder,
                 },
                 saksbehandlingsperioder: [...p.saksbehandlingsperioder],
+                vilkaarsvurderinger: {},
             }),
         )
 
@@ -89,6 +92,7 @@ function skapPerson(fnr: string): Person {
             alder: faker.number.int({ min: 14, max: 80 }),
         },
         saksbehandlingsperioder: [],
+        vilkaarsvurderinger: {},
     }
 }
 
