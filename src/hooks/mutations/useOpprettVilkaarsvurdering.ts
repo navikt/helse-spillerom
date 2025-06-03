@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { fetchAndParse } from '@utils/fetch'
+import { putAndParse } from '@utils/fetch'
 import { Vilkaarsvurdering, vilkaarsvurderingSchema, Vurdering } from '@/schemas/vilkaarsvurdering'
 
 type MutationProps = {
@@ -17,12 +17,11 @@ export function useOpprettVilkaarsvurdering() {
 
     return useMutation<Vilkaarsvurdering, Error, MutationProps>({
         mutationFn: async ({ kode, vurdering, årsak, notat }) => {
-            return await fetchAndParse(
+            return await putAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaar/${kode}`,
                 vilkaarsvurderingSchema,
                 {
-                    method: 'PUT',
-                    body: JSON.stringify({ vurdering, årsak, notat }),
+                    body: { vurdering, årsak, notat },
                 },
             )
         },
