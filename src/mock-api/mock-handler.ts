@@ -128,7 +128,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             const nyVurdering: Vilkaarsvurdering = {
                 kode,
                 vurdering: body.vurdering,
-                begrunnelse: body.begrunnelse,
+                årsak: body.årsak,
+                notat: body.notat,
             }
 
             if (!person?.vilkaarsvurderinger) {

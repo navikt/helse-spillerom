@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
-export const vurderingEnum = z.enum(['JA', 'NEI', 'IKKE_AKTUELT'])
+export const vurderingEnum = z.enum(['OPPFYLT', 'IKKE_OPPFYLT', 'IKKE_RELEVANT'])
 export type Vurdering = z.infer<typeof vurderingEnum>
 
 export const vilkaarsvurderingSchema = z.object({
     kode: z.string(),
     vurdering: vurderingEnum,
-    begrunnelse: z.string(),
+    årsak: z.string(),
     notat: z.string().optional(),
 })
 

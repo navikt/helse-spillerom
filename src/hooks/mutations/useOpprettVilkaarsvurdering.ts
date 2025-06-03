@@ -7,7 +7,8 @@ import { Vilkaarsvurdering, vilkaarsvurderingSchema, Vurdering } from '@/schemas
 type MutationProps = {
     kode: string
     vurdering: Vurdering
-    begrunnelse: string
+    årsak: string
+    notat?: string
 }
 
 export function useOpprettVilkaarsvurdering() {
@@ -15,13 +16,13 @@ export function useOpprettVilkaarsvurdering() {
     const queryClient = useQueryClient()
 
     return useMutation<Vilkaarsvurdering, Error, MutationProps>({
-        mutationFn: async ({ kode, vurdering, begrunnelse }) => {
+        mutationFn: async ({ kode, vurdering, årsak, notat }) => {
             return await fetchAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaar/${kode}`,
                 vilkaarsvurderingSchema,
                 {
                     method: 'PUT',
-                    body: JSON.stringify({ vurdering, begrunnelse }),
+                    body: JSON.stringify({ vurdering, årsak, notat }),
                 },
             )
         },
