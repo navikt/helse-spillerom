@@ -21,7 +21,9 @@ export function useOpprettVilkaarsvurdering() {
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaar/${kode}`,
                 vilkaarsvurderingSchema,
                 {
-                    body: { vurdering, årsak, notat },
+                    vurdering,
+                    årsak,
+                    notat,
                 },
             )
         },
