@@ -17,8 +17,8 @@ export type Vilkår = {
     vilkårskode: string
     beskrivelse: string
     mulige_resultater: {
-        ja: Årsak[]
-        nei: Årsak[]
+        OPPFYLT: Årsak[]
+        IKKE_OPPFYLT: Årsak[]
     }
 }
 
@@ -35,16 +35,16 @@ export const kodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'MÅ_SØKE_INNEN_TRE_MÅNEDER',
+        vilkårskode: 'MAA_SOKE_INNEN_TRE_MAANEDER',
         beskrivelse: 'En ytelse gis for opptil tre måneder før den måneden da kravet ble satt fram',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'INNEN_TRE_MÅNEDER',
                     beskrivelse: 'Søknad fremsatt i tide',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'IKKE_INNEN_TRE_MÅNEDER',
                     beskrivelse: 'Søknad ikke fremsatt i tide',
@@ -65,13 +65,13 @@ export const kodeverk: Kodeverk = [
         vilkårskode: 'BOINO',
         beskrivelse: 'Personer som er bosatt i Norge, er pliktige medlemmer i folketrygden',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'en_kode',
                     beskrivelse: 'Er medlem i folketrygden',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'en_annen_kode',
                     beskrivelse: 'Er ikke medlem i folketrygden',
@@ -89,16 +89,16 @@ export const kodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'ARBUFØR',
+        vilkårskode: 'ARBUFOR',
         beskrivelse: 'Arbeidsufør',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'en_kode',
                     beskrivelse: 'Er arbeidsufør',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'en_annen_kode',
                     beskrivelse: 'Er ikke arbeidsufør',
@@ -119,13 +119,13 @@ export const kodeverk: Kodeverk = [
         vilkårskode: 'OPPTJT',
         beskrivelse: 'Opptjeningstid',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'en_kode',
                     beskrivelse: 'Her må det stå noeertert',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'en_annen_kode',
                     beskrivelse: 'Her må det stå noe',
@@ -146,13 +146,13 @@ export const kodeverk: Kodeverk = [
         vilkårskode: 'MINSTEINNT',
         beskrivelse: 'Har opparbeidet minste inntekt (1/2G) - inntektsgrunnlaget',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'en_kode',
                     beskrivelse: 'Her må det stå noe',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'en_annen_kode',
                     beskrivelse: 'Her må det stå noe',
@@ -173,13 +173,13 @@ export const kodeverk: Kodeverk = [
         vilkårskode: 'INNTAP',
         beskrivelse: 'Har tapt pensjonsgivende inntekt på grunn av arbeidsuførhet',
         mulige_resultater: {
-            ja: [
+            OPPFYLT: [
                 {
                     kode: 'en_kode',
                     beskrivelse: 'Her må det stå noe',
                 },
             ],
-            nei: [
+            IKKE_OPPFYLT: [
                 {
                     kode: 'en_annen_kode',
                     beskrivelse: 'Her må det stå noe',

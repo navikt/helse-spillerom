@@ -4,35 +4,46 @@ import { ReactElement } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Radio, RadioGroup, Textarea } from '@navikt/ds-react'
-import { capitalize } from 'remeda'
 
 import { Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
 import { vilkårsvurderingSchema, VilkårsvurderingSchema } from '@schemas/vilkårsvurdering'
+import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
+import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
 
-export function VilkårsvurderingForm({ vilkår }: { vilkår: Vilkår }): ReactElement {
+interface VilkårsvurderingFormProps {
+    vilkår: Vilkår
+    vurdering?: Vilkaarsvurdering
+}
+
+export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingFormProps): ReactElement {
+    const mutation = useOpprettVilkaarsvurdering()
     const form = useForm<VilkårsvurderingSchema>({
         resolver: zodResolver(vilkårsvurderingSchema),
         defaultValues: {
             vilkårskode: vilkår.vilkårskode,
-            status: '',
-            årsak: '',
-            notat: '',
+            vurdering: vurdering?.vurdering ?? '',
+            årsak: vurdering?.årsak ?? '',
+            notat: vurdering?.notat ?? '',
         },
     })
 
     async function onSubmit(values: VilkårsvurderingSchema) {
-        // do mutation
-        console.log(values)
+        mutation.mutate({
+            kode: values.vilkårskode,
+            vurdering: values.vurdering as Vurdering,
+            årsak: values.årsak,
+            notat: values.notat,
+        })
     }
 
-    const selectedVurdering = form.watch('status')
+    const selectedVurdering = form.watch('vurdering')
 
     return (
         <FormProvider {...form}>
             <form role="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8 px-10">
                 <Controller
                     control={form.control}
-                    name="status"
+                    name="vurdering"
                     render={({ field }) => (
                         <RadioGroup
                             size="small"
@@ -45,7 +56,7 @@ export function VilkårsvurderingForm({ vilkår }: { vilkår: Vilkår }): ReactE
                         >
                             {Object.keys(vilkår.mulige_resultater).map((vurdering) => (
                                 <Radio key={vurdering} value={vurdering}>
-                                    {capitalize(vurdering)}
+                                    {vurderingVisningsTekst[vurdering as Vurdering]}
                                 </Radio>
                             ))}
                             <Radio value="IKKE_RELEVANT">Ikke relevant</Radio>
@@ -102,4 +113,10 @@ export function VilkårsvurderingForm({ vilkår }: { vilkår: Vilkår }): ReactE
             </form>
         </FormProvider>
     )
+}
+
+const vurderingVisningsTekst: Record<Vurdering, string> = {
+    OPPFYLT: 'Ja',
+    IKKE_OPPFYLT: 'Nei',
+    IKKE_RELEVANT: 'Ikke relevant',
 }

@@ -4,11 +4,13 @@ import { ReactElement, useState } from 'react'
 import { Accordion, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
-import { ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, CircleSlashFillIcon, ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { kodeverk, Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
 import { VilkårsvurderingFormPanel } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingFormPanel'
+import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
+import { Vurdering } from '@schemas/vilkaarsvurdering'
 
 interface VilkårsgrunnlagProps {
     value: string
@@ -16,6 +18,10 @@ interface VilkårsgrunnlagProps {
 
 export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElement {
     const [aktivtVilkår, setAktivtVilkår] = useState<Vilkår>(kodeverk[0])
+    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
+
+    if (isLoading) return <></> // skeleton?
+    if (isError) return <></> // gjør noe fornuftig
 
     return (
         <SaksbildePanel value={value}>
@@ -34,35 +40,46 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {kodeverk.map((vilkår) => (
-                                        <TableRow
-                                            key={vilkår.vilkårskode}
-                                            role="button"
-                                            onClick={() => setAktivtVilkår(vilkår)}
-                                            selected={vilkår.vilkårskode === aktivtVilkår.vilkårskode}
-                                            className="cursor-pointer"
-                                        >
-                                            <TableDataCell align="center" className="pl-[13px]">
-                                                <HStack wrap={false} gap="4" align="center">
-                                                    <span className="h-6 w-6">
-                                                        <ExclamationmarkTriangleFillIcon
-                                                            fontSize={24}
-                                                            className="text-icon-warning"
-                                                        />
-                                                    </span>
-                                                    <span className="inline-block min-w-[70px] text-start font-bold">
-                                                        § {vilkår.vilkårshjemmel.paragraf} {vilkår.vilkårshjemmel.ledd}{' '}
-                                                        {vilkår.vilkårshjemmel.bokstav} {vilkår.vilkårshjemmel.setning}
-                                                    </span>
-                                                    {vilkår.beskrivelse}
-                                                </HStack>
-                                            </TableDataCell>
-                                            <TableDataCell className="whitespace-nowrap">Ikke vurdert</TableDataCell>
-                                        </TableRow>
-                                    ))}
+                                    {kodeverk.map((vilkår) => {
+                                        const vilkårsvurdering = vilkårsvurderinger?.find(
+                                            (vurdertVilkår) => vurdertVilkår.kode === vilkår.vilkårskode,
+                                        )
+                                        return (
+                                            <TableRow
+                                                key={vilkår.vilkårskode}
+                                                role="button"
+                                                onClick={() => setAktivtVilkår(vilkår)}
+                                                selected={vilkår.vilkårskode === aktivtVilkår.vilkårskode}
+                                                className="cursor-pointer"
+                                            >
+                                                <TableDataCell align="center" className="pl-[13px]">
+                                                    <HStack wrap={false} gap="4" align="center">
+                                                        <span className="h-6 w-6">
+                                                            {getVurderingIcon(vilkårsvurdering?.vurdering)}
+                                                        </span>
+                                                        <span className="inline-block min-w-[70px] text-start font-bold">
+                                                            § {vilkår.vilkårshjemmel.paragraf}{' '}
+                                                            {vilkår.vilkårshjemmel.ledd} {vilkår.vilkårshjemmel.bokstav}{' '}
+                                                            {vilkår.vilkårshjemmel.setning}
+                                                        </span>
+                                                        {vilkår.beskrivelse}
+                                                    </HStack>
+                                                </TableDataCell>
+                                                <TableDataCell className="whitespace-nowrap">
+                                                    {getVurderingText(vilkårsvurdering?.vurdering)}
+                                                </TableDataCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             </Table>
-                            <VilkårsvurderingFormPanel key={aktivtVilkår.vilkårskode} vilkår={aktivtVilkår} />
+                            <VilkårsvurderingFormPanel
+                                key={aktivtVilkår.vilkårskode}
+                                vilkår={aktivtVilkår}
+                                vurdering={vilkårsvurderinger?.find(
+                                    (vurdertVilkår) => vurdertVilkår.kode === aktivtVilkår.vilkårskode,
+                                )}
+                            />
                         </HStack>
                     </AccordionContent>
                 </AccordionItem>
@@ -101,4 +118,38 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
             </Accordion>
         </SaksbildePanel>
     )
+}
+
+export function getVurderingIcon(vurdering?: Vurdering): ReactElement {
+    switch (vurdering) {
+        case 'OPPFYLT': {
+            return <CheckmarkCircleFillIcon fontSize={24} className="text-icon-success" />
+        }
+        case 'IKKE_OPPFYLT': {
+            return <CircleSlashFillIcon fontSize={24} className="text-icon-danger" />
+        }
+        case 'IKKE_RELEVANT': {
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-gray-400" />
+        }
+        default: {
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-icon-warning" />
+        }
+    }
+}
+
+function getVurderingText(vurdering?: Vurdering): string {
+    switch (vurdering) {
+        case 'OPPFYLT': {
+            return 'Oppfylt'
+        }
+        case 'IKKE_OPPFYLT': {
+            return 'Ikke oppfylt'
+        }
+        case 'IKKE_RELEVANT': {
+            return 'Vurder likevel'
+        }
+        default: {
+            return 'Ikke vurdert'
+        }
+    }
 }
