@@ -52,3 +52,24 @@ export async function putAndParse<T>(url: string, schema: z.ZodType<T>, body: un
         body: JSON.stringify(body),
     })
 }
+
+export async function deleteNoContent(url: string): Promise<void> {
+    const res = await fetch(url, { method: 'DELETE' })
+
+    if (!res.ok) {
+        const isJson = (res.headers.get('content-type') ?? '').includes('json')
+        const payload: unknown = isJson ? await res.json() : await res.text()
+
+        const maybeProblem = problemDetailsSchema.safeParse(payload)
+        if (maybeProblem.success) {
+            throw new ProblemDetailsError(maybeProblem.data)
+        }
+
+        throw new ProblemDetailsError({
+            title: 'Ukjent feil',
+            status: res.status,
+            detail: `Failed to delete ${url}: ${res.status}`,
+            type: 'about:blank',
+        })
+    }
+}

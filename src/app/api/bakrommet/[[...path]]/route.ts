@@ -14,6 +14,7 @@ type RouteParams = {
 export const GET = bakrommetProxy
 export const POST = bakrommetProxy
 export const PUT = bakrommetProxy
+export const DELETE = bakrommetProxy
 
 async function bakrommetProxy(request: Request, { params }: RouteParams): Promise<Response> {
     const proxyPath = `/${(await params).path.join('/')}`

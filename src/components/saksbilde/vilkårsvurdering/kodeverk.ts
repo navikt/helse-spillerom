@@ -122,7 +122,7 @@ export const kodeverk: Kodeverk = [
             ja: [
                 {
                     kode: 'en_kode',
-                    beskrivelse: 'Her må det stå noe',
+                    beskrivelse: 'Her må det stå noeertert',
                 },
             ],
             nei: [

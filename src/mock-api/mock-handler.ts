@@ -148,6 +148,25 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
             return NextResponse.json(nyVurdering, { status: 201 })
         }
+        case 'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const uuid = hentUuidFraUrl(request.url)
+            const kode = request.url.split('/').pop()!
+
+            if (!person?.vilkaarsvurderinger?.[uuid]) {
+                return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
+            }
+
+            const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
+            if (existingIndex >= 0) {
+                person.vilkaarsvurderinger[uuid].splice(existingIndex, 1)
+                return new NextResponse(null, { status: 204 })
+            }
+
+            return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
+        }
         default:
             raise(new Error(`Unknown path: ${path}`))
     }

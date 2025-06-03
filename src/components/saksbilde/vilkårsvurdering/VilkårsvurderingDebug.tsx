@@ -2,12 +2,13 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Select, Table, TextField, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon } from '@navikt/aksel-icons'
+import { ParagraphIcon, TrashIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
+import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
 import { Vurdering } from '@/schemas/vilkaarsvurdering'
 import { erProd } from '@/env'
 
@@ -57,6 +58,7 @@ function Vilkårsvurdering(): ReactElement {
 
     const { data: vurderinger = [] } = useVilkaarsvurderinger()
     const { mutate: opprettVurdering } = useOpprettVilkaarsvurdering()
+    const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 
     const handleSubmit = () => {
         opprettVurdering(
@@ -74,7 +76,7 @@ function Vilkårsvurdering(): ReactElement {
     return (
         <div className="space-y-4">
             <div className="flex gap-4">
-                <TextField label="Kode" value={kode} onChange={(e) => setKode(e.target.value)} />
+                <TextField label="Kode" value={kode} onChange={(e) => setKode(e.target.value.toUpperCase())} />
                 <Select label="Vurdering" value={vurdering} onChange={(e) => setVurdering(e.target.value as Vurdering)}>
                     <option value="OPPFYLT">OPPFYLT</option>
                     <option value="IKKE_OPPFYLT">IKKE_OPPFYLT</option>
@@ -91,6 +93,7 @@ function Vilkårsvurdering(): ReactElement {
                         <Table.HeaderCell>Vurdering</Table.HeaderCell>
                         <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
                         <Table.HeaderCell>Notat</Table.HeaderCell>
+                        <Table.HeaderCell className="w-16">Handling</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -100,6 +103,14 @@ function Vilkårsvurdering(): ReactElement {
                             <Table.DataCell>{vurdering.vurdering}</Table.DataCell>
                             <Table.DataCell>{vurdering.årsak}</Table.DataCell>
                             <Table.DataCell>{vurdering.notat}</Table.DataCell>
+                            <Table.DataCell>
+                                <Button
+                                    variant="tertiary"
+                                    size="small"
+                                    icon={<TrashIcon title="Slett vurdering" />}
+                                    onClick={() => slettVurdering({ kode: vurdering.kode })}
+                                />
+                            </Table.DataCell>
                         </Table.Row>
                     ))}
                 </Table.Body>
