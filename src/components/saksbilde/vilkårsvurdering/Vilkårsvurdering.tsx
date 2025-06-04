@@ -25,6 +25,9 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
     const [aktivtVilkår, setAktivtVilkår] = useState<Vilkår>(kodeverk[0])
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
 
+    const antallVilkår = kodeverk.length
+    const vurderteVilkår = vilkårsvurderinger?.length ?? 0
+
     if (isLoading) return <></> // skeleton?
     if (isError) return <></> // gjør noe fornuftig
 
@@ -32,7 +35,7 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
         <SaksbildePanel value={value}>
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 <AccordionItem defaultOpen>
-                    <AccordionHeader>Generelle bestemmelser 0/6</AccordionHeader>
+                    <AccordionHeader>Generelle bestemmelser {`${vurderteVilkår}/${antallVilkår}`}</AccordionHeader>
                     <AccordionContent className="p-0">
                         <HStack wrap={false}>
                             <Table size="medium" className="h-fit w-3/5 min-w-3/5">
