@@ -19,7 +19,8 @@
         "lint": "eslint --ext=ts,tsx src",
         "test": "vitest --config vitest.config.mts",
         "lint:fix": "eslint --ext=ts,tsx src --fix",
-        "format": "npm run prettier:write && npm run lint:fix"
+        "format": "npm run prettier:write && npm run lint:fix",
+        "kodeverk": "ts-node --project scripts/tsconfig.json scripts/kodeverkTilExcel.ts"
     },
     "dependencies": {
         "@faker-js/faker": "^9.7.0",
@@ -60,8 +61,10 @@
         "postcss": "^8.5.3",
         "prettier-plugin-tailwindcss": "^0.6.11",
         "tailwindcss": "^4.1.4",
+        "ts-node": "^10.9.2",
         "typescript": "^5.8.3",
-        "vitest": "^3.1.1"
+        "vitest": "^3.1.1",
+        "xlsx": "^0.18.5"
     },
     "eslintConfig": {
         "extends": [
