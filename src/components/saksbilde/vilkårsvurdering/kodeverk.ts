@@ -27,7 +27,7 @@ export type Vilkår = {
     }
 }
 
-export type Kodeverk = Vilkår[]
+type Kodeverk = Vilkår[]
 
 export const kodeverk: Kodeverk = [
     // Ftrl 22-13 3
