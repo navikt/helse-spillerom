@@ -13,9 +13,10 @@ import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
 interface VilkårsvurderingFormProps {
     vilkår: Vilkår
     vurdering?: Vilkaarsvurdering
+    neste: () => void
 }
 
-export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingFormProps): ReactElement {
+export function VilkårsvurderingForm({ vilkår, vurdering, neste }: VilkårsvurderingFormProps): ReactElement {
     const mutation = useOpprettVilkaarsvurdering()
     const form = useForm<VilkårsvurderingSchema>({
         resolver: zodResolver(vilkårsvurderingSchema),
@@ -106,7 +107,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
                     <Button variant="primary" size="small" type="submit">
                         Lagre
                     </Button>
-                    <Button variant="tertiary" size="small" type="button" onClick={() => {}}>
+                    <Button variant="tertiary" size="small" type="button" onClick={neste}>
                         Neste
                     </Button>
                 </HStack>

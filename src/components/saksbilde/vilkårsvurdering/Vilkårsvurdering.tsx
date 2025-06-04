@@ -84,6 +84,10 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                 vurdering={vilkårsvurderinger?.find(
                                     (vurdertVilkår) => vurdertVilkår.kode === aktivtVilkår.vilkårskode,
                                 )}
+                                neste={() => {
+                                    const i = kodeverk.findIndex((v) => v.vilkårskode === aktivtVilkår.vilkårskode)
+                                    setAktivtVilkår(kodeverk[(i + 1) % kodeverk.length])
+                                }}
                             />
                         </HStack>
                     </AccordionContent>
