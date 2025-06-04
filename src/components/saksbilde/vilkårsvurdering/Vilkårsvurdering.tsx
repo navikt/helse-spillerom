@@ -35,7 +35,9 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
         <SaksbildePanel value={value}>
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 <AccordionItem defaultOpen>
-                    <AccordionHeader>Generelle bestemmelser {`${vurderteVilkår}/${antallVilkår}`}</AccordionHeader>
+                    <AccordionHeader>
+                        Generelle bestemmelser {vurderteVilkår}/{antallVilkår}
+                    </AccordionHeader>
                     <AccordionContent className="p-0">
                         <HStack wrap={false}>
                             <Table size="medium" className="h-fit w-3/5 min-w-3/5">
