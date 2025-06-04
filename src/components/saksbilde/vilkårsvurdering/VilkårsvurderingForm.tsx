@@ -59,11 +59,10 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
                                     {vurderingVisningsTekst[vurdering as Vurdering]}
                                 </Radio>
                             ))}
-                            <Radio value="IKKE_RELEVANT">Ikke relevant</Radio>
                         </RadioGroup>
                     )}
                 />
-                {selectedVurdering !== 'IKKE_RELEVANT' && selectedVurdering !== '' && (
+                {selectedVurdering !== '' && (
                     <Controller
                         control={form.control}
                         name="årsak"

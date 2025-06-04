@@ -1,24 +1,28 @@
 import { Maybe } from '@/utils/tsUtils'
 
+type Vilkårshjemmel = {
+    lovverk: string
+    lovverksversjon: string
+    paragraf: string
+    ledd: Maybe<string>
+    setning: Maybe<string>
+    bokstav: Maybe<string>
+}
+
 export type Årsak = {
     kode: string
     beskrivelse: string
+    vilkårshjemmel?: Vilkårshjemmel
 }
 
 export type Vilkår = {
-    vilkårshjemmel: {
-        lovverk: string
-        lovverksversjon: string
-        paragraf: string
-        ledd: Maybe<string>
-        setning: Maybe<string>
-        bokstav: Maybe<string>
-    }
+    vilkårshjemmel: Vilkårshjemmel
     vilkårskode: string
     beskrivelse: string
     mulige_resultater: {
         OPPFYLT: Årsak[]
         IKKE_OPPFYLT: Årsak[]
+        IKKE_RELEVANT?: Årsak[]
     }
 }
 
@@ -121,14 +125,74 @@ export const kodeverk: Kodeverk = [
         mulige_resultater: {
             OPPFYLT: [
                 {
-                    kode: 'en_kode',
-                    beskrivelse: 'Her må det stå noeertert',
+                    kode: 'hovedregel',
+                    beskrivelse: 'Har arbeidet i 28 dager før arbeidsuførhet inntreffer',
+                },
+                {
+                    kode: 'annen ytelse',
+                    beskrivelse:
+                        'Har mottatt dagpenger, omsorgspenger, pleiepenger, opplæringspenger, svangerskapspenger eller foreldrepenger',
                 },
             ],
             IKKE_OPPFYLT: [
                 {
-                    kode: 'en_annen_kode',
-                    beskrivelse: 'Her må det stå noe',
+                    kode: 'ikke arbeidet',
+                    beskrivelse: 'Har ikke arbeidet i 28 dager før arbeidsuførhet inntreffer',
+                },
+
+                {
+                    kode: 'aap før foreldrepenger',
+                    beskrivelse: 'Har AAP før foreldrepenger og retten var brukt opp uten ny opptjening',
+                },
+            ],
+            IKKE_RELEVANT: [
+                {
+                    kode: 'ANSATT_NORSK_SKIP_OPTJ_UINNT',
+                    beskrivelse: 'Ansatt på et norsk skip i utenriksfart',
+                    vilkårshjemmel: {
+                        lovverk: 'Folketrygdloven',
+                        lovverksversjon: '2019-01-01',
+                        paragraf: '8-2',
+                        ledd: '1',
+                        setning: null,
+                        bokstav: null,
+                    },
+                },
+                {
+                    kode: 'fisk',
+                    beskrivelse: 'Fisker som er tatt opp på blad B i fiskermanntallet',
+                    vilkårshjemmel: {
+                        lovverk: 'Folketrygdloven',
+                        lovverksversjon: '2019-01-01',
+                        paragraf: '8-2',
+                        ledd: '1',
+                        setning: null,
+                        bokstav: null,
+                    },
+                },
+                {
+                    kode: 'mil',
+                    beskrivelse: 'Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten',
+                    vilkårshjemmel: {
+                        lovverk: 'Folketrygdloven',
+                        lovverksversjon: '2019-01-01',
+                        paragraf: '8-2',
+                        ledd: '1',
+                        setning: null,
+                        bokstav: null,
+                    },
+                },
+                {
+                    kode: 'yrk',
+                    beskrivelse: 'Arbeidsufør på grunn av en godkjent yrkesskade',
+                    vilkårshjemmel: {
+                        lovverk: 'Folketrygdloven',
+                        lovverksversjon: '2019-01-01',
+                        paragraf: '8-2',
+                        ledd: '1',
+                        setning: null,
+                        bokstav: null,
+                    },
                 },
             ],
         },
