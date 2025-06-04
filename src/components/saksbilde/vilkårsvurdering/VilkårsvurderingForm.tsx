@@ -32,7 +32,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, neste }: Vilkårsvur
         mutation.mutate({
             kode: values.vilkårskode,
             vurdering: values.vurdering as Vurdering,
-            årsak: values.årsak,
+            årsak: values.årsak ?? '',
             notat: values.notat,
         })
     }
@@ -45,7 +45,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, neste }: Vilkårsvur
                 <Controller
                     control={form.control}
                     name="vurdering"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <RadioGroup
                             size="small"
                             legend="Er vilkåret oppfylt?"
@@ -55,6 +55,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, neste }: Vilkårsvur
                                 form.setValue('årsak', '')
                                 form.setValue('notat', '')
                             }}
+                            error={fieldState.error?.message}
                         >
                             {Object.keys(vilkår.mulige_resultater).map((vurdering) => (
                                 <Radio key={vurdering} value={vurdering}>
@@ -68,7 +69,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, neste }: Vilkårsvur
                     <Controller
                         control={form.control}
                         name="årsak"
-                        render={({ field }) => {
+                        render={({ field, fieldState }) => {
                             const vurderingKey = selectedVurdering as keyof typeof vilkår.mulige_resultater
                             const årsaker = vilkår.mulige_resultater[vurderingKey] ?? []
 
@@ -78,6 +79,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, neste }: Vilkårsvur
                                     legend="Begrunnelse"
                                     value={field.value}
                                     onChange={field.onChange}
+                                    error={fieldState.error?.message}
                                 >
                                     {årsaker.map((årsak) => (
                                         <Radio key={årsak.kode} value={årsak.kode}>
