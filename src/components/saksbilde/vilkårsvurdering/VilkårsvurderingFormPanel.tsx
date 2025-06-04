@@ -9,10 +9,14 @@ import { getVurderingIcon } from '@components/saksbilde/vilkårsvurdering/Vilkå
 interface VilkårsvurderingFormPanelProps {
     vilkår?: Vilkår
     vurdering?: Vilkaarsvurdering
-    neste: () => void
+    nesteAction: () => void
 }
 
-export function VilkårsvurderingFormPanel({ vilkår, vurdering, neste }: VilkårsvurderingFormPanelProps): ReactElement {
+export function VilkårsvurderingFormPanel({
+    vilkår,
+    vurdering,
+    nesteAction,
+}: VilkårsvurderingFormPanelProps): ReactElement {
     if (!vilkår) return <></>
 
     return (
@@ -27,7 +31,7 @@ export function VilkårsvurderingFormPanel({ vilkår, vurdering, neste }: Vilkå
                     {vilkår.beskrivelse}
                 </Heading>
             </HStack>
-            <VilkårsvurderingForm vilkår={vilkår} vurdering={vurdering} neste={neste} />
+            <VilkårsvurderingForm vilkår={vilkår} vurdering={vurdering} nesteAction={nesteAction} />
         </VStack>
     )
 }
