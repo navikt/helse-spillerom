@@ -23,6 +23,7 @@ export type Vilkår = {
         OPPFYLT: Årsak[]
         IKKE_OPPFYLT: Årsak[]
         IKKE_RELEVANT?: Årsak[]
+        SKAL_IKKE_VURDERES: Årsak[]
     }
 }
 
@@ -54,6 +55,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Søknad ikke fremsatt i tide',
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
     // Ftrl 2-1
@@ -81,6 +83,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Er ikke medlem i folketrygden',
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
     // Ftrl 8-4
@@ -108,6 +111,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Er ikke arbeidsufør',
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
     // Ftrl 8-2 1
@@ -195,6 +199,7 @@ export const kodeverk: Kodeverk = [
                     },
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
     // Ftrl 8-3 2
@@ -222,6 +227,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Her må det stå noe',
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
     // Ftrl 8-3
@@ -249,6 +255,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Her må det stå noe',
                 },
             ],
+            SKAL_IKKE_VURDERES: [],
         },
     },
 ]

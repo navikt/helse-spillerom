@@ -52,6 +52,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
                             onChange={(val) => {
                                 field.onChange(val)
                                 form.setValue('årsak', '')
+                                form.setValue('notat', '')
                             }}
                         >
                             {Object.keys(vilkår.mulige_resultater).map((vurdering) => (
@@ -62,7 +63,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
                         </RadioGroup>
                     )}
                 />
-                {selectedVurdering !== '' && (
+                {selectedVurdering !== '' && selectedVurdering !== 'SKAL_IKKE_VURDERES' && (
                     <Controller
                         control={form.control}
                         name="årsak"
@@ -105,8 +106,8 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
                     <Button variant="primary" size="small" type="submit">
                         Lagre
                     </Button>
-                    <Button variant="tertiary" size="small" type="button" onClick={() => form.reset()}>
-                        Avbryt
+                    <Button variant="tertiary" size="small" type="button" onClick={() => {}}>
+                        Neste
                     </Button>
                 </HStack>
             </form>
@@ -117,5 +118,6 @@ export function VilkårsvurderingForm({ vilkår, vurdering }: VilkårsvurderingF
 const vurderingVisningsTekst: Record<Vurdering, string> = {
     OPPFYLT: 'Ja',
     IKKE_OPPFYLT: 'Nei',
-    IKKE_RELEVANT: 'Ikke relevant',
+    IKKE_RELEVANT: 'Unntak/Ikke relevant',
+    SKAL_IKKE_VURDERES: 'Skal ikke vurderes',
 }

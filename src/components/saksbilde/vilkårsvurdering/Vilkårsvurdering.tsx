@@ -4,7 +4,12 @@ import { ReactElement, useState } from 'react'
 import { Accordion, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
-import { CheckmarkCircleFillIcon, CircleSlashFillIcon, ExclamationmarkTriangleFillIcon } from '@navikt/aksel-icons'
+import {
+    CheckmarkCircleFillIcon,
+    CircleSlashFillIcon,
+    ExclamationmarkTriangleFillIcon,
+    QuestionmarkCircleFillIcon,
+} from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { kodeverk, Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
@@ -30,12 +35,12 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                     <AccordionHeader>Generelle bestemmelser 0/6</AccordionHeader>
                     <AccordionContent className="p-0">
                         <HStack wrap={false}>
-                            <Table size="medium" className="h-fit w-1/2 min-w-1/2">
+                            <Table size="medium" className="h-fit w-3/5 min-w-3/5">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHeaderCell className="w-full">Vilkår</TableHeaderCell>
-                                        <TableHeaderCell className="min-w-32 whitespace-nowrap">
-                                            Vurdering
+                                        <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
+                                            Status
                                         </TableHeaderCell>
                                     </TableRow>
                                 </TableHeader>
@@ -47,10 +52,10 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                         return (
                                             <TableRow
                                                 key={vilkår.vilkårskode}
-                                                role="button"
-                                                onClick={() => setAktivtVilkår(vilkår)}
                                                 selected={vilkår.vilkårskode === aktivtVilkår.vilkårskode}
                                                 className="cursor-pointer"
+                                                role="button"
+                                                onClick={() => setAktivtVilkår(vilkår)}
                                             >
                                                 <TableDataCell align="center" className="pl-[13px]">
                                                     <HStack wrap={false} gap="4" align="center">
@@ -129,6 +134,9 @@ export function getVurderingIcon(vurdering?: Vurdering): ReactElement {
             return <CircleSlashFillIcon fontSize={24} className="text-icon-danger" />
         }
         case 'IKKE_RELEVANT': {
+            return <QuestionmarkCircleFillIcon fontSize={24} className="text-icon-default" /> // må byttes til et annet ikon
+        }
+        case 'SKAL_IKKE_VURDERES': {
             return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-gray-400" />
         }
         default: {
@@ -146,7 +154,10 @@ function getVurderingText(vurdering?: Vurdering): string {
             return 'Ikke oppfylt'
         }
         case 'IKKE_RELEVANT': {
-            return 'Vurder likevel'
+            return 'Ikke relevant'
+        }
+        case 'SKAL_IKKE_VURDERES': {
+            return 'Skal ikke vurderes'
         }
         default: {
             return 'Ikke vurdert'
