@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Accordion, HStack, Table } from '@navikt/ds-react'
+import { Accordion, BodyShort, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import {
@@ -72,12 +72,16 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                                         <span className="h-6 w-6">
                                                             {getVurderingIcon(vilkårsvurdering?.vurdering)}
                                                         </span>
-                                                        <span className="inline-block min-w-[70px] text-start font-bold">
+                                                        <BodyShort
+                                                            align="start"
+                                                            weight="semibold"
+                                                            className="min-w-[70px]"
+                                                        >
                                                             § {vilkår.vilkårshjemmel.paragraf}{' '}
                                                             {vilkår.vilkårshjemmel.ledd} {vilkår.vilkårshjemmel.bokstav}{' '}
                                                             {vilkår.vilkårshjemmel.setning}
-                                                        </span>
-                                                        {vilkår.beskrivelse}
+                                                        </BodyShort>
+                                                        <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
                                                     </HStack>
                                                 </TableDataCell>
                                                 <TableDataCell className="whitespace-nowrap">
