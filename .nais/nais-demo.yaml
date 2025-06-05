@@ -25,7 +25,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: https://sp-kodeverk.ekstern.dev.nav.no
+        - host: sp-kodeverk.ekstern.dev.nav.no
   resources:
     limits:
       memory: 350Mi
