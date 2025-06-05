@@ -9,7 +9,7 @@ import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
 export default async function PersonPage(): Promise<ReactElement> {
     return (
         <section className="flex-auto">
-            <Tabs defaultValue="sykepengegrunnlag">
+            <Tabs defaultValue="vilkårsvurdering">
                 <TabsList>
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />

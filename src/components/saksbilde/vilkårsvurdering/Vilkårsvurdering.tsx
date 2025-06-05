@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Accordion, BodyShort, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
@@ -12,19 +12,31 @@ import {
 } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
-import { kodeverk, Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
+import { Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
 import { VilkårsvurderingFormPanel } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingFormPanel'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { cn } from '@utils/tw'
+import { useKodeverk } from '@hooks/queries/useKodeverk'
 
 interface VilkårsgrunnlagProps {
     value: string
 }
 
 export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElement {
-    const [aktivtVilkår, setAktivtVilkår] = useState<Vilkår>(kodeverk[0])
+    const [aktivtVilkår, setAktivtVilkår] = useState<Vilkår>()
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
+    const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverk()
+
+    useEffect(() => {
+        if (kodeverk && kodeverk.length > 0) {
+            setAktivtVilkår(kodeverk[0])
+        }
+    }, [kodeverk, setAktivtVilkår])
+    if (kodeverkLoading || kodeverkError || !kodeverk) return <></> // skeleton?
+    if (!aktivtVilkår) {
+        return <></> // ingen vilkår å vise ennå, mest for å få ts happy
+    }
 
     const antallVilkår = kodeverk.length
     const vurderteVilkår = vilkårsvurderinger?.length ?? 0

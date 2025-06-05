@@ -56,6 +56,8 @@ spec:
     outbound:
       rules:
         - application: bakrommet
+      external:
+        - host: https://sp-kodeverk.ekstern.dev.nav.no
   env:
     - name: BAKROMMET_SCOPE
       value: api://dev-gcp.speilvendt.bakrommet/.default
