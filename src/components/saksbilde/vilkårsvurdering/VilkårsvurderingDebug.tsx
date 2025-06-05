@@ -1,15 +1,13 @@
 'use client'
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
-import { Button, Modal, Select, Table, TextField, Tooltip } from '@navikt/ds-react'
+import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
 import { ParagraphIcon, TrashIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
-import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
 import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
-import { Vurdering } from '@/schemas/vilkaarsvurdering'
 import { erProd } from '@/env'
 
 export function VilkarsvurderingDebugging({ children }: PropsWithChildren): ReactElement {
@@ -52,69 +50,38 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
 }
 
 function Vilkårsvurdering(): ReactElement {
-    const [kode, setKode] = useState('')
-    const [vurdering, setVurdering] = useState<Vurdering>('OPPFYLT')
-    const [årsak, setÅrsak] = useState('')
-
     const { data: vurderinger = [] } = useVilkaarsvurderinger()
-    const { mutate: opprettVurdering } = useOpprettVilkaarsvurdering()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 
-    const handleSubmit = () => {
-        opprettVurdering(
-            { kode, vurdering, årsak },
-            {
-                onSuccess: () => {
-                    setKode('')
-                    setVurdering('OPPFYLT')
-                    setÅrsak('')
-                },
-            },
-        )
-    }
-
     return (
-        <div className="space-y-4">
-            <div className="flex gap-4">
-                <TextField label="Kode" value={kode} onChange={(e) => setKode(e.target.value.toUpperCase())} />
-                <Select label="Vurdering" value={vurdering} onChange={(e) => setVurdering(e.target.value as Vurdering)}>
-                    <option value="OPPFYLT">OPPFYLT</option>
-                    <option value="IKKE_OPPFYLT">IKKE_OPPFYLT</option>
-                    <option value="IKKE_RELEVANT">IKKE_RELEVANT</option>
-                </Select>
-                <TextField label="Begrunnelse" value={årsak} onChange={(e) => setÅrsak(e.target.value)} />
-                <Button onClick={handleSubmit}>Opprett vurdering</Button>
-            </div>
-
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Kode</Table.HeaderCell>
-                        <Table.HeaderCell>Vurdering</Table.HeaderCell>
-                        <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
-                        <Table.HeaderCell>Notat</Table.HeaderCell>
-                        <Table.HeaderCell className="w-16">Handling</Table.HeaderCell>
+        <Table>
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell>Kode</Table.HeaderCell>
+                    <Table.HeaderCell>Vurdering</Table.HeaderCell>
+                    <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+                    <Table.HeaderCell>Notat</Table.HeaderCell>
+                    <Table.HeaderCell></Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {vurderinger.map((vurdering) => (
+                    <Table.Row key={vurdering.kode}>
+                        <Table.DataCell>{vurdering.kode}</Table.DataCell>
+                        <Table.DataCell>{vurdering.vurdering}</Table.DataCell>
+                        <Table.DataCell>{vurdering.årsak}</Table.DataCell>
+                        <Table.DataCell>{vurdering.notat}</Table.DataCell>
+                        <Table.DataCell>
+                            <Button
+                                variant="tertiary"
+                                size="small"
+                                icon={<TrashIcon className="text-icon-danger" title="Slett vurdering" />}
+                                onClick={() => slettVurdering({ kode: vurdering.kode })}
+                            />
+                        </Table.DataCell>
                     </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {vurderinger.map((vurdering) => (
-                        <Table.Row key={vurdering.kode}>
-                            <Table.DataCell>{vurdering.kode}</Table.DataCell>
-                            <Table.DataCell>{vurdering.vurdering}</Table.DataCell>
-                            <Table.DataCell>{vurdering.årsak}</Table.DataCell>
-                            <Table.DataCell>{vurdering.notat}</Table.DataCell>
-                            <Table.DataCell>
-                                <Button
-                                    variant="tertiary"
-                                    size="small"
-                                    icon={<TrashIcon title="Slett vurdering" />}
-                                    onClick={() => slettVurdering({ kode: vurdering.kode })}
-                                />
-                            </Table.DataCell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table>
-        </div>
+                ))}
+            </Table.Body>
+        </Table>
     )
 }
