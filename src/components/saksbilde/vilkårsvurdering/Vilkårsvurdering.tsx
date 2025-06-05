@@ -16,6 +16,7 @@ import { kodeverk, Vilkår } from '@components/saksbilde/vilkårsvurdering/kodev
 import { VilkårsvurderingFormPanel } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingFormPanel'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
+import { cn } from '@utils/tw'
 
 interface VilkårsgrunnlagProps {
     value: string
@@ -54,11 +55,15 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                         const vilkårsvurdering = vilkårsvurderinger?.find(
                                             (vurdertVilkår) => vurdertVilkår.kode === vilkår.vilkårskode,
                                         )
+                                        const selected = vilkår.vilkårskode === aktivtVilkår.vilkårskode
+
                                         return (
                                             <TableRow
                                                 key={vilkår.vilkårskode}
-                                                selected={vilkår.vilkårskode === aktivtVilkår.vilkårskode}
-                                                className="cursor-pointer"
+                                                selected={selected}
+                                                className={cn('cursor-pointer', {
+                                                    'relative z-10': selected,
+                                                })}
                                                 role="button"
                                                 onClick={() => setAktivtVilkår(vilkår)}
                                             >
