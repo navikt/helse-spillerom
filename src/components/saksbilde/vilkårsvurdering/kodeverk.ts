@@ -16,6 +16,7 @@ export type Årsak = {
 }
 
 export type Vilkår = {
+    kategori: string
     vilkårshjemmel: Vilkårshjemmel
     vilkårskode: string
     beskrivelse: string
@@ -32,6 +33,7 @@ export type Kodeverk = Vilkår[]
 export const kodeverk: Kodeverk = [
     // Ftrl 22-13 3
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -60,6 +62,7 @@ export const kodeverk: Kodeverk = [
     },
     // Ftrl 2-1
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -88,6 +91,7 @@ export const kodeverk: Kodeverk = [
     },
     // Ftrl 8-4
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -116,6 +120,7 @@ export const kodeverk: Kodeverk = [
     },
     // Ftrl 8-2 1
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -204,6 +209,7 @@ export const kodeverk: Kodeverk = [
     },
     // Ftrl 8-3 2
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -232,6 +238,7 @@ export const kodeverk: Kodeverk = [
     },
     // Ftrl 8-3
     {
+        kategori: 'generelle_bestemmelser',
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '2019-01-01',
@@ -242,6 +249,91 @@ export const kodeverk: Kodeverk = [
         },
         vilkårskode: 'INNTAP',
         beskrivelse: 'Har tapt pensjonsgivende inntekt på grunn av arbeidsuførhet',
+        mulige_resultater: {
+            OPPFYLT: [
+                {
+                    kode: 'en_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            IKKE_OPPFYLT: [
+                {
+                    kode: 'en_annen_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            SKAL_IKKE_VURDERES: [],
+        },
+    },
+    // tester ting
+    {
+        kategori: 'arbeidstakere',
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2019-01-01',
+            paragraf: '1-1',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'en_vilkårskode_arbeidstaker',
+        beskrivelse: 'En eller annen beskrivelse',
+        mulige_resultater: {
+            OPPFYLT: [
+                {
+                    kode: 'en_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            IKKE_OPPFYLT: [
+                {
+                    kode: 'en_annen_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            SKAL_IKKE_VURDERES: [],
+        },
+    },
+    {
+        kategori: 'selvstendig_næringsdrivende',
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2019-01-01',
+            paragraf: '1-2',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'en_vilkårskode_selvstendig1',
+        beskrivelse: 'En eller annen beskrivelse',
+        mulige_resultater: {
+            OPPFYLT: [
+                {
+                    kode: 'en_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            IKKE_OPPFYLT: [
+                {
+                    kode: 'en_annen_kode',
+                    beskrivelse: 'Her må det stå noe',
+                },
+            ],
+            SKAL_IKKE_VURDERES: [],
+        },
+    },
+    {
+        kategori: 'selvstendig_næringsdrivende',
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2019-01-01',
+            paragraf: '1-3',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'en_vilkårskode_selvstendig2',
+        beskrivelse: 'En eller annen beskrivelse',
         mulige_resultater: {
             OPPFYLT: [
                 {
