@@ -53,6 +53,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
                             onChange={(val) => {
                                 field.onChange(val)
                                 form.setValue('årsak', '')
+                                form.clearErrors('årsak')
                                 form.setValue('notat', '')
                             }}
                             error={fieldState.error?.message}
