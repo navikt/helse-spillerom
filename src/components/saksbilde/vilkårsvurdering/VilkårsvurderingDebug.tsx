@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
 import { erProd } from '@/env'
+import { useKodeverk } from '@hooks/queries/useKodeverk'
 
 export function VilkarsvurderingDebugging({ children }: PropsWithChildren): ReactElement {
     const [showModal, setShowModal] = useState(false)
@@ -38,7 +39,7 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
                         setShowModal(false)
                     }}
                     header={{ heading: 'Vurderte vilkår', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max max-w-[800px] rounded-none p-0"
+                    className="left-auto m-0 m-10 h-screen max-h-max max-w-[1200px] rounded-none p-0"
                 >
                     <ModalBody>
                         <Vilkårsvurdering />
@@ -51,6 +52,7 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
 
 function Vilkårsvurdering(): ReactElement {
     const { data: vurderinger = [] } = useVilkaarsvurderinger()
+    const { data: kodeverk = [] } = useKodeverk()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 
     return (
@@ -65,22 +67,51 @@ function Vilkårsvurdering(): ReactElement {
                 </Table.Row>
             </Table.Header>
             <Table.Body>
-                {vurderinger.map((vurdering) => (
-                    <Table.Row key={vurdering.kode}>
-                        <Table.DataCell>{vurdering.kode}</Table.DataCell>
-                        <Table.DataCell>{vurdering.vurdering}</Table.DataCell>
-                        <Table.DataCell>{vurdering.årsak}</Table.DataCell>
-                        <Table.DataCell>{vurdering.notat}</Table.DataCell>
-                        <Table.DataCell>
-                            <Button
-                                variant="tertiary"
-                                size="small"
-                                icon={<TrashIcon className="text-icon-danger" title="Slett vurdering" />}
-                                onClick={() => slettVurdering({ kode: vurdering.kode })}
-                            />
-                        </Table.DataCell>
-                    </Table.Row>
-                ))}
+                {vurderinger.map((vurdering) => {
+                    const vilkår = kodeverk.find((v) => v.vilkårskode === vurdering.kode)
+                    const årsak = vilkår?.mulige_resultater[vurdering.vurdering]?.find(
+                        (a) => a.kode === vurdering.årsak,
+                    )
+                    return (
+                        <Table.Row key={vurdering.kode}>
+                            <Table.DataCell>
+                                <div>
+                                    {vurdering.kode}
+                                    {vilkår?.vilkårshjemmel && (
+                                        <div className="text-sm text-gray-500">
+                                            {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.paragraf}
+                                            {vilkår.vilkårshjemmel.ledd && ` ledd ${vilkår.vilkårshjemmel.ledd}`}
+                                            {vilkår.vilkårshjemmel.bokstav &&
+                                                ` bokstav ${vilkår.vilkårshjemmel.bokstav}`}
+                                        </div>
+                                    )}
+                                </div>
+                            </Table.DataCell>
+                            <Table.DataCell>{vurdering.vurdering}</Table.DataCell>
+                            <Table.DataCell>
+                                <div>
+                                    {vurdering.årsak}
+                                    {årsak?.vilkårshjemmel && (
+                                        <div className="text-sm text-gray-500">
+                                            {årsak.vilkårshjemmel.lovverk} §{årsak.vilkårshjemmel.paragraf}
+                                            {årsak.vilkårshjemmel.ledd && ` ledd ${årsak.vilkårshjemmel.ledd}`}
+                                            {årsak.vilkårshjemmel.bokstav && ` bokstav ${årsak.vilkårshjemmel.bokstav}`}
+                                        </div>
+                                    )}
+                                </div>
+                            </Table.DataCell>
+                            <Table.DataCell>{vurdering.notat}</Table.DataCell>
+                            <Table.DataCell>
+                                <Button
+                                    variant="tertiary"
+                                    size="small"
+                                    icon={<TrashIcon className="text-icon-danger" title="Slett vurdering" />}
+                                    onClick={() => slettVurdering({ kode: vurdering.kode })}
+                                />
+                            </Table.DataCell>
+                        </Table.Row>
+                    )
+                })}
             </Table.Body>
         </Table>
     )
