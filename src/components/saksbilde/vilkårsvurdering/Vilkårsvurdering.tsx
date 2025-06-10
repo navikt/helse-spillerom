@@ -52,7 +52,7 @@ export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElemen
                                 {vilkårListe.length}
                             </AccordionHeader>
                             <AccordionContent className="p-0">
-                                <KategoriAccordionContent
+                                <VilkårsvurderingAccordionContent
                                     vilkårListe={vilkårListe}
                                     vilkårsvurderinger={vilkårsvurderinger}
                                 />
@@ -70,7 +70,10 @@ interface KategoriAccordionContentProps {
     vilkårsvurderinger?: Vilkaarsvurdering[]
 }
 
-function KategoriAccordionContent({ vilkårListe, vilkårsvurderinger }: KategoriAccordionContentProps): ReactElement {
+function VilkårsvurderingAccordionContent({
+    vilkårListe,
+    vilkårsvurderinger,
+}: KategoriAccordionContentProps): ReactElement {
     const [aktivtVilkår, setAktivtVilkår] = useState<Vilkår>()
 
     useEffect(() => {

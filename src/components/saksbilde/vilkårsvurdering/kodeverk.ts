@@ -276,7 +276,7 @@ export const kodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'en_vilkårskode_arbeidstaker',
+        vilkårskode: 'en_vilkaarskode_arbeidstaker',
         beskrivelse: 'En eller annen beskrivelse',
         mulige_resultater: {
             OPPFYLT: [
@@ -304,7 +304,7 @@ export const kodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'en_vilkårskode_selvstendig1',
+        vilkårskode: 'en_vilkaarskode_selvstendig1',
         beskrivelse: 'En eller annen beskrivelse',
         mulige_resultater: {
             OPPFYLT: [
@@ -332,7 +332,7 @@ export const kodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'en_vilkårskode_selvstendig2',
+        vilkårskode: 'en_vilkaarskode_selvstendig2',
         beskrivelse: 'En eller annen beskrivelse',
         mulige_resultater: {
             OPPFYLT: [
