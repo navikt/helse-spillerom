@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { Heading, HStack, VStack } from '@navikt/ds-react'
 import { ClockIcon, FolderIcon } from '@navikt/aksel-icons'
 
@@ -28,16 +29,31 @@ export function Høyremeny(): ReactElement {
 
     return (
         <HStack>
-            {showSidemeny && (
-                <Sidemeny side="right" className="transition delay-150 duration-300 ease-in-out">
-                    <VStack gap="4">
-                        <Heading level="1" size="xsmall" className="font-medium text-gray-600">
-                            {filter}
-                        </Heading>
-                        {høyremenyElementer[filter]}
-                    </VStack>
-                </Sidemeny>
-            )}
+            <AnimatePresence initial={false}>
+                {showSidemeny && (
+                    <motion.div
+                        key="historikk"
+                        transition={{
+                            type: 'tween',
+                            duration: 0.2,
+                            ease: 'easeInOut',
+                        }}
+                        initial={{ width: 0 }}
+                        animate={{ width: 'auto' }}
+                        exit={{ width: 0 }}
+                        className="overflow-hidden"
+                    >
+                        <Sidemeny side="right" className="h-full">
+                            <VStack gap="4">
+                                <Heading level="1" size="xsmall" className="font-medium text-gray-600">
+                                    {filter}
+                                </Heading>
+                                {høyremenyElementer[filter]}
+                            </VStack>
+                        </Sidemeny>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <VStack className="border-l-1 border-border-divider px-3 py-6" gap="6">
                 <FilterButton
                     icon={<ClockIcon title="Historikk" />}
