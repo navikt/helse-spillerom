@@ -48,7 +48,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
                     render={({ field, fieldState }) => (
                         <RadioGroup
                             size="small"
-                            legend="Er vilkåret oppfylt?"
+                            legend={vilkår.spørsmålstekst || 'Er vilkåret oppfylt?'}
                             value={field.value}
                             onChange={(val) => {
                                 field.onChange(val)

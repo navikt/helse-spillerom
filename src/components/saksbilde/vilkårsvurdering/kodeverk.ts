@@ -20,6 +20,7 @@ export type Vilkår = {
     vilkårshjemmel: Vilkårshjemmel
     vilkårskode: string
     beskrivelse: string
+    spørsmålstekst?: string
     mulige_resultater: {
         OPPFYLT: Årsak[]
         IKKE_OPPFYLT: Årsak[]
