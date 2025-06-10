@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { BodyShort, VStack } from '@navikt/ds-react'
 
 import { useDokumenter } from '@hooks/queries/useDokumenter'
-import { Dokument, DokumentSkeleton } from '@components/sidemenyer/høyremeny/Dokument'
+import { Dokument, DokumentSkeleton } from '@components/sidemenyer/høyremeny/dokumenter/Dokument'
 
 export function Dokumenter(): ReactElement {
     const { data: dokumenter, isLoading, isError } = useDokumenter()

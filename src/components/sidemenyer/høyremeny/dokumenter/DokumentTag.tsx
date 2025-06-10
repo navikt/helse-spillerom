@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, ComponentType, ReactElement } from 'react'
 import { Tag, TagProps } from '@navikt/ds-react'
 
-import { Dokumenttype } from '@/schemas/dokument'
+import { Dokumenttype } from '@schemas/dokument'
 import { cn } from '@utils/tw'
 
 interface DokumentTagProps {

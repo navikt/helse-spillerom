@@ -1,11 +1,11 @@
 'use client'
 
-import { ReactElement, useState, Fragment } from 'react'
-import { Button, Modal, Table, BodyShort, Detail, HStack, VStack } from '@navikt/ds-react'
+import { Fragment, ReactElement, useState } from 'react'
+import { BodyShort, Button, Detail, HStack, Modal, Table, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
 import { useAareg } from '@hooks/queries/useAareg'
-import { Arbeidsforhold } from '@/schemas/aareg'
+import { Arbeidsforhold } from '@schemas/aareg'
 import { cn } from '@utils/tw'
 
 export function AaregKnapp(): ReactElement {
