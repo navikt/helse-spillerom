@@ -70,7 +70,7 @@ interface KategoriAccordionContentProps {
     vilkårsvurderinger?: Vilkaarsvurdering[]
 }
 
-function VilkårsvurderingAccordionContent({
+export function VilkårsvurderingAccordionContent({
     vilkårListe,
     vilkårsvurderinger,
 }: KategoriAccordionContentProps): ReactElement {
