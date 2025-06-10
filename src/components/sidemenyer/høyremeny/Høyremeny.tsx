@@ -40,12 +40,12 @@ export function Høyremeny(): ReactElement {
             )}
             <VStack className="border-l-1 border-border-divider px-3 py-6" gap="6">
                 <FilterButton
-                    icon={<ClockIcon />}
+                    icon={<ClockIcon title="Historikk" />}
                     active={filter === 'Historikk' && showSidemeny}
                     onClick={() => handleClick('Historikk')}
                 />
                 <FilterButton
-                    icon={<FolderIcon />}
+                    icon={<FolderIcon title="Dokumenter" />}
                     active={filter === 'Dokumenter' && showSidemeny}
                     onClick={() => handleClick('Dokumenter')}
                 />
