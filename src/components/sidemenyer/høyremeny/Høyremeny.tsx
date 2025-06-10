@@ -32,7 +32,7 @@ export function Høyremeny(): ReactElement {
             <AnimatePresence initial={false}>
                 {showSidemeny && (
                     <motion.div
-                        key="historikk"
+                        key="høyremeny"
                         transition={{
                             type: 'tween',
                             duration: 0.2,
