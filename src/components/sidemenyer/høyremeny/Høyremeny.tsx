@@ -91,9 +91,10 @@ function FilterButton({ icon, active, onClick }: FilterButtonProps): ReactElemen
     return (
         <button
             className={cn(
-                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-surface-subtle hover:bg-surface-action-subtle-hover active:bg-surface-action active:text-text-on-action',
+                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full active:bg-surface-action active:text-text-on-action',
                 {
-                    'bg-surface-action text-text-on-action': active,
+                    'bg-surface-subtle hover:bg-surface-action-subtle-hover': !active,
+                    'bg-surface-action text-text-on-action hover:bg-surface-action-hover': active,
                 },
             )}
             onClick={onClick}
