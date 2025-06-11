@@ -10,7 +10,11 @@ interface MenyProps extends PropsWithChildren {
 export function Sidemeny({ side, className, children }: MenyProps): ReactElement {
     return (
         <section
-            className={cn('w-sm border-border-divider p-4', className, side === 'left' ? 'border-r-1' : 'border-l-1')}
+            className={cn(
+                'w-sm min-w-sm border-border-divider p-4',
+                className,
+                side === 'left' ? 'border-r-1' : 'border-l-1',
+            )}
         >
             {children}
         </section>
