@@ -60,9 +60,11 @@ export function Tidslinje(): ReactElement {
 
 function TimelineSkeleton(): ReactElement {
     return (
-        <VStack className="mt-7 border-b-1 border-border-divider p-8 pb-6" gap="4">
+        <VStack className="mt-7 border-b-1 border-border-divider p-8 pb-4" gap="3">
             <TimelineRowSkeleton />
             <TimelineRowSkeleton />
+            <Skeleton variant="rectangle" height={14} className="mt-[15px] ml-[265px] grow" />
+            <Skeleton variant="rectangle" height={36} width={246} className="self-end" />
         </VStack>
     )
 }
@@ -70,8 +72,8 @@ function TimelineSkeleton(): ReactElement {
 function TimelineRowSkeleton(): ReactElement {
     return (
         <HStack gap="4" align="center">
-            <Skeleton variant="text" width={176} className="size-10" />
-            <Skeleton variant="text" className="size-10 flex-1" />
+            <Skeleton variant="text" width={248} height={42} />
+            <Skeleton variant="text" height={42} className="grow" />
         </HStack>
     )
 }
