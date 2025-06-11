@@ -9,6 +9,7 @@ import { hentPerson } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
 import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
+import { Inntektsforhold } from '@/schemas/inntektsforhold'
 
 import { ainntektData } from './ainntekt'
 
@@ -166,6 +167,39 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             }
 
             return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
+        }
+        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const uuid = hentUuidFraUrl(request.url)
+            if (!person?.inntektsforhold) {
+                person.inntektsforhold = {}
+            }
+            return NextResponse.json(person.inntektsforhold[uuid] || [])
+        }
+        case 'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const uuid = hentUuidFraUrl(request.url)
+            const body = await request.json()
+            const nyttInntektsforhold: Inntektsforhold = {
+                id: uuidv4(),
+                inntektsforholdtype: body.inntektsforholdtype,
+                sykmeldtFraForholdet: body.sykmeldtFraForholdet,
+            }
+
+            if (!person?.inntektsforhold) {
+                person.inntektsforhold = {}
+            }
+            if (!person.inntektsforhold[uuid]) {
+                person.inntektsforhold[uuid] = []
+            }
+
+            person.inntektsforhold[uuid].push(nyttInntektsforhold)
+
+            return NextResponse.json(nyttInntektsforhold, { status: 201 })
         }
         default:
             raise(new Error(`Unknown path: ${path}`))
