@@ -1,7 +1,7 @@
 'use client'
 
 import { PropsWithChildren, ReactElement } from 'react'
-import { HStack, Skeleton } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, Skeleton } from '@navikt/ds-react'
 import { FigureCombinationIcon } from '@navikt/aksel-icons'
 
 import { NavnOgAlder } from '@components/personheader/NavnOgAlder'
@@ -10,10 +10,10 @@ import { AktørId } from '@components/personheader/AktørId'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 
 export function PersonHeader(): ReactElement {
-    const { data: personinfo, isLoading, isError } = usePersoninfo()
+    const { data: personinfo, isLoading, isError, refetch } = usePersoninfo()
 
     if (isLoading) return <PersonHeaderSkeleton />
-    if (isError || !personinfo) return <></> // vis noe fornuftig
+    if (isError || !personinfo) return <PersonHeaderError refetch={() => refetch()} />
 
     return (
         <PersonHeaderContainer>
@@ -23,18 +23,6 @@ export function PersonHeader(): ReactElement {
             <Fødselsnummer fødselsnummer={personinfo.fødselsnummer} />
             <Seperator />
             <AktørId aktørId={personinfo.aktørId} />
-        </PersonHeaderContainer>
-    )
-}
-
-function PersonHeaderSkeleton(): ReactElement {
-    return (
-        <PersonHeaderContainer>
-            <Skeleton width={210} />
-            <Seperator />
-            <Skeleton width={127} />
-            <Seperator />
-            <Skeleton width={210} />
         </PersonHeaderContainer>
     )
 }
@@ -49,4 +37,27 @@ function PersonHeaderContainer({ children }: PropsWithChildren): ReactElement {
 
 function Seperator(): ReactElement {
     return <span className="mx-4">/</span>
+}
+
+function PersonHeaderSkeleton(): ReactElement {
+    return (
+        <PersonHeaderContainer>
+            <Skeleton width={210} />
+            <Seperator />
+            <Skeleton width={127} />
+            <Seperator />
+            <Skeleton width={210} />
+        </PersonHeaderContainer>
+    )
+}
+
+function PersonHeaderError({ refetch }: { refetch: () => void }): ReactElement {
+    return (
+        <PersonHeaderContainer>
+            <BodyShort>Kunne ikke hente personinfo akkurat nå.</BodyShort>
+            <Button className="ml-4" type="button" size="xsmall" variant="secondary" onClick={refetch}>
+                Prøv igjen
+            </Button>
+        </PersonHeaderContainer>
+    )
 }
