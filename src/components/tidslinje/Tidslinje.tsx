@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { CheckmarkCircleFillIcon } from '@navikt/aksel-icons'
 
@@ -15,10 +15,10 @@ import { Timeline } from '@components/tidslinje/timeline/Timeline'
 
 export function Tidslinje(): ReactElement {
     const [activePeriod, setActivePeriod] = useState<string>('')
-    const { data: søknader, isLoading, isError } = useSoknader(dayjs('2020-01-01'))
+    const { data: søknader, isLoading, isError, refetch } = useSoknader(dayjs('2020-01-01'))
 
     if (isLoading) return <TimelineSkeleton />
-    if (isError || !søknader) return <></> // vis noe fornuftig
+    if (isError || !søknader) return <TimelineError refetch={() => refetch()} />
     if (søknader.length === 0) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
@@ -74,6 +74,17 @@ function TimelineRowSkeleton(): ReactElement {
         <HStack gap="4" align="center">
             <Skeleton variant="text" width={248} height={42} />
             <Skeleton variant="text" height={42} className="grow" />
+        </HStack>
+    )
+}
+
+function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
+    return (
+        <HStack className="h-60 w-full border-b-1 border-border-divider" align="center" justify="center" gap="4">
+            <BodyShort>Kunne ikke hente data for å vise tidslinjen akkurat nå.</BodyShort>
+            <Button type="button" size="xsmall" variant="secondary" onClick={refetch}>
+                Prøv igjen
+            </Button>
         </HStack>
     )
 }
