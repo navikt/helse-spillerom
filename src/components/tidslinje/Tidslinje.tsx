@@ -19,7 +19,7 @@ export function Tidslinje(): ReactElement {
 
     if (isLoading) return <TimelineSkeleton />
     if (isError || !søknader) return <TimelineError refetch={() => refetch()} />
-    if (søknader.length === 0) return <></> // vis noe fornuftig
+    if (søknader.length === 0) return <TimelineEmpty />
 
     const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
         const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
@@ -85,6 +85,14 @@ function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
             <Button type="button" size="xsmall" variant="secondary" onClick={refetch}>
                 Prøv igjen
             </Button>
+        </HStack>
+    )
+}
+
+function TimelineEmpty(): ReactElement {
+    return (
+        <HStack className="h-60 w-full border-b-1 border-border-divider" align="center" justify="center" gap="4">
+            <BodyShort>Fant ingen søknader/behandlinger.</BodyShort>
         </HStack>
     )
 }
