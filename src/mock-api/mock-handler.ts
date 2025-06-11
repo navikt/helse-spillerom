@@ -184,10 +184,22 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             }
             const uuid = hentUuidFraUrl(request.url)
             const body = await request.json()
+
+            // Mock organisasjonsnavn lookup basert på orgnummer
+            const getOrgnavn = (orgnummer?: string): string | undefined => {
+                if (!orgnummer) return undefined
+                const mockOrganisasjoner: Record<string, string> = {
+                    '123456789': 'NAV IT',
+                }
+                return mockOrganisasjoner[orgnummer] || `Organisasjon ${orgnummer}`
+            }
+
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
                 inntektsforholdtype: body.inntektsforholdtype,
                 sykmeldtFraForholdet: body.sykmeldtFraForholdet,
+                orgnummer: body.orgnummer,
+                orgnavn: body.orgnummer ? getOrgnavn(body.orgnummer) : undefined,
             }
 
             if (!person?.inntektsforhold) {

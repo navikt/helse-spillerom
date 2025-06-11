@@ -7,6 +7,7 @@ import { Inntektsforhold, inntektsforholdSchema, Inntektsforholdtype } from '@/s
 type MutationProps = {
     inntektsforholdtype: Inntektsforholdtype
     sykmeldtFraForholdet: boolean
+    orgnummer?: string
 }
 
 export function useOpprettInntektsforhold() {
@@ -14,13 +15,14 @@ export function useOpprettInntektsforhold() {
     const queryClient = useQueryClient()
 
     return useMutation<Inntektsforhold, Error, MutationProps>({
-        mutationFn: async ({ inntektsforholdtype, sykmeldtFraForholdet }) => {
+        mutationFn: async ({ inntektsforholdtype, sykmeldtFraForholdet, orgnummer }) => {
             return await postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
                 inntektsforholdSchema,
                 {
                     inntektsforholdtype,
                     sykmeldtFraForholdet,
+                    orgnummer,
                 },
             )
         },

@@ -11,6 +11,8 @@ export const inntektsforholdSchema = z.object({
     id: z.string(),
     inntektsforholdtype: inntektsforholdtypeSchema,
     sykmeldtFraForholdet: z.boolean(),
+    orgnummer: z.string().optional(),
+    orgnavn: z.string().optional(),
 })
 
 export type Inntektsforhold = z.infer<typeof inntektsforholdSchema>
