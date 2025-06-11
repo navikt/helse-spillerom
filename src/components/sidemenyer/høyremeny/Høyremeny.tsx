@@ -28,7 +28,7 @@ export function Høyremeny(): ReactElement {
     }
 
     return (
-        <HStack>
+        <HStack wrap={false}>
             <AnimatePresence initial={false}>
                 {showSidemeny && (
                     <motion.div
