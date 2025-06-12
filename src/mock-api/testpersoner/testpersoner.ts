@@ -5,6 +5,7 @@ import { Søknad } from '@/schemas/søknad'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
+import { Dokument } from '@/schemas/dokument'
 
 export interface Testperson {
     personId: string
@@ -13,6 +14,7 @@ export interface Testperson {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     inntektsforhold?: Record<string, Inntektsforhold[]>
     dagoversikt?: Record<string, Dagoversikt>
+    dokumenter?: Record<string, Dokument[]>
 }
 
 export const testpersoner: Testperson[] = [Kalle, Mattis]

@@ -6,7 +6,8 @@ import { personsøk } from '@/mock-api/personsøk'
 import { hentPerson } from '@/mock-api/session'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
 import { hentPersonIdFraUrl, hentUuidFraUrl, hentInntektsforholdUuidFraUrl } from '@/mock-api/utils/url-utils'
-import { handlePersoninfo, handleDokumenter } from '@/mock-api/handlers/person-handlers'
+import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
+import { handleDokumenter } from '@/mock-api/handlers/dokument-handlers'
 import {
     handleGetSaksbehandlingsperioder,
     handlePostSaksbehandlingsperioder,

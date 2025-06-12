@@ -10,6 +10,7 @@ import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
+import { Dokument } from '@/schemas/dokument'
 
 export interface Person {
     fnr: string
@@ -19,6 +20,7 @@ export interface Person {
     vilkaarsvurderinger: Record<string, Vilkaarsvurdering[]>
     inntektsforhold: Record<string, Inntektsforhold[]>
     dagoversikt: Record<string, Dagoversikt>
+    dokumenter: Record<string, Dokument[]>
 }
 
 type Session = {
@@ -69,6 +71,7 @@ export async function getSession(): Promise<Session> {
                 vilkaarsvurderinger: {},
                 inntektsforhold: p.inntektsforhold ? { ...p.inntektsforhold } : {},
                 dagoversikt: p.dagoversikt ? { ...p.dagoversikt } : {},
+                dokumenter: p.dokumenter ? { ...p.dokumenter } : {},
             }),
         )
 
@@ -101,6 +104,7 @@ function skapPerson(fnr: string): Person {
         vilkaarsvurderinger: {},
         inntektsforhold: {},
         dagoversikt: {},
+        dokumenter: {},
     }
 }
 
