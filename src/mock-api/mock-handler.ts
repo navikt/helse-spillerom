@@ -1,356 +1,115 @@
 import { logger } from '@navikt/next-logger'
 import { NextResponse } from 'next/server'
-import { v4 as uuidv4 } from 'uuid'
 
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
-import { Søknad } from '@/schemas/søknad'
 import { hentPerson } from '@/mock-api/session'
-import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
-import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
-import { Inntektsforhold } from '@/schemas/inntektsforhold'
-import { Dagoversikt, Dag } from '@/schemas/dagoversikt'
+import { hentPersonIdFraUrl, hentUuidFraUrl, hentInntektsforholdUuidFraUrl } from '@/mock-api/utils/url-utils'
+import { handlePersoninfo, handleDokumenter } from '@/mock-api/handlers/person-handlers'
+import {
+    handleGetSaksbehandlingsperioder,
+    handlePostSaksbehandlingsperioder,
+} from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
+import { handleGetSoknader } from '@/mock-api/handlers/soknad-handlers'
+import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
+import {
+    handleGetInntektsforhold,
+    handlePostInntektsforhold,
+    handleGetDagoversikt,
+} from '@/mock-api/handlers/inntektsforhold-handlers'
 
 import { ainntektData } from './ainntekt'
 
-function hentPersonIdFraUrl(url: string): string {
-    const parts = url.split('/')
-    // Finn indeksen til 'v1' og ta neste del som er personId
-    const v1Index = parts.findIndex((part) => part === 'v1')
-    if (v1Index === -1 || v1Index + 1 >= parts.length) {
-        throw new Error('Kunne ikke finne personId i URL')
-    }
-    return parts[v1Index + 1]
+interface HandlerContext {
+    request: Request
+    person?: ReturnType<typeof hentPerson>
+    personId: string
+    uuid?: string
+    inntektsforholdId?: string
+    kode?: string
 }
 
-function hentUuidFraUrl(url: string): string {
-    const parts = url.split('/')
-    // Finn indeksen til 'saksbehandlingsperioder' og ta neste del som er uuid
-    const periodeIndex = parts.findIndex((part) => part === 'saksbehandlingsperioder')
-    if (periodeIndex === -1 || periodeIndex + 1 >= parts.length) {
-        throw new Error('Kunne ikke finne UUID i URL')
-    }
-    return parts[periodeIndex + 1]
-}
+type HandlerFunction = (context: HandlerContext) => Promise<Response>
 
-function hentInntektsforholdUuidFraUrl(url: string): string {
-    const parts = url.split('/')
-    // Finn indeksen til 'inntektsforhold' og ta neste del som er uuid
-    const inntektsforholdIndex = parts.findIndex((part) => part === 'inntektsforhold')
-    if (inntektsforholdIndex === -1 || inntektsforholdIndex + 1 >= parts.length) {
-        throw new Error('Kunne ikke finne inntektsforhold UUID i URL')
-    }
-    return parts[inntektsforholdIndex + 1]
-}
+const handlers: Record<string, HandlerFunction> = {
+    'GET /v1/[personId]/personinfo': async ({ person }) => handlePersoninfo(await person),
 
-function genererDagoversikt(fom: string, tom: string): Dagoversikt {
-    const dager: Dag[] = []
-    const startDato = new Date(fom)
-    const sluttDato = new Date(tom)
+    'GET /v1/[personId]/saksbehandlingsperioder': async ({ person }) => handleGetSaksbehandlingsperioder(await person),
 
-    // Generer dager fra fom til tom
-    const currentDato = new Date(startDato)
-    while (currentDato <= sluttDato) {
-        const erHelg = currentDato.getDay() === 0 || currentDato.getDay() === 6
+    'POST /v1/[personId]/saksbehandlingsperioder': async ({ request, person, personId }) =>
+        handlePostSaksbehandlingsperioder(request, await person, personId),
 
-        dager.push({
-            id: uuidv4(),
-            type: erHelg ? 'HELGEDAG' : 'SYKEDAG',
-            dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
-        })
+    'GET /v1/[personId]/soknader': async ({ request, personId }) => handleGetSoknader(request, personId),
 
-        // Gå til neste dag
-        currentDato.setDate(currentDato.getDate() + 1)
-    }
+    'GET /v1/[personId]/dokumenter': async () => handleDokumenter(),
 
-    return dager
-}
+    'GET /v1/[personId]/arbeidsforhold': async () => NextResponse.json(mockArbeidsforhold),
 
-function getOrgnavn(orgnummer?: string, fallbackNavn?: string): string | undefined {
-    if (!orgnummer) return fallbackNavn
+    'GET /v1/[personId]/ainntekt': async () => NextResponse.json(ainntektData),
 
-    const mockOrganisasjoner: Record<string, string> = {
-        '123456789': 'NAV IT',
-    }
+    'POST /v1/personsok': async ({ request }) => personsøk(request),
 
-    return mockOrganisasjoner[orgnummer] || fallbackNavn || `Organisasjon ${orgnummer}`
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar': async ({ person, uuid }) =>
+        handleGetVilkaar(await person, uuid!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': async ({ request, person, uuid, kode }) =>
+        handlePutVilkaar(request, await person, uuid!, kode!),
+
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': async ({ person, uuid, kode }) =>
+        handleDeleteVilkaar(await person, uuid!, kode!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ person, uuid }) =>
+        handleGetInntektsforhold(await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid }) =>
+        handlePostInntektsforhold(request, await person, uuid!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
+        person,
+        inntektsforholdId,
+    }) => handleGetDagoversikt(await person, inntektsforholdId!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
-    const personIdFraRequest = hentPersonIdFraUrl(request.url)
-    const person = await hentPerson(personIdFraRequest)
 
-    switch (path) {
-        case 'GET /v1/[personId]/personinfo': {
-            if (!person) {
-                return NextResponse.json(
-                    {
-                        message: 'Person not found',
-                    },
-                    { status: 404 },
-                )
-            }
-            return NextResponse.json({
-                fødselsnummer: person.fnr,
-                aktørId: person.personinfo.aktørId,
-                navn: person.personinfo.navn,
-                alder: person.personinfo.alder,
-            })
+    try {
+        const personId = hentPersonIdFraUrl(request.url)
+        const person = hentPerson(personId)
+
+        // Prepare context
+        const context: HandlerContext = {
+            request,
+            person,
+            personId,
         }
-        case 'GET /v1/[personId]/saksbehandlingsperioder':
-            return NextResponse.json(person?.saksbehandlingsperioder || [])
 
-        case 'POST /v1/[personId]/saksbehandlingsperioder':
-            const body = await request.json()
-            const nyPeriode = {
-                id: uuidv4(),
-                spilleromPersonId: personIdFraRequest,
-                opprettet: new Date().toISOString(),
-                opprettetAvNavIdent: 'Z123456',
-                opprettetAvNavn: 'Test Testesen',
-                fom: body.fom,
-                tom: body.tom,
-                sykepengesoknadIder: body.sykepengesoknadIder || [],
-            }
-            person?.saksbehandlingsperioder.push(nyPeriode)
-
-            // Automatisk opprettelse av inntektsforhold basert på valgte søknader
-            if (body.sykepengesoknadIder && body.sykepengesoknadIder.length > 0 && person) {
-                const testperson = finnPerson(personIdFraRequest)
-                const søknader = testperson?.soknader || []
-                const valgteSøknader = søknader.filter((søknad) => body.sykepengesoknadIder.includes(søknad.id))
-
-                // Opprett unike inntektsforhold basert på orgnummer + arbeidssituasjon
-                const unikeInntektsforhold = new Map<
-                    string,
-                    {
-                        orgnummer?: string
-                        orgnavn?: string
-                        arbeidssituasjon: string
-                    }
-                >()
-
-                valgteSøknader.forEach((søknad) => {
-                    const orgnummer = søknad.arbeidsgiver?.orgnummer
-                    const arbeidssituasjon = søknad.arbeidssituasjon || 'ANNET'
-
-                    // Lag unik nøkkel basert på orgnummer + arbeidssituasjon
-                    const key = `${orgnummer || 'ingen'}_${arbeidssituasjon}`
-
-                    if (!unikeInntektsforhold.has(key)) {
-                        unikeInntektsforhold.set(key, {
-                            orgnummer,
-                            orgnavn: søknad.arbeidsgiver?.navn,
-                            arbeidssituasjon,
-                        })
-                    }
-                })
-
-                // Konverter arbeidssituasjon til inntektsforholdtype
-                const mapArbeidssituasjonTilInntektsforholdtype = (arbeidssituasjon: string) => {
-                    switch (arbeidssituasjon) {
-                        case 'ARBEIDSTAKER':
-                            return 'ORDINÆRT_ARBEIDSFORHOLD'
-                        case 'FRILANSER':
-                            return 'FRILANSER'
-                        case 'NAERINGSDRIVENDE':
-                            return 'SELVSTENDIG_NÆRINGSDRIVENDE'
-                        case 'ARBEIDSLEDIG':
-                            return 'ARBEIDSLEDIG'
-                        default:
-                            return 'ORDINÆRT_ARBEIDSFORHOLD'
-                    }
-                }
-
-                // Opprett inntektsforhold og dagoversikt
-                if (!person?.inntektsforhold) {
-                    person.inntektsforhold = {}
-                }
-                if (!person?.dagoversikt) {
-                    person.dagoversikt = {}
-                }
-                if (!person.inntektsforhold[nyPeriode.id]) {
-                    person.inntektsforhold[nyPeriode.id] = []
-                }
-
-                unikeInntektsforhold.forEach((forhold) => {
-                    const nyttInntektsforhold: Inntektsforhold = {
-                        id: uuidv4(),
-                        inntektsforholdtype: mapArbeidssituasjonTilInntektsforholdtype(forhold.arbeidssituasjon),
-                        sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
-                        orgnummer: forhold.orgnummer,
-                        orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),
-                    }
-
-                    person.inntektsforhold[nyPeriode.id].push(nyttInntektsforhold)
-
-                    // Opprett dagoversikt automatisk siden alle er sykmeldt
-                    person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(nyPeriode.fom, nyPeriode.tom)
-                })
-            }
-
-            return NextResponse.json(nyPeriode, { status: 201 })
-        case 'GET /v1/[personId]/soknader':
-            const url = new URL(request.url)
-            const fom = url.searchParams.get('fom')
-            const soknader: Søknad[] = finnPerson(personIdFraRequest)?.soknader || []
-            return NextResponse.json(
-                soknader.filter((soknad) => {
-                    //soknad fom er lik eller større enn fom
-                    if (!fom) return true
-                    const fomDate = new Date(fom)
-                    const soknadFomDate = new Date(soknad.fom!)
-                    return soknadFomDate >= fomDate
-                }),
-            )
-        case 'GET /v1/[personId]/dokumenter':
-            return NextResponse.json([
-                {
-                    id: '1',
-                    type: 'INNTEKTSMELDING',
-                    sendtTilNAVTidsunkt: '2025-01-01T09:12:10',
-                },
-                {
-                    id: '2',
-                    type: 'SØKNAD',
-                    sendtTilNAVTidsunkt: '2025-01-01T08:06:30',
-                },
-                {
-                    id: '3',
-                    type: 'SYKMELDING',
-                    sendtTilNAVTidsunkt: '2025-01-01T07:30:00',
-                },
-            ])
-        case 'GET /v1/[personId]/arbeidsforhold':
-            return NextResponse.json(mockArbeidsforhold)
-        case 'GET /v1/[personId]/ainntekt':
-            return NextResponse.json(ainntektData)
-        case 'POST /v1/personsok':
-            return personsøk(request)
-        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const uuid = hentUuidFraUrl(request.url)
-            if (!person?.vilkaarsvurderinger) {
-                person.vilkaarsvurderinger = {}
-            }
-            return NextResponse.json(person.vilkaarsvurderinger[uuid] || [])
+        // Extract additional parameters based on path
+        if (path.includes('/saksbehandlingsperioder/') && path.includes('[uuid]')) {
+            context.uuid = hentUuidFraUrl(request.url)
         }
-        case 'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const uuid = hentUuidFraUrl(request.url)
-            const kode = request.url.split('/').pop()!
-            const body = await request.json()
-            const nyVurdering: Vilkaarsvurdering = {
-                kode,
-                vurdering: body.vurdering,
-                årsak: body.årsak,
-                notat: body.notat,
-            }
 
-            if (!person?.vilkaarsvurderinger) {
-                person.vilkaarsvurderinger = {}
-            }
-            if (!person.vilkaarsvurderinger[uuid]) {
-                person.vilkaarsvurderinger[uuid] = []
-            }
-
-            const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
-            if (existingIndex >= 0) {
-                person.vilkaarsvurderinger[uuid][existingIndex] = nyVurdering
-            } else {
-                person.vilkaarsvurderinger[uuid].push(nyVurdering)
-            }
-
-            return NextResponse.json(nyVurdering, { status: 201 })
+        if (path.includes('/inntektsforhold/') && path.includes('/dagoversikt')) {
+            context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
-        case 'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const uuid = hentUuidFraUrl(request.url)
-            const kode = request.url.split('/').pop()!
 
-            if (!person?.vilkaarsvurderinger?.[uuid]) {
-                return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
-            }
-
-            const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
-            if (existingIndex >= 0) {
-                person.vilkaarsvurderinger[uuid].splice(existingIndex, 1)
-                return new NextResponse(null, { status: 204 })
-            }
-
-            return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
+        if (path.includes('/vilkaar/') && path.split('/').length > 6) {
+            context.kode = request.url.split('/').pop()!
         }
-        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const uuid = hentUuidFraUrl(request.url)
-            if (!person?.inntektsforhold) {
-                person.inntektsforhold = {}
-            }
-            return NextResponse.json(person.inntektsforhold[uuid] || [])
+
+        // Find and execute handler
+        const handler = handlers[path]
+        if (handler) {
+            return await handler(context)
         }
-        case 'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const uuid = hentUuidFraUrl(request.url)
-            const body = await request.json()
 
-            const nyttInntektsforhold: Inntektsforhold = {
-                id: uuidv4(),
-                inntektsforholdtype: body.inntektsforholdtype,
-                sykmeldtFraForholdet: body.sykmeldtFraForholdet,
-                orgnummer: body.orgnummer,
-                orgnavn: getOrgnavn(body.orgnummer),
-            }
-
-            if (!person?.inntektsforhold) {
-                person.inntektsforhold = {}
-            }
-            if (!person.inntektsforhold[uuid]) {
-                person.inntektsforhold[uuid] = []
-            }
-
-            person.inntektsforhold[uuid].push(nyttInntektsforhold)
-
-            // Opprett dagoversikt automatisk hvis sykmeldt fra forholdet
-            if (body.sykmeldtFraForholdet) {
-                if (!person.dagoversikt) {
-                    person.dagoversikt = {}
-                }
-
-                // Finn saksbehandlingsperioden for å få fom og tom
-                const saksbehandlingsperiode = person.saksbehandlingsperioder.find((p) => p.id === uuid)
-                if (saksbehandlingsperiode) {
-                    person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(
-                        saksbehandlingsperiode.fom,
-                        saksbehandlingsperiode.tom,
-                    )
-                }
-            }
-
-            return NextResponse.json(nyttInntektsforhold, { status: 201 })
-        }
-        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': {
-            if (!person) {
-                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-            }
-            const inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
-            if (!person?.dagoversikt) {
-                person.dagoversikt = {}
-            }
-            return NextResponse.json(person.dagoversikt[inntektsforholdId] || [])
-        }
-        default:
-            raise(new Error(`Unknown path: ${path}`))
+        raise(new Error(`Unknown path: ${path}`))
+    } catch (error) {
+        logger.error('Error in mocketBakrommetData:', error)
+        return NextResponse.json(
+            { message: 'Internal server error', error: error instanceof Error ? error.message : 'Unknown error' },
+            { status: 500 },
+        )
     }
 }

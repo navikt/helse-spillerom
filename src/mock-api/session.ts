@@ -73,7 +73,7 @@ export async function getSession(): Promise<Session> {
         )
 
         sessionStore[sessionId] = {
-            expires: dayjs().add(1, 'hour'),
+            expires: dayjs().add(1, 'minute'), // Temporary: short expiry for testing
             testpersoner: [
                 ...personer,
                 skapPerson('12345678902'),
