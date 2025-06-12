@@ -9,6 +9,7 @@ import { testpersoner } from '@/mock-api/testpersoner/testpersoner'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Dagoversikt } from '@/schemas/dagoversikt'
 
 export interface Person {
     fnr: string
@@ -17,6 +18,7 @@ export interface Person {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     vilkaarsvurderinger: Record<string, Vilkaarsvurdering[]>
     inntektsforhold: Record<string, Inntektsforhold[]>
+    dagoversikt: Record<string, Dagoversikt>
 }
 
 type Session = {
@@ -66,6 +68,7 @@ export async function getSession(): Promise<Session> {
                 saksbehandlingsperioder: [...p.saksbehandlingsperioder],
                 vilkaarsvurderinger: {},
                 inntektsforhold: {},
+                dagoversikt: {},
             }),
         )
 
@@ -97,6 +100,7 @@ function skapPerson(fnr: string): Person {
         saksbehandlingsperioder: [],
         vilkaarsvurderinger: {},
         inntektsforhold: {},
+        dagoversikt: {},
     }
 }
 

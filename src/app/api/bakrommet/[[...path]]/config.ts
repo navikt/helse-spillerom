@@ -14,6 +14,7 @@ export const allowedAPIs = [
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g

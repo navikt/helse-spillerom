@@ -145,7 +145,6 @@ export function Inntektsforhold({ value }: InntektsforholdProps): ReactElement {
                     <Table size="medium">
                         <TableHeader>
                             <TableRow>
-                                <TableHeaderCell>ID</TableHeaderCell>
                                 <TableHeaderCell>Type</TableHeaderCell>
                                 <TableHeaderCell>Organisasjon</TableHeaderCell>
                                 <TableHeaderCell>Sykmeldt fra forholdet</TableHeaderCell>
@@ -154,11 +153,6 @@ export function Inntektsforhold({ value }: InntektsforholdProps): ReactElement {
                         <TableBody>
                             {inntektsforhold.map((forhold) => (
                                 <TableRow key={forhold.id}>
-                                    <TableDataCell>
-                                        <BodyShort className="font-mono text-sm">
-                                            {forhold.id.substring(0, 8)}...
-                                        </BodyShort>
-                                    </TableDataCell>
                                     <TableDataCell>
                                         <BodyShort>{getInntektsforholdtypeText(forhold.inntektsforholdtype)}</BodyShort>
                                     </TableDataCell>

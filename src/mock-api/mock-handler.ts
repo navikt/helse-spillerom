@@ -10,6 +10,7 @@ import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { mockArbeidsforhold } from '@/mock-api/aareg'
 import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Dagoversikt, Dag } from '@/schemas/dagoversikt'
 
 import { ainntektData } from './ainntekt'
 
@@ -31,6 +32,39 @@ function hentUuidFraUrl(url: string): string {
         throw new Error('Kunne ikke finne UUID i URL')
     }
     return parts[periodeIndex + 1]
+}
+
+function hentInntektsforholdUuidFraUrl(url: string): string {
+    const parts = url.split('/')
+    // Finn indeksen til 'inntektsforhold' og ta neste del som er uuid
+    const inntektsforholdIndex = parts.findIndex((part) => part === 'inntektsforhold')
+    if (inntektsforholdIndex === -1 || inntektsforholdIndex + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne inntektsforhold UUID i URL')
+    }
+    return parts[inntektsforholdIndex + 1]
+}
+
+function genererDagoversikt(fom: string, tom: string): Dagoversikt {
+    const dager: Dag[] = []
+    const startDato = new Date(fom)
+    const sluttDato = new Date(tom)
+    
+    // Generer dager fra fom til tom
+    const currentDato = new Date(startDato)
+    while (currentDato <= sluttDato) {
+        const erHelg = currentDato.getDay() === 0 || currentDato.getDay() === 6
+        
+        dager.push({
+            id: uuidv4(),
+            type: erHelg ? 'HELGEDAG' : 'SYKEDAG',
+            dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
+        })
+        
+        // Gå til neste dag
+        currentDato.setDate(currentDato.getDate() + 1)
+    }
+    
+    return dager
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
@@ -211,7 +245,33 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
             person.inntektsforhold[uuid].push(nyttInntektsforhold)
 
+            // Opprett dagoversikt automatisk hvis sykmeldt fra forholdet
+            if (body.sykmeldtFraForholdet) {
+                if (!person.dagoversikt) {
+                    person.dagoversikt = {}
+                }
+                
+                // Finn saksbehandlingsperioden for å få fom og tom
+                const saksbehandlingsperiode = person.saksbehandlingsperioder.find(p => p.id === uuid)
+                if (saksbehandlingsperiode) {
+                    person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(
+                        saksbehandlingsperiode.fom,
+                        saksbehandlingsperiode.tom
+                    )
+                }
+            }
+
             return NextResponse.json(nyttInntektsforhold, { status: 201 })
+        }
+        case 'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': {
+            if (!person) {
+                return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+            }
+            const inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
+            if (!person?.dagoversikt) {
+                person.dagoversikt = {}
+            }
+            return NextResponse.json(person.dagoversikt[inntektsforholdId] || [])
         }
         default:
             raise(new Error(`Unknown path: ${path}`))
