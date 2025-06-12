@@ -14,20 +14,18 @@ import {
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
 import { VilkårsvurderingFormPanel } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingFormPanel'
+import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
 import { cn } from '@utils/tw'
 import { useKodeverk } from '@hooks/queries/useKodeverk'
 
-interface VilkårsgrunnlagProps {
-    value: string
-}
-
-export function Vilkårsvurdering({ value }: VilkårsgrunnlagProps): ReactElement {
+export function Vilkårsvurdering({ value }: { value: string }): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverk()
 
-    if (kodeverkLoading || isLoading || kodeverkError || isError || !kodeverk) return <></> // skeleton?
+    if (isLoading || kodeverkLoading) return <VilkårsvurderingSkeleton />
+    if (kodeverkError || isError || !kodeverk) return <></> // vis noe fornuftig
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {

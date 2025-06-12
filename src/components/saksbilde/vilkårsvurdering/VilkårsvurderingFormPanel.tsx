@@ -20,7 +20,10 @@ export function VilkårsvurderingFormPanel({
     if (!vilkår) return <></>
 
     return (
-        <VStack className="mt-12 -ml-px grow border-t-2 border-l border-border-default bg-surface-selected p-4" gap="8">
+        <VStack
+            className="mt-12 -ml-px grow border-t-2 border-l border-border-default bg-surface-selected px-4 py-3"
+            gap="8"
+        >
             <HStack gap="4" wrap={false}>
                 <span className="h-6 w-6">{getVurderingIcon(vurdering?.vurdering)}</span>
                 <Heading level="2" size="xsmall">
