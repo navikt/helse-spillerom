@@ -1,9 +1,10 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Heading, HStack, VStack } from '@navikt/ds-react'
 import { ClockIcon, FolderIcon } from '@navikt/aksel-icons'
+import { useParams } from 'next/navigation'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/dokumenter/Dokumenter'
@@ -15,8 +16,18 @@ import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk
 type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 
 export function Høyremeny(): ReactElement {
-    const [filter, setFilter] = useState<HøyremenyFilter>('Dokumenter')
+    const params = useParams()
+    const erISaksbehandlingsperiode = Boolean(params?.saksbehandlingsperiodeId)
+
+    const [filter, setFilter] = useState<HøyremenyFilter>(erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk')
     const [showSidemeny, setShowSidemeny] = useState<boolean>(true)
+
+    // Oppdater filter når vi navigerer til/fra saksbehandlingsperiode
+    useEffect(() => {
+        if (!erISaksbehandlingsperiode && filter === 'Dokumenter') {
+            setFilter('Historikk')
+        }
+    }, [erISaksbehandlingsperiode, filter])
 
     function handleClick(clickedFilter: HøyremenyFilter) {
         if (filter === clickedFilter && showSidemeny) {
@@ -60,11 +71,13 @@ export function Høyremeny(): ReactElement {
                     active={filter === 'Historikk' && showSidemeny}
                     onClick={() => handleClick('Historikk')}
                 />
-                <FilterButton
-                    icon={<FolderIcon title="Dokumenter" />}
-                    active={filter === 'Dokumenter' && showSidemeny}
-                    onClick={() => handleClick('Dokumenter')}
-                />
+                {erISaksbehandlingsperiode && (
+                    <FilterButton
+                        icon={<FolderIcon title="Dokumenter" />}
+                        active={filter === 'Dokumenter' && showSidemeny}
+                        onClick={() => handleClick('Dokumenter')}
+                    />
+                )}
             </VStack>
         </HStack>
     )
