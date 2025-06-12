@@ -29,7 +29,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
     })
 
     async function onSubmit(values: VilkårsvurderingSchema) {
-        mutation.mutate({
+        await mutation.mutateAsync({
             kode: values.vilkårskode,
             vurdering: values.vurdering as Vurdering,
             årsak: values.årsak ?? '',
@@ -107,10 +107,16 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
                     )}
                 />
                 <HStack gap="4">
-                    <Button variant="primary" size="small" type="submit">
+                    <Button variant="primary" size="small" type="submit" loading={form.formState.isSubmitting}>
                         Lagre
                     </Button>
-                    <Button variant="tertiary" size="small" type="button" onClick={nesteAction}>
+                    <Button
+                        variant="tertiary"
+                        size="small"
+                        type="button"
+                        onClick={nesteAction}
+                        disabled={form.formState.isSubmitting}
+                    >
                         Neste
                     </Button>
                 </HStack>
