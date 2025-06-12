@@ -19,7 +19,22 @@ export async function handlePersoninfo(person: Person | undefined): Promise<Resp
     })
 }
 
-export async function handleDokumenter(): Promise<Response> {
+export async function handleDokumenter(
+    person: Person | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _saksbehandlingsperiodeId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json(
+            {
+                message: 'Person not found',
+            },
+            { status: 404 },
+        )
+    }
+
+    // Du kan her legge til logikk for å filtrere dokumenter basert på saksbehandlingsperiodeId
+    // For nå returnerer vi bare mockdata
     return NextResponse.json([
         {
             id: '1',

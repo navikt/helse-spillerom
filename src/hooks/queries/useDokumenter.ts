@@ -9,7 +9,12 @@ export function useDokumenter() {
     const params = useParams()
 
     return useQuery<Dokument[], Error>({
-        queryKey: ['dokumenter', params.personId],
-        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${params.personId}/dokumenter`, z.array(dokumentSchema)),
+        queryKey: ['dokumenter', params.personId, params.saksbehandlingsperiodeId],
+        queryFn: () =>
+            fetchAndParse(
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter`,
+                z.array(dokumentSchema),
+            ),
+        enabled: Boolean(params.personId && params.saksbehandlingsperiodeId),
     })
 }

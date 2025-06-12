@@ -42,7 +42,8 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/soknader': async ({ request, personId }) => handleGetSoknader(request, personId),
 
-    'GET /v1/[personId]/dokumenter': async () => handleDokumenter(),
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter': async ({ person, uuid }) =>
+        handleDokumenter(await person, uuid!),
 
     'GET /v1/[personId]/arbeidsforhold': async () => NextResponse.json(mockArbeidsforhold),
 
