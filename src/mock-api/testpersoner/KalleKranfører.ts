@@ -24,7 +24,7 @@ export const Kalle: Testperson = {
             sendtNav: '2024-08-02',
             sendtArbeidsgiver: '2024-08-02',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 1',
+                navn: 'Kranførerkompaniet',
                 orgnummer: '987654321',
             },
             soknadsperioder: [
@@ -51,7 +51,7 @@ export const Kalle: Testperson = {
             sendtNav: '2024-08-10',
             sendtArbeidsgiver: '2024-08-10',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 1',
+                navn: 'Kranførerkompaniet',
                 orgnummer: '987654321',
             },
             soknadsperioder: [
@@ -78,7 +78,7 @@ export const Kalle: Testperson = {
             sendtNav: '2025-01-01',
             sendtArbeidsgiver: '2025-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 1',
+                navn: 'Kranførerkompaniet',
                 orgnummer: '987654321',
             },
             soknadsperioder: [
@@ -105,7 +105,7 @@ export const Kalle: Testperson = {
             sendtNav: '2025-01-01',
             sendtArbeidsgiver: '2025-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 1',
+                navn: 'Kranførerkompaniet',
                 orgnummer: '987654321',
             },
             soknadsperioder: [
@@ -132,7 +132,7 @@ export const Kalle: Testperson = {
             sendtNav: '2025-01-01',
             sendtArbeidsgiver: '2025-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 2',
+                navn: 'Krankompisen',
                 orgnummer: '123456789',
             },
             soknadsperioder: [
@@ -159,7 +159,7 @@ export const Kalle: Testperson = {
             sendtNav: '2024-01-01',
             sendtArbeidsgiver: '2024-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 2',
+                navn: 'Krankompisen',
                 orgnummer: '123456789',
             },
             soknadsperioder: [
@@ -186,7 +186,7 @@ export const Kalle: Testperson = {
             sendtNav: '2023-01-01',
             sendtArbeidsgiver: '2023-01-01',
             arbeidsgiver: {
-                navn: 'Arbeidsgivernavn 2',
+                navn: 'Krankompisen',
                 orgnummer: '123456789',
             },
             soknadsperioder: [
@@ -217,7 +217,7 @@ export const Kalle: Testperson = {
                 inntektsforholdtype: 'ORDINÆRT_ARBEIDSFORHOLD',
                 sykmeldtFraForholdet: true,
                 orgnummer: '987654321',
-                orgnavn: 'Arbeidsgivernavn 1',
+                orgnavn: 'Kranførerkompaniet',
             },
         ],
     },

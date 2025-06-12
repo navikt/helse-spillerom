@@ -29,14 +29,17 @@ export function getOrgnavn(orgnummer?: string, fallbackNavn?: string): string | 
     if (!orgnummer) return fallbackNavn
 
     const mockOrganisasjoner: Record<string, string> = {
-        '123456789': 'Arbeidsgivernavn 2', // Brukt av Kalle og Mattis (men Mattis kaller det 'Danskebåten')
-        '987654321': 'Arbeidsgivernavn 1',
+        '123456789': 'Krankompisen',
+        '987654321': 'Kranførerkompaniet',
+        '889955555': 'Danskebåten',
     }
 
     return mockOrganisasjoner[orgnummer] || fallbackNavn || `Organisasjon ${orgnummer}`
 }
 
-export function mapArbeidssituasjonTilInntektsforholdtype(arbeidssituasjon: string): 'ORDINÆRT_ARBEIDSFORHOLD' | 'FRILANSER' | 'SELVSTENDIG_NÆRINGSDRIVENDE' | 'ARBEIDSLEDIG' {
+export function mapArbeidssituasjonTilInntektsforholdtype(
+    arbeidssituasjon: string,
+): 'ORDINÆRT_ARBEIDSFORHOLD' | 'FRILANSER' | 'SELVSTENDIG_NÆRINGSDRIVENDE' | 'ARBEIDSLEDIG' {
     switch (arbeidssituasjon) {
         case 'ARBEIDSTAKER':
             return 'ORDINÆRT_ARBEIDSFORHOLD'

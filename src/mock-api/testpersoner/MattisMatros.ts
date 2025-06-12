@@ -25,7 +25,7 @@ export const Mattis: Testperson = {
             sendtArbeidsgiver: '2025-01-01',
             arbeidsgiver: {
                 navn: 'Danskebåten',
-                orgnummer: '123456789',
+                orgnummer: '889955555',
             },
             soknadsperioder: [
                 {
