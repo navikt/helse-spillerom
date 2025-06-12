@@ -224,42 +224,42 @@ export const Kalle: Testperson = {
     dagoversikt: {
         '607f8e85-b0ba-4240-9950-383f6d7eac9e': [
             {
-                id: 'dag-1',
+                id: '7f3e9a8b-1c2d-4e5f-8a9b-2c3d4e5f6a7b',
                 type: 'SYKEDAG',
                 dato: '2024-08-02',
             },
             {
-                id: 'dag-2',
+                id: '8e4f0b9c-2d3e-5f6a-9b0c-3d4e5f6a7b8c',
                 type: 'HELGEDAG',
                 dato: '2024-08-03',
             },
             {
-                id: 'dag-3',
+                id: '9f5a1c0d-3e4f-6a7b-0c1d-4e5f6a7b8c9d',
                 type: 'HELGEDAG',
                 dato: '2024-08-04',
             },
             {
-                id: 'dag-4',
+                id: 'a06b2d1e-4f5a-7b8c-1d2e-5f6a7b8c9d0e',
                 type: 'SYKEDAG',
                 dato: '2024-08-05',
             },
             {
-                id: 'dag-5',
+                id: 'b17c3e2f-5a6b-8c9d-2e3f-6a7b8c9d0e1f',
                 type: 'SYKEDAG',
                 dato: '2024-08-06',
             },
             {
-                id: 'dag-6',
+                id: 'c28d4f3a-6b7c-9d0e-3f4a-7b8c9d0e1f2a',
                 type: 'SYKEDAG',
                 dato: '2024-08-07',
             },
             {
-                id: 'dag-7',
+                id: 'd39e5a4b-7c8d-0e1f-4a5b-8c9d0e1f2a3b',
                 type: 'SYKEDAG',
                 dato: '2024-08-08',
             },
             {
-                id: 'dag-8',
+                id: 'e4af6b5c-8d9e-1f2a-5b6c-9d0e1f2a3b4c',
                 type: 'SYKEDAG',
                 dato: '2024-08-09',
             },
