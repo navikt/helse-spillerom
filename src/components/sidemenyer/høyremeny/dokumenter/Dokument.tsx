@@ -12,11 +12,11 @@ interface DokumentProps {
 export function Dokument({ dokument }: DokumentProps): ReactElement {
     return (
         <DokumentContainer>
-            <DokumentTag type={dokument.type} />
+            <DokumentTag type={dokument.dokumentType} />
             <VStack>
-                <BodyShort className="font-bold">{dokumentVisningstekst[dokument.type]}</BodyShort>
+                <BodyShort className="font-bold">{dokumentVisningstekst[dokument.dokumentType]}</BodyShort>
                 <BodyShort className="text-medium text-gray-600">
-                    {getFormattedDatetimeString(dokument.sendtTilNAVTidsunkt)}
+                    {getFormattedDatetimeString(dokument.opprettet)}
                 </BodyShort>
             </VStack>
         </DokumentContainer>
