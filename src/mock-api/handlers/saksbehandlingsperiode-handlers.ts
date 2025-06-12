@@ -49,5 +49,13 @@ export async function handlePostSaksbehandlingsperioder(
         Object.assign(person.dagoversikt, resultat.dagoversikt)
     }
 
+    // Legg til dokumenter hvis det finnes noen
+    if (resultat.dokumenter.length > 0) {
+        if (!person.dokumenter) {
+            person.dokumenter = {}
+        }
+        person.dokumenter[resultat.saksbehandlingsperiode.id] = resultat.dokumenter
+    }
+
     return NextResponse.json(resultat.saksbehandlingsperiode, { status: 201 })
 }

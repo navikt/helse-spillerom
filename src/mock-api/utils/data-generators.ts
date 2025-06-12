@@ -4,6 +4,7 @@ import { Dagoversikt, Dag } from '@/schemas/dagoversikt'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Søknad } from '@/schemas/søknad'
+import { Dokument } from '@/schemas/dokument'
 
 export function genererDagoversikt(fom: string, tom: string): Dagoversikt {
     const dager: Dag[] = []
@@ -57,6 +58,24 @@ export function mapArbeidssituasjonTilInntektsforholdtype(
     }
 }
 
+export function genererDokumenterFraSøknader(søknader: Søknad[], søknadIder: string[]): Dokument[] {
+    const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
+
+    return valgteSøknader.map(
+        (søknad): Dokument => ({
+            id: uuidv4(),
+            dokumentType: 'SØKNAD',
+            eksternId: søknad.id,
+            innhold: søknad,
+            opprettet: new Date().toISOString(),
+            request: {
+                kilde: 'mock-api',
+                tidsstempel: new Date().toISOString(),
+            },
+        }),
+    )
+}
+
 export function opprettSaksbehandlingsperiode(
     spilleromPersonId: string,
     søknader: Søknad[],
@@ -68,6 +87,7 @@ export function opprettSaksbehandlingsperiode(
     saksbehandlingsperiode: Saksbehandlingsperiode
     inntektsforhold: Inntektsforhold[]
     dagoversikt: Record<string, Dagoversikt>
+    dokumenter: Dokument[]
 } {
     const dagoversikt: Record<string, Dagoversikt> = {}
 
@@ -130,10 +150,14 @@ export function opprettSaksbehandlingsperiode(
         })
     }
 
+    // Generer dokumenter fra søknadene
+    const dokumenter = genererDokumenterFraSøknader(søknader, søknadIder)
+
     return {
         saksbehandlingsperiode,
         inntektsforhold,
         dagoversikt,
+        dokumenter,
     }
 }
 
@@ -145,10 +169,12 @@ export function genererSaksbehandlingsperioder(
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     inntektsforhold: Record<string, Inntektsforhold[]>
     dagoversikt: Record<string, Dagoversikt>
+    dokumenter: Record<string, Dokument[]>
 } {
     const saksbehandlingsperioder: Saksbehandlingsperiode[] = []
     const alleInntektsforhold: Record<string, Inntektsforhold[]> = {}
     const alleDagoversikt: Record<string, Dagoversikt> = {}
+    const alleDokumenter: Record<string, Dokument[]> = {}
 
     perioder.forEach((periode) => {
         const resultat = opprettSaksbehandlingsperiode(
@@ -165,11 +191,17 @@ export function genererSaksbehandlingsperioder(
 
         // Kombiner dagoversikt
         Object.assign(alleDagoversikt, resultat.dagoversikt)
+
+        // Legg til dokumenter for denne saksbehandlingsperioden
+        if (resultat.dokumenter.length > 0) {
+            alleDokumenter[resultat.saksbehandlingsperiode.id] = resultat.dokumenter
+        }
     })
 
     return {
         saksbehandlingsperioder,
         inntektsforhold: alleInntektsforhold,
         dagoversikt: alleDagoversikt,
+        dokumenter: alleDokumenter,
     }
 }

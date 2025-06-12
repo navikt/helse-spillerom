@@ -14,7 +14,7 @@ export interface Testperson {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     inntektsforhold?: Record<string, Inntektsforhold[]>
     dagoversikt?: Record<string, Dagoversikt>
-    dokumenter?: Record<string, Dokument[]>
+    dokumenter: Record<string, Dokument[]>
 }
 
 export const testpersoner: Testperson[] = [Kalle, Mattis]

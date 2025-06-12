@@ -59,5 +59,8 @@ const generertData = genererSaksbehandlingsperioder(
 
 export const Mattis: Testperson = {
     ...mattisGrunndata,
-    ...generertData,
+    saksbehandlingsperioder: generertData.saksbehandlingsperioder,
+    inntektsforhold: generertData.inntektsforhold,
+    dagoversikt: generertData.dagoversikt,
+    dokumenter: generertData.dokumenter,
 }
