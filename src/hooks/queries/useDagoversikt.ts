@@ -21,4 +21,4 @@ export function useDagoversikt({ inntektsforholdId }: UseDagoversiktParams) {
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId && !!inntektsforholdId,
     })
-} 
+}

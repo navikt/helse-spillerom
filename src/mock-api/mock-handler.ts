@@ -48,22 +48,22 @@ function genererDagoversikt(fom: string, tom: string): Dagoversikt {
     const dager: Dag[] = []
     const startDato = new Date(fom)
     const sluttDato = new Date(tom)
-    
+
     // Generer dager fra fom til tom
     const currentDato = new Date(startDato)
     while (currentDato <= sluttDato) {
         const erHelg = currentDato.getDay() === 0 || currentDato.getDay() === 6
-        
+
         dager.push({
             id: uuidv4(),
             type: erHelg ? 'HELGEDAG' : 'SYKEDAG',
             dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
         })
-        
+
         // Gå til neste dag
         currentDato.setDate(currentDato.getDate() + 1)
     }
-    
+
     return dager
 }
 
@@ -250,13 +250,13 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 if (!person.dagoversikt) {
                     person.dagoversikt = {}
                 }
-                
+
                 // Finn saksbehandlingsperioden for å få fom og tom
-                const saksbehandlingsperiode = person.saksbehandlingsperioder.find(p => p.id === uuid)
+                const saksbehandlingsperiode = person.saksbehandlingsperioder.find((p) => p.id === uuid)
                 if (saksbehandlingsperiode) {
                     person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(
                         saksbehandlingsperiode.fom,
-                        saksbehandlingsperiode.tom
+                        saksbehandlingsperiode.tom,
                     )
                 }
             }
