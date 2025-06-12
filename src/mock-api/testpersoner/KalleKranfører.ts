@@ -1,6 +1,8 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
+import { genererSaksbehandlingsperioder } from '@/mock-api/utils/data-generators'
 
-export const Kalle: Testperson = {
+// Grunndata for Kalle
+const kalleGrunndata = {
     personId: '8j4ns',
     personinfo: {
         fødselsnummer: '12345678901',
@@ -11,9 +13,9 @@ export const Kalle: Testperson = {
     soknader: [
         {
             id: '1',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2024-08-02',
             tom: '2024-08-09',
             korrigerer: null,
@@ -38,9 +40,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '2',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2024-08-10',
             tom: '2024-09-22',
             korrigerer: null,
@@ -65,9 +67,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '3',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2025-01-01',
             tom: '2025-01-31',
             korrigerer: null,
@@ -92,9 +94,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '4',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2025-02-01',
             tom: '2025-02-28',
             korrigerer: null,
@@ -119,9 +121,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '5',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2025-01-01',
             tom: '2025-01-31',
             korrigerer: null,
@@ -146,9 +148,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '6',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2024-01-01',
             tom: '2024-01-31',
             korrigerer: null,
@@ -173,9 +175,9 @@ export const Kalle: Testperson = {
         },
         {
             id: '7',
-            type: 'ARBEIDSTAKERE',
-            status: 'NY',
-            arbeidssituasjon: 'ARBEIDSTAKER',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
             fom: '2023-01-01',
             tom: '2023-01-31',
             korrigerer: null,
@@ -199,70 +201,21 @@ export const Kalle: Testperson = {
             ],
         },
     ],
-    saksbehandlingsperioder: [
-        {
-            id: 'fd8b0600-a589-4249-acbf-d746be738a93',
-            spilleromPersonId: '8j4ns',
-            opprettet: '2024-08-02T10:00:00Z',
-            opprettetAvNavIdent: 'Z123456',
-            opprettetAvNavn: 'Test Testesen',
-            fom: '2024-08-02',
-            tom: '2024-08-09',
-        },
-    ],
-    inntektsforhold: {
-        'fd8b0600-a589-4249-acbf-d746be738a93': [
-            {
-                id: '607f8e85-b0ba-4240-9950-383f6d7eac9e',
-                inntektsforholdtype: 'ORDINÆRT_ARBEIDSFORHOLD',
-                sykmeldtFraForholdet: true,
-                orgnummer: '987654321',
-                orgnavn: 'Kranførerkompaniet',
-            },
-        ],
+}
+
+// Generer saksbehandlingsperioder, inntektsforhold og dagoversikt basert på søknader
+const periodeDefinisjon = [
+    {
+        fom: '2024-08-02',
+        tom: '2024-08-09',
+        søknadIder: ['1'], // Refererer til søknad med id '1'
+        uuid: '607f8e85-b0ba-4240-9950-383f6d7eac9e',
     },
-    dagoversikt: {
-        '607f8e85-b0ba-4240-9950-383f6d7eac9e': [
-            {
-                id: '7f3e9a8b-1c2d-4e5f-8a9b-2c3d4e5f6a7b',
-                type: 'SYKEDAG',
-                dato: '2024-08-02',
-            },
-            {
-                id: '8e4f0b9c-2d3e-5f6a-9b0c-3d4e5f6a7b8c',
-                type: 'HELGEDAG',
-                dato: '2024-08-03',
-            },
-            {
-                id: '9f5a1c0d-3e4f-6a7b-0c1d-4e5f6a7b8c9d',
-                type: 'HELGEDAG',
-                dato: '2024-08-04',
-            },
-            {
-                id: 'a06b2d1e-4f5a-7b8c-1d2e-5f6a7b8c9d0e',
-                type: 'SYKEDAG',
-                dato: '2024-08-05',
-            },
-            {
-                id: 'b17c3e2f-5a6b-8c9d-2e3f-6a7b8c9d0e1f',
-                type: 'SYKEDAG',
-                dato: '2024-08-06',
-            },
-            {
-                id: 'c28d4f3a-6b7c-9d0e-3f4a-7b8c9d0e1f2a',
-                type: 'SYKEDAG',
-                dato: '2024-08-07',
-            },
-            {
-                id: 'd39e5a4b-7c8d-0e1f-4a5b-8c9d0e1f2a3b',
-                type: 'SYKEDAG',
-                dato: '2024-08-08',
-            },
-            {
-                id: 'e4af6b5c-8d9e-1f2a-5b6c-9d0e1f2a3b4c',
-                type: 'SYKEDAG',
-                dato: '2024-08-09',
-            },
-        ],
-    },
+]
+
+const generertData = genererSaksbehandlingsperioder(kalleGrunndata.personId, kalleGrunndata.soknader, periodeDefinisjon)
+
+export const Kalle: Testperson = {
+    ...kalleGrunndata,
+    ...generertData,
 }

@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { Dagoversikt, Dag } from '@/schemas/dagoversikt'
+import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
+import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Søknad } from '@/schemas/søknad'
 
 export function genererDagoversikt(fom: string, tom: string): Dagoversikt {
     const dager: Dag[] = []
@@ -51,5 +54,122 @@ export function mapArbeidssituasjonTilInntektsforholdtype(
             return 'ARBEIDSLEDIG'
         default:
             return 'ORDINÆRT_ARBEIDSFORHOLD'
+    }
+}
+
+export function opprettSaksbehandlingsperiode(
+    spilleromPersonId: string,
+    søknader: Søknad[],
+    fom: string,
+    tom: string,
+    søknadIder: string[],
+    uuid?: string,
+): {
+    saksbehandlingsperiode: Saksbehandlingsperiode
+    inntektsforhold: Inntektsforhold[]
+    dagoversikt: Record<string, Dagoversikt>
+} {
+    const dagoversikt: Record<string, Dagoversikt> = {}
+
+    // Opprett saksbehandlingsperiode
+    const saksbehandlingsperiode: Saksbehandlingsperiode = {
+        id: uuid || uuidv4(),
+        spilleromPersonId: spilleromPersonId,
+        opprettet: new Date().toISOString(),
+        opprettetAvNavIdent: 'Z123456',
+        opprettetAvNavn: 'Test Testesen',
+        fom: fom,
+        tom: tom,
+    }
+
+    const inntektsforhold: Inntektsforhold[] = []
+
+    // Automatisk opprettelse av inntektsforhold basert på valgte søknader
+    if (søknadIder && søknadIder.length > 0) {
+        const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
+
+        // Opprett unike inntektsforhold basert på orgnummer + arbeidssituasjon
+        const unikeInntektsforhold = new Map<
+            string,
+            {
+                orgnummer?: string
+                orgnavn?: string
+                arbeidssituasjon: string
+            }
+        >()
+
+        valgteSøknader.forEach((søknad) => {
+            const orgnummer = søknad.arbeidsgiver?.orgnummer
+            const arbeidssituasjon = søknad.arbeidssituasjon || 'ANNET'
+
+            // Lag unik nøkkel basert på orgnummer + arbeidssituasjon
+            const key = `${orgnummer || 'ingen'}_${arbeidssituasjon}`
+
+            if (!unikeInntektsforhold.has(key)) {
+                unikeInntektsforhold.set(key, {
+                    orgnummer,
+                    orgnavn: søknad.arbeidsgiver?.navn,
+                    arbeidssituasjon,
+                })
+            }
+        })
+
+        unikeInntektsforhold.forEach((forhold) => {
+            const nyttInntektsforhold: Inntektsforhold = {
+                id: uuidv4(),
+                inntektsforholdtype: mapArbeidssituasjonTilInntektsforholdtype(forhold.arbeidssituasjon),
+                sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
+                orgnummer: forhold.orgnummer,
+                orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),
+            }
+
+            inntektsforhold.push(nyttInntektsforhold)
+
+            // Opprett dagoversikt automatisk siden alle er sykmeldt
+            dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(fom, tom)
+        })
+    }
+
+    return {
+        saksbehandlingsperiode,
+        inntektsforhold,
+        dagoversikt,
+    }
+}
+
+export function genererSaksbehandlingsperioder(
+    spilleromPersonId: string,
+    søknader: Søknad[],
+    perioder: Array<{ fom: string; tom: string; søknadIder: string[]; uuid?: string }>,
+): {
+    saksbehandlingsperioder: Saksbehandlingsperiode[]
+    inntektsforhold: Record<string, Inntektsforhold[]>
+    dagoversikt: Record<string, Dagoversikt>
+} {
+    const saksbehandlingsperioder: Saksbehandlingsperiode[] = []
+    const alleInntektsforhold: Record<string, Inntektsforhold[]> = {}
+    const alleDagoversikt: Record<string, Dagoversikt> = {}
+
+    perioder.forEach((periode) => {
+        const resultat = opprettSaksbehandlingsperiode(
+            spilleromPersonId,
+            søknader,
+            periode.fom,
+            periode.tom,
+            periode.søknadIder,
+            periode.uuid,
+        )
+
+        saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
+        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = resultat.inntektsforhold
+
+        // Kombiner dagoversikt
+        Object.assign(alleDagoversikt, resultat.dagoversikt)
+    })
+
+    return {
+        saksbehandlingsperioder,
+        inntektsforhold: alleInntektsforhold,
+        dagoversikt: alleDagoversikt,
     }
 }

@@ -1,14 +1,8 @@
 import { NextResponse } from 'next/server'
-import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
-import { Inntektsforhold } from '@/schemas/inntektsforhold'
-import {
-    genererDagoversikt,
-    getOrgnavn,
-    mapArbeidssituasjonTilInntektsforholdtype,
-} from '@/mock-api/utils/data-generators'
+import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/data-generators'
 
 export async function handleGetSaksbehandlingsperioder(person: Person | undefined): Promise<Response> {
     return NextResponse.json(person?.saksbehandlingsperioder || [])
@@ -24,76 +18,36 @@ export async function handlePostSaksbehandlingsperioder(
     }
 
     const body = await request.json()
-    const nyPeriode = {
-        id: uuidv4(),
-        spilleromPersonId: personIdFraRequest,
-        opprettet: new Date().toISOString(),
-        opprettetAvNavIdent: 'Z123456',
-        opprettetAvNavn: 'Test Testesen',
-        fom: body.fom,
-        tom: body.tom,
-        sykepengesoknadIder: body.sykepengesoknadIder || [],
-    }
-    person.saksbehandlingsperioder.push(nyPeriode)
+    const testperson = finnPerson(personIdFraRequest)
+    const søknader = testperson?.soknader || []
 
-    // Automatisk opprettelse av inntektsforhold basert på valgte søknader
-    if (body.sykepengesoknadIder && body.sykepengesoknadIder.length > 0) {
-        const testperson = finnPerson(personIdFraRequest)
-        const søknader = testperson?.soknader || []
-        const valgteSøknader = søknader.filter((søknad) => body.sykepengesoknadIder.includes(søknad.id))
+    // Bruk den nye generator-funksjonen
+    const resultat = opprettSaksbehandlingsperiode(
+        personIdFraRequest,
+        søknader,
+        body.fom,
+        body.tom,
+        body.sykepengesoknadIder || [],
+    )
 
-        // Opprett unike inntektsforhold basert på orgnummer + arbeidssituasjon
-        const unikeInntektsforhold = new Map<
-            string,
-            {
-                orgnummer?: string
-                orgnavn?: string
-                arbeidssituasjon: string
-            }
-        >()
+    // Legg til den nye saksbehandlingsperioden
+    person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 
-        valgteSøknader.forEach((søknad) => {
-            const orgnummer = søknad.arbeidsgiver?.orgnummer
-            const arbeidssituasjon = søknad.arbeidssituasjon || 'ANNET'
-
-            // Lag unik nøkkel basert på orgnummer + arbeidssituasjon
-            const key = `${orgnummer || 'ingen'}_${arbeidssituasjon}`
-
-            if (!unikeInntektsforhold.has(key)) {
-                unikeInntektsforhold.set(key, {
-                    orgnummer,
-                    orgnavn: søknad.arbeidsgiver?.navn,
-                    arbeidssituasjon,
-                })
-            }
-        })
-
-        // Opprett inntektsforhold og dagoversikt
+    // Legg til inntektsforhold hvis det finnes noen
+    if (resultat.inntektsforhold.length > 0) {
         if (!person.inntektsforhold) {
             person.inntektsforhold = {}
         }
+        person.inntektsforhold[resultat.saksbehandlingsperiode.id] = resultat.inntektsforhold
+    }
+
+    // Legg til dagoversikt hvis det finnes noen
+    if (Object.keys(resultat.dagoversikt).length > 0) {
         if (!person.dagoversikt) {
             person.dagoversikt = {}
         }
-        if (!person.inntektsforhold[nyPeriode.id]) {
-            person.inntektsforhold[nyPeriode.id] = []
-        }
-
-        unikeInntektsforhold.forEach((forhold) => {
-            const nyttInntektsforhold: Inntektsforhold = {
-                id: uuidv4(),
-                inntektsforholdtype: mapArbeidssituasjonTilInntektsforholdtype(forhold.arbeidssituasjon),
-                sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
-                orgnummer: forhold.orgnummer,
-                orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),
-            }
-
-            person.inntektsforhold[nyPeriode.id].push(nyttInntektsforhold)
-
-            // Opprett dagoversikt automatisk siden alle er sykmeldt
-            person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(nyPeriode.fom, nyPeriode.tom)
-        })
+        Object.assign(person.dagoversikt, resultat.dagoversikt)
     }
 
-    return NextResponse.json(nyPeriode, { status: 201 })
+    return NextResponse.json(resultat.saksbehandlingsperiode, { status: 201 })
 }
