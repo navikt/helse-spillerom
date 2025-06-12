@@ -1,66 +1,19 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, HStack, VStack, Table, BodyShort, Heading, Select, Switch, Alert, TextField } from '@navikt/ds-react'
+import { Alert, BodyShort, Box, Button, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PlusIcon } from '@navikt/aksel-icons'
+import { AnimatePresence, motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
 import { Inntektsforholdtype } from '@schemas/inntektsforhold'
+import { InntektsforholdForm } from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
-interface InntektsforholdProps {
-    value: string
-}
-
-export function Inntektsforhold({ value }: InntektsforholdProps): ReactElement {
-    const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
-    const opprettInntektsforhold = useOpprettInntektsforhold()
-
+export function Inntektsforhold({ value }: { value: string }): ReactElement {
     const [visSopprettForm, setVisOpprettForm] = useState(false)
-    const [nyInntektsforholdtype, setNyInntektsforholdtype] = useState<Inntektsforholdtype>('ORDINÆRT_ARBEIDSFORHOLD')
-    const [nySykmeldtFraForholdet, setNySykmeldtFraForholdet] = useState(false)
-    const [nyOrgnummer, setNyOrgnummer] = useState('')
-
-    const handleOpprett = () => {
-        // Valider at orgnummer er påkrevd for alle typer utenom arbeidsledig
-        const erArbeidsledig = nyInntektsforholdtype === 'ARBEIDSLEDIG'
-        if (!erArbeidsledig && !nyOrgnummer.trim()) {
-            return // Du kan legge til error state her hvis ønskelig
-        }
-
-        opprettInntektsforhold.mutate(
-            {
-                inntektsforholdtype: nyInntektsforholdtype,
-                sykmeldtFraForholdet: nySykmeldtFraForholdet,
-                orgnummer: nyOrgnummer.trim() || undefined,
-            },
-            {
-                onSuccess: () => {
-                    setVisOpprettForm(false)
-                    setNyInntektsforholdtype('ORDINÆRT_ARBEIDSFORHOLD')
-                    setNySykmeldtFraForholdet(false)
-                    setNyOrgnummer('')
-                },
-            },
-        )
-    }
-
-    const getInntektsforholdtypeText = (type: Inntektsforholdtype): string => {
-        switch (type) {
-            case 'ORDINÆRT_ARBEIDSFORHOLD':
-                return 'Ordinært arbeidsforhold'
-            case 'FRILANSER':
-                return 'Frilanser'
-            case 'SELVSTENDIG_NÆRINGSDRIVENDE':
-                return 'Selvstendig næringsdrivende'
-            case 'ARBEIDSLEDIG':
-                return 'Arbeidsledig'
-            default:
-                return type
-        }
-    }
+    const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -73,73 +26,41 @@ export function Inntektsforhold({ value }: InntektsforholdProps): ReactElement {
     return (
         <SaksbildePanel value={value}>
             <VStack gap="6">
-                <HStack justify="space-between" align="center">
-                    <Heading size="medium">Inntektsforhold</Heading>
-                    <Button
-                        variant="secondary"
-                        size="small"
-                        icon={<PlusIcon />}
-                        onClick={() => setVisOpprettForm(!visSopprettForm)}
-                    >
-                        Legg til inntektsforhold
-                    </Button>
-                </HStack>
-
-                {visSopprettForm && (
-                    <Alert variant="info">
-                        <VStack gap="4">
-                            <Heading size="small">Opprett nytt inntektsforhold</Heading>
-
-                            <Select
-                                label="Inntektsforholdtype"
-                                value={nyInntektsforholdtype}
-                                onChange={(e) => {
-                                    setNyInntektsforholdtype(e.target.value as Inntektsforholdtype)
-                                    // Tøm orgnummer hvis arbeidsledig velges
-                                    if (e.target.value === 'ARBEIDSLEDIG') {
-                                        setNyOrgnummer('')
-                                    }
-                                }}
+                <Button
+                    className="w-fit"
+                    variant="secondary"
+                    size="small"
+                    icon={<PlusIcon />}
+                    onClick={() => setVisOpprettForm((prev) => !prev)}
+                >
+                    Legg til inntektsforhold
+                </Button>
+                <AnimatePresence initial={false}>
+                    {visSopprettForm && (
+                        <motion.div
+                            key="opprett-inntektsforhold"
+                            transition={{
+                                type: 'tween',
+                                duration: 0.2,
+                                ease: 'easeInOut',
+                            }}
+                            initial={{ height: 0 }}
+                            animate={{ height: 'auto' }}
+                            exit={{ height: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <Box
+                                background="surface-selected"
+                                padding="8"
+                                borderRadius="medium"
+                                borderColor="border-subtle"
+                                borderWidth="1"
                             >
-                                <option value="ORDINÆRT_ARBEIDSFORHOLD">Ordinært arbeidsforhold</option>
-                                <option value="FRILANSER">Frilanser</option>
-                                <option value="SELVSTENDIG_NÆRINGSDRIVENDE">Selvstendig næringsdrivende</option>
-                                <option value="ARBEIDSLEDIG">Arbeidsledig</option>
-                            </Select>
-
-                            {nyInntektsforholdtype !== 'ARBEIDSLEDIG' && (
-                                <TextField
-                                    label="Organisasjonsnummer"
-                                    value={nyOrgnummer}
-                                    onChange={(e) => setNyOrgnummer(e.target.value)}
-                                    placeholder="123456789"
-                                    description="9-sifret organisasjonsnummer"
-                                />
-                            )}
-
-                            <Switch
-                                checked={nySykmeldtFraForholdet}
-                                onChange={() => setNySykmeldtFraForholdet(!nySykmeldtFraForholdet)}
-                            >
-                                Sykmeldt fra forholdet
-                            </Switch>
-
-                            <HStack gap="2">
-                                <Button
-                                    variant="primary"
-                                    size="small"
-                                    onClick={handleOpprett}
-                                    loading={opprettInntektsforhold.isPending}
-                                >
-                                    Opprett
-                                </Button>
-                                <Button variant="secondary" size="small" onClick={() => setVisOpprettForm(false)}>
-                                    Avbryt
-                                </Button>
-                            </HStack>
-                        </VStack>
-                    </Alert>
-                )}
+                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
+                            </Box>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {inntektsforhold && inntektsforhold.length > 0 ? (
                     <Table size="medium">
@@ -186,4 +107,19 @@ export function Inntektsforhold({ value }: InntektsforholdProps): ReactElement {
             </VStack>
         </SaksbildePanel>
     )
+}
+
+function getInntektsforholdtypeText(type: Inntektsforholdtype): string {
+    switch (type) {
+        case 'ORDINÆRT_ARBEIDSFORHOLD':
+            return 'Ordinært arbeidsforhold'
+        case 'FRILANSER':
+            return 'Frilanser'
+        case 'SELVSTENDIG_NÆRINGSDRIVENDE':
+            return 'Selvstendig næringsdrivende'
+        case 'ARBEIDSLEDIG':
+            return 'Arbeidsledig'
+        default:
+            return type
+    }
 }

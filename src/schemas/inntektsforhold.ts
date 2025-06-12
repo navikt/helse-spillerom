@@ -7,13 +7,23 @@ export const inntektsforholdtypeSchema = z.enum([
     'ARBEIDSLEDIG',
 ])
 
-export const inntektsforholdSchema = z.object({
-    id: z.string(),
-    inntektsforholdtype: inntektsforholdtypeSchema,
-    sykmeldtFraForholdet: z.boolean(),
-    orgnummer: z.string().optional(),
-    orgnavn: z.string().optional(),
-})
+export const inntektsforholdSchema = z
+    .object({
+        id: z.string(),
+        inntektsforholdtype: inntektsforholdtypeSchema,
+        sykmeldtFraForholdet: z.boolean(),
+        orgnummer: z.string().optional(),
+        orgnavn: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+        if (data.inntektsforholdtype !== 'ARBEIDSLEDIG' && data.orgnummer?.length !== 9) {
+            ctx.addIssue({
+                path: ['orgnummer'],
+                code: z.ZodIssueCode.custom,
+                message: 'Organisasjonsnummer må fylles inn (9 siffer)',
+            })
+        }
+    })
 
 export type Inntektsforhold = z.infer<typeof inntektsforholdSchema>
 export type Inntektsforholdtype = z.infer<typeof inntektsforholdtypeSchema>
