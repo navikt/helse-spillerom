@@ -18,5 +18,3 @@ export async function handlePersoninfo(person: Person | undefined): Promise<Resp
         alder: person.personinfo.alder,
     })
 }
-
-

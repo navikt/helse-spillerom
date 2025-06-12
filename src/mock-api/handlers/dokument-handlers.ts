@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 
 import { Person } from '@/mock-api/session'
-import { Dokument } from '@/schemas/dokument'
 
 export async function handleDokumenter(
     person: Person | undefined,
@@ -20,4 +19,4 @@ export async function handleDokumenter(
     const dokumenter = person.dokumenter?.[saksbehandlingsperiodeId] || []
 
     return NextResponse.json(dokumenter)
-} 
+}
