@@ -67,6 +67,16 @@ function genererDagoversikt(fom: string, tom: string): Dagoversikt {
     return dager
 }
 
+function getOrgnavn(orgnummer?: string, fallbackNavn?: string): string | undefined {
+    if (!orgnummer) return fallbackNavn
+
+    const mockOrganisasjoner: Record<string, string> = {
+        '123456789': 'NAV IT',
+    }
+
+    return mockOrganisasjoner[orgnummer] || fallbackNavn || `Organisasjon ${orgnummer}`
+}
+
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
     logger.info(`Mocking path: ${path}`)
     const personIdFraRequest = hentPersonIdFraUrl(request.url)
@@ -105,6 +115,82 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
                 sykepengesoknadIder: body.sykepengesoknadIder || [],
             }
             person?.saksbehandlingsperioder.push(nyPeriode)
+
+            // Automatisk opprettelse av inntektsforhold basert på valgte søknader
+            if (body.sykepengesoknadIder && body.sykepengesoknadIder.length > 0 && person) {
+                const testperson = finnPerson(personIdFraRequest)
+                const søknader = testperson?.soknader || []
+                const valgteSøknader = søknader.filter((søknad) => body.sykepengesoknadIder.includes(søknad.id))
+
+                // Opprett unike inntektsforhold basert på orgnummer + arbeidssituasjon
+                const unikeInntektsforhold = new Map<
+                    string,
+                    {
+                        orgnummer?: string
+                        orgnavn?: string
+                        arbeidssituasjon: string
+                    }
+                >()
+
+                valgteSøknader.forEach((søknad) => {
+                    const orgnummer = søknad.arbeidsgiver?.orgnummer
+                    const arbeidssituasjon = søknad.arbeidssituasjon || 'ANNET'
+
+                    // Lag unik nøkkel basert på orgnummer + arbeidssituasjon
+                    const key = `${orgnummer || 'ingen'}_${arbeidssituasjon}`
+
+                    if (!unikeInntektsforhold.has(key)) {
+                        unikeInntektsforhold.set(key, {
+                            orgnummer,
+                            orgnavn: søknad.arbeidsgiver?.navn,
+                            arbeidssituasjon,
+                        })
+                    }
+                })
+
+                // Konverter arbeidssituasjon til inntektsforholdtype
+                const mapArbeidssituasjonTilInntektsforholdtype = (arbeidssituasjon: string) => {
+                    switch (arbeidssituasjon) {
+                        case 'ARBEIDSTAKER':
+                            return 'ORDINÆRT_ARBEIDSFORHOLD'
+                        case 'FRILANSER':
+                            return 'FRILANSER'
+                        case 'NAERINGSDRIVENDE':
+                            return 'SELVSTENDIG_NÆRINGSDRIVENDE'
+                        case 'ARBEIDSLEDIG':
+                            return 'ARBEIDSLEDIG'
+                        default:
+                            return 'ORDINÆRT_ARBEIDSFORHOLD'
+                    }
+                }
+
+                // Opprett inntektsforhold og dagoversikt
+                if (!person?.inntektsforhold) {
+                    person.inntektsforhold = {}
+                }
+                if (!person?.dagoversikt) {
+                    person.dagoversikt = {}
+                }
+                if (!person.inntektsforhold[nyPeriode.id]) {
+                    person.inntektsforhold[nyPeriode.id] = []
+                }
+
+                unikeInntektsforhold.forEach((forhold) => {
+                    const nyttInntektsforhold: Inntektsforhold = {
+                        id: uuidv4(),
+                        inntektsforholdtype: mapArbeidssituasjonTilInntektsforholdtype(forhold.arbeidssituasjon),
+                        sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
+                        orgnummer: forhold.orgnummer,
+                        orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),
+                    }
+
+                    person.inntektsforhold[nyPeriode.id].push(nyttInntektsforhold)
+
+                    // Opprett dagoversikt automatisk siden alle er sykmeldt
+                    person.dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(nyPeriode.fom, nyPeriode.tom)
+                })
+            }
+
             return NextResponse.json(nyPeriode, { status: 201 })
         case 'GET /v1/[personId]/soknader':
             const url = new URL(request.url)
@@ -219,21 +305,12 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             const uuid = hentUuidFraUrl(request.url)
             const body = await request.json()
 
-            // Mock organisasjonsnavn lookup basert på orgnummer
-            const getOrgnavn = (orgnummer?: string): string | undefined => {
-                if (!orgnummer) return undefined
-                const mockOrganisasjoner: Record<string, string> = {
-                    '123456789': 'NAV IT',
-                }
-                return mockOrganisasjoner[orgnummer] || `Organisasjon ${orgnummer}`
-            }
-
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
                 inntektsforholdtype: body.inntektsforholdtype,
                 sykmeldtFraForholdet: body.sykmeldtFraForholdet,
                 orgnummer: body.orgnummer,
-                orgnavn: body.orgnummer ? getOrgnavn(body.orgnummer) : undefined,
+                orgnavn: getOrgnavn(body.orgnummer),
             }
 
             if (!person?.inntektsforhold) {

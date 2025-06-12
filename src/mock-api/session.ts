@@ -67,8 +67,8 @@ export async function getSession(): Promise<Session> {
                 },
                 saksbehandlingsperioder: [...p.saksbehandlingsperioder],
                 vilkaarsvurderinger: {},
-                inntektsforhold: {},
-                dagoversikt: {},
+                inntektsforhold: p.inntektsforhold ? { ...p.inntektsforhold } : {},
+                dagoversikt: p.dagoversikt ? { ...p.dagoversikt } : {},
             }),
         )
 

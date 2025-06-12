@@ -210,4 +210,59 @@ export const Kalle: Testperson = {
             tom: '2024-08-09',
         },
     ],
+    inntektsforhold: {
+        'fd8b0600-a589-4249-acbf-d746be738a93': [
+            {
+                id: '607f8e85-b0ba-4240-9950-383f6d7eac9e',
+                inntektsforholdtype: 'ORDINÆRT_ARBEIDSFORHOLD',
+                sykmeldtFraForholdet: true,
+                orgnummer: '987654321',
+                orgnavn: 'Arbeidsgivernavn 1',
+            },
+        ],
+    },
+    dagoversikt: {
+        '607f8e85-b0ba-4240-9950-383f6d7eac9e': [
+            {
+                id: 'dag-1',
+                type: 'SYKEDAG',
+                dato: '2024-08-02',
+            },
+            {
+                id: 'dag-2',
+                type: 'HELGEDAG',
+                dato: '2024-08-03',
+            },
+            {
+                id: 'dag-3',
+                type: 'HELGEDAG',
+                dato: '2024-08-04',
+            },
+            {
+                id: 'dag-4',
+                type: 'SYKEDAG',
+                dato: '2024-08-05',
+            },
+            {
+                id: 'dag-5',
+                type: 'SYKEDAG',
+                dato: '2024-08-06',
+            },
+            {
+                id: 'dag-6',
+                type: 'SYKEDAG',
+                dato: '2024-08-07',
+            },
+            {
+                id: 'dag-7',
+                type: 'SYKEDAG',
+                dato: '2024-08-08',
+            },
+            {
+                id: 'dag-8',
+                type: 'SYKEDAG',
+                dato: '2024-08-09',
+            },
+        ],
+    },
 }
