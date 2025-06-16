@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Dokument as _Dokument, Dokumenttype } from '@schemas/dokument'
 import { DokumentTag } from '@components/sidemenyer/høyremeny/dokumenter/DokumentTag'
 import { getFormattedDatetimeString } from '@utils/date-format'
+import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
+import { Søknad } from '@schemas/søknad'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -45,9 +47,13 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         transition={{ duration: 0.2, ease: 'easeInOut' }}
                         style={{ overflow: 'hidden' }}
                     >
-                        <pre className="overflow-x-auto rounded bg-gray-50 p-2 text-xs">
-                            {JSON.stringify(dokument.innhold, null, 2)}
-                        </pre>
+                        {dokument.dokumentType === 'SØKNAD' ? (
+                            <Søknadsinnhold søknad={dokument.innhold as Søknad} />
+                        ) : (
+                            <pre className="overflow-x-auto rounded bg-gray-50 p-2 text-xs">
+                                {JSON.stringify(dokument.innhold, null, 2)}
+                            </pre>
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
