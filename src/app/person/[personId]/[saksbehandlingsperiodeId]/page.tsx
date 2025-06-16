@@ -10,7 +10,7 @@ import { Inntektsforhold } from '@/components/saksbilde/inntektsforhold/Inntekts
 export default async function PersonPage(): Promise<ReactElement> {
     return (
         <section className="flex-auto">
-            <Tabs defaultValue="vilkårsvurdering">
+            <Tabs defaultValue="inntektsforhold">
                 <TabsList>
                     <TabsTab value="inntektsforhold" label="Inntektsforhold" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
