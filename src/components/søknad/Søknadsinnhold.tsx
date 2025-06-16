@@ -5,7 +5,6 @@ import { NORSK_DATOFORMAT, NORSK_DATOFORMAT_MED_KLOKKESLETT } from '@utils/date-
 import { Søknad } from '@/schemas/søknad'
 
 import { Spørsmål } from './Sporsmal'
-import styles from './Søknadsinnhold.module.css'
 
 type SøknadsinnholdProps = {
     søknad: Søknad
@@ -15,22 +14,22 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
     return (
         <div>
             {søknad && (
-                <div className={styles.dokument}>
+                <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded">
                     {søknad.type && (
-                        <div className={styles.fragment}>
-                            <h3 className={styles.overskrift}>Type</h3>
-                            <div className={styles.innhold}>{søknad.type.replace(/_/g, ' ')}</div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-base font-semibold text-gray-900 m-0">Type</h3>
+                            <div className="text-sm text-gray-700 leading-6">{søknad.type.replace(/_/g, ' ')}</div>
                         </div>
                     )}
                     {søknad.soknadsperioder &&
                         søknad.soknadsperioder.length > 0 &&
                         søknad.soknadsperioder.map((søknadsperiode) => (
-                            <div key={`søknadsperiode${søknadsperiode.fom}`} className={styles.fragment}>
-                                <h3 className={styles.overskrift}>
+                            <div key={`søknadsperiode${søknadsperiode.fom}`} className="flex flex-col gap-2">
+                                <h3 className="text-base font-semibold text-gray-900 m-0">
                                     {dayjs(søknadsperiode.fom).format(NORSK_DATOFORMAT)} –{' '}
                                     {dayjs(søknadsperiode.tom).format(NORSK_DATOFORMAT)}
                                 </h3>
-                                <div className={styles.innhold}>
+                                <div className="text-sm text-gray-700 leading-6">
                                     {søknadsperiode.grad || søknadsperiode.sykmeldingsgrad ? (
                                         <>{søknadsperiode.grad || søknadsperiode.sykmeldingsgrad} % sykmeldt</>
                                     ) : (
@@ -46,25 +45,25 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
                             </div>
                         ))}
                     {søknad.arbeidGjenopptatt && (
-                        <div className={styles.fragment}>
-                            <h3 className={styles.overskrift}>Arbeid gjenopptatt</h3>
-                            <div className={styles.innhold}>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-base font-semibold text-gray-900 m-0">Arbeid gjenopptatt</h3>
+                            <div className="text-sm text-gray-700 leading-6">
                                 {dayjs(søknad.arbeidGjenopptatt).format(NORSK_DATOFORMAT)}
                             </div>
                         </div>
                     )}
                     {søknad.sykmeldingSkrevet && (
-                        <div className={styles.fragment}>
-                            <h3 className={styles.overskrift}>Sykmelding skrevet</h3>
-                            <div className={styles.innhold}>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-base font-semibold text-gray-900 m-0">Sykmelding skrevet</h3>
+                            <div className="text-sm text-gray-700 leading-6">
                                 {dayjs(søknad.sykmeldingSkrevet).format(NORSK_DATOFORMAT_MED_KLOKKESLETT)}
                             </div>
                         </div>
                     )}
                     {(søknad.egenmeldingsdagerFraSykmelding?.length ?? 0) > 0 && (
-                        <div className={styles.fragment}>
-                            <h3 className={styles.overskrift}>Egenmeldingsdager fra sykmelding</h3>
-                            <div className={styles.innhold}>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-base font-semibold text-gray-900 m-0">Egenmeldingsdager fra sykmelding</h3>
+                            <div className="text-sm text-gray-700 leading-6">
                                 {søknad.egenmeldingsdagerFraSykmelding
                                     ?.map((it) => dayjs(it).format(NORSK_DATOFORMAT))
                                     .sort((a, b) =>

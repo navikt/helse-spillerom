@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { BodyShort } from '@navikt/ds-react'
 
 interface EnBlokkProps extends React.HTMLAttributes<HTMLDivElement> {
     overskrift: string
@@ -7,11 +6,9 @@ interface EnBlokkProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const DokumentFragment = ({ overskrift, children }: EnBlokkProps): ReactElement => {
     return (
-        <>
-            <BodyShort weight="semibold" size="small">
-                {overskrift}
-            </BodyShort>
-            <BodyShort size="small">{children}</BodyShort>
-        </>
+        <div className="flex flex-col gap-2">
+            <p className="text-sm font-semibold text-gray-900">{overskrift}</p>
+            <p className="text-sm text-gray-700">{children}</p>
+        </div>
     )
 }

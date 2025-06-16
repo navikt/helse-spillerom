@@ -5,8 +5,6 @@ import { CheckmarkIcon } from '@navikt/aksel-icons'
 import { NORSK_DATOFORMAT } from '@utils/date-format'
 import { Sporsmal, Svartype } from '@/schemas/søknad'
 
-import styles from './Søknadsinnhold.module.css'
-
 interface SpørsmålProps {
     spørsmål: Sporsmal[]
     rotnivå?: boolean
@@ -19,14 +17,14 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
         return (
             <div
                 key={it.tag}
-                className={`${styles.spørsmål} ${rotnivå ? styles.rotspørsmål : ''} ${
-                    it.svar?.[0]?.verdi === 'CHECKED' ? styles.sammelinje : ''
-                }`}
+                className={`flex flex-col gap-2 p-2 border-l-2 border-gray-200 ml-2 ${
+                    rotnivå ? 'ml-0 border-l-0 pl-0' : ''
+                } ${it.svar?.[0]?.verdi === 'CHECKED' ? 'flex items-center gap-2' : ''}`}
             >
                 {it.svar && it.svartype && (
-                    <div className={styles.fragment}>
-                        <h3 className={styles.overskrift}>{it.sporsmalstekst ?? ''}</h3>
-                        <div className={styles.innhold}>{getSvarForVisning(it.svar, it.svartype)}</div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="text-base font-semibold text-gray-900 m-0">{it.sporsmalstekst ?? ''}</h3>
+                        <div className="text-sm text-gray-700 leading-6">{getSvarForVisning(it.svar, it.svartype)}</div>
                     </div>
                 )}
                 {underspørsmål && <Spørsmål spørsmål={underspørsmål} rotnivå={false} />}
