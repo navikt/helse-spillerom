@@ -24,14 +24,13 @@ const skalVisesIOppsummering = (sporsmal: Sporsmal) => {
 }
 
 const erUndersporsmalStilt = (sporsmal: Sporsmal): boolean => {
-    if (!sporsmal.kriterieForVisningAvUndersporsmal || !sporsmal.svar) return false
-
-    // Special handling for radio groups
-    if (sporsmal.svartype === 'RADIO_GRUPPE' || sporsmal.svartype === 'RADIO_GRUPPE_TIMER_PROSENT') {
-        return sporsmal.svar.some((s) => s.verdi === 'CHECKED')
+    if (!sporsmal.svar || sporsmal.svar.length === 0) return false
+    if (sporsmal.kriterieForVisningAvUndersporsmal) {
+        // Hvis det finnes en kriterie, vis kun hvis svaret matcher kriteriet
+        return sporsmal.svar.some((s) => s.verdi === sporsmal.kriterieForVisningAvUndersporsmal)
     }
-
-    return sporsmal.svar.some((s) => s.verdi === sporsmal.kriterieForVisningAvUndersporsmal)
+    // Hvis det ikke finnes kriterie, vis hvis det finnes et besvart svar
+    return sporsmal.svar.some((s) => s.verdi && s.verdi !== '')
 }
 
 const hentSvar = (sporsmal: Sporsmal): string | null => {
@@ -41,15 +40,105 @@ const hentSvar = (sporsmal: Sporsmal): string | null => {
 
 export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): ReactElement[] => {
     return spørsmål?.filter(skalVisesIOppsummering).map((it) => {
-        const skalViseUnderspørsmål = it.undersporsmal && it.undersporsmal.length > 0 && erUndersporsmalStilt(it)
+        // Spesialhåndtering for RADIO_GRUPPE og RADIO_GRUPPE_TIMER_PROSENT
+        if (
+            (it.svartype === 'RADIO_GRUPPE' || it.svartype === 'RADIO_GRUPPE_TIMER_PROSENT') &&
+            it.undersporsmal &&
+            it.undersporsmal.length > 0
+        ) {
+            const valgteRadioer = it.undersporsmal.filter((us) => us.svar?.[0]?.verdi === 'CHECKED')
+            return (
+                <div
+                    key={it.tag}
+                    className={`ml-2 flex flex-col gap-2 border-l-2 border-gray-200 p-2 ${
+                        rotnivå ? 'ml-0 border-l-0 pl-0' : ''
+                    }`}
+                >
+                    <div className="flex flex-col gap-2">
+                        <h3 className="m-0 text-sm font-semibold text-gray-900">{it.sporsmalstekst ?? ''}</h3>
+                        <div className="text-sm leading-6 text-gray-700">
+                            <SporsmalVarianter sporsmal={it} />
+                        </div>
+                    </div>
+                    {valgteRadioer.map((radio) => (
+                        <div key={radio.id} className="ml-4">
+                            <h4 className="text-sm font-medium text-gray-800">{radio.sporsmalstekst}</h4>
+                            <SporsmalVarianter sporsmal={radio} />
+                            {radio.undersporsmal && radio.undersporsmal.length > 0 && (
+                                <Spørsmål spørsmål={radio.undersporsmal} rotnivå={false} />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
 
-        // Special handling for radio groups with sub-questions
-        const underspørsmålSomErBesvartOgHarUnderspørsmål =
-            (it.svartype === 'RADIO_GRUPPE' || it.svartype === 'RADIO_GRUPPE_TIMER_PROSENT') && it.undersporsmal
-                ? it.undersporsmal.filter(
-                      (us) => us.svar?.[0]?.verdi === 'CHECKED' && us.undersporsmal && us.undersporsmal.length > 0,
-                  )
-                : []
+        // Spesialhåndtering for CHECKBOX_GRUPPE
+        if (it.svartype === 'CHECKBOX_GRUPPE' && it.undersporsmal && it.undersporsmal.length > 0) {
+            const valgteCheckboxer = it.undersporsmal.filter((us) => us.svar?.[0]?.verdi === 'CHECKED')
+            return (
+                <div
+                    key={it.tag}
+                    className={`ml-2 flex flex-col gap-2 border-l-2 border-gray-200 p-2 ${
+                        rotnivå ? 'ml-0 border-l-0 pl-0' : ''
+                    }`}
+                >
+                    <div className="flex flex-col gap-2">
+                        <h3 className="m-0 text-sm font-semibold text-gray-900">{it.sporsmalstekst ?? ''}</h3>
+                        <div className="text-sm leading-6 text-gray-700">
+                            <SporsmalVarianter sporsmal={it} />
+                        </div>
+                    </div>
+                    {valgteCheckboxer.map((checkbox) => (
+                        <div key={checkbox.id} className="ml-4">
+                            <h4 className="text-sm font-medium text-gray-800">{checkbox.sporsmalstekst}</h4>
+                            <SporsmalVarianter sporsmal={checkbox} />
+                            {checkbox.undersporsmal && checkbox.undersporsmal.length > 0 && (
+                                <Spørsmål spørsmål={checkbox.undersporsmal} rotnivå={false} />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+
+        // Spesialhåndtering for GRUPPE_AV_UNDERSPORSMAL og IKKE_RELEVANT
+        if (
+            (it.svartype === 'GRUPPE_AV_UNDERSPORSMAL' || it.svartype === 'IKKE_RELEVANT') &&
+            it.undersporsmal &&
+            it.undersporsmal.length > 0
+        ) {
+            // Vis alle underspørsmål som har svar
+            const besvarteUndersporsmal = it.undersporsmal.filter(
+                (us) => us.svar && us.svar.length > 0 && us.svar[0]?.verdi && us.svar[0]?.verdi !== '',
+            )
+            return (
+                <div
+                    key={it.tag}
+                    className={`ml-2 flex flex-col gap-2 border-l-2 border-gray-200 p-2 ${
+                        rotnivå ? 'ml-0 border-l-0 pl-0' : ''
+                    }`}
+                >
+                    <div className="flex flex-col gap-2">
+                        <h3 className="m-0 text-sm font-semibold text-gray-900">{it.sporsmalstekst ?? ''}</h3>
+                        <div className="text-sm leading-6 text-gray-700">
+                            <SporsmalVarianter sporsmal={it} />
+                        </div>
+                    </div>
+                    {besvarteUndersporsmal.map((us) => (
+                        <div key={us.id} className="ml-4">
+                            <h4 className="text-sm font-medium text-gray-800">{us.sporsmalstekst}</h4>
+                            <SporsmalVarianter sporsmal={us} />
+                            {us.undersporsmal && us.undersporsmal.length > 0 && (
+                                <Spørsmål spørsmål={us.undersporsmal} rotnivå={false} />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+
+        const skalViseUnderspørsmål = it.undersporsmal && it.undersporsmal.length > 0 && erUndersporsmalStilt(it)
 
         return (
             <div
@@ -66,14 +155,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                         </div>
                     </div>
                 )}
-                {skalViseUnderspørsmål && it.undersporsmal && (
-                    <>
-                        <Spørsmål spørsmål={it.undersporsmal} rotnivå={false} />
-                        {underspørsmålSomErBesvartOgHarUnderspørsmål && (
-                            <Spørsmål spørsmål={underspørsmålSomErBesvartOgHarUnderspørsmål} rotnivå={false} />
-                        )}
-                    </>
-                )}
+                {skalViseUnderspørsmål && it.undersporsmal && <Spørsmål spørsmål={it.undersporsmal} rotnivå={false} />}
             </div>
         )
     })
@@ -89,8 +171,17 @@ const SporsmalVarianter = ({ sporsmal }: SporsmalVarianterProps) => {
 
     switch (svartype) {
         case 'CHECKBOX':
+            return (
+                <span className="inline-flex items-center gap-2">
+                    <CheckmarkIcon fill="#000" style={{ border: '1px solid #000' }} />
+                </span>
+            )
         case 'RADIO':
-            return <CheckmarkIcon fill="#000" style={{ border: '1px solid #000' }} />
+            return (
+                <span className="inline-flex items-center gap-2">
+                    <CheckmarkIcon fill="#000" style={{ border: '1px solid #000' }} />
+                </span>
+            )
         case 'BELOP':
             return `${Number(svar[0]?.verdi) / 100} kr`
         case 'DATO':
