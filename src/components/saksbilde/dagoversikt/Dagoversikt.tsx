@@ -115,10 +115,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
     return (
         <SaksbildePanel value={value}>
-            <Heading size="medium" className="mb-4">
-                Dagoversikt
-            </Heading>
-
             <Tabs
                 value={aktivtForhold?.id || sykmeldingsforhold[0]?.id}
                 onChange={(value) => setAktivtInntektsforholdId(value)}

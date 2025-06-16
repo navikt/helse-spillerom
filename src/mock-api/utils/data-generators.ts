@@ -50,6 +50,7 @@ export function mapArbeidssituasjonTilInntektsforholdtype(
         case 'FRILANSER':
             return 'FRILANSER'
         case 'NAERINGSDRIVENDE':
+        case 'FISKER':
             return 'SELVSTENDIG_NÆRINGSDRIVENDE'
         case 'ARBEIDSLEDIG':
             return 'ARBEIDSLEDIG'

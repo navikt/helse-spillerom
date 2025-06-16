@@ -6,7 +6,8 @@ import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
-import { Bosse } from '@/mock-api/testpersoner/BosseBunntrål'
+
+import { Bosse } from './BosseBunntrål'
 
 export interface Testperson {
     personId: string

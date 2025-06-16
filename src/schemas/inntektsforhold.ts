@@ -16,7 +16,7 @@ export const inntektsforholdSchema = z
         orgnavn: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-        if (data.inntektsforholdtype !== 'ARBEIDSLEDIG' && data.orgnummer?.length !== 9) {
+        if (data.inntektsforholdtype === 'ORDINÆRT_ARBEIDSFORHOLD' && data.orgnummer?.length !== 9) {
             ctx.addIssue({
                 path: ['orgnummer'],
                 code: z.ZodIssueCode.custom,

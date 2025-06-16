@@ -21,16 +21,14 @@ export async function handlePostSaksbehandlingsperioder(
     const testperson = finnPerson(personIdFraRequest)
     const søknader = testperson?.soknader || []
 
-    // Bruk den nye generator-funksjonen
     const resultat = opprettSaksbehandlingsperiode(
         personIdFraRequest,
         søknader,
         body.fom,
         body.tom,
-        body.sykepengesoknadIder || [],
+        body.søknader || [],
     )
 
-    // Legg til den nye saksbehandlingsperioden
     person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 
     // Legg til inntektsforhold hvis det finnes noen

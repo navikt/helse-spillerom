@@ -55,7 +55,6 @@ export async function getSession(): Promise<Session> {
     }
 
     const sessionId = getSessionId()
-
     if (!sessionStore[sessionId] || sessionStore[sessionId].expires.isBefore(dayjs())) {
         const personer = testpersoner.map(
             (p): Person => ({
@@ -76,7 +75,7 @@ export async function getSession(): Promise<Session> {
         )
 
         sessionStore[sessionId] = {
-            expires: dayjs().add(1, 'minute'), // Temporary: short expiry for testing
+            expires: dayjs().add(120, 'minute'),
             testpersoner: [
                 ...personer,
                 skapPerson('12345678902'),
