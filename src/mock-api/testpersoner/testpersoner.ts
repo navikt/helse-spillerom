@@ -6,6 +6,7 @@ import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
+import { Bosse } from '@/mock-api/testpersoner/BosseBunntrål'
 
 export interface Testperson {
     personId: string
@@ -17,7 +18,7 @@ export interface Testperson {
     dokumenter: Record<string, Dokument[]>
 }
 
-export const testpersoner: Testperson[] = [Kalle, Mattis]
+export const testpersoner: Testperson[] = [Kalle, Mattis, Bosse]
 
 export function finnPerson(personId: string) {
     return testpersoner.find((p) => p.personId === personId)

@@ -67,6 +67,6 @@ export const søknadSchema = z.object({
     opprettet: z.string(),
     sendtNav: z.string().nullable(),
     sendtArbeidsgiver: z.string().nullable(),
-    arbeidsgiver: arbeidsgiverSchema.nullable(),
+    arbeidsgiver: arbeidsgiverSchema.nullable().optional(),
     soknadsperioder: z.array(søknadsperiodeSchema),
 })
