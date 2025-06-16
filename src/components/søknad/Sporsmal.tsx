@@ -3,38 +3,89 @@ import React, { ReactElement } from 'react'
 import { CheckmarkIcon } from '@navikt/aksel-icons'
 
 import { NORSK_DATOFORMAT } from '@utils/date-format'
-import { Sporsmal, Svartype } from '@/schemas/søknad'
+import { Sporsmal } from '@/schemas/søknad'
 
 interface SpørsmålProps {
     spørsmål: Sporsmal[]
     rotnivå?: boolean
 }
 
+const skalVisesIOppsummering = (sporsmal: Sporsmal) => {
+    switch (sporsmal.tag) {
+        case 'ANSVARSERKLARING':
+        case 'BEKREFT_OPPLYSNINGER':
+        case 'VAER_KLAR_OVER_AT':
+        case 'BEKREFT_OPPLYSNINGER_UTLAND_INFO':
+        case 'IKKE_SOKT_UTENLANDSOPPHOLD_INFORMASJON':
+            return false
+        default:
+            return true
+    }
+}
+
+const erUndersporsmalStilt = (sporsmal: Sporsmal): boolean => {
+    if (!sporsmal.kriterieForVisningAvUndersporsmal || !sporsmal.svar) return false
+
+    // Special handling for radio groups
+    if (sporsmal.svartype === 'RADIO_GRUPPE' || sporsmal.svartype === 'RADIO_GRUPPE_TIMER_PROSENT') {
+        return sporsmal.svar.some((s) => s.verdi === 'CHECKED')
+    }
+
+    return sporsmal.svar.some((s) => s.verdi === sporsmal.kriterieForVisningAvUndersporsmal)
+}
+
+const hentSvar = (sporsmal: Sporsmal): string | null => {
+    if (!sporsmal.svar || sporsmal.svar.length === 0) return null
+    return sporsmal.svar[0]?.verdi
+}
+
 export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): ReactElement[] => {
-    return spørsmål?.map((it) => {
-        const underspørsmål = it.undersporsmal && it.undersporsmal.length > 0 ? it.undersporsmal : null
+    return spørsmål?.filter(skalVisesIOppsummering).map((it) => {
+        const skalViseUnderspørsmål = it.undersporsmal && it.undersporsmal.length > 0 && erUndersporsmalStilt(it)
+
+        // Special handling for radio groups with sub-questions
+        const underspørsmålSomErBesvartOgHarUnderspørsmål =
+            (it.svartype === 'RADIO_GRUPPE' || it.svartype === 'RADIO_GRUPPE_TIMER_PROSENT') && it.undersporsmal
+                ? it.undersporsmal.filter(
+                      (us) => us.svar?.[0]?.verdi === 'CHECKED' && us.undersporsmal && us.undersporsmal.length > 0,
+                  )
+                : []
 
         return (
             <div
                 key={it.tag}
-                className={`flex flex-col gap-2 p-2 border-l-2 border-gray-200 ml-2 ${
+                className={`ml-2 flex flex-col gap-2 border-l-2 border-gray-200 p-2 ${
                     rotnivå ? 'ml-0 border-l-0 pl-0' : ''
                 } ${it.svar?.[0]?.verdi === 'CHECKED' ? 'flex items-center gap-2' : ''}`}
             >
                 {it.svar && it.svartype && (
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-base font-semibold text-gray-900 m-0">{it.sporsmalstekst ?? ''}</h3>
-                        <div className="text-sm text-gray-700 leading-6">{getSvarForVisning(it.svar, it.svartype)}</div>
+                        <h3 className="m-0 text-sm font-semibold text-gray-900">{it.sporsmalstekst ?? ''}</h3>
+                        <div className="text-sm leading-6 text-gray-700">
+                            <SporsmalVarianter sporsmal={it} />
+                        </div>
                     </div>
                 )}
-                {underspørsmål && <Spørsmål spørsmål={underspørsmål} rotnivå={false} />}
+                {skalViseUnderspørsmål && it.undersporsmal && (
+                    <>
+                        <Spørsmål spørsmål={it.undersporsmal} rotnivå={false} />
+                        {underspørsmålSomErBesvartOgHarUnderspørsmål && (
+                            <Spørsmål spørsmål={underspørsmålSomErBesvartOgHarUnderspørsmål} rotnivå={false} />
+                        )}
+                    </>
+                )}
             </div>
         )
     })
 }
 
-const getSvarForVisning = (svar: { verdi: string }[], svartype: Svartype) => {
-    if (svar.length === 0 || !svar[0]?.verdi) return
+interface SporsmalVarianterProps {
+    sporsmal: Sporsmal
+}
+
+const SporsmalVarianter = ({ sporsmal }: SporsmalVarianterProps) => {
+    const { svar, svartype } = sporsmal
+    if (!svar || svar.length === 0 || !svar[0]?.verdi) return null
 
     switch (svartype) {
         case 'CHECKBOX':
@@ -80,8 +131,12 @@ const getSvarForVisning = (svar: { verdi: string }[], svartype: Svartype) => {
             return `${svar[0]?.verdi} km`
         case 'JA_NEI':
             return svar[0]?.verdi === 'JA' ? 'Ja' : 'Nei'
+        case 'RADIO_GRUPPE':
         case 'RADIO_GRUPPE_TIMER_PROSENT':
-            return
+            return hentSvar(sporsmal)
+        case 'GRUPPE_AV_UNDERSPORSMAL':
+        case 'IKKE_RELEVANT':
+            return null
         default:
             return svar[0]?.verdi
     }

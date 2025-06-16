@@ -72,6 +72,8 @@ export const svartypeEnum = z.enum([
     'OPPSUMMERING',
     'CHECKBOX_PANEL',
     'RADIO_GRUPPE',
+    'GRUPPE_AV_UNDERSPORSMAL',
+    'IKKE_RELEVANT',
 ])
 
 export type Svartype = z.infer<typeof svartypeEnum>

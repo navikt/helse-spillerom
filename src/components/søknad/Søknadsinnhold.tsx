@@ -14,22 +14,22 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
     return (
         <div>
             {søknad && (
-                <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded">
+                <div className="flex flex-col gap-4 rounded bg-gray-50 p-4">
                     {søknad.type && (
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-base font-semibold text-gray-900 m-0">Type</h3>
-                            <div className="text-sm text-gray-700 leading-6">{søknad.type.replace(/_/g, ' ')}</div>
+                            <h3 className="m-0 text-sm font-semibold text-gray-900">Type</h3>
+                            <div className="text-sm leading-6 text-gray-700">{søknad.type.replace(/_/g, ' ')}</div>
                         </div>
                     )}
                     {søknad.soknadsperioder &&
                         søknad.soknadsperioder.length > 0 &&
                         søknad.soknadsperioder.map((søknadsperiode) => (
                             <div key={`søknadsperiode${søknadsperiode.fom}`} className="flex flex-col gap-2">
-                                <h3 className="text-base font-semibold text-gray-900 m-0">
+                                <h3 className="m-0 text-sm font-semibold text-gray-900">
                                     {dayjs(søknadsperiode.fom).format(NORSK_DATOFORMAT)} –{' '}
                                     {dayjs(søknadsperiode.tom).format(NORSK_DATOFORMAT)}
                                 </h3>
-                                <div className="text-sm text-gray-700 leading-6">
+                                <div className="text-sm leading-6 text-gray-700">
                                     {søknadsperiode.grad || søknadsperiode.sykmeldingsgrad ? (
                                         <>{søknadsperiode.grad || søknadsperiode.sykmeldingsgrad} % sykmeldt</>
                                     ) : (
@@ -46,24 +46,26 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
                         ))}
                     {søknad.arbeidGjenopptatt && (
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-base font-semibold text-gray-900 m-0">Arbeid gjenopptatt</h3>
-                            <div className="text-sm text-gray-700 leading-6">
+                            <h3 className="m-0 text-sm font-semibold text-gray-900">Arbeid gjenopptatt</h3>
+                            <div className="text-sm leading-6 text-gray-700">
                                 {dayjs(søknad.arbeidGjenopptatt).format(NORSK_DATOFORMAT)}
                             </div>
                         </div>
                     )}
                     {søknad.sykmeldingSkrevet && (
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-base font-semibold text-gray-900 m-0">Sykmelding skrevet</h3>
-                            <div className="text-sm text-gray-700 leading-6">
+                            <h3 className="m-0 text-sm font-semibold text-gray-900">Sykmelding skrevet</h3>
+                            <div className="text-sm leading-6 text-gray-700">
                                 {dayjs(søknad.sykmeldingSkrevet).format(NORSK_DATOFORMAT_MED_KLOKKESLETT)}
                             </div>
                         </div>
                     )}
                     {(søknad.egenmeldingsdagerFraSykmelding?.length ?? 0) > 0 && (
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-base font-semibold text-gray-900 m-0">Egenmeldingsdager fra sykmelding</h3>
-                            <div className="text-sm text-gray-700 leading-6">
+                            <h3 className="m-0 text-sm font-semibold text-gray-900">
+                                Egenmeldingsdager fra sykmelding
+                            </h3>
+                            <div className="text-sm leading-6 text-gray-700">
                                 {søknad.egenmeldingsdagerFraSykmelding
                                     ?.map((it) => dayjs(it).format(NORSK_DATOFORMAT))
                                     .sort((a, b) =>

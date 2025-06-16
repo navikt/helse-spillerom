@@ -1,4 +1,5 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
+import { søknadSchema } from '@/schemas/søknad'
 
 const bosseGrunndata = {
     personId: 'bosse',
@@ -11,9 +12,12 @@ const bosseGrunndata = {
     soknader: [
         {
             id: '1b002e4f-1559-3415-a940-56eddf83e4d3',
-            type: 'SELVSTENDIGE_OG_FRILANSERE' as const,
-            status: 'SENDT' as const,
-            arbeidssituasjon: 'FISKER' as const,
+            type: 'SELVSTENDIGE_OG_FRILANSERE',
+            status: 'SENDT',
+            fnr: '30816199456',
+            sykmeldingId: '19f53de3-0259-44f4-a606-663162e4dae9',
+            arbeidsgiver: null,
+            arbeidssituasjon: 'FISKER',
             korrigerer: null,
             korrigertAv: null,
             soktUtenlandsopphold: false,
@@ -27,18 +31,13 @@ const bosseGrunndata = {
             sykmeldingSkrevet: '2025-06-09T02:00:00',
             opprettet: '2025-06-16T13:06:46.752112',
             opprinneligSendt: null,
-            sendtNav: '2025-06-16T13:08:34.980121663',
+            sendtNav: '2025-06-16T13:08:34.980122',
             sendtArbeidsgiver: null,
             egenmeldinger: null,
             fravarForSykmeldingen: [],
             papirsykmeldinger: [],
             fravar: [],
-            andreInntektskilder: [
-                {
-                    type: 'FRILANSER_SELVSTENDIG',
-                    sykmeldt: false,
-                },
-            ],
+            andreInntektskilder: [{ type: 'FRILANSER_SELVSTENDIG', sykmeldt: false }],
             soknadsperioder: [
                 {
                     fom: '2025-06-09',
@@ -59,13 +58,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'CHECKBOX_PANEL' as const,
+                    svartype: 'CHECKBOX_PANEL',
                     kriterieForVisningAvUndersporsmal: null,
-                    svar: [
-                        {
-                            verdi: 'CHECKED',
-                        },
-                    ],
+                    svar: [{ verdi: 'CHECKED' }],
                     undersporsmal: [],
                     metadata: null,
                 },
@@ -77,13 +72,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'JA_NEI' as const,
+                    svartype: 'JA_NEI',
                     kriterieForVisningAvUndersporsmal: 'JA',
-                    svar: [
-                        {
-                            verdi: 'NEI',
-                        },
-                    ],
+                    svar: [{ verdi: 'NEI' }],
                     undersporsmal: [
                         {
                             id: '46763d2a-3c8f-30b4-b669-3bd608bb89db',
@@ -92,7 +83,7 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: '2025-06-09',
                             max: '2025-06-15',
-                            svartype: 'DATO' as const,
+                            svartype: 'DATO',
                             kriterieForVisningAvUndersporsmal: null,
                             svar: [],
                             undersporsmal: [],
@@ -109,13 +100,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'JA_NEI' as const,
+                    svartype: 'JA_NEI',
                     kriterieForVisningAvUndersporsmal: 'JA',
-                    svar: [
-                        {
-                            verdi: 'JA',
-                        },
-                    ],
+                    svar: [{ verdi: 'JA' }],
                     undersporsmal: [
                         {
                             id: '5cefd405-7016-316e-809d-7cf065fb5756',
@@ -124,7 +111,7 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: null,
                             max: null,
-                            svartype: 'RADIO_GRUPPE_TIMER_PROSENT' as const,
+                            svartype: 'RADIO_GRUPPE_TIMER_PROSENT',
                             kriterieForVisningAvUndersporsmal: null,
                             svar: [],
                             undersporsmal: [
@@ -135,7 +122,7 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'RADIO' as const,
+                                    svartype: 'RADIO',
                                     kriterieForVisningAvUndersporsmal: 'CHECKED',
                                     svar: [],
                                     undersporsmal: [
@@ -147,7 +134,7 @@ const bosseGrunndata = {
                                             undertekst: 'Oppgi i prosent. Eksempel: 40',
                                             min: '1',
                                             max: '99',
-                                            svartype: 'PROSENT' as const,
+                                            svartype: 'PROSENT',
                                             kriterieForVisningAvUndersporsmal: null,
                                             svar: [],
                                             undersporsmal: [],
@@ -157,19 +144,15 @@ const bosseGrunndata = {
                                     metadata: null,
                                 },
                                 {
-                                    id: '11ef6f99-8311-3ee2-9841-eae5a20ff6bc',
+                                    id: '11ef6f99-8311-3ee2-9841-eae5a20ff8bc',
                                     tag: 'HVOR_MYE_TIMER_0',
                                     sporsmalstekst: 'Timer',
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'RADIO' as const,
+                                    svartype: 'RADIO',
                                     kriterieForVisningAvUndersporsmal: 'CHECKED',
-                                    svar: [
-                                        {
-                                            verdi: 'CHECKED',
-                                        },
-                                    ],
+                                    svar: [{ verdi: 'CHECKED' }],
                                     undersporsmal: [
                                         {
                                             id: '7454e8b4-8875-3d6d-90ca-281808c9f0c4',
@@ -179,13 +162,9 @@ const bosseGrunndata = {
                                             undertekst: 'Eksempel: 8,5',
                                             min: '1',
                                             max: '150',
-                                            svartype: 'TIMER' as const,
+                                            svartype: 'TIMER',
                                             kriterieForVisningAvUndersporsmal: null,
-                                            svar: [
-                                                {
-                                                    verdi: '4',
-                                                },
-                                            ],
+                                            svar: [{ verdi: '4' }],
                                             undersporsmal: [],
                                             metadata: null,
                                         },
@@ -195,35 +174,31 @@ const bosseGrunndata = {
                             ],
                             metadata: null,
                         },
-                    ],
-                    metadata: null,
-                },
-                {
-                    id: '9a44ae0d-7dad-3b34-b748-5d032a546c4a',
-                    tag: 'JOBBER_DU_NORMAL_ARBEIDSUKE_0',
-                    sporsmalstekst: 'Jobber du vanligvis 37,5 timer i uka?',
-                    undertekst: null,
-                    min: null,
-                    max: null,
-                    svartype: 'JA_NEI' as const,
-                    kriterieForVisningAvUndersporsmal: 'NEI',
-                    svar: [
                         {
-                            verdi: 'JA',
-                        },
-                    ],
-                    undersporsmal: [
-                        {
-                            id: 'b0cff6fa-a3e6-3918-82ac-8ad95660f546',
-                            tag: 'HVOR_MANGE_TIMER_PER_UKE_0',
-                            sporsmalstekst: 'Oppgi timer per uke',
-                            undertekst: 'Eksempel: 8,5',
-                            min: '1',
-                            max: '150',
-                            svartype: 'TIMER' as const,
-                            kriterieForVisningAvUndersporsmal: null,
-                            svar: [],
-                            undersporsmal: [],
+                            id: '9a44ae0d-7dad-3b34-b748-5d032a546c4a',
+                            tag: 'JOBBER_DU_NORMAL_ARBEIDSUKE_0',
+                            sporsmalstekst: 'Jobber du vanligvis 37,5 timer i uka?',
+                            undertekst: null,
+                            min: null,
+                            max: null,
+                            svartype: 'JA_NEI',
+                            kriterieForVisningAvUndersporsmal: 'NEI',
+                            svar: [{ verdi: 'JA' }],
+                            undersporsmal: [
+                                {
+                                    id: 'b0cff6fa-a3e6-3918-82ac-8ad95660f546',
+                                    tag: 'HVOR_MANGE_TIMER_PER_UKE_0',
+                                    sporsmalstekst: 'Oppgi timer per uke',
+                                    undertekst: 'Eksempel: 8,5',
+                                    min: '1',
+                                    max: '150',
+                                    svartype: 'TIMER',
+                                    kriterieForVisningAvUndersporsmal: null,
+                                    svar: [],
+                                    undersporsmal: [],
+                                    metadata: null,
+                                },
+                            ],
                             metadata: null,
                         },
                     ],
@@ -236,12 +211,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'JA_NEI' as const,
-                    svar: [
-                        {
-                            verdi: 'JA',
-                        },
-                    ],
+                    svartype: 'JA_NEI',
+                    kriterieForVisningAvUndersporsmal: null,
+                    svar: [{ verdi: 'JA' }],
                     undersporsmal: [],
                     metadata: null,
                 },
@@ -252,13 +224,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'JA_NEI' as const,
+                    svartype: 'JA_NEI',
                     kriterieForVisningAvUndersporsmal: 'JA',
-                    svar: [
-                        {
-                            verdi: 'JA',
-                        },
-                    ],
+                    svar: [{ verdi: 'JA' }],
                     undersporsmal: [
                         {
                             id: '48c713e2-b8cc-3b50-8683-5068794dd559',
@@ -267,7 +235,7 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: null,
                             max: null,
-                            svartype: 'CHECKBOX_GRUPPE' as const,
+                            svartype: 'CHECKBOX_GRUPPE',
                             kriterieForVisningAvUndersporsmal: null,
                             svar: [],
                             undersporsmal: [
@@ -278,7 +246,7 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'CHECKBOX' as const,
+                                    svartype: 'CHECKBOX',
                                     kriterieForVisningAvUndersporsmal: 'CHECKED',
                                     svar: [],
                                     undersporsmal: [
@@ -289,7 +257,8 @@ const bosseGrunndata = {
                                             undertekst: null,
                                             min: null,
                                             max: null,
-                                            svartype: 'JA_NEI' as const,
+                                            svartype: 'JA_NEI',
+                                            kriterieForVisningAvUndersporsmal: null,
                                             svar: [],
                                             undersporsmal: [],
                                             metadata: null,
@@ -304,7 +273,7 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'CHECKBOX' as const,
+                                    svartype: 'CHECKBOX',
                                     kriterieForVisningAvUndersporsmal: 'CHECKED',
                                     svar: [],
                                     undersporsmal: [
@@ -315,7 +284,8 @@ const bosseGrunndata = {
                                             undertekst: null,
                                             min: null,
                                             max: null,
-                                            svartype: 'JA_NEI' as const,
+                                            svartype: 'JA_NEI',
+                                            kriterieForVisningAvUndersporsmal: null,
                                             svar: [],
                                             undersporsmal: [],
                                             metadata: null,
@@ -330,13 +300,9 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'CHECKBOX' as const,
+                                    svartype: 'CHECKBOX',
                                     kriterieForVisningAvUndersporsmal: 'CHECKED',
-                                    svar: [
-                                        {
-                                            verdi: 'CHECKED',
-                                        },
-                                    ],
+                                    svar: [{ verdi: 'CHECKED' }],
                                     undersporsmal: [
                                         {
                                             id: 'cb47acec-d78a-34be-93b9-cb70b2e50fdd',
@@ -345,12 +311,9 @@ const bosseGrunndata = {
                                             undertekst: null,
                                             min: null,
                                             max: null,
-                                            svartype: 'JA_NEI' as const,
-                                            svar: [
-                                                {
-                                                    verdi: 'NEI',
-                                                },
-                                            ],
+                                            svartype: 'JA_NEI',
+                                            kriterieForVisningAvUndersporsmal: null,
+                                            svar: [{ verdi: 'NEI' }],
                                             undersporsmal: [],
                                             metadata: null,
                                         },
@@ -364,7 +327,7 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'CHECKBOX' as const,
+                                    svartype: 'CHECKBOX',
                                     kriterieForVisningAvUndersporsmal: null,
                                     svar: [],
                                     undersporsmal: [],
@@ -383,13 +346,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'JA_NEI' as const,
+                    svartype: 'JA_NEI',
                     kriterieForVisningAvUndersporsmal: 'JA',
-                    svar: [
-                        {
-                            verdi: 'NEI',
-                        },
-                    ],
+                    svar: [{ verdi: 'NEI' }],
                     undersporsmal: [
                         {
                             id: 'ea0902ef-451c-3661-92ab-cc294e61e6cf',
@@ -398,7 +357,7 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: '2025-06-09',
                             max: '2025-06-15',
-                            svartype: 'PERIODER' as const,
+                            svartype: 'PERIODER',
                             kriterieForVisningAvUndersporsmal: null,
                             svar: [],
                             undersporsmal: [],
@@ -414,7 +373,9 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'RADIO_GRUPPE' as const,
+                    svartype: 'RADIO_GRUPPE',
+                    kriterieForVisningAvUndersporsmal: null,
+                    svar: [],
                     undersporsmal: [
                         {
                             id: '4ed1cd4d-b1cc-3ff0-a510-1d183e3402b2',
@@ -423,7 +384,7 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: null,
                             max: null,
-                            svartype: 'RADIO' as const,
+                            svartype: 'RADIO',
                             kriterieForVisningAvUndersporsmal: 'CHECKED',
                             svar: [],
                             undersporsmal: [
@@ -434,7 +395,8 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: '2025-06-08',
-                                    svartype: 'DATO' as const,
+                                    svartype: 'DATO',
+                                    kriterieForVisningAvUndersporsmal: null,
                                     svar: [],
                                     undersporsmal: [],
                                     metadata: null,
@@ -449,13 +411,9 @@ const bosseGrunndata = {
                             undertekst: null,
                             min: null,
                             max: null,
-                            svartype: 'RADIO' as const,
+                            svartype: 'RADIO',
                             kriterieForVisningAvUndersporsmal: 'CHECKED',
-                            svar: [
-                                {
-                                    verdi: 'CHECKED',
-                                },
-                            ],
+                            svar: [{ verdi: 'CHECKED' }],
                             undersporsmal: [
                                 {
                                     id: 'a6efb1cc-2014-3443-8198-a19d2c19fbad',
@@ -464,7 +422,9 @@ const bosseGrunndata = {
                                     undertekst: null,
                                     min: null,
                                     max: null,
-                                    svartype: 'RADIO_GRUPPE' as const,
+                                    svartype: 'RADIO_GRUPPE',
+                                    kriterieForVisningAvUndersporsmal: null,
+                                    svar: [],
                                     undersporsmal: [
                                         {
                                             id: 'c777171c-6af0-3074-becb-b31b13bc15e2',
@@ -473,7 +433,7 @@ const bosseGrunndata = {
                                             undertekst: null,
                                             min: null,
                                             max: null,
-                                            svartype: 'RADIO' as const,
+                                            svartype: 'RADIO',
                                             kriterieForVisningAvUndersporsmal: 'CHECKED',
                                             svar: [],
                                             undersporsmal: [
@@ -484,7 +444,8 @@ const bosseGrunndata = {
                                                     undertekst: null,
                                                     min: '2020-01-01',
                                                     max: '2025-06-08',
-                                                    svartype: 'DATO' as const,
+                                                    svartype: 'DATO',
+                                                    kriterieForVisningAvUndersporsmal: null,
                                                     svar: [],
                                                     undersporsmal: [],
                                                     metadata: null,
@@ -499,28 +460,21 @@ const bosseGrunndata = {
                                             undertekst: null,
                                             min: null,
                                             max: null,
-                                            svartype: 'RADIO' as const,
+                                            svartype: 'RADIO',
                                             kriterieForVisningAvUndersporsmal: 'CHECKED',
-                                            svar: [
-                                                {
-                                                    verdi: 'CHECKED',
-                                                },
-                                            ],
+                                            svar: [{ verdi: 'CHECKED' }],
                                             undersporsmal: [
                                                 {
                                                     id: 'd796a1a6-d74f-367f-844c-63124aecbb3c',
                                                     tag: 'INNTEKTSOPPLYSNINGER_VARIG_ENDRING',
                                                     sporsmalstekst:
-                                                        'Har det skjedd en varig endring i arbeidssituasjonen eller virksomheten din i mellom 1. januar 2020 og frem til sykmeldingstidspunktet?',
+                                                        'Har det skjedd en varig endring i arbeidssituasjonen eller virksomheten din i mellom 1. januar 2020 og frem tilsykmeldingstidspunktet?',
                                                     undertekst: null,
                                                     min: null,
                                                     max: null,
-                                                    svartype: 'JA_NEI' as const,
-                                                    svar: [
-                                                        {
-                                                            verdi: 'JA',
-                                                        },
-                                                    ],
+                                                    svartype: 'JA_NEI',
+                                                    kriterieForVisningAvUndersporsmal: 'JA',
+                                                    svar: [{ verdi: 'JA' }],
                                                     undersporsmal: [
                                                         {
                                                             id: '229feb32-7eeb-3a1a-b600-d24f2dd2288b',
@@ -530,7 +484,9 @@ const bosseGrunndata = {
                                                             undertekst: 'Du kan velge ett eller flere alternativer',
                                                             min: null,
                                                             max: null,
-                                                            svartype: 'CHECKBOX_GRUPPE' as const,
+                                                            svartype: 'CHECKBOX_GRUPPE',
+                                                            kriterieForVisningAvUndersporsmal: null,
+                                                            svar: [],
                                                             undersporsmal: [
                                                                 {
                                                                     id: '528f8512-1902-3fa6-902d-cea979e343ae',
@@ -540,7 +496,8 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: null,
                                                                     max: null,
-                                                                    svartype: 'CHECKBOX' as const,
+                                                                    svartype: 'CHECKBOX',
+                                                                    kriterieForVisningAvUndersporsmal: null,
                                                                     svar: [],
                                                                     undersporsmal: [],
                                                                     metadata: null,
@@ -552,12 +509,9 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: null,
                                                                     max: null,
-                                                                    svartype: 'CHECKBOX' as const,
-                                                                    svar: [
-                                                                        {
-                                                                            verdi: 'CHECKED',
-                                                                        },
-                                                                    ],
+                                                                    svartype: 'CHECKBOX',
+                                                                    kriterieForVisningAvUndersporsmal: null,
+                                                                    svar: [{ verdi: 'CHECKED' }],
                                                                     undersporsmal: [],
                                                                     metadata: null,
                                                                 },
@@ -568,7 +522,8 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: null,
                                                                     max: null,
-                                                                    svartype: 'CHECKBOX' as const,
+                                                                    svartype: 'CHECKBOX',
+                                                                    kriterieForVisningAvUndersporsmal: null,
                                                                     svar: [],
                                                                     undersporsmal: [],
                                                                     metadata: null,
@@ -580,7 +535,8 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: null,
                                                                     max: null,
-                                                                    svartype: 'CHECKBOX' as const,
+                                                                    svartype: 'CHECKBOX',
+                                                                    kriterieForVisningAvUndersporsmal: null,
                                                                     svar: [],
                                                                     undersporsmal: [],
                                                                     metadata: null,
@@ -592,7 +548,8 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: null,
                                                                     max: null,
-                                                                    svartype: 'CHECKBOX' as const,
+                                                                    svartype: 'CHECKBOX',
+                                                                    kriterieForVisningAvUndersporsmal: null,
                                                                     svar: [],
                                                                     undersporsmal: [],
                                                                     metadata: null,
@@ -608,12 +565,9 @@ const bosseGrunndata = {
                                                             undertekst: null,
                                                             min: null,
                                                             max: null,
-                                                            svartype: 'JA_NEI' as const,
-                                                            svar: [
-                                                                {
-                                                                    verdi: 'NEI',
-                                                                },
-                                                            ],
+                                                            svartype: 'JA_NEI',
+                                                            kriterieForVisningAvUndersporsmal: 'JA',
+                                                            svar: [{ verdi: 'NEI' }],
                                                             undersporsmal: [
                                                                 {
                                                                     id: '7890f353-532e-37f4-850c-96e9c0e7d09d',
@@ -623,7 +577,8 @@ const bosseGrunndata = {
                                                                     undertekst: null,
                                                                     min: '2020-01-01',
                                                                     max: '2025-06-09',
-                                                                    svartype: 'DATO' as const,
+                                                                    svartype: 'DATO',
+                                                                    kriterieForVisningAvUndersporsmal: null,
                                                                     svar: [],
                                                                     undersporsmal: [],
                                                                     metadata: null,
@@ -653,20 +608,16 @@ const bosseGrunndata = {
                     undertekst: null,
                     min: null,
                     max: null,
-                    svartype: 'OPPSUMMERING' as const,
+                    svartype: 'OPPSUMMERING',
                     kriterieForVisningAvUndersporsmal: null,
-                    svar: [
-                        {
-                            verdi: 'true',
-                        },
-                    ],
+                    svar: [{ verdi: 'true' }],
                     undersporsmal: [],
                     metadata: null,
                 },
             ],
             avsendertype: 'BRUKER',
             ettersending: false,
-            mottaker: 'NAV',
+            mottaker: null,
             egenmeldtSykmelding: false,
             yrkesskade: null,
             arbeidUtenforNorge: true,
@@ -693,8 +644,12 @@ const bosseGrunndata = {
     ],
 }
 
+// Validate søknader with Zod schema
+const validatedSoknader = bosseGrunndata.soknader.map((soknad) => søknadSchema.parse(soknad))
+
 export const Bosse: Testperson = {
     ...bosseGrunndata,
+    soknader: validatedSoknader,
     saksbehandlingsperioder: [],
     inntektsforhold: {},
     dagoversikt: {},
