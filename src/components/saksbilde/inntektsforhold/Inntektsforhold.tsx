@@ -2,7 +2,14 @@
 
 import { ReactElement, useState } from 'react'
 import { Alert, BodyShort, Box, Button, Table, VStack } from '@navikt/ds-react'
-import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
+import {
+    TableBody,
+    TableDataCell,
+    TableExpandableRow,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+} from '@navikt/ds-react/Table'
 import { PlusIcon } from '@navikt/aksel-icons'
 import { AnimatePresence, motion } from 'motion/react'
 
@@ -12,7 +19,7 @@ import { Inntektsforholdtype } from '@schemas/inntektsforhold'
 import { InntektsforholdForm } from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
-    const [visSopprettForm, setVisOpprettForm] = useState(false)
+    const [visOpprettForm, setVisOpprettForm] = useState(false)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
@@ -36,7 +43,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                     Legg til inntektsforhold
                 </Button>
                 <AnimatePresence initial={false}>
-                    {visSopprettForm && (
+                    {visOpprettForm && (
                         <motion.div
                             key="opprett-inntektsforhold"
                             transition={{
@@ -66,6 +73,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                     <Table size="medium">
                         <TableHeader>
                             <TableRow>
+                                <TableHeaderCell />
                                 <TableHeaderCell>Type</TableHeaderCell>
                                 <TableHeaderCell>Organisasjon</TableHeaderCell>
                                 <TableHeaderCell>Sykmeldt fra forholdet</TableHeaderCell>
@@ -73,7 +81,11 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                         </TableHeader>
                         <TableBody>
                             {inntektsforhold.map((forhold) => (
-                                <TableRow key={forhold.id}>
+                                <TableExpandableRow
+                                    key={forhold.id}
+                                    expandOnRowClick
+                                    content="Velge forsikring og sånn her?"
+                                >
                                     <TableDataCell>
                                         <BodyShort>{getInntektsforholdtypeText(forhold.inntektsforholdtype)}</BodyShort>
                                     </TableDataCell>
@@ -95,7 +107,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                                     <TableDataCell>
                                         <BodyShort>{forhold.sykmeldtFraForholdet ? 'Ja' : 'Nei'}</BodyShort>
                                     </TableDataCell>
-                                </TableRow>
+                                </TableExpandableRow>
                             ))}
                         </TableBody>
                     </Table>
