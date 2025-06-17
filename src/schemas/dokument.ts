@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-export type Kildespor = z.infer<typeof kildesporSchema>
 export const kildesporSchema = z
     .object({
         // Add specific Kildespor fields here based on your backend implementation
@@ -13,7 +12,7 @@ export const kildesporSchema = z
 
 export type Dokument = z.infer<typeof dokumentSchema>
 export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
-export const dokumenttypeSchema = z.enum(['SØKNAD', 'INNTEKTSMELDING', 'SYKMELDING', 'AAREG'])
+export const dokumenttypeSchema = z.enum(['SØKNAD', 'INNTEKTSMELDING', 'SYKMELDING', 'AAREG', 'ainntekt828'])
 
 export const dokumentSchema = z.object({
     id: z.string().uuid(),

@@ -18,6 +18,7 @@ const dokumentTag: Record<Dokumenttype, ComponentType> = {
     INNTEKTSMELDING: InntektsmeldingTag,
     SYKMELDING: SykmeldingTag,
     AAREG: AaregTag,
+    ainntekt828: () => <ExtendedTag variant="neutral">A8</ExtendedTag>,
 }
 
 function SøknadTag(): ReactElement {
