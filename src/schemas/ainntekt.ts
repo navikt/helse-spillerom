@@ -20,6 +20,7 @@ const inntektSchema = z.object({
     utloeserArbeidsgiveravgift: z.boolean(),
     informasjonsstatus: z.string(),
     beskrivelse: z.string(),
+    antall: z.number().optional(),
 })
 
 const arbeidsInntektInformasjonSchema = z.object({

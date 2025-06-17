@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server'
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
 import { hentPerson } from '@/mock-api/session'
-import { mockArbeidsforhold } from '@/mock-api/aareg'
 import { hentPersonIdFraUrl, hentUuidFraUrl, hentInntektsforholdUuidFraUrl } from '@/mock-api/utils/url-utils'
 import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
 import { handleDokumenter } from '@/mock-api/handlers/dokument-handlers'
@@ -19,8 +18,8 @@ import {
     handlePostInntektsforhold,
     handleGetDagoversikt,
 } from '@/mock-api/handlers/inntektsforhold-handlers'
-
-import { ainntektData } from './ainntekt'
+import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
+import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 
 interface HandlerContext {
     request: Request
@@ -46,9 +45,9 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter': async ({ person, uuid }) =>
         handleDokumenter(await person, uuid!),
 
-    'GET /v1/[personId]/arbeidsforhold': async () => NextResponse.json(mockArbeidsforhold),
+    'GET /v1/[personId]/arbeidsforhold': async ({ personId }) => handleGetArbeidsforhold(personId),
 
-    'GET /v1/[personId]/ainntekt': async () => NextResponse.json(ainntektData),
+    'GET /v1/[personId]/ainntekt': async ({ personId }) => handleGetAinntekt(personId),
 
     'POST /v1/personsok': async ({ request }) => personsøk(request),
 
