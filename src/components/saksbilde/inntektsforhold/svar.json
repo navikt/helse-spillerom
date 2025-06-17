@@ -1,14 +1,5 @@
-[
-    {
-        "kode": "INNTEKTSFORHOLD",
-        "svar": "SELVSTENDIG_NÆRINGSDRIVENDE"
-    },
-    {
-        "kode": "SELVSTENDIG_NÆRINGSDRIVENDE_TYPE",
-        "svar": "FISKER"
-    },
-    {
-        "kode": "FISKER_BLAD_B",
-        "svar": "ER_FISKER_BLAD_B"
-    }
-]
+{
+    "INNTEKTSFORHOLD": "SELVSTENDIG_NÆRINGSDRIVENDE",
+    "SELVSTENDIG_NÆRINGSDRIVENDE_TYPE": "FISKER",
+    "FISKER_BLAD_B": "ER_FISKER_BLAD_B"
+}
