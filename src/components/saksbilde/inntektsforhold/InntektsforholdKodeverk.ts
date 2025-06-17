@@ -16,13 +16,13 @@ export const inntektsforholdKodeverk = {
             navn: 'Selvstendig næringsdrivende',
             underspørsmål: [
                 {
-                    kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_TYPE',
+                    kode: 'TYPE_SELVSTENDIG_NÆRINGSDRIVENDE',
                     navn: 'Type selvstendig næringsdrivende',
                     variant: 'CHECKBOX',
                     alternativer: [
                         {
-                            kode: 'VANLIG',
-                            navn: 'Vanlig selvstendig næringsdrivende',
+                            kode: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
+                            navn: 'Ordinær selvstendig næringsdrivende',
                             underspørsmål: [
                                 {
                                     kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING',
@@ -30,15 +30,15 @@ export const inntektsforholdKodeverk = {
                                     variant: 'RADIO',
                                     alternativer: [
                                         {
-                                            kode: '1',
+                                            kode: 'FORSIKRING_80_PROSENT_FRA_FØRSTE_SYKEDAG',
                                             navn: '80 prosent fra første sykedag',
                                         },
                                         {
-                                            kode: '2',
+                                            kode: 'FORSIKRING_100_PROSENT_FRA_17_SYKEDAG',
                                             navn: '100 prosent fra 17. sykedag',
                                         },
                                         {
-                                            kode: '3',
+                                            kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
                                             navn: '100 prosent fra første sykedag',
                                         },
                                         {
@@ -54,17 +54,17 @@ export const inntektsforholdKodeverk = {
                             navn: 'Fisker',
                             underspørsmål: [
                                 {
-                                    kode: 'FISKER_BLAD_B',
-                                    navn: 'Registrert i fiskermanntallets blad B (fiske som hovednæring)',
+                                    kode: 'FISKER_BLAD',
+                                    navn: 'Blad i fiskermanntallet',
                                     variant: 'RADIO',
                                     alternativer: [
                                         {
-                                            kode: 'ER_FISKER_BLAD_B',
-                                            navn: 'Ja, er omfattet av kollektiv forsikring',
+                                            kode: 'FISKER_BLAD_A',
+                                            navn: 'Blad A (fiske som binæring)',
                                         },
                                         {
-                                            kode: 'IKKE_FISKER_BLAD_B',
-                                            navn: 'Nei, er ikke omfattet av kollektiv forsikring',
+                                            kode: 'FISKER_BLAD_B',
+                                            navn: 'Blad B (fiske som hovednæring)',
                                         },
                                     ],
                                 },
@@ -82,7 +82,6 @@ export const inntektsforholdKodeverk = {
                 },
             ],
         },
-
         {
             kode: 'INAKTIV',
             navn: 'Inaktiv',
