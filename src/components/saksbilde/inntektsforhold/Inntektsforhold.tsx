@@ -17,22 +17,10 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { Inntektsforholdtype } from '@schemas/inntektsforhold'
 import { InntektsforholdForm } from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
-import { VilkårsvurderingAccordionContent } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
-import { useKodeverk } from '@hooks/queries/useKodeverk'
-import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
-
-const inntektsforholdTypeToKodeverkKategori: Record<Inntektsforholdtype, string | undefined> = {
-    ORDINÆRT_ARBEIDSFORHOLD: 'arbeidstakere',
-    FRILANSER: 'frilanser',
-    SELVSTENDIG_NÆRINGSDRIVENDE: 'selvstendig_næringsdrivende',
-    ARBEIDSLEDIG: undefined,
-}
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
-    const { data: kodeverk } = useKodeverk()
-    const { data: vilkaarsvurderinger } = useVilkaarsvurderinger()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -93,26 +81,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                         </TableHeader>
                         <TableBody>
                             {inntektsforhold.map((forhold) => (
-                                <TableExpandableRow
-                                    key={forhold.id}
-                                    expandOnRowClick
-                                    content={
-                                        inntektsforholdTypeToKodeverkKategori[forhold.inntektsforholdtype] && (
-                                            <VilkårsvurderingAccordionContent
-                                                vilkårListe={
-                                                    kodeverk?.filter(
-                                                        (v) =>
-                                                            v.kategori ===
-                                                            inntektsforholdTypeToKodeverkKategori[
-                                                                forhold.inntektsforholdtype
-                                                            ],
-                                                    ) ?? []
-                                                }
-                                                vilkårsvurderinger={vilkaarsvurderinger}
-                                            />
-                                        )
-                                    }
-                                >
+                                <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
                                     <TableDataCell>
                                         <BodyShort>{getInntektsforholdtypeText(forhold.inntektsforholdtype)}</BodyShort>
                                     </TableDataCell>
