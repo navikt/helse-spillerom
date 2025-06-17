@@ -1,5 +1,5 @@
 export const inntektsforholdKodeverk = {
-    kode: 'INNTEKTSFORHOLD',
+    kode: 'INNTEKTSKATEGORI',
     navn: 'Type inntektsforhold',
     variant: 'SELECT',
     alternativer: [
