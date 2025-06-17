@@ -41,21 +41,37 @@ export function getOrgnavn(orgnummer?: string, fallbackNavn?: string): string | 
     return mockOrganisasjoner[orgnummer] || fallbackNavn || `Organisasjon ${orgnummer}`
 }
 
-export function mapArbeidssituasjonTilInntektsforholdtype(
-    arbeidssituasjon: string,
-): 'ORDINÆRT_ARBEIDSFORHOLD' | 'FRILANSER' | 'SELVSTENDIG_NÆRINGSDRIVENDE' | 'ARBEIDSLEDIG' {
+export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<string, string> {
     switch (arbeidssituasjon) {
         case 'ARBEIDSTAKER':
-            return 'ORDINÆRT_ARBEIDSFORHOLD'
+            return {
+                INNTEKTSKATEGORI: 'ARBEIDSTAKER',
+                TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
+            }
         case 'FRILANSER':
-            return 'FRILANSER'
+            return {
+                INNTEKTSKATEGORI: 'FRILANSER',
+            }
         case 'NAERINGSDRIVENDE':
+            return {
+                INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
+                TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
+            }
         case 'FISKER':
-            return 'SELVSTENDIG_NÆRINGSDRIVENDE'
+            return {
+                INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
+                TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'FISKER',
+                FISKER_BLAD: 'FISKER_BLAD_B',
+            }
         case 'ARBEIDSLEDIG':
-            return 'ARBEIDSLEDIG'
+            return {
+                INNTEKTSKATEGORI: 'INAKTIV',
+            }
         default:
-            return 'ORDINÆRT_ARBEIDSFORHOLD'
+            return {
+                INNTEKTSKATEGORI: 'ARBEIDSTAKER',
+                TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
+            }
     }
 }
 
@@ -138,7 +154,7 @@ export function opprettSaksbehandlingsperiode(
         unikeInntektsforhold.forEach((forhold) => {
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
-                inntektsforholdtype: mapArbeidssituasjonTilInntektsforholdtype(forhold.arbeidssituasjon),
+                svar: mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
                 sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
                 orgnummer: forhold.orgnummer,
                 orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),

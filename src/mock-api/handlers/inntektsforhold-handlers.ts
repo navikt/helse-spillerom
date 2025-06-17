@@ -28,7 +28,7 @@ export async function handlePostInntektsforhold(
 
     const nyttInntektsforhold: Inntektsforhold = {
         id: uuidv4(),
-        inntektsforholdtype: body.inntektsforholdtype,
+        svar: body.svar,
         sykmeldtFraForholdet: body.sykmeldtFraForholdet,
         orgnummer: body.orgnummer,
         orgnavn: getOrgnavn(body.orgnummer),

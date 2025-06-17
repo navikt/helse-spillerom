@@ -2,10 +2,10 @@ import { useParams } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
-import { Inntektsforhold, inntektsforholdSchema, Inntektsforholdtype } from '@/schemas/inntektsforhold'
+import { Inntektsforhold, inntektsforholdSchema } from '@/schemas/inntektsforhold'
 
 type MutationProps = {
-    inntektsforholdtype: Inntektsforholdtype
+    svar: Record<string, string>
     sykmeldtFraForholdet: boolean
     orgnummer?: string
 }
@@ -15,12 +15,12 @@ export function useOpprettInntektsforhold() {
     const queryClient = useQueryClient()
 
     return useMutation<Inntektsforhold, Error, MutationProps>({
-        mutationFn: async ({ inntektsforholdtype, sykmeldtFraForholdet, orgnummer }) => {
+        mutationFn: async ({ svar, sykmeldtFraForholdet, orgnummer }) => {
             return await postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
                 inntektsforholdSchema,
                 {
-                    inntektsforholdtype,
+                    svar,
                     sykmeldtFraForholdet,
                     orgnummer,
                 },

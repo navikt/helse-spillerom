@@ -15,7 +15,6 @@ import { AnimatePresence, motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { Inntektsforholdtype } from '@schemas/inntektsforhold'
 import { InntektsforholdForm } from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
@@ -83,7 +82,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                             {inntektsforhold.map((forhold) => (
                                 <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
                                     <TableDataCell>
-                                        <BodyShort>{getInntektsforholdtypeText(forhold.inntektsforholdtype)}</BodyShort>
+                                        <BodyShort>{getInntektsforholdDisplayText(forhold.svar)}</BodyShort>
                                     </TableDataCell>
                                     <TableDataCell>
                                         <VStack gap="1">
@@ -117,17 +116,41 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
     )
 }
 
-function getInntektsforholdtypeText(type: Inntektsforholdtype): string {
-    switch (type) {
-        case 'ORDINÆRT_ARBEIDSFORHOLD':
-            return 'Ordinært arbeidsforhold'
+function getInntektsforholdDisplayText(svar: Record<string, string>): string {
+    const inntektskategori = svar['INNTEKTSKATEGORI']
+
+    switch (inntektskategori) {
+        case 'ARBEIDSTAKER': {
+            const typeArbeidstaker = svar['TYPE_ARBEIDSTAKER']
+            switch (typeArbeidstaker) {
+                case 'ORDINÆRT_ARBEIDSFORHOLD':
+                    return 'Ordinært arbeidsforhold'
+                case 'MARITIMT_ARBEIDSFORHOLD':
+                    return 'Maritimt arbeidsforhold'
+                case 'FISKER':
+                    return 'Fisker (arbeidstaker)'
+                default:
+                    return 'Arbeidstaker'
+            }
+        }
         case 'FRILANSER':
             return 'Frilanser'
-        case 'SELVSTENDIG_NÆRINGSDRIVENDE':
-            return 'Selvstendig næringsdrivende'
-        case 'ARBEIDSLEDIG':
-            return 'Arbeidsledig'
+        case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+            const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
+            switch (typeSelvstendig) {
+                case 'FISKER':
+                    return 'Fisker (selvstendig)'
+                case 'JORDBRUKER':
+                    return 'Jordbruker'
+                case 'REINDRIFT':
+                    return 'Reindrift'
+                default:
+                    return 'Selvstendig næringsdrivende'
+            }
+        }
+        case 'INAKTIV':
+            return 'Inaktiv'
         default:
-            return type
+            return inntektskategori || 'Ukjent'
     }
 }

@@ -38,18 +38,42 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         inntektsforholdId: aktivtForhold?.id,
     })
 
-    const getInntektsforholdtypeText = (type: string): string => {
-        switch (type) {
-            case 'ORDINÆRT_ARBEIDSFORHOLD':
-                return 'Ordinært arbeidsforhold'
+    const getInntektsforholdDisplayText = (svar: Record<string, string>): string => {
+        const inntektskategori = svar['INNTEKTSKATEGORI']
+
+        switch (inntektskategori) {
+            case 'ARBEIDSTAKER': {
+                const typeArbeidstaker = svar['TYPE_ARBEIDSTAKER']
+                switch (typeArbeidstaker) {
+                    case 'ORDINÆRT_ARBEIDSFORHOLD':
+                        return 'Ordinært arbeidsforhold'
+                    case 'MARITIMT_ARBEIDSFORHOLD':
+                        return 'Maritimt arbeidsforhold'
+                    case 'FISKER':
+                        return 'Fisker (arbeidstaker)'
+                    default:
+                        return 'Arbeidstaker'
+                }
+            }
             case 'FRILANSER':
                 return 'Frilanser'
-            case 'SELVSTENDIG_NÆRINGSDRIVENDE':
-                return 'Selvstendig næringsdrivende'
-            case 'ARBEIDSLEDIG':
-                return 'Arbeidsledig'
+            case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+                const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
+                switch (typeSelvstendig) {
+                    case 'FISKER':
+                        return 'Fisker (selvstendig)'
+                    case 'JORDBRUKER':
+                        return 'Jordbruker'
+                    case 'REINDRIFT':
+                        return 'Reindrift'
+                    default:
+                        return 'Selvstendig næringsdrivende'
+                }
+            }
+            case 'INAKTIV':
+                return 'Inaktiv'
             default:
-                return type
+                return inntektskategori || 'Ukjent'
         }
     }
 
@@ -124,7 +148,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         <TabsTab
                             key={forhold.id}
                             value={forhold.id}
-                            label={`${getInntektsforholdtypeText(forhold.inntektsforholdtype)}${forhold.orgnavn ? ` - ${forhold.orgnavn}` : ''}`}
+                            label={`${getInntektsforholdDisplayText(forhold.svar)}${forhold.orgnavn ? ` - ${forhold.orgnavn}` : ''}`}
                         />
                     ))}
                 </TabsList>

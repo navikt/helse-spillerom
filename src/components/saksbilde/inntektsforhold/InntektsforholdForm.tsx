@@ -12,7 +12,10 @@ export function InntektsforholdForm({ closeForm }: { closeForm: () => void }): R
         resolver: zodResolver(inntektsforholdSchema),
         defaultValues: {
             id: '',
-            inntektsforholdtype: 'ORDINÆRT_ARBEIDSFORHOLD',
+            svar: {
+                INNTEKTSKATEGORI: 'ARBEIDSTAKER',
+                TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
+            },
             sykmeldtFraForholdet: false,
             orgnummer: '',
             orgnavn: '',
@@ -22,7 +25,7 @@ export function InntektsforholdForm({ closeForm }: { closeForm: () => void }): R
     async function onSubmit(values: InntektsforholdSchema) {
         await mutation.mutateAsync(
             {
-                inntektsforholdtype: values.inntektsforholdtype,
+                svar: values.svar,
                 sykmeldtFraForholdet: values.sykmeldtFraForholdet,
                 orgnummer: values.orgnummer,
             },
@@ -34,7 +37,9 @@ export function InntektsforholdForm({ closeForm }: { closeForm: () => void }): R
         )
     }
 
-    const inntektsforholdtype = form.watch('inntektsforholdtype')
+    const svar = form.watch('svar')
+    const inntektskategori = svar?.INNTEKTSKATEGORI
+    const typeArbeidstaker = svar?.TYPE_ARBEIDSTAKER
 
     return (
         <FormProvider {...form}>
@@ -42,22 +47,22 @@ export function InntektsforholdForm({ closeForm }: { closeForm: () => void }): R
                 <Heading size="small">Opprett nytt inntektsforhold</Heading>
                 <Controller
                     control={form.control}
-                    name="inntektsforholdtype"
+                    name="svar.INNTEKTSKATEGORI"
                     render={({ field, fieldState }) => (
                         <Select
                             {...field}
                             className="max-w-96"
-                            label="Inntektsforholdtype"
+                            label="Inntektskategori"
                             error={fieldState.error?.message}
                         >
-                            <option value="ORDINÆRT_ARBEIDSFORHOLD">Ordinært arbeidsforhold</option>
+                            <option value="ARBEIDSTAKER">Arbeidstaker</option>
                             <option value="FRILANSER">Frilanser</option>
                             <option value="SELVSTENDIG_NÆRINGSDRIVENDE">Selvstendig næringsdrivende</option>
-                            <option value="ARBEIDSLEDIG">Arbeidsledig</option>
+                            <option value="INAKTIV">Inaktiv</option>
                         </Select>
                     )}
                 />
-                {inntektsforholdtype !== 'ARBEIDSLEDIG' && (
+                {inntektskategori === 'ARBEIDSTAKER' && typeArbeidstaker === 'ORDINÆRT_ARBEIDSFORHOLD' && (
                     <Controller
                         control={form.control}
                         name="orgnummer"
