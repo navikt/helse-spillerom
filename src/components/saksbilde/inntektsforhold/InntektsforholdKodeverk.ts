@@ -6,6 +6,61 @@ export const inntektsforholdKodeverk = {
         {
             kode: 'ARBEIDSTAKER',
             navn: 'Arbeidstaker',
+            underspørsmål: [
+                {
+                    kode: 'TYPE_ARBEIDSTAKER',
+                    navn: 'Type arbeidstaker',
+                    variant: 'RADIO',
+                    alternativer: [
+                        {
+                            kode: 'ORDINÆRT_ARBEIDSFORHOLD',
+                            navn: 'Ordinært arbeidsforhold',
+                        },
+                        {
+                            kode: 'MARITIMT_ARBEIDSFORHOLD',
+                            navn: 'Maritimt arbeidsforhold',
+                            underspørsmål: [
+                                {
+                                    kode: 'SKIPSFART',
+                                    navn: 'Skipsfart',
+                                    variant: 'RADIO',
+                                    alternativer: [
+                                        {
+                                            kode: 'NORSK_UTENLANDSFART',
+                                            navn: 'Norsk skip i utenlandsfart',
+                                        },
+                                        {
+                                            kode: 'VANLIG_SKIPSFART',
+                                            navn: 'Vanlig skipsfart?',
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            kode: 'FISKER',
+                            navn: 'Fisker',
+                            underspørsmål: [
+                                {
+                                    kode: 'FISKER_BLAD',
+                                    navn: 'Blad i fiskermanntallet',
+                                    variant: 'RADIO',
+                                    alternativer: [
+                                        {
+                                            kode: 'FISKER_BLAD_A',
+                                            navn: 'Blad A (fiske som binæring)',
+                                        },
+                                        {
+                                            kode: 'FISKER_BLAD_B',
+                                            navn: 'Blad B (fiske som hovednæring)',
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
         },
         {
             kode: 'FRILANSER',
