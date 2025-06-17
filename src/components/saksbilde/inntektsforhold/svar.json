@@ -1,0 +1,14 @@
+[
+    {
+        "kode": "INNTEKTSFORHOLD",
+        "svar": "SELVSTENDIG_NÆRINGSDRIVENDE"
+    },
+    {
+        "kode": "SELVSTENDIG_NÆRINGSDRIVENDE_TYPE",
+        "svar": "FISKER"
+    },
+    {
+        "kode": "FISKER_BLAD_B",
+        "svar": "ER_FISKER_BLAD_B"
+    }
+]
