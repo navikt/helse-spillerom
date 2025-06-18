@@ -128,10 +128,44 @@ export const inntektsforholdKodeverk = {
                         {
                             kode: 'JORDBRUKER',
                             navn: 'Jordbruker',
+                            underspørsmål: [
+                                {
+                                    kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER',
+                                    navn: 'Kollektiv forsikring for jordbrukere',
+                                    variant: 'RADIO',
+                                    alternativer: [
+                                        {
+                                            kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER_JA',
+                                            navn: 'Ja',
+                                        },
+                                        {
+                                            kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER_NEI',
+                                            navn: 'Nei',
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                         {
                             kode: 'REINDRIFT',
-                            navn: 'Reindrift',
+                            navn: 'Reindriftsutøver',
+                            underspørsmål: [
+                                {
+                                    kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT',
+                                    navn: 'Kollektiv forsikring for reindriftsutøvere',
+                                    variant: 'RADIO',
+                                    alternativer: [
+                                        {
+                                            kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT_JA',
+                                            navn: 'Ja',
+                                        },
+                                        {
+                                            kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT_NEI',
+                                            navn: 'Nei',
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 },
