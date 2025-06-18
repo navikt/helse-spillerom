@@ -79,35 +79,33 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {inntektsforhold.map((forhold) => {
-                                return (
-                                    <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
-                                        <TableDataCell>
-                                            <BodyShort>{getInntektsforholdDisplayText(forhold.svar)}</BodyShort>
-                                        </TableDataCell>
-                                        <TableDataCell>
-                                            <VStack gap="1">
-                                                {forhold.svar['ORGNAVN'] && (
-                                                    <BodyShort weight="semibold">{forhold.svar['ORGNAVN']}</BodyShort>
-                                                )}
-                                                {forhold.svar['ORGNUMMER'] && (
-                                                    <BodyShort className="font-mono text-sm text-gray-600">
-                                                        {forhold.svar['ORGNUMMER']}
-                                                    </BodyShort>
-                                                )}
-                                                {!forhold.svar['ORGNUMMER'] && !forhold.svar['ORGNAVN'] && (
-                                                    <BodyShort className="text-gray-500">-</BodyShort>
-                                                )}
-                                            </VStack>
-                                        </TableDataCell>
-                                        <TableDataCell>
-                                            <BodyShort>
-                                                {forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
-                                            </BodyShort>
-                                        </TableDataCell>
-                                    </TableExpandableRow>
-                                )
-                            })}
+                            {inntektsforhold.map((forhold) => (
+                                <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
+                                    <TableDataCell>
+                                        <BodyShort>{getInntektsforholdDisplayText(forhold.svar)}</BodyShort>
+                                    </TableDataCell>
+                                    <TableDataCell>
+                                        <VStack gap="1">
+                                            {forhold.svar['ORGNAVN'] && (
+                                                <BodyShort weight="semibold">{forhold.svar['ORGNAVN']}</BodyShort>
+                                            )}
+                                            {forhold.svar['ORGNUMMER'] && (
+                                                <BodyShort className="font-mono text-sm text-gray-600">
+                                                    {forhold.svar['ORGNUMMER']}
+                                                </BodyShort>
+                                            )}
+                                            {!forhold.svar['ORGNUMMER'] && !forhold.svar['ORGNAVN'] && (
+                                                <BodyShort className="text-gray-500">-</BodyShort>
+                                            )}
+                                        </VStack>
+                                    </TableDataCell>
+                                    <TableDataCell>
+                                        <BodyShort>
+                                            {forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
+                                        </BodyShort>
+                                    </TableDataCell>
+                                </TableExpandableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 ) : (
