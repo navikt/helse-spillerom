@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import Ting from '@components/saksbilde/inntektsforhold/Ting'
+import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -62,7 +62,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                                 borderColor="border-subtle"
                                 borderWidth="1"
                             >
-                                <Ting closeForm={() => setVisOpprettForm(false)} />
+                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
                             </Box>
                         </motion.div>
                     )}

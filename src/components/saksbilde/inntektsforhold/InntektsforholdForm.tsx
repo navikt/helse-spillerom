@@ -1,99 +1,213 @@
-// export function InntektsforholdForm({ closeForm }: { closeForm: () => void }): ReactElement {
-//     const mutation = useOpprettInntektsforhold()
-//     const form = useForm<InntektsforholdSchema>({
-//         resolver: zodResolver(inntektsforholdSchema),
-//         defaultValues: {
-//             id: '',
-//             svar: {
-//                 INNTEKTSKATEGORI: 'ARBEIDSTAKER',
-//                 TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
-//             },
-//             sykmeldtFraForholdet: false,
-//             orgnummer: '',
-//             orgnavn: '',
-//         },
-//     })
-//
-//     async function onSubmit(values: InntektsforholdSchema) {
-//         await mutation.mutateAsync(
-//             {
-//                 svar: values.svar,
-//                 sykmeldtFraForholdet: values.sykmeldtFraForholdet,
-//                 orgnummer: values.orgnummer,
-//             },
-//             {
-//                 onSuccess: () => {
-//                     closeForm()
-//                 },
-//             },
-//         )
-//     }
-//
-//     const svar = form.watch('svar')
-//     const inntektskategori = svar?.INNTEKTSKATEGORI
-//     const typeArbeidstaker = svar?.TYPE_ARBEIDSTAKER
-//
-//     return (
-//         <FormProvider {...form}>
-//             <form role="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
-//                 <Heading size="small">Opprett nytt inntektsforhold</Heading>
-//                 <Controller
-//                     control={form.control}
-//                     name="svar.INNTEKTSKATEGORI"
-//                     render={({ field, fieldState }) => (
-//                         <Select
-//                             {...field}
-//                             className="max-w-96"
-//                             label="Inntektskategori"
-//                             error={fieldState.error?.message}
-//                         >
-//                             <option value="ARBEIDSTAKER">Arbeidstaker</option>
-//                             <option value="FRILANSER">Frilanser</option>
-//                             <option value="SELVSTENDIG_NÆRINGSDRIVENDE">Selvstendig næringsdrivende</option>
-//                             <option value="INAKTIV">Inaktiv</option>
-//                         </Select>
-//                     )}
-//                 />
-//                 {inntektskategori === 'ARBEIDSTAKER' && typeArbeidstaker === 'ORDINÆRT_ARBEIDSFORHOLD' && (
-//                     <Controller
-//                         control={form.control}
-//                         name="orgnummer"
-//                         render={({ field, fieldState }) => (
-//                             <TextField
-//                                 {...field}
-//                                 className="max-w-96"
-//                                 label="Organisasjonsnummer"
-//                                 placeholder="123456789"
-//                                 description="9-sifret organisasjonsnummer"
-//                                 error={fieldState.error?.message}
-//                             />
-//                         )}
-//                     />
-//                 )}
-//                 <Controller
-//                     control={form.control}
-//                     name="sykmeldtFraForholdet"
-//                     render={({ field }) => (
-//                         <Switch checked={field.value} onChange={field.onChange}>
-//                             Sykmeldt fra forholdet
-//                         </Switch>
-//                     )}
-//                 />
-//                 <HStack gap="4">
-//                     <Button variant="primary" size="small" type="submit" loading={form.formState.isSubmitting}>
-//                         Opprett
-//                     </Button>
-//                     <Button
-//                         variant="tertiary"
-//                         size="small"
-//                         type="button"
-//                         disabled={form.formState.isSubmitting}
-//                         onClick={() => closeForm()}
-//                     >
-//                         Avbryt
-//                     </Button>
-//                 </HStack>
-//             </form>
-//         </FormProvider>
-//     )
-// }
+import { Fragment, ReactElement, useState } from 'react'
+import {
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    Heading,
+    HStack,
+    Radio,
+    RadioGroup,
+    Select,
+    TextField,
+    VStack,
+} from '@navikt/ds-react'
+
+import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
+import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
+
+interface KodeverkAlternativ {
+    kode: string
+    navn: string
+    underspørsmål?: KodeverkSpørsmål[]
+}
+
+interface KodeverkSpørsmål {
+    kode: string
+    navn: string
+    variant: 'CHECKBOX' | 'RADIO' | 'TEXTFIELD'
+    alternativer: KodeverkAlternativ[]
+}
+
+interface RåKodeverkAlternativ {
+    kode: string
+    navn: string
+    underspørsmål?: RåKodeverkSpørsmål[]
+}
+
+interface RåKodeverkSpørsmål {
+    kode: string
+    navn: string
+    variant: string
+    alternativer?: RåKodeverkAlternativ[]
+}
+
+export default function InntektsforholdForm({ closeForm }: { closeForm: () => void }): ReactElement {
+    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
+    const mutation = useOpprettInntektsforhold()
+
+    const handleSelectChange = (kode: string, value: string) => {
+        setSelectedValues((prev) => ({
+            ...prev,
+            [kode]: value,
+        }))
+    }
+
+    const handleRadioChange = (kode: string, value: string) => {
+        setSelectedValues((prev) => ({
+            ...prev,
+            [kode]: value,
+        }))
+    }
+
+    const handleTextFieldChange = (kode: string, value: string) => {
+        setSelectedValues((prev) => ({
+            ...prev,
+            [kode]: value,
+        }))
+    }
+
+    function onSubmit() {
+        mutation.mutate(
+            {
+                svar: selectedValues,
+            },
+            {
+                onSuccess: () => {
+                    closeForm()
+                },
+            },
+        )
+    }
+
+    const renderUnderspørsmål = (spørsmål: KodeverkSpørsmål) => {
+        switch (spørsmål.variant) {
+            case 'CHECKBOX':
+                return (
+                    <CheckboxGroup
+                        legend={spørsmål.navn}
+                        value={(selectedValues[spørsmål.kode] as string[]) || []}
+                        onChange={(values) => {
+                            setSelectedValues((prev) => ({ ...prev, [spørsmål.kode]: values }))
+                        }}
+                        size="small"
+                    >
+                        <VStack gap="3">
+                            {spørsmål.alternativer.map((alt) => {
+                                const isSelected = ((selectedValues[spørsmål.kode] as string[]) || []).includes(
+                                    alt.kode,
+                                )
+                                return (
+                                    <div key={alt.kode}>
+                                        <Checkbox value={alt.kode} size="small">
+                                            {alt.navn}
+                                        </Checkbox>
+                                        {isSelected &&
+                                            alt.underspørsmål?.map((us) => (
+                                                <div key={us.kode} className="mt-2 ml-6">
+                                                    {renderUnderspørsmål(toKodeverkSpørsmål(us))}
+                                                </div>
+                                            ))}
+                                    </div>
+                                )
+                            })}
+                        </VStack>
+                    </CheckboxGroup>
+                )
+            case 'RADIO':
+                return (
+                    <RadioGroup
+                        legend={spørsmål.navn}
+                        value={(selectedValues[spørsmål.kode] as string) || ''}
+                        onChange={(value) => handleRadioChange(spørsmål.kode, value)}
+                        size="small"
+                    >
+                        <VStack gap="3">
+                            {spørsmål.alternativer.map((alt) => {
+                                const isSelected = selectedValues[spørsmål.kode] === alt.kode
+                                return (
+                                    <div key={alt.kode}>
+                                        <Radio value={alt.kode} size="small">
+                                            {alt.navn}
+                                        </Radio>
+                                        {isSelected &&
+                                            alt.underspørsmål?.map((us) => (
+                                                <div key={us.kode} className="mt-2 ml-6">
+                                                    {renderUnderspørsmål(toKodeverkSpørsmål(us))}
+                                                </div>
+                                            ))}
+                                    </div>
+                                )
+                            })}
+                        </VStack>
+                    </RadioGroup>
+                )
+            case 'TEXTFIELD':
+                return (
+                    <TextField
+                        className="max-w-96"
+                        label={spørsmål.navn}
+                        value={(selectedValues[spørsmål.kode] as string) || ''}
+                        onChange={(value) => handleTextFieldChange(spørsmål.kode, value.target.value)}
+                        placeholder="123456789" // kan ikke hardkodes
+                        description="9-sifret organisasjonsnummer" // kan ikke hardkodes
+                        size="small"
+                    />
+                )
+        }
+    }
+
+    const selectedKode = selectedValues[inntektsforholdKodeverk.kode] as string
+    const selectedAlternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === selectedKode)
+
+    // Helper to ensure variant is typed correctly
+    const toKodeverkSpørsmål = (spm: RåKodeverkSpørsmål): KodeverkSpørsmål => ({
+        kode: spm.kode,
+        navn: spm.navn,
+        variant: spm.variant as 'CHECKBOX' | 'RADIO' | 'TEXTFIELD',
+        alternativer: spm.alternativer?.map(toKodeverkAlternativ) ?? [],
+    })
+
+    const toKodeverkAlternativ = (alt: RåKodeverkAlternativ): KodeverkAlternativ => ({
+        kode: alt.kode,
+        navn: alt.navn,
+        underspørsmål: alt.underspørsmål?.map(toKodeverkSpørsmål),
+    })
+
+    return (
+        <VStack gap="8">
+            <Heading size="small">Opprett nytt inntektsforhold</Heading>
+            <Select
+                label="Velg type inntektsforhold"
+                value={selectedKode || ''}
+                onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
+                size="small"
+                className="max-w-96"
+            >
+                <option value="">Velg...</option>
+                {inntektsforholdKodeverk.alternativer.map((alt) => (
+                    <option key={alt.kode} value={alt.kode}>
+                        {alt.navn}
+                    </option>
+                ))}
+            </Select>
+            {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
+                <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
+            ))}
+            <HStack gap="4">
+                <Button
+                    variant="primary"
+                    size="small"
+                    type="button"
+                    loading={false}
+                    disabled={selectedKode === undefined || selectedKode === ''}
+                    onClick={onSubmit}
+                >
+                    Opprett
+                </Button>
+                <Button variant="tertiary" size="small" type="button" disabled={false} onClick={() => closeForm()}>
+                    Avbryt
+                </Button>
+            </HStack>
+        </VStack>
+    )
+}
