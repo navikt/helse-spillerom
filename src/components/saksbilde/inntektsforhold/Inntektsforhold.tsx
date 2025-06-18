@@ -36,7 +36,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                     className="w-fit"
                     variant="secondary"
                     size="small"
-                    icon={<PlusIcon />}
+                    icon={<PlusIcon aria-hidden />}
                     onClick={() => setVisOpprettForm((prev) => !prev)}
                 >
                     Legg til inntektsforhold
@@ -72,7 +72,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                     <Table size="medium">
                         <TableHeader>
                             <TableRow>
-                                <TableHeaderCell />
+                                <TableHeaderCell className="ignore-axe" />
                                 <TableHeaderCell>Type</TableHeaderCell>
                                 <TableHeaderCell>Organisasjon</TableHeaderCell>
                                 <TableHeaderCell>Sykmeldt fra forholdet</TableHeaderCell>
@@ -80,7 +80,6 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                         </TableHeader>
                         <TableBody>
                             {inntektsforhold.map((forhold) => {
-                                console.log(forhold.svar['ER_SYKMELDT'])
                                 return (
                                     <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
                                         <TableDataCell>
