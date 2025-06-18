@@ -1,9 +1,19 @@
-'use client'
-
-import { Checkbox, CheckboxGroup, Heading, Radio, RadioGroup, Select, TextField, VStack } from '@navikt/ds-react'
-import { useState } from 'react'
+import { Fragment, ReactElement, useState } from 'react'
+import {
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    Heading,
+    HStack,
+    Radio,
+    RadioGroup,
+    Select,
+    TextField,
+    VStack,
+} from '@navikt/ds-react'
 
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
+import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
 
 interface KodeverkAlternativ {
     kode: string
@@ -31,8 +41,9 @@ interface RåKodeverkSpørsmål {
     alternativer?: RåKodeverkAlternativ[]
 }
 
-export default function InntektsforholdPage() {
+export default function Ting({ closeForm }: { closeForm: () => void }): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
+    const mutation = useOpprettInntektsforhold()
 
     const handleSelectChange = (kode: string, value: string) => {
         setSelectedValues((prev) => ({
@@ -53,6 +64,19 @@ export default function InntektsforholdPage() {
             ...prev,
             [kode]: value,
         }))
+    }
+
+    function onSubmit() {
+        mutation.mutate(
+            {
+                svar: selectedValues,
+            },
+            {
+                onSuccess: () => {
+                    closeForm()
+                },
+            },
+        )
     }
 
     const renderUnderspørsmål = (spørsmål: KodeverkSpørsmål) => {
@@ -150,28 +174,40 @@ export default function InntektsforholdPage() {
     })
 
     return (
-        <div className="container mx-auto p-6">
-            <Heading size="large" level="1" spacing>
-                {inntektsforholdKodeverk.navn}
-            </Heading>
-            <VStack gap="6">
-                <Select
-                    label="Velg type inntektsforhold"
-                    value={selectedKode || ''}
-                    onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
-                    size="small"
-                >
-                    <option value="">Velg...</option>
-                    {inntektsforholdKodeverk.alternativer.map((alt) => (
-                        <option key={alt.kode} value={alt.kode}>
-                            {alt.navn}
-                        </option>
-                    ))}
-                </Select>
-                {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
-                    <div key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</div>
+        <VStack gap="8">
+            <Heading size="small">Opprett nytt inntektsforhold</Heading>
+            <Select
+                label="Velg type inntektsforhold"
+                value={selectedKode || ''}
+                onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
+                size="small"
+                className="max-w-96"
+            >
+                <option value="">Velg...</option>
+                {inntektsforholdKodeverk.alternativer.map((alt) => (
+                    <option key={alt.kode} value={alt.kode}>
+                        {alt.navn}
+                    </option>
                 ))}
-            </VStack>
-        </div>
+            </Select>
+            {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
+                <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
+            ))}
+            <HStack gap="4">
+                <Button
+                    variant="primary"
+                    size="small"
+                    type="button"
+                    loading={false}
+                    disabled={selectedKode === undefined || selectedKode === ''}
+                    onClick={onSubmit}
+                >
+                    Opprett
+                </Button>
+                <Button variant="tertiary" size="small" type="button" disabled={false} onClick={() => closeForm()}>
+                    Avbryt
+                </Button>
+            </HStack>
+        </VStack>
     )
 }

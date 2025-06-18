@@ -8,6 +8,20 @@ export const inntektsforholdKodeverk = {
             navn: 'Arbeidstaker',
             underspørsmål: [
                 {
+                    kode: 'ORGNUMMER',
+                    navn: 'Organisasjonsnummer',
+                    variant: 'TEXTFIELD',
+                },
+                {
+                    kode: 'ER_SYKMELDT',
+                    navn: 'Er sykmeldt fra forholdet',
+                    variant: 'RADIO',
+                    alternativer: [
+                        { kode: 'JA', navn: 'Ja' },
+                        { kode: 'NEI', navn: 'Nei' },
+                    ],
+                },
+                {
                     kode: 'TYPE_ARBEIDSTAKER',
                     navn: 'Type arbeidstaker',
                     variant: 'RADIO',
@@ -70,6 +84,20 @@ export const inntektsforholdKodeverk = {
             kode: 'SELVSTENDIG_NÆRINGSDRIVENDE',
             navn: 'Selvstendig næringsdrivende',
             underspørsmål: [
+                {
+                    kode: 'ORGNUMMER',
+                    navn: 'Organisasjonsnummer',
+                    variant: 'TEXTFIELD',
+                },
+                {
+                    kode: 'ER_SYKMELDT',
+                    navn: 'Er sykmeldt fra forholdet',
+                    variant: 'RADIO',
+                    alternativer: [
+                        { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
+                        { kode: 'ER_SYKMELDT_NEI', navn: 'Nei' },
+                    ],
+                },
                 {
                     kode: 'TYPE_SELVSTENDIG_NÆRINGSDRIVENDE',
                     navn: 'Type selvstendig næringsdrivende',

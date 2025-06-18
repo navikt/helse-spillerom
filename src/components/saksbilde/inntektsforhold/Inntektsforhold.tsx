@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { InntektsforholdForm } from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
+import Ting from '@components/saksbilde/inntektsforhold/Ting'
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -62,7 +62,7 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                                 borderColor="border-subtle"
                                 borderWidth="1"
                             >
-                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
+                                <Ting closeForm={() => setVisOpprettForm(false)} />
                             </Box>
                         </motion.div>
                     )}
@@ -86,21 +86,23 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                                     </TableDataCell>
                                     <TableDataCell>
                                         <VStack gap="1">
-                                            {forhold.orgnavn && (
-                                                <BodyShort weight="semibold">{forhold.orgnavn}</BodyShort>
+                                            {forhold.svar['ORGNAVN'] && (
+                                                <BodyShort weight="semibold">{forhold.svar['ORGNAVN']}</BodyShort>
                                             )}
-                                            {forhold.orgnummer && (
+                                            {forhold.svar['ORGNUMMER'] && (
                                                 <BodyShort className="font-mono text-sm text-gray-600">
-                                                    {forhold.orgnummer}
+                                                    {forhold.svar['ORGNUMMER']}
                                                 </BodyShort>
                                             )}
-                                            {!forhold.orgnummer && !forhold.orgnavn && (
+                                            {!forhold.svar['ORGNUMMER'] && !forhold.svar['ORGNAVN'] && (
                                                 <BodyShort className="text-gray-500">-</BodyShort>
                                             )}
                                         </VStack>
                                     </TableDataCell>
                                     <TableDataCell>
-                                        <BodyShort>{forhold.sykmeldtFraForholdet ? 'Ja' : 'Nei'}</BodyShort>
+                                        <BodyShort>
+                                            {forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
+                                        </BodyShort>
                                     </TableDataCell>
                                 </TableExpandableRow>
                             ))}
@@ -116,8 +118,8 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
     )
 }
 
-function getInntektsforholdDisplayText(svar: Record<string, string>): string {
-    const inntektskategori = svar['INNTEKTSKATEGORI']
+function getInntektsforholdDisplayText(svar: Record<string, string | string[]>): string {
+    const inntektskategori = svar['INNTEKTSKATEGORI'] as string
 
     switch (inntektskategori) {
         case 'ARBEIDSTAKER': {
@@ -136,6 +138,7 @@ function getInntektsforholdDisplayText(svar: Record<string, string>): string {
         case 'FRILANSER':
             return 'Frilanser'
         case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+            // TODO her må det vel gjøres noe
             const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
             switch (typeSelvstendig) {
                 case 'FISKER':

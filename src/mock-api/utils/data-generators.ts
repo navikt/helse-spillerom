@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { Dagoversikt, Dag } from '@/schemas/dagoversikt'
+import { Dag, Dagoversikt } from '@/schemas/dagoversikt'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Søknad } from '@/schemas/søknad'
@@ -154,10 +154,10 @@ export function opprettSaksbehandlingsperiode(
         unikeInntektsforhold.forEach((forhold) => {
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
-                svar: mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
-                sykmeldtFraForholdet: true, // Automatisk sykmeldt siden det er basert på søknader
-                orgnummer: forhold.orgnummer,
-                orgnavn: getOrgnavn(forhold.orgnummer, forhold.orgnavn),
+                svar: {
+                    ...mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
+                    ORGNAVN: getOrgnavn(forhold.orgnummer, forhold.orgnavn) ?? '',
+                },
             }
 
             inntektsforhold.push(nyttInntektsforhold)
