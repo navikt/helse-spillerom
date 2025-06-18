@@ -79,16 +79,18 @@ export const inntektsforholdKodeverk = {
         {
             kode: 'FRILANSER',
             navn: 'Frilanser',
-        },
-        {
-            kode: 'SELVSTENDIG_NÆRINGSDRIVENDE',
-            navn: 'Selvstendig næringsdrivende',
             underspørsmål: [
                 {
                     kode: 'ORGNUMMER',
                     navn: 'Organisasjonsnummer',
                     variant: 'TEXTFIELD',
                 },
+            ],
+        },
+        {
+            kode: 'SELVSTENDIG_NÆRINGSDRIVENDE',
+            navn: 'Selvstendig næringsdrivende',
+            underspørsmål: [
                 {
                     kode: 'ER_SYKMELDT',
                     navn: 'Er sykmeldt fra forholdet',
