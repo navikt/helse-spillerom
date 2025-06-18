@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Checkbox, CheckboxGroup, DatePicker, Label, useDatepicker } from '@navikt/ds-react'
+import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Switch, useDatepicker } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -21,8 +21,11 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
 
     const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
     const [selectedSøknader, setSelectedSøknader] = useState<string[]>([])
+    const [isManualMode, setIsManualMode] = useState(false)
+    const [manualFom, setManualFom] = useState<Date | undefined>(undefined)
+    const [manualTom, setManualTom] = useState<Date | undefined>(undefined)
     const { data: søknader, isError } = useSoknader(validFromDate)
-    const { mutate: opprettSaksbehandlingsperiode } = useOpprettSaksbehandlingsperiode()
+    const { mutate: opprettSaksbehandlingsperiode, isPending } = useOpprettSaksbehandlingsperiode()
 
     const [errorTekst, setErrorTekst] = useState<string | undefined>(undefined)
 
@@ -34,6 +37,16 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
             }
         },
         defaultSelected: validFromDate.toDate(),
+    })
+
+    const { datepickerProps: fomDatepickerProps, inputProps: fomInputProps } = useDatepicker({
+        onDateChange: (d) => setManualFom(d),
+        defaultSelected: manualFom,
+    })
+
+    const { datepickerProps: tomDatepickerProps, inputProps: tomInputProps } = useDatepicker({
+        onDateChange: (d) => setManualTom(d),
+        defaultSelected: manualTom,
     })
 
     if (isError) return <></> // vis noe fornuftig
@@ -48,32 +61,49 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
 
     const handleSubmit = () => {
         setErrorTekst(undefined)
-        if (selectedSøknader.length === 0) {
-            setErrorTekst('Ingen søknader valgt')
+
+        if (!isManualMode && selectedSøknader.length === 0) {
+            setErrorTekst('Du må velge minst én søknad')
             return
         }
 
-        const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
-        if (valgteSøknader.length === 0) return
+        if (isManualMode && (!manualFom || !manualTom)) {
+            setErrorTekst('Du må velge både fra og til dato')
+            return
+        }
 
-        const minFom = valgteSøknader.reduce((min, søknad) => {
-            if (!søknad.fom) return min
-            return !min || dayjs(søknad.fom).isBefore(dayjs(min)) ? søknad.fom : min
-        }, '')
+        let fom: string
+        let tom: string
 
-        const maxTom = valgteSøknader.reduce((max, søknad) => {
-            if (!søknad.tom) return max
-            return !max || dayjs(søknad.tom).isAfter(dayjs(max)) ? søknad.tom : max
-        }, '')
+        if (isManualMode) {
+            if (!manualFom || !manualTom) return // TypeScript guard
+            fom = dayjs(manualFom).format('YYYY-MM-DD')
+            tom = dayjs(manualTom).format('YYYY-MM-DD')
+        } else {
+            const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
+            if (valgteSøknader.length === 0) return
 
-        if (!minFom || !maxTom) return
+            const minFom = valgteSøknader.reduce((min, søknad) => {
+                if (!søknad.fom) return min
+                return !min || dayjs(søknad.fom).isBefore(dayjs(min)) ? søknad.fom : min
+            }, '')
+
+            const maxTom = valgteSøknader.reduce((max, søknad) => {
+                if (!søknad.tom) return max
+                return !max || dayjs(søknad.tom).isAfter(dayjs(max)) ? søknad.tom : max
+            }, '')
+
+            if (!minFom || !maxTom) return
+            fom = minFom
+            tom = maxTom
+        }
 
         opprettSaksbehandlingsperiode(
             {
                 request: {
-                    fom: minFom,
-                    tom: maxTom,
-                    søknader: selectedSøknader,
+                    fom,
+                    tom,
+                    søknader: isManualMode ? [] : selectedSøknader,
                 },
                 callback: (periode) => {
                     router.push(`/person/${params.personId}/${periode.id}`)
@@ -82,6 +112,9 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
             {
                 onSuccess: () => {
                     // Navigasjon skjer i callback
+                },
+                onError: (error) => {
+                    setErrorTekst(error.message)
                 },
             },
         )
@@ -96,52 +129,90 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 }}
             >
                 <div className="mb-8">
-                    <DatePicker {...datepickerProps}>
-                        <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
-                    </DatePicker>
+                    <Switch
+                        checked={isManualMode}
+                        onChange={(e) => {
+                            setIsManualMode(e.target.checked)
+                            setErrorTekst(undefined)
+                            if (e.target.checked) {
+                                setSelectedSøknader([])
+                            } else {
+                                setManualFom(undefined)
+                                setManualTom(undefined)
+                            }
+                        }}
+                    >
+                        Manuell periode
+                    </Switch>
                 </div>
-                <Label spacing>Velg hvilken søknad som skal behandles</Label>
-                {søknader?.length === 0 && <div>Ingen søknader etter valgt dato</div>}
-                {søknaderGruppert &&
-                    Object.entries(søknaderGruppert).map(([key, gruppe]) => (
-                        <div key={key} className="mt-4">
-                            <CheckboxGroup legend={key} error={errorTekst}>
-                                {gruppe.map((søknad, j) => (
-                                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <Checkbox
-                                            value={søknad.id}
-                                            checked={selectedSøknader.includes(søknad.id)}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    setSelectedSøknader([...selectedSøknader, søknad.id])
-                                                } else {
-                                                    setSelectedSøknader(
-                                                        selectedSøknader.filter((id) => id !== søknad.id),
-                                                    )
-                                                }
-                                            }}
-                                        >
-                                            {getFormattedDateString(søknad.fom) +
-                                                ' - ' +
-                                                getFormattedDateString(søknad.tom)}
-                                        </Checkbox>
-                                        <Button
-                                            as="a"
-                                            href="#" // TODO: Bytt til faktisk søknadslenke
-                                            variant="tertiary"
-                                            size="small"
-                                        >
-                                            Se søknad
-                                        </Button>
-                                    </div>
-                                ))}
-                            </CheckboxGroup>
+
+                {!isManualMode && (
+                    <>
+                        <div className="mb-8">
+                            <DatePicker {...datepickerProps}>
+                                <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
+                            </DatePicker>
                         </div>
-                    ))}
-                <Button variant="tertiary" size="small" className="mt-4 mb-6" type="button">
-                    Velg saksbehandlingsperiode manuelt
-                </Button>
-                <Button className="block" size="small" type="submit">
+
+                        <Label spacing>Velg hvilken søknad som skal behandles</Label>
+                        {søknader?.length === 0 && <div>Ingen søknader etter valgt dato</div>}
+                        {søknaderGruppert &&
+                            Object.entries(søknaderGruppert).map(([key, gruppe]) => (
+                                <div key={key} className="mt-4">
+                                    <CheckboxGroup legend={key} error={errorTekst}>
+                                        {gruppe.map((søknad, j) => (
+                                            <div
+                                                key={j}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                                            >
+                                                <Checkbox
+                                                    value={søknad.id}
+                                                    checked={selectedSøknader.includes(søknad.id)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedSøknader([...selectedSøknader, søknad.id])
+                                                        } else {
+                                                            setSelectedSøknader(
+                                                                selectedSøknader.filter((id) => id !== søknad.id),
+                                                            )
+                                                        }
+                                                    }}
+                                                >
+                                                    {getFormattedDateString(søknad.fom) +
+                                                        ' - ' +
+                                                        getFormattedDateString(søknad.tom)}
+                                                </Checkbox>
+                                                <Button
+                                                    as="a"
+                                                    href="#" // TODO: Bytt til faktisk søknadslenke
+                                                    variant="tertiary"
+                                                    size="small"
+                                                >
+                                                    Se søknad
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </CheckboxGroup>
+                                </div>
+                            ))}
+                    </>
+                )}
+
+                {isManualMode && (
+                    <div className="space-y-4">
+                        <Label spacing>Velg periode</Label>
+                        <div className="flex gap-4">
+                            <DatePicker {...fomDatepickerProps}>
+                                <DatePicker.Input {...fomInputProps} label="Fra og med" error={errorTekst} />
+                            </DatePicker>
+                            <DatePicker {...tomDatepickerProps}>
+                                <DatePicker.Input {...tomInputProps} label="Til og med" error={errorTekst} />
+                            </DatePicker>
+                        </div>
+                    </div>
+                )}
+
+                <Button className="mt-8 block" size="small" type="submit" loading={isPending}>
                     Start behandling
                 </Button>
             </form>
