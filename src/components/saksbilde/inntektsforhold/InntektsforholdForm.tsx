@@ -69,7 +69,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
     function onSubmit() {
         mutation.mutate(
             {
-                svar: selectedValues,
+                kategorisering: selectedValues,
             },
             {
                 onSuccess: () => {

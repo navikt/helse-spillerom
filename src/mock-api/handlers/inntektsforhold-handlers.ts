@@ -28,7 +28,7 @@ export async function handlePostInntektsforhold(
 
     const nyttInntektsforhold: Inntektsforhold = {
         id: uuidv4(),
-        svar: { ...body.svar, ORGNAVN: getOrgnavn(body.svar['ORGNUMMER']) ?? '' },
+        kategorisering: { ...body.kategorisering, ORGNAVN: getOrgnavn(body.kategorisering['ORGNUMMER']) ?? '' },
     }
 
     if (!person.inntektsforhold) {

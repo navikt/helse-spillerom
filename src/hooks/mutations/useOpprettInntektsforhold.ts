@@ -5,7 +5,7 @@ import { postAndParse } from '@utils/fetch'
 import { Inntektsforhold, inntektsforholdSchema } from '@/schemas/inntektsforhold'
 
 type MutationProps = {
-    svar: Record<string, string | string[]>
+    kategorisering: Record<string, string | string[]>
 }
 
 export function useOpprettInntektsforhold() {
@@ -13,12 +13,12 @@ export function useOpprettInntektsforhold() {
     const queryClient = useQueryClient()
 
     return useMutation<Inntektsforhold, Error, MutationProps>({
-        mutationFn: async ({ svar }) => {
+        mutationFn: async ({ kategorisering }) => {
             return await postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
                 inntektsforholdSchema,
                 {
-                    svar,
+                    kategorisering,
                 },
             )
         },

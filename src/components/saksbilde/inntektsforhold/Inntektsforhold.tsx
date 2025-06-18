@@ -82,26 +82,29 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                             {inntektsforhold.map((forhold) => (
                                 <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
                                     <TableDataCell>
-                                        <BodyShort>{getInntektsforholdDisplayText(forhold.svar)}</BodyShort>
+                                        <BodyShort>{getInntektsforholdDisplayText(forhold.kategorisering)}</BodyShort>
                                     </TableDataCell>
                                     <TableDataCell>
                                         <VStack gap="1">
-                                            {forhold.svar['ORGNAVN'] && (
-                                                <BodyShort weight="semibold">{forhold.svar['ORGNAVN']}</BodyShort>
-                                            )}
-                                            {forhold.svar['ORGNUMMER'] && (
-                                                <BodyShort className="font-mono text-sm text-gray-600">
-                                                    {forhold.svar['ORGNUMMER']}
+                                            {forhold.kategorisering['ORGNAVN'] && (
+                                                <BodyShort weight="semibold">
+                                                    {forhold.kategorisering['ORGNAVN']}
                                                 </BodyShort>
                                             )}
-                                            {!forhold.svar['ORGNUMMER'] && !forhold.svar['ORGNAVN'] && (
-                                                <BodyShort className="text-gray-500">-</BodyShort>
+                                            {forhold.kategorisering['ORGNUMMER'] && (
+                                                <BodyShort className="font-mono text-sm text-gray-600">
+                                                    {forhold.kategorisering['ORGNUMMER']}
+                                                </BodyShort>
                                             )}
+                                            {!forhold.kategorisering['ORGNUMMER'] &&
+                                                !forhold.kategorisering['ORGNAVN'] && (
+                                                    <BodyShort className="text-gray-500">-</BodyShort>
+                                                )}
                                         </VStack>
                                     </TableDataCell>
                                     <TableDataCell>
                                         <BodyShort>
-                                            {forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
+                                            {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
                                         </BodyShort>
                                     </TableDataCell>
                                 </TableExpandableRow>
@@ -118,12 +121,12 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
     )
 }
 
-function getInntektsforholdDisplayText(svar: Record<string, string | string[]>): string {
-    const inntektskategori = svar['INNTEKTSKATEGORI'] as string
+function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): string {
+    const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
 
     switch (inntektskategori) {
         case 'ARBEIDSTAKER': {
-            const typeArbeidstaker = svar['TYPE_ARBEIDSTAKER']
+            const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
             switch (typeArbeidstaker) {
                 case 'ORDINÆRT_ARBEIDSFORHOLD':
                     return 'Ordinært arbeidsforhold'
@@ -139,7 +142,7 @@ function getInntektsforholdDisplayText(svar: Record<string, string | string[]>):
             return 'Frilanser'
         case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
             // TODO her må det vel gjøres noe
-            const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
+            const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
             switch (typeSelvstendig) {
                 case 'FISKER':
                     return 'Fisker (selvstendig)'

@@ -22,7 +22,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
     // Filtrer kun inntektsforhold hvor personen er sykmeldt fra
     const sykmeldingsforhold =
-        inntektsforhold?.filter((forhold) => forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA') || []
+        inntektsforhold?.filter((forhold) => forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA') || []
 
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
 
@@ -39,12 +39,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         inntektsforholdId: aktivtForhold?.id,
     })
 
-    const getInntektsforholdDisplayText = (svar: Record<string, string | string[]>): string => {
-        const inntektskategori = svar['INNTEKTSKATEGORI'] as string
+    const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): string => {
+        const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
 
         switch (inntektskategori) {
             case 'ARBEIDSTAKER': {
-                const typeArbeidstaker = svar['TYPE_ARBEIDSTAKER']
+                const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
                 switch (typeArbeidstaker) {
                     case 'ORDINÆRT_ARBEIDSFORHOLD':
                         return 'Ordinært arbeidsforhold'
@@ -60,7 +60,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 return 'Frilanser'
             case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
                 // TODO Her må det gjøres noe
-                const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
+                const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
                 switch (typeSelvstendig) {
                     case 'FISKER':
                         return 'Fisker (selvstendig)'
@@ -150,7 +150,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         <TabsTab
                             key={forhold.id}
                             value={forhold.id}
-                            label={`${getInntektsforholdDisplayText(forhold.svar)}${forhold.svar['ORGNAVN'] ? ` - ${forhold.svar['ORGNAVN']}` : ''}`}
+                            label={`${getInntektsforholdDisplayText(forhold.kategorisering)}${forhold.kategorisering['ORGNAVN'] ? ` - ${forhold.kategorisering['ORGNAVN']}` : ''}`}
                         />
                     ))}
                 </TabsList>

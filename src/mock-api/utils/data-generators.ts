@@ -154,7 +154,7 @@ export function opprettSaksbehandlingsperiode(
         unikeInntektsforhold.forEach((forhold) => {
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
-                svar: {
+                kategorisering: {
                     ...mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
                     ORGNAVN: getOrgnavn(forhold.orgnummer, forhold.orgnavn) ?? '',
                 },
