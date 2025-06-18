@@ -17,8 +17,8 @@ export const inntektsforholdKodeverk = {
                     navn: 'Er sykmeldt fra forholdet',
                     variant: 'RADIO',
                     alternativer: [
-                        { kode: 'JA', navn: 'Ja' },
-                        { kode: 'NEI', navn: 'Nei' },
+                        { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
+                        { kode: 'ER_SYKMELDT_NEI', navn: 'Nei' },
                     ],
                 },
                 {

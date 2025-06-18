@@ -1,8 +1,8 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Tabs, Table, BodyShort, Heading, Alert, Tag } from '@navikt/ds-react'
-import { TabsList, TabsTab, TabsPanel } from '@navikt/ds-react/Tabs'
+import { Alert, BodyShort, Heading, Table, Tabs, Tag } from '@navikt/ds-react'
+import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
@@ -21,7 +21,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     } = useInntektsforhold()
 
     // Filtrer kun inntektsforhold hvor personen er sykmeldt fra
-    const sykmeldingsforhold = inntektsforhold?.filter((forhold) => forhold.sykmeldtFraForholdet) || []
+    const sykmeldingsforhold =
+        inntektsforhold?.filter((forhold) => forhold.svar['ER_SYKMELDT'] === 'ER_SYKMELDT_JA') || []
 
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
 
@@ -38,8 +39,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         inntektsforholdId: aktivtForhold?.id,
     })
 
-    const getInntektsforholdDisplayText = (svar: Record<string, string>): string => {
-        const inntektskategori = svar['INNTEKTSKATEGORI']
+    const getInntektsforholdDisplayText = (svar: Record<string, string | string[]>): string => {
+        const inntektskategori = svar['INNTEKTSKATEGORI'] as string
 
         switch (inntektskategori) {
             case 'ARBEIDSTAKER': {
@@ -58,6 +59,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
             case 'FRILANSER':
                 return 'Frilanser'
             case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+                // TODO Her må det gjøres noe
                 const typeSelvstendig = svar['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
                 switch (typeSelvstendig) {
                     case 'FISKER':
@@ -148,7 +150,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         <TabsTab
                             key={forhold.id}
                             value={forhold.id}
-                            label={`${getInntektsforholdDisplayText(forhold.svar)}${forhold.orgnavn ? ` - ${forhold.orgnavn}` : ''}`}
+                            label={`${getInntektsforholdDisplayText(forhold.svar)}${forhold.svar['ORGNAVN'] ? ` - ${forhold.svar['ORGNAVN']}` : ''}`}
                         />
                     ))}
                 </TabsList>
