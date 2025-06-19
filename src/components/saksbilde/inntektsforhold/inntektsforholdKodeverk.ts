@@ -85,6 +85,21 @@ export const inntektsforholdKodeverk = {
                     navn: 'Organisasjonsnummer',
                     variant: 'TEXTFIELD',
                 },
+                {
+                    kode: 'FRILANSER_FORSIKRING',
+                    navn: 'Nav-kjøpt forsikring',
+                    variant: 'RADIO',
+                    alternativer: [
+                        {
+                            kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
+                            navn: '100 prosent fra første sykedag',
+                        },
+                        {
+                            kode: 'INGEN_FORSIKRING',
+                            navn: 'Ingen Ingen forsikring / ikke aktuelt pga også selvstendig næringsdrivende',
+                        },
+                    ],
+                },
             ],
         },
         {
