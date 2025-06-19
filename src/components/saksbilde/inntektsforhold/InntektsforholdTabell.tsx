@@ -19,6 +19,7 @@ import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 import { useOppdaterInntektsforhold } from '@hooks/mutations/useOppdaterInntektsforhold'
+import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -236,39 +237,10 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
 function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): string {
     const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
 
-    switch (inntektskategori) {
-        case 'ARBEIDSTAKER': {
-            const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
-            switch (typeArbeidstaker) {
-                case 'ORDINÆRT_ARBEIDSFORHOLD':
-                    return 'Ordinært arbeidsforhold'
-                case 'MARITIMT_ARBEIDSFORHOLD':
-                    return 'Maritimt arbeidsforhold'
-                case 'FISKER':
-                    return 'Fisker (arbeidstaker)'
-                default:
-                    return 'Arbeidstaker'
-            }
-        }
-        case 'FRILANSER':
-            return 'Frilanser'
-        case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
-            // TODO her må det vel gjøres noe
-            const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
-            switch (typeSelvstendig) {
-                case 'FISKER':
-                    return 'Fisker (selvstendig)'
-                case 'JORDBRUKER':
-                    return 'Jordbruker'
-                case 'REINDRIFT':
-                    return 'Reindrift'
-                default:
-                    return 'Selvstendig næringsdrivende'
-            }
-        }
-        case 'INAKTIV':
-            return 'Inaktiv'
-        default:
-            return inntektskategori || 'Ukjent'
+    if (!inntektskategori) {
+        return 'Ukjent'
     }
+
+    const alternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === inntektskategori)
+    return alternativ?.navn || inntektskategori
 }

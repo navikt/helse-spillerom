@@ -15,7 +15,6 @@ export function useOppdaterInntektsforhold() {
 
     return useMutation<Inntektsforhold, Error, MutationProps>({
         mutationFn: async ({ inntektsforholdId, kategorisering }) => {
-            console.log('putter ', inntektsforholdId)
             return await putAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold/${inntektsforholdId}`,
                 inntektsforholdSchema,
@@ -25,7 +24,6 @@ export function useOppdaterInntektsforhold() {
             )
         },
         onSuccess: () => {
-            console.log('invalidated')
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
             })

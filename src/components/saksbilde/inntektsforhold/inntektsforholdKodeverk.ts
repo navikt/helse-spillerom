@@ -221,6 +221,10 @@ export const inntektsforholdKodeverk = {
             navn: 'Inaktiv',
         },
         {
+            kode: 'ARBEIDSLEDIG',
+            navn: 'Arbeidsledig',
+        },
+        {
             kode: 'ANNET',
             navn: 'Annet',
         },
