@@ -12,7 +12,7 @@ export default async function PersonPage(): Promise<ReactElement> {
         <section className="flex-auto">
             <Tabs defaultValue="inntektsforhold">
                 <TabsList>
-                    <TabsTab value="inntektsforhold" label="InntektsforholdTabell" />
+                    <TabsTab value="inntektsforhold" label="Inntektsforhold" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
