@@ -1,5 +1,6 @@
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { z } from 'zod'
 
 import { fetchAndParse } from '@utils/fetch'
@@ -8,8 +9,9 @@ import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/
 
 export function useSaksbehandlingsperioder() {
     const params = useParams()
+    const router = useRouter()
 
-    return useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
+    const query = useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
         queryKey: ['saksbehandlingsperioder', params.personId],
         queryFn: () =>
             fetchAndParse(
@@ -18,4 +20,13 @@ export function useSaksbehandlingsperioder() {
             ),
         enabled: !!params.personId,
     })
+
+    useEffect(() => {
+        if (query.error && query.error.problem.status === 404) {
+            // Naviger til rot-nivået hvis API-et returnerer 404
+            router.push('/')
+        }
+    }, [query.error, router])
+
+    return query
 }

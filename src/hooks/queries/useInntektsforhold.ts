@@ -1,5 +1,6 @@
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { z } from 'zod'
 
 import { fetchAndParse } from '@utils/fetch'
@@ -8,8 +9,9 @@ import { Inntektsforhold, inntektsforholdSchema } from '@/schemas/inntektsforhol
 
 export function useInntektsforhold() {
     const params = useParams()
+    const router = useRouter()
 
-    return useQuery<Inntektsforhold[], ProblemDetailsError>({
+    const query = useQuery<Inntektsforhold[], ProblemDetailsError>({
         queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
@@ -18,4 +20,13 @@ export function useInntektsforhold() {
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
     })
+
+    useEffect(() => {
+        if (query.error && query.error.problem.status === 404) {
+            // Naviger til rot-nivået hvis API-et returnerer 404
+            router.push('/')
+        }
+    }, [query.error, router])
+
+    return query
 }
