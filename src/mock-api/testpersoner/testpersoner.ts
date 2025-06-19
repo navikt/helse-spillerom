@@ -8,6 +8,7 @@ import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
 
 import { Bosse } from './BosseBunntrål'
+import { BlankeArk } from './BlankeArk'
 
 export interface Testperson {
     personId: string
@@ -19,7 +20,7 @@ export interface Testperson {
     dokumenter: Record<string, Dokument[]>
 }
 
-export const testpersoner: Testperson[] = [Kalle, Mattis, Bosse]
+export const testpersoner: Testperson[] = [Kalle, Mattis, Bosse, BlankeArk]
 
 export function finnPerson(personId: string) {
     return testpersoner.find((p) => p.personId === personId)
