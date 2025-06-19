@@ -18,7 +18,7 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
-import { useOppdaterInntektsforhold } from '@hooks/mutations/useOppdaterInntektsforhold'
+import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
@@ -28,7 +28,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
     const slettMutation = useSlettInntektsforhold()
-    const oppdaterMutation = useOppdaterInntektsforhold()
+    const oppdaterMutation = useOppdaterInntektsforholdKategorisering()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)

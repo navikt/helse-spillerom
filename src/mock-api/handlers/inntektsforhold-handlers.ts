@@ -101,7 +101,7 @@ export async function handleGetDagoversikt(person: Person | undefined, inntektsf
     return NextResponse.json(person.dagoversikt[inntektsforholdId] || [])
 }
 
-export async function handlePutInntektsforhold(
+export async function handlePutInntektsforholdKategorisering(
     request: Request,
     person: Person | undefined,
     saksbehandlingsperiodeId: string,
@@ -121,8 +121,8 @@ export async function handlePutInntektsforhold(
     // Oppdater kategorisering og ORGNAVN
     const updated: Inntektsforhold = {
         ...person.inntektsforhold[saksbehandlingsperiodeId][index],
-        kategorisering: { ...body.kategorisering, ORGNAVN: getOrgnavn(body.kategorisering['ORGNUMMER']) ?? '' },
+        kategorisering: { ...body, ORGNAVN: getOrgnavn(body['ORGNUMMER']) ?? '' },
     }
     person.inntektsforhold[saksbehandlingsperiodeId][index] = updated
-    return NextResponse.json(updated)
+    return new Response(null, { status: 204 })
 }

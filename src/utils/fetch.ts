@@ -73,3 +73,28 @@ export async function deleteNoContent(url: string): Promise<void> {
         })
     }
 }
+
+export async function putNoContent(url: string, body: unknown): Promise<void> {
+    const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    })
+
+    if (!res.ok) {
+        const isJson = (res.headers.get('content-type') ?? '').includes('json')
+        const payload: unknown = isJson ? await res.json() : await res.text()
+
+        const maybeProblem = problemDetailsSchema.safeParse(payload)
+        if (maybeProblem.success) {
+            throw new ProblemDetailsError(maybeProblem.data)
+        }
+
+        throw new ProblemDetailsError({
+            title: 'Ukjent feil',
+            status: res.status,
+            detail: `Failed to put ${url}: ${res.status}`,
+            type: 'about:blank',
+        })
+    }
+}
