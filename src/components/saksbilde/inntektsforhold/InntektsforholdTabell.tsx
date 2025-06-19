@@ -69,7 +69,18 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         </TableHeader>
                         <TableBody>
                             {inntektsforhold.map((forhold) => (
-                                <TableExpandableRow key={forhold.id} expandOnRowClick content="placeholder">
+                                <TableExpandableRow
+                                    key={forhold.id}
+                                    expandOnRowClick
+                                    content={
+                                        <InntektsforholdForm
+                                            closeForm={() => {}}
+                                            disabled={true}
+                                            title={undefined}
+                                            initialValues={forhold.kategorisering}
+                                        />
+                                    }
+                                >
                                     <TableDataCell>
                                         <BodyShort>{getInntektsforholdDisplayText(forhold.kategorisering)}</BodyShort>
                                     </TableDataCell>
@@ -154,7 +165,10 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                 borderColor="border-subtle"
                                 borderWidth="1"
                             >
-                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
+                                <InntektsforholdForm
+                                    closeForm={() => setVisOpprettForm(false)}
+                                    title="Legg til nytt inntektsforhold"
+                                />
                             </Box>
                         </motion.div>
                     )}

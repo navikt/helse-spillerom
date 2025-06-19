@@ -41,11 +41,24 @@ interface RåKodeverkSpørsmål {
     alternativer?: RåKodeverkAlternativ[]
 }
 
-export default function InntektsforholdForm({ closeForm }: { closeForm: () => void }): ReactElement {
-    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
+interface InntektsforholdFormProps {
+    closeForm: () => void
+    disabled?: boolean
+    initialValues?: Record<string, string | string[]>
+    title?: string
+}
+
+export default function InntektsforholdForm({
+    closeForm,
+    disabled = false,
+    initialValues = {},
+    title,
+}: InntektsforholdFormProps): ReactElement {
+    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
     const mutation = useOpprettInntektsforhold()
 
     const handleSelectChange = (kode: string, value: string) => {
+        if (disabled) return
         setSelectedValues((prev) => ({
             ...prev,
             [kode]: value,
@@ -53,6 +66,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
     }
 
     const handleRadioChange = (kode: string, value: string) => {
+        if (disabled) return
         setSelectedValues((prev) => ({
             ...prev,
             [kode]: value,
@@ -60,6 +74,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
     }
 
     const handleTextFieldChange = (kode: string, value: string) => {
+        if (disabled) return
         setSelectedValues((prev) => ({
             ...prev,
             [kode]: value,
@@ -67,6 +82,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
     }
 
     function onSubmit() {
+        if (disabled) return
         mutation.mutate(
             {
                 kategorisering: selectedValues,
@@ -87,9 +103,11 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
                         legend={spørsmål.navn}
                         value={(selectedValues[spørsmål.kode] as string[]) || []}
                         onChange={(values) => {
+                            if (disabled) return
                             setSelectedValues((prev) => ({ ...prev, [spørsmål.kode]: values }))
                         }}
                         size="small"
+                        disabled={disabled}
                     >
                         <VStack gap="3">
                             {spørsmål.alternativer.map((alt) => {
@@ -98,7 +116,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
                                 )
                                 return (
                                     <div key={alt.kode}>
-                                        <Checkbox value={alt.kode} size="small">
+                                        <Checkbox value={alt.kode} size="small" disabled={disabled}>
                                             {alt.navn}
                                         </Checkbox>
                                         {isSelected &&
@@ -120,13 +138,14 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
                         value={(selectedValues[spørsmål.kode] as string) || ''}
                         onChange={(value) => handleRadioChange(spørsmål.kode, value)}
                         size="small"
+                        disabled={disabled}
                     >
                         <VStack gap="3">
                             {spørsmål.alternativer.map((alt) => {
                                 const isSelected = selectedValues[spørsmål.kode] === alt.kode
                                 return (
                                     <div key={alt.kode}>
-                                        <Radio value={alt.kode} size="small">
+                                        <Radio value={alt.kode} size="small" disabled={disabled}>
                                             {alt.navn}
                                         </Radio>
                                         {isSelected &&
@@ -151,6 +170,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
                         placeholder="123456789" // kan ikke hardkodes
                         description="9-sifret organisasjonsnummer" // kan ikke hardkodes
                         size="small"
+                        disabled={disabled}
                     />
                 )
         }
@@ -175,13 +195,14 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
 
     return (
         <VStack gap="8">
-            <Heading size="small">Legg til nytt inntektsforhold</Heading>
+            {title && <Heading size="small">{title}</Heading>}
             <Select
                 label="Velg type inntektsforhold"
                 value={selectedKode || ''}
                 onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
                 size="small"
                 className="max-w-96"
+                disabled={disabled}
             >
                 <option value="">Velg...</option>
                 {inntektsforholdKodeverk.alternativer.map((alt) => (
@@ -193,21 +214,23 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
             {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
                 <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
             ))}
-            <HStack gap="4">
-                <Button
-                    variant="primary"
-                    size="small"
-                    type="button"
-                    loading={false}
-                    disabled={selectedKode === undefined || selectedKode === ''}
-                    onClick={onSubmit}
-                >
-                    Opprett
-                </Button>
-                <Button variant="tertiary" size="small" type="button" disabled={false} onClick={() => closeForm()}>
-                    Avbryt
-                </Button>
-            </HStack>
+            {!disabled && (
+                <HStack gap="4">
+                    <Button
+                        variant="primary"
+                        size="small"
+                        type="button"
+                        loading={false}
+                        disabled={selectedKode === undefined || selectedKode === ''}
+                        onClick={onSubmit}
+                    >
+                        Opprett
+                    </Button>
+                    <Button variant="tertiary" size="small" type="button" disabled={false} onClick={() => closeForm()}>
+                        Avbryt
+                    </Button>
+                </HStack>
+            )}
         </VStack>
     )
 }
