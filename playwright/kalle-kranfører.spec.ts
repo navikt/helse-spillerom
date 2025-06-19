@@ -51,6 +51,6 @@ test.describe('Kalle Kranfører', () => {
         // Finn første celle i første rad
         const firstCell = firstRow.locator('td p').first()
         await expect(firstCell).toBeVisible()
-        await expect(firstCell).toHaveText('Ordinært arbeidsforhold')
+        await expect(firstCell).toHaveText('Arbeidstaker')
     })
 })
