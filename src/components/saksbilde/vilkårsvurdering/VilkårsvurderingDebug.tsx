@@ -39,7 +39,7 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
                         setShowModal(false)
                     }}
                     header={{ heading: 'Vurderte vilkår', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max max-w-[1200px] rounded-none p-0"
+                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>
                         <Vilkårsvurdering />
