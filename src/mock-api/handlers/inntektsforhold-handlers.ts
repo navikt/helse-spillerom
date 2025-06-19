@@ -41,7 +41,7 @@ export async function handlePostInntektsforhold(
     person.inntektsforhold[uuid].push(nyttInntektsforhold)
 
     // Opprett dagoversikt automatisk hvis sykmeldt fra forholdet
-    if (body.sykmeldtFraForholdet) {
+    if (body.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA') {
         if (!person.dagoversikt) {
             person.dagoversikt = {}
         }
