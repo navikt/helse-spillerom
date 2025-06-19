@@ -55,42 +55,6 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     return (
         <SaksbildePanel value={value}>
             <VStack gap="6">
-                <Button
-                    className="w-fit"
-                    variant="secondary"
-                    size="small"
-                    icon={<PlusIcon aria-hidden />}
-                    onClick={() => setVisOpprettForm((prev) => !prev)}
-                >
-                    Legg til inntektsforhold
-                </Button>
-                <AnimatePresence initial={false}>
-                    {visOpprettForm && (
-                        <motion.div
-                            key="opprett-inntektsforhold"
-                            transition={{
-                                type: 'tween',
-                                duration: 0.2,
-                                ease: 'easeInOut',
-                            }}
-                            initial={{ height: 0 }}
-                            animate={{ height: 'auto' }}
-                            exit={{ height: 0 }}
-                            className="overflow-hidden"
-                        >
-                            <Box
-                                background="surface-selected"
-                                padding="8"
-                                borderRadius="medium"
-                                borderColor="border-subtle"
-                                borderWidth="1"
-                            >
-                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
-                            </Box>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
                 {inntektsforhold && inntektsforhold.length > 0 ? (
                     <Table size="medium">
                         <TableHeader>
@@ -158,6 +122,43 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         <BodyShort>Ingen inntektsforhold registrert for denne saksbehandlingsperioden.</BodyShort>
                     </Alert>
                 )}
+                {!visOpprettForm && (
+                    <Button
+                        className="w-fit"
+                        variant="tertiary"
+                        size="small"
+                        icon={<PlusIcon aria-hidden />}
+                        onClick={() => setVisOpprettForm((prev) => !prev)}
+                    >
+                        Legg til inntektsforhold
+                    </Button>
+                )}
+                <AnimatePresence initial={false}>
+                    {visOpprettForm && (
+                        <motion.div
+                            key="opprett-inntektsforhold"
+                            transition={{
+                                type: 'tween',
+                                duration: 0.2,
+                                ease: 'easeInOut',
+                            }}
+                            initial={{ height: 0 }}
+                            animate={{ height: 'auto' }}
+                            exit={{ height: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <Box
+                                background="surface-subtle"
+                                padding="8"
+                                borderRadius="medium"
+                                borderColor="border-subtle"
+                                borderWidth="1"
+                            >
+                                <InntektsforholdForm closeForm={() => setVisOpprettForm(false)} />
+                            </Box>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </VStack>
 
             <Modal

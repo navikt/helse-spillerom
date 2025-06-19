@@ -175,7 +175,7 @@ export default function InntektsforholdForm({ closeForm }: { closeForm: () => vo
 
     return (
         <VStack gap="8">
-            <Heading size="small">Opprett nytt inntektsforhold</Heading>
+            <Heading size="small">Legg til nytt inntektsforhold</Heading>
             <Select
                 label="Velg type inntektsforhold"
                 value={selectedKode || ''}
