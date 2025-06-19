@@ -19,7 +19,7 @@ import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
-export function Inntektsforhold({ value }: { value: string }): ReactElement {
+export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
