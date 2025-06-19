@@ -1,9 +1,9 @@
 'use client'
 
-import { ReactElement, useState, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { motion } from 'motion/react'
-import { Heading, HStack, VStack } from '@navikt/ds-react'
-import { ClockIcon, FolderIcon } from '@navikt/aksel-icons'
+import { Button, Heading, HStack, VStack } from '@navikt/ds-react'
+import { ClockIcon, FolderIcon, XMarkIcon } from '@navikt/aksel-icons'
 import { useParams } from 'next/navigation'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
@@ -58,9 +58,18 @@ export function Høyremeny(): ReactElement {
                     >
                         <Sidemeny side="right" className="h-full">
                             <VStack gap="4">
-                                <Heading level="1" size="xsmall" className="font-medium text-gray-600">
-                                    {filter}
-                                </Heading>
+                                <HStack justify="space-between">
+                                    <Heading level="1" size="xsmall" className="font-medium text-gray-600">
+                                        {filter}
+                                    </Heading>
+                                    <Button
+                                        variant="tertiary-neutral"
+                                        size="xsmall"
+                                        type="button"
+                                        icon={<XMarkIcon />}
+                                        onClick={() => setShowSidemeny(false)}
+                                    />
+                                </HStack>
                                 <div role="region" aria-label={`${filter.toLowerCase()} innhold`}>
                                     {høyremenyElementer[filter]}
                                 </div>
