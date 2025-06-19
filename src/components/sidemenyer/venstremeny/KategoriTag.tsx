@@ -19,7 +19,7 @@ export function kategoriSetTilTekstOgWarning(kategorier: Set<string>): { tekst: 
     if (kategorier.has('ANNET')) return { tekst: 'Kategori ikke satt', warning: true }
 
     const hasArbeidstaker = kategorier.has('ARBEIDSTAKER')
-    const hasSelvstendig = kategorier.has('SELVSTENDIG_NAERINGSDRIVENDE')
+    const hasSelvstendig = kategorier.has('SELVSTENDIG_NÆRINGSDRIVENDE')
     const hasFrilanser = kategorier.has('FRILANSER')
 
     // 1 kategori
