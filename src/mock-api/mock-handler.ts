@@ -16,6 +16,7 @@ import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-
 import {
     handleGetInntektsforhold,
     handlePostInntektsforhold,
+    handleDeleteInntektsforhold,
     handleGetDagoversikt,
 } from '@/mock-api/handlers/inntektsforhold-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
@@ -66,6 +67,12 @@ const handlers: Record<string, HandlerFunction> = {
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid }) =>
         handlePostInntektsforhold(request, await person, uuid!),
 
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]': async ({
+        person,
+        uuid,
+        inntektsforholdId,
+    }) => handleDeleteInntektsforhold(await person, uuid!, inntektsforholdId!),
+
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
         person,
         inntektsforholdId,
@@ -92,6 +99,10 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
         }
 
         if (path.includes('/inntektsforhold/') && path.includes('/dagoversikt')) {
+            context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
+        }
+
+        if (path.includes('/inntektsforhold/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 

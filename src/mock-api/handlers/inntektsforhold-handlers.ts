@@ -59,6 +59,38 @@ export async function handlePostInntektsforhold(
     return NextResponse.json(nyttInntektsforhold, { status: 201 })
 }
 
+export async function handleDeleteInntektsforhold(
+    person: Person | undefined,
+    saksbehandlingsperiodeId: string,
+    inntektsforholdId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    if (!person.inntektsforhold || !person.inntektsforhold[saksbehandlingsperiodeId]) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+
+    const inntektsforholdIndex = person.inntektsforhold[saksbehandlingsperiodeId].findIndex(
+        (forhold) => forhold.id === inntektsforholdId,
+    )
+
+    if (inntektsforholdIndex === -1) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+
+    // Remove the inntektsforhold
+    person.inntektsforhold[saksbehandlingsperiodeId].splice(inntektsforholdIndex, 1)
+
+    // Also remove associated dagoversikt if it exists
+    if (person.dagoversikt && person.dagoversikt[inntektsforholdId]) {
+        delete person.dagoversikt[inntektsforholdId]
+    }
+
+    return new Response(null, { status: 204 })
+}
+
 export async function handleGetDagoversikt(person: Person | undefined, inntektsforholdId: string): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })

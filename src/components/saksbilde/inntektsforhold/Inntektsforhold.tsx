@@ -2,6 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { Alert, BodyShort, Box, Button, Table, VStack } from '@navikt/ds-react'
+import { Modal } from '@navikt/ds-react'
 import {
     TableBody,
     TableDataCell,
@@ -10,16 +11,20 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@navikt/ds-react/Table'
-import { PlusIcon } from '@navikt/aksel-icons'
+import { PlusIcon, PencilIcon, TrashIcon } from '@navikt/aksel-icons'
 import { AnimatePresence, motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 
 export function Inntektsforhold({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
+    const [slettModalOpen, setSlettModalOpen] = useState(false)
+    const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
+    const slettMutation = useSlettInntektsforhold()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -28,6 +33,24 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                 <Alert variant="error">Kunne ikke laste inntektsforhold</Alert>
             </SaksbildePanel>
         )
+
+    const handleSlett = (inntektsforholdId: string) => {
+        setInntektsforholdTilSlett(inntektsforholdId)
+        setSlettModalOpen(true)
+    }
+
+    const confirmSlett = () => {
+        if (inntektsforholdTilSlett) {
+            slettMutation.mutate({ inntektsforholdId: inntektsforholdTilSlett })
+            setSlettModalOpen(false)
+            setInntektsforholdTilSlett(null)
+        }
+    }
+
+    const cancelSlett = () => {
+        setSlettModalOpen(false)
+        setInntektsforholdTilSlett(null)
+    }
 
     return (
         <SaksbildePanel value={value}>
@@ -73,9 +96,11 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                         <TableHeader>
                             <TableRow>
                                 <TableHeaderCell className="ignore-axe" />
-                                <TableHeaderCell>Type</TableHeaderCell>
+                                <TableHeaderCell>Inntektsforhold</TableHeaderCell>
                                 <TableHeaderCell>Organisasjon</TableHeaderCell>
-                                <TableHeaderCell>Sykmeldt fra forholdet</TableHeaderCell>
+                                <TableHeaderCell>Sykmeldt</TableHeaderCell>
+                                <TableHeaderCell className="ignore-axe" />
+                                <TableHeaderCell className="ignore-axe" />
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -107,6 +132,23 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                                             {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
                                         </BodyShort>
                                     </TableDataCell>
+                                    <TableDataCell>
+                                        <Button variant="tertiary" size="small" icon={<PencilIcon aria-hidden />}>
+                                            Rediger
+                                        </Button>
+                                    </TableDataCell>
+                                    <TableDataCell>
+                                        <Button
+                                            className="text-red-500"
+                                            variant="tertiary"
+                                            size="small"
+                                            icon={<TrashIcon aria-hidden />}
+                                            onClick={() => handleSlett(forhold.id)}
+                                            disabled={slettMutation.isPending}
+                                        >
+                                            Slett
+                                        </Button>
+                                    </TableDataCell>
                                 </TableExpandableRow>
                             ))}
                         </TableBody>
@@ -117,6 +159,28 @@ export function Inntektsforhold({ value }: { value: string }): ReactElement {
                     </Alert>
                 )}
             </VStack>
+
+            <Modal
+                open={slettModalOpen}
+                onClose={cancelSlett}
+                header={{
+                    heading: 'Slett inntektsforhold',
+                }}
+            >
+                <Modal.Body>
+                    <BodyShort>
+                        Er du sikker på at du vil slette dette inntektsforholdet? Denne handlingen kan ikke angres.
+                    </BodyShort>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={confirmSlett} loading={slettMutation.isPending}>
+                        Slett
+                    </Button>
+                    <Button variant="secondary" onClick={cancelSlett} disabled={slettMutation.isPending}>
+                        Avbryt
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </SaksbildePanel>
     )
 }

@@ -37,10 +37,10 @@ test.describe('Kalle Kranfører', () => {
         // Finn tabellen som inneholder inntektsforhold ved å bruke kolonneoverskriftene
         const inntektsforholdTable = page
             .locator('table', {
-                has: page.locator('th', { hasText: 'Type' }),
+                has: page.locator('th', { hasText: 'Inntektsforhold' }),
             })
             .filter({
-                has: page.locator('th', { hasText: 'Sykmeldt fra forholdet' }),
+                has: page.locator('th', { hasText: 'Sykmeldt' }),
             })
         await expect(inntektsforholdTable).toBeVisible()
 

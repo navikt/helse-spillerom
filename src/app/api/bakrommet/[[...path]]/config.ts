@@ -13,6 +13,7 @@ export const allowedAPIs = [
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt',
 ]
 
