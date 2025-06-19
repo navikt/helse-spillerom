@@ -18,6 +18,7 @@ import {
     handlePostInntektsforhold,
     handleDeleteInntektsforhold,
     handleGetDagoversikt,
+    handlePutInntektsforhold,
 } from '@/mock-api/handlers/inntektsforhold-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
@@ -77,6 +78,13 @@ const handlers: Record<string, HandlerFunction> = {
         person,
         inntektsforholdId,
     }) => handleGetDagoversikt(await person, inntektsforholdId!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]': async ({
+        request,
+        person,
+        uuid,
+        inntektsforholdId,
+    }) => handlePutInntektsforhold(request, await person, uuid!, inntektsforholdId!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

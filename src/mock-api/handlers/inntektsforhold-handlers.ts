@@ -100,3 +100,29 @@ export async function handleGetDagoversikt(person: Person | undefined, inntektsf
     }
     return NextResponse.json(person.dagoversikt[inntektsforholdId] || [])
 }
+
+export async function handlePutInntektsforhold(
+    request: Request,
+    person: Person | undefined,
+    saksbehandlingsperiodeId: string,
+    inntektsforholdId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+    if (!person.inntektsforhold || !person.inntektsforhold[saksbehandlingsperiodeId]) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+    const body = await request.json()
+    const index = person.inntektsforhold[saksbehandlingsperiodeId].findIndex((f) => f.id === inntektsforholdId)
+    if (index === -1) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+    // Oppdater kategorisering og ORGNAVN
+    const updated: Inntektsforhold = {
+        ...person.inntektsforhold[saksbehandlingsperiodeId][index],
+        kategorisering: { ...body.kategorisering, ORGNAVN: getOrgnavn(body.kategorisering['ORGNUMMER']) ?? '' },
+    }
+    person.inntektsforhold[saksbehandlingsperiodeId][index] = updated
+    return NextResponse.json(updated)
+}

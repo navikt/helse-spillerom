@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useState } from 'react'
+import { Fragment, ReactElement, useState, useEffect } from 'react'
 import {
     Button,
     Checkbox,
@@ -46,6 +46,10 @@ interface InntektsforholdFormProps {
     disabled?: boolean
     initialValues?: Record<string, string | string[]>
     title?: string
+    onSubmit?: (kategorisering: Record<string, string | string[]>) => void
+    isLoading?: boolean
+    avbrytLabel?: string
+    lagreLabel?: string
 }
 
 export default function InntektsforholdForm({
@@ -53,9 +57,19 @@ export default function InntektsforholdForm({
     disabled = false,
     initialValues = {},
     title,
+    onSubmit,
+    isLoading = false,
+    avbrytLabel = 'Avbryt',
+    lagreLabel = 'Opprett',
 }: InntektsforholdFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
     const mutation = useOpprettInntektsforhold()
+
+    useEffect(() => {
+        if (Object.keys(initialValues).length > 0) {
+            setSelectedValues(initialValues)
+        }
+    }, [initialValues])
 
     const handleSelectChange = (kode: string, value: string) => {
         if (disabled) return
@@ -81,18 +95,22 @@ export default function InntektsforholdForm({
         }))
     }
 
-    function onSubmit() {
+    function handleSubmit() {
         if (disabled) return
-        mutation.mutate(
-            {
-                kategorisering: selectedValues,
-            },
-            {
-                onSuccess: () => {
-                    closeForm()
+        if (onSubmit) {
+            onSubmit(selectedValues)
+        } else {
+            mutation.mutate(
+                {
+                    kategorisering: selectedValues,
                 },
-            },
-        )
+                {
+                    onSuccess: () => {
+                        closeForm()
+                    },
+                },
+            )
+        }
     }
 
     const renderUnderspørsmål = (spørsmål: KodeverkSpørsmål) => {
@@ -220,14 +238,20 @@ export default function InntektsforholdForm({
                         variant="primary"
                         size="small"
                         type="button"
-                        loading={false}
+                        loading={isLoading || mutation.isPending}
                         disabled={selectedKode === undefined || selectedKode === ''}
-                        onClick={onSubmit}
+                        onClick={handleSubmit}
                     >
-                        Opprett
+                        {lagreLabel}
                     </Button>
-                    <Button variant="tertiary" size="small" type="button" disabled={false} onClick={() => closeForm()}>
-                        Avbryt
+                    <Button
+                        variant="tertiary"
+                        size="small"
+                        type="button"
+                        disabled={isLoading || mutation.isPending}
+                        onClick={closeForm}
+                    >
+                        {avbrytLabel}
                     </Button>
                 </HStack>
             )}

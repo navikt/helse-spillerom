@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Box, Button, Table, VStack } from '@navikt/ds-react'
+import { Alert, BodyShort, Box, Button, Table, VStack, HStack } from '@navikt/ds-react'
 import { Modal } from '@navikt/ds-react'
 import {
     TableBody,
@@ -18,13 +18,16 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
+import { useOppdaterInntektsforhold } from '@hooks/mutations/useOppdaterInntektsforhold'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
+    const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
     const slettMutation = useSlettInntektsforhold()
+    const oppdaterMutation = useOppdaterInntektsforhold()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -52,6 +55,18 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
         setInntektsforholdTilSlett(null)
     }
 
+    const handleRediger = (id: string) => {
+        setRedigererId(id)
+    }
+
+    const handleAvbrytRedigering = () => {
+        setRedigererId(null)
+    }
+
+    const handleLagreRedigering = (inntektsforholdId: string, kategorisering: Record<string, string | string[]>) => {
+        oppdaterMutation.mutate({ inntektsforholdId, kategorisering }, { onSuccess: () => setRedigererId(null) })
+    }
+
     return (
         <SaksbildePanel value={value}>
             <VStack gap="6">
@@ -63,8 +78,6 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                 <TableHeaderCell>Inntektsforhold</TableHeaderCell>
                                 <TableHeaderCell>Organisasjon</TableHeaderCell>
                                 <TableHeaderCell>Sykmeldt</TableHeaderCell>
-                                <TableHeaderCell className="ignore-axe" />
-                                <TableHeaderCell className="ignore-axe" />
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -73,12 +86,49 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                     key={forhold.id}
                                     expandOnRowClick
                                     content={
-                                        <InntektsforholdForm
-                                            closeForm={() => {}}
-                                            disabled={true}
-                                            title={undefined}
-                                            initialValues={forhold.kategorisering}
-                                        />
+                                        redigererId === forhold.id ? (
+                                            <InntektsforholdForm
+                                                closeForm={handleAvbrytRedigering}
+                                                disabled={false}
+                                                initialValues={forhold.kategorisering}
+                                                onSubmit={(kategorisering) =>
+                                                    handleLagreRedigering(forhold.id, kategorisering)
+                                                }
+                                                isLoading={oppdaterMutation.isPending}
+                                                avbrytLabel="Avbryt"
+                                                lagreLabel="Lagre"
+                                            />
+                                        ) : (
+                                            <VStack gap="4">
+                                                <InntektsforholdForm
+                                                    closeForm={() => {}}
+                                                    disabled={true}
+                                                    title={undefined}
+                                                    initialValues={forhold.kategorisering}
+                                                />
+                                                <HStack gap="2">
+                                                    <Button
+                                                        variant="tertiary"
+                                                        size="small"
+                                                        icon={<PencilIcon aria-hidden />}
+                                                        onClick={() => handleRediger(forhold.id)}
+                                                        disabled={redigererId !== null && redigererId !== forhold.id}
+                                                    >
+                                                        Rediger
+                                                    </Button>
+                                                    <Button
+                                                        className="text-red-500"
+                                                        variant="tertiary"
+                                                        size="small"
+                                                        icon={<TrashIcon aria-hidden />}
+                                                        onClick={() => handleSlett(forhold.id)}
+                                                        disabled={slettMutation.isPending}
+                                                    >
+                                                        Slett
+                                                    </Button>
+                                                </HStack>
+                                            </VStack>
+                                        )
                                     }
                                 >
                                     <TableDataCell>
@@ -106,23 +156,6 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                         <BodyShort>
                                             {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
                                         </BodyShort>
-                                    </TableDataCell>
-                                    <TableDataCell>
-                                        <Button variant="tertiary" size="small" icon={<PencilIcon aria-hidden />}>
-                                            Rediger
-                                        </Button>
-                                    </TableDataCell>
-                                    <TableDataCell>
-                                        <Button
-                                            className="text-red-500"
-                                            variant="tertiary"
-                                            size="small"
-                                            icon={<TrashIcon aria-hidden />}
-                                            onClick={() => handleSlett(forhold.id)}
-                                            disabled={slettMutation.isPending}
-                                        >
-                                            Slett
-                                        </Button>
                                     </TableDataCell>
                                 </TableExpandableRow>
                             ))}
