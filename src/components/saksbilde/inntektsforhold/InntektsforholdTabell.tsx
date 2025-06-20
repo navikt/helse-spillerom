@@ -133,7 +133,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                     lagreLabel="Lagre"
                                                 />
                                             ) : (
-                                                <VStack gap="4">
+                                                <VStack gap="4" className="ignore-axe">
                                                     <InntektsforholdForm
                                                         closeForm={() => {}}
                                                         disabled={true}
@@ -182,14 +182,12 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                     </BodyShort>
                                                 )}
                                                 {forhold.kategorisering['ORGNUMMER'] && (
-                                                    <BodyShort className="font-mono text-sm text-gray-600">
+                                                    <BodyShort className="font-mono text-sm">
                                                         {forhold.kategorisering['ORGNUMMER']}
                                                     </BodyShort>
                                                 )}
                                                 {!forhold.kategorisering['ORGNUMMER'] &&
-                                                    !forhold.kategorisering['ORGNAVN'] && (
-                                                        <BodyShort className="text-gray-500">-</BodyShort>
-                                                    )}
+                                                    !forhold.kategorisering['ORGNAVN'] && <BodyShort>-</BodyShort>}
                                             </VStack>
                                         </TableDataCell>
                                         <TableDataCell>

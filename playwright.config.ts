@@ -42,7 +42,7 @@ const opts: OptionsType = process.env.CI
 export default defineConfig({
     testDir: './playwright',
     expect: {
-        timeout: 10 * 1000,
+        timeout: 5 * 1000,
     },
     timeout: opts.timeout,
     fullyParallel: true,
@@ -53,6 +53,8 @@ export default defineConfig({
     use: {
         baseURL: opts.baseURL,
         trace: 'on-first-retry',
+        actionTimeout: 10 * 1000,
+        navigationTimeout: 15 * 1000,
     },
     webServer: opts.server,
     projects: [

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker/locale/nb_NO'
 import dayjs, { Dayjs } from 'dayjs'
 
 import { Personinfo } from '@/schemas/personinfo'
-import { testpersoner } from '@/mock-api/testpersoner/testpersoner'
+import { testpersoner, Testperson } from '@/mock-api/testpersoner/testpersoner'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
@@ -27,6 +27,24 @@ type Session = {
     expires: Dayjs
     testpersoner: Person[]
 }
+
+// Deep copy funksjon for å unngå delte referanser mellom sesjoner
+function deepCopyPerson(person: Testperson): Person {
+    return {
+        fnr: person.personinfo.fødselsnummer,
+        personId: person.personId,
+        personinfo: { ...person.personinfo },
+        saksbehandlingsperioder: person.saksbehandlingsperioder.map((periode: Saksbehandlingsperiode) => ({
+            ...periode,
+            opprettet: new Date(periode.opprettet).toISOString(),
+        })),
+        vilkaarsvurderinger: {},
+        inntektsforhold: JSON.parse(JSON.stringify(person.inntektsforhold || {})),
+        dagoversikt: JSON.parse(JSON.stringify(person.dagoversikt || {})),
+        dokumenter: JSON.parse(JSON.stringify(person.dokumenter || {})),
+    }
+}
+
 export const sessionStore = nextleton('sessionStore', () => {
     return {} as Record<string, Session>
 })
@@ -56,23 +74,7 @@ export async function getSession(): Promise<Session> {
 
     const sessionId = getSessionId()
     if (!sessionStore[sessionId] || sessionStore[sessionId].expires.isBefore(dayjs())) {
-        const personer = testpersoner.map(
-            (p): Person => ({
-                fnr: p.personinfo.fødselsnummer,
-                personId: p.personId,
-                personinfo: {
-                    fødselsnummer: p.personinfo.fødselsnummer,
-                    aktørId: p.personinfo.aktørId,
-                    navn: p.personinfo.navn,
-                    alder: p.personinfo.alder,
-                },
-                saksbehandlingsperioder: [...p.saksbehandlingsperioder],
-                vilkaarsvurderinger: {},
-                inntektsforhold: p.inntektsforhold ? { ...p.inntektsforhold } : {},
-                dagoversikt: p.dagoversikt ? { ...p.dagoversikt } : {},
-                dokumenter: p.dokumenter ? { ...p.dokumenter } : {},
-            }),
-        )
+        const personer = testpersoner.map(deepCopyPerson)
 
         sessionStore[sessionId] = {
             expires: dayjs().add(120, 'minute'),
