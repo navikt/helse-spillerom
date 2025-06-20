@@ -14,6 +14,7 @@ import {
 
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
+import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 
 interface KodeverkAlternativ {
     kode: string
@@ -64,12 +65,23 @@ export default function InntektsforholdForm({
 }: InntektsforholdFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
     const mutation = useOpprettInntektsforhold()
+    const { data: existingInntektsforhold = [] } = useInntektsforhold()
 
     useEffect(() => {
         if (Object.keys(initialValues).length > 0) {
             setSelectedValues(initialValues)
         }
     }, [initialValues])
+
+    // Sjekk om det allerede finnes et inntektsforhold med SELVSTENDIG_NÆRINGSDRIVENDE
+    const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some(
+        (forhold) => forhold.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE',
+    )
+
+    // Filtrer bort SELVSTENDIG_NÆRINGSDRIVENDE hvis det allerede finnes
+    const availableAlternatives = inntektsforholdKodeverk.alternativer.filter(
+        (alt) => !(alt.kode === 'SELVSTENDIG_NÆRINGSDRIVENDE' && hasExistingSelvstendigNæringsdrivende),
+    )
 
     const handleSelectChange = (kode: string, value: string) => {
         if (disabled) return
@@ -194,8 +206,9 @@ export default function InntektsforholdForm({
         }
     }
 
-    const selectedKode = selectedValues[inntektsforholdKodeverk.kode] as string
-    const selectedAlternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === selectedKode)
+    const selectedAlternativ = inntektsforholdKodeverk.alternativer.find(
+        (alt) => alt.kode === (selectedValues[inntektsforholdKodeverk.kode] as string),
+    )
 
     // Helper to ensure variant is typed correctly
     const toKodeverkSpørsmål = (spm: RåKodeverkSpørsmål): KodeverkSpørsmål => ({
@@ -214,16 +227,17 @@ export default function InntektsforholdForm({
     return (
         <VStack gap="8">
             {title && <Heading size="small">{title}</Heading>}
+
             <Select
                 label="Velg type inntektsforhold"
-                value={selectedKode || ''}
+                value={(selectedValues[inntektsforholdKodeverk.kode] as string) || ''}
                 onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
                 size="small"
                 className="max-w-96"
                 disabled={disabled}
             >
                 <option value="">Velg...</option>
-                {inntektsforholdKodeverk.alternativer.map((alt) => (
+                {availableAlternatives.map((alt) => (
                     <option key={alt.kode} value={alt.kode}>
                         {alt.navn}
                     </option>
@@ -239,7 +253,10 @@ export default function InntektsforholdForm({
                         size="small"
                         type="button"
                         loading={isLoading || mutation.isPending}
-                        disabled={selectedKode === undefined || selectedKode === ''}
+                        disabled={
+                            selectedValues[inntektsforholdKodeverk.kode] === undefined ||
+                            selectedValues[inntektsforholdKodeverk.kode] === ''
+                        }
                         onClick={handleSubmit}
                     >
                         {lagreLabel}

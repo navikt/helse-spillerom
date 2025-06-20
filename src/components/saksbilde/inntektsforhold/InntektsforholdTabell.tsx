@@ -38,6 +38,18 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
             </SaksbildePanel>
         )
 
+    // Sjekk om det finnes inntektsforhold som ikke kan kombineres med andre
+    const inntektsforholdSomIkkeKanKombineres =
+        inntektsforhold?.filter((forhold) => {
+            const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
+            const alternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === kategori)
+            return alternativ?.kanIkkeKombineresMedAndre === true
+        }) || []
+
+    // Vis advarsel hvis det finnes inntektsforhold som ikke kan kombineres og det er flere enn ett inntektsforhold totalt
+    const showKombinasjonsAdvarsel =
+        inntektsforholdSomIkkeKanKombineres.length > 0 && (inntektsforhold?.length || 0) > 1
+
     const handleSlett = (inntektsforholdId: string) => {
         setInntektsforholdTilSlett(inntektsforholdId)
         setSlettModalOpen(true)
@@ -71,6 +83,24 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     return (
         <SaksbildePanel value={value}>
             <VStack gap="6">
+                {showKombinasjonsAdvarsel && (
+                    <Alert variant="warning">
+                        <BodyShort>
+                            {inntektsforholdSomIkkeKanKombineres
+                                .map((forhold) => {
+                                    const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
+                                    const alternativ = inntektsforholdKodeverk.alternativer.find(
+                                        (alt) => alt.kode === kategori,
+                                    )
+                                    return alternativ?.navn
+                                })
+                                .join(', ')}{' '}
+                            kan ikke kombineres med andre inntektsforhold. Vurder å fjerne andre inntektsforhold eller
+                            endre kategoriseringen.
+                        </BodyShort>
+                    </Alert>
+                )}
+
                 {inntektsforhold && inntektsforhold.length > 0 ? (
                     <Table size="medium">
                         <TableHeader>

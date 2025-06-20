@@ -168,10 +168,16 @@ export const inntektsforholdKodeverk = {
         {
             kode: 'INAKTIV',
             navn: 'Inaktiv',
+            kanIkkeKombineresMedAndre: true,
         },
         {
             kode: 'ARBEIDSLEDIG',
             navn: 'Arbeidsledig',
+        },
+        {
+            kode: 'DIMMITERT_VERNEPLIKTIG',
+            navn: 'Dimmittert vernepliktig',
+            kanIkkeKombineresMedAndre: true,
         },
         {
             kode: 'ANNET',
