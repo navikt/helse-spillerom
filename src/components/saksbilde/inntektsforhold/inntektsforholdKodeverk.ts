@@ -32,45 +32,11 @@ export const inntektsforholdKodeverk = {
                         },
                         {
                             kode: 'MARITIMT_ARBEIDSFORHOLD',
-                            navn: 'Maritimt arbeidsforhold',
-                            underspørsmål: [
-                                {
-                                    kode: 'SKIPSFART',
-                                    navn: 'Skipsfart',
-                                    variant: 'RADIO',
-                                    alternativer: [
-                                        {
-                                            kode: 'NORSK_UTENLANDSFART',
-                                            navn: 'Norsk skip i utenlandsfart',
-                                        },
-                                        {
-                                            kode: 'VANLIG_SKIPSFART',
-                                            navn: 'Vanlig skipsfart?',
-                                        },
-                                    ],
-                                },
-                            ],
+                            navn: 'Maritimt arbeidsforhold på norsk skip i utenlandsfart',
                         },
                         {
                             kode: 'FISKER',
-                            navn: 'Fisker',
-                            underspørsmål: [
-                                {
-                                    kode: 'FISKER_BLAD',
-                                    navn: 'Blad i fiskermanntallet',
-                                    variant: 'RADIO',
-                                    alternativer: [
-                                        {
-                                            kode: 'FISKER_BLAD_A',
-                                            navn: 'Blad A (fiske som binæring)',
-                                        },
-                                        {
-                                            kode: 'FISKER_BLAD_B',
-                                            navn: 'Blad B (fiske som hovednæring)',
-                                        },
-                                    ],
-                                },
-                            ],
+                            navn: 'Fisker på blad B',
                         },
                     ],
                 },
@@ -118,7 +84,7 @@ export const inntektsforholdKodeverk = {
                 {
                     kode: 'TYPE_SELVSTENDIG_NÆRINGSDRIVENDE',
                     navn: 'Type selvstendig næringsdrivende',
-                    variant: 'CHECKBOX',
+                    variant: 'RADIO',
                     alternativer: [
                         {
                             kode: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
@@ -151,41 +117,24 @@ export const inntektsforholdKodeverk = {
                         },
                         {
                             kode: 'FISKER',
-                            navn: 'Fisker',
-                            underspørsmål: [
-                                {
-                                    kode: 'FISKER_BLAD',
-                                    navn: 'Blad i fiskermanntallet',
-                                    variant: 'RADIO',
-                                    alternativer: [
-                                        {
-                                            kode: 'FISKER_BLAD_A',
-                                            navn: 'Blad A (fiske som binæring)',
-                                        },
-                                        {
-                                            kode: 'FISKER_BLAD_B',
-                                            navn: 'Blad B (fiske som hovednæring)',
-                                        },
-                                    ],
-                                },
-                            ],
+                            navn: 'Fisker på blad B',
                         },
                         {
                             kode: 'JORDBRUKER',
-                            navn: 'Jordbruker',
+                            navn: 'Jordbruker omfattet av kollektiv forsikring',
                             underspørsmål: [
                                 {
-                                    kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER',
-                                    navn: 'Kollektiv forsikring for jordbrukere',
+                                    kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING',
+                                    navn: 'Nav-kjøpt forsikring',
                                     variant: 'RADIO',
                                     alternativer: [
                                         {
-                                            kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER_JA',
-                                            navn: 'Ja',
+                                            kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
+                                            navn: '100 prosent fra første sykedag',
                                         },
                                         {
-                                            kode: 'KOLLEKTIV_FORSIKRING_JORDBRUKER_NEI',
-                                            navn: 'Nei',
+                                            kode: 'INGEN_FORSIKRING',
+                                            navn: 'Ingen kjøpt forsikring',
                                         },
                                     ],
                                 },
@@ -193,20 +142,20 @@ export const inntektsforholdKodeverk = {
                         },
                         {
                             kode: 'REINDRIFT',
-                            navn: 'Reindriftsutøver',
+                            navn: 'Reindriftsutøver omfattet av kollektiv forsikring',
                             underspørsmål: [
                                 {
-                                    kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT',
-                                    navn: 'Kollektiv forsikring for reindriftsutøvere',
+                                    kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING',
+                                    navn: 'Nav-kjøpt forsikring',
                                     variant: 'RADIO',
                                     alternativer: [
                                         {
-                                            kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT_JA',
-                                            navn: 'Ja',
+                                            kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
+                                            navn: '100 prosent fra første sykedag',
                                         },
                                         {
-                                            kode: 'KOLLEKTIV_FORSIKRING_REINDRIFT_NEI',
-                                            navn: 'Nei',
+                                            kode: 'INGEN_FORSIKRING',
+                                            navn: 'Ingen kjøpt forsikring',
                                         },
                                     ],
                                 },
