@@ -1,13 +1,15 @@
 import { PropsWithChildren, ReactElement, useState } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
 
 import { Dokument as _Dokument, Dokumenttype } from '@schemas/dokument'
 import { DokumentTag } from '@components/sidemenyer/høyremeny/dokumenter/DokumentTag'
 import { getFormattedDatetimeString } from '@utils/date-format'
 import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 import { Søknad } from '@schemas/søknad'
+import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
+import { getTestSafeTransition } from '@utils/tsUtils'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -36,7 +38,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                     {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </span>
             </button>
-            <AnimatePresence initial={false}>
+            <AnimatePresenceWrapper initial={false}>
                 {open && (
                     <motion.div
                         id={`dokument-innhold-${dokument.id}`}
@@ -44,7 +46,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        transition={getTestSafeTransition({ duration: 0.2, ease: 'easeInOut' })}
                         style={{ overflow: 'hidden' }}
                     >
                         {dokument.dokumentType === 'SØKNAD' ? (
@@ -56,7 +58,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         )}
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresenceWrapper>
         </li>
     )
 }

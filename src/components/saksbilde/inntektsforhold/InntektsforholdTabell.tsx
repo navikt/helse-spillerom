@@ -12,7 +12,7 @@ import {
     TableRow,
 } from '@navikt/ds-react/Table'
 import { PlusIcon, PencilIcon, TrashIcon } from '@navikt/aksel-icons'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
@@ -20,6 +20,8 @@ import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhol
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
+import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
+import { getTestSafeTransition } from '@utils/tsUtils'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -219,15 +221,15 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         Legg til inntektsforhold
                     </Button>
                 )}
-                <AnimatePresence initial={false}>
+                <AnimatePresenceWrapper initial={false}>
                     {visOpprettForm && (
                         <motion.div
                             key="opprett-inntektsforhold"
-                            transition={{
+                            transition={getTestSafeTransition({
                                 type: 'tween',
                                 duration: 0.2,
                                 ease: 'easeInOut',
-                            }}
+                            })}
                             initial={{ height: 0 }}
                             animate={{ height: 'auto' }}
                             exit={{ height: 0 }}
@@ -247,7 +249,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                             </Box>
                         </motion.div>
                     )}
-                </AnimatePresence>
+                </AnimatePresenceWrapper>
             </VStack>
 
             <Modal

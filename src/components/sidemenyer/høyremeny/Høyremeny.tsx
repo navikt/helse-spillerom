@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState, useEffect } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
 import { Heading, HStack, VStack } from '@navikt/ds-react'
 import { ClockIcon, FolderIcon } from '@navikt/aksel-icons'
 import { useParams } from 'next/navigation'
@@ -12,6 +12,8 @@ import { AaregKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AaregKn
 import { AinntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AinntektKnapp'
 import { cn } from '@utils/tw'
 import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk'
+import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
+import { getTestSafeTransition } from '@utils/tsUtils'
 
 type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 
@@ -39,16 +41,16 @@ export function Høyremeny(): ReactElement {
     }
 
     return (
-        <HStack wrap={false} role="region" aria-label="Høyremeny kontroller">
-            <AnimatePresence initial={false}>
+        <HStack wrap={false} aria-label="Høyremeny kontroller">
+            <AnimatePresenceWrapper initial={false}>
                 {showSidemeny && (
                     <motion.div
                         key="høyremeny"
-                        transition={{
+                        transition={getTestSafeTransition({
                             type: 'tween',
                             duration: 0.2,
                             ease: 'easeInOut',
-                        }}
+                        })}
                         initial={{ width: 0 }}
                         animate={{ width: 'auto' }}
                         exit={{ width: 0 }}
@@ -66,7 +68,7 @@ export function Høyremeny(): ReactElement {
                         </Sidemeny>
                     </motion.div>
                 )}
-            </AnimatePresence>
+            </AnimatePresenceWrapper>
             <VStack
                 className="border-l-1 border-border-divider px-3 py-6"
                 gap="6"

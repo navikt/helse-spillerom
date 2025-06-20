@@ -28,7 +28,7 @@ test.describe('Kalle Kranfører', () => {
         await inntektsforholdTab.click()
 
         // Sjekk at "Legg til inntektsforhold"-knappen har riktig tilgjengelighet
-        const leggTilButton = page.getByRole('button', { name: 'Legg til inntektsforhold' })
+        const leggTilButton = page.getByRole('button', { name: 'Legg til nytt inntektsforhold' })
         await expect(leggTilButton).toBeVisible()
         // Sjekk at ikonet er skjult for skjermlesere
         const plusIcon = leggTilButton.locator('svg')
