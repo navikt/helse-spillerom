@@ -66,8 +66,9 @@ export function Høyremeny(): ReactElement {
                                         variant="tertiary-neutral"
                                         size="xsmall"
                                         type="button"
-                                        icon={<XMarkIcon />}
+                                        icon={<XMarkIcon aria-hidden />}
                                         onClick={() => setShowSidemeny(false)}
+                                        aria-label="Lukk høyremeny"
                                     />
                                 </HStack>
                                 <div role="region" aria-label={`${filter.toLowerCase()} innhold`}>
