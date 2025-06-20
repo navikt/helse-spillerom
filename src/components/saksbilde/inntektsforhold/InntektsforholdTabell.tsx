@@ -102,96 +102,106 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                 )}
 
                 {inntektsforhold && inntektsforhold.length > 0 ? (
-                    <Table size="medium">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHeaderCell className="ignore-axe" />
-                                <TableHeaderCell>Inntektsforhold</TableHeaderCell>
-                                <TableHeaderCell>Organisasjon</TableHeaderCell>
-                                <TableHeaderCell>Sykmeldt</TableHeaderCell>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {inntektsforhold.map((forhold) => (
-                                <TableExpandableRow
-                                    key={forhold.id}
-                                    expandOnRowClick
-                                    content={
-                                        redigererId === forhold.id ? (
-                                            <InntektsforholdForm
-                                                closeForm={handleAvbrytRedigering}
-                                                disabled={false}
-                                                initialValues={forhold.kategorisering}
-                                                onSubmit={(kategorisering) =>
-                                                    handleLagreRedigering(forhold.id, kategorisering)
-                                                }
-                                                isLoading={oppdaterMutation.isPending}
-                                                avbrytLabel="Avbryt"
-                                                lagreLabel="Lagre"
-                                            />
-                                        ) : (
-                                            <VStack gap="4">
+                    <div role="region" aria-label="Inntektsforhold tabell">
+                        <Table size="medium" aria-label="Inntektsforhold oversikt">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHeaderCell className="ignore-axe" />
+                                    <TableHeaderCell scope="col">Inntektsforhold</TableHeaderCell>
+                                    <TableHeaderCell scope="col">Organisasjon</TableHeaderCell>
+                                    <TableHeaderCell scope="col">Sykmeldt</TableHeaderCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {inntektsforhold.map((forhold, index) => (
+                                    <TableExpandableRow
+                                        key={forhold.id}
+                                        expandOnRowClick
+                                        content={
+                                            redigererId === forhold.id ? (
                                                 <InntektsforholdForm
-                                                    closeForm={() => {}}
-                                                    disabled={true}
-                                                    title={undefined}
+                                                    closeForm={handleAvbrytRedigering}
+                                                    disabled={false}
                                                     initialValues={forhold.kategorisering}
+                                                    onSubmit={(kategorisering) =>
+                                                        handleLagreRedigering(forhold.id, kategorisering)
+                                                    }
+                                                    isLoading={oppdaterMutation.isPending}
+                                                    avbrytLabel="Avbryt"
+                                                    lagreLabel="Lagre"
                                                 />
-                                                <HStack gap="2">
-                                                    <Button
-                                                        variant="tertiary"
-                                                        size="small"
-                                                        icon={<PencilIcon aria-hidden />}
-                                                        onClick={() => handleRediger(forhold.id)}
-                                                        disabled={redigererId !== null && redigererId !== forhold.id}
-                                                    >
-                                                        Rediger
-                                                    </Button>
-                                                    <Button
-                                                        className="text-red-500"
-                                                        variant="tertiary"
-                                                        size="small"
-                                                        icon={<TrashIcon aria-hidden />}
-                                                        onClick={() => handleSlett(forhold.id)}
-                                                        disabled={slettMutation.isPending}
-                                                    >
-                                                        Slett
-                                                    </Button>
-                                                </HStack>
-                                            </VStack>
-                                        )
-                                    }
-                                >
-                                    <TableDataCell>
-                                        <BodyShort>{getInntektsforholdDisplayText(forhold.kategorisering)}</BodyShort>
-                                    </TableDataCell>
-                                    <TableDataCell>
-                                        <VStack gap="1">
-                                            {forhold.kategorisering['ORGNAVN'] && (
-                                                <BodyShort weight="semibold">
-                                                    {forhold.kategorisering['ORGNAVN']}
-                                                </BodyShort>
-                                            )}
-                                            {forhold.kategorisering['ORGNUMMER'] && (
-                                                <BodyShort className="font-mono text-sm text-gray-600">
-                                                    {forhold.kategorisering['ORGNUMMER']}
-                                                </BodyShort>
-                                            )}
-                                            {!forhold.kategorisering['ORGNUMMER'] &&
-                                                !forhold.kategorisering['ORGNAVN'] && (
-                                                    <BodyShort className="text-gray-500">-</BodyShort>
+                                            ) : (
+                                                <VStack gap="4">
+                                                    <InntektsforholdForm
+                                                        closeForm={() => {}}
+                                                        disabled={true}
+                                                        title={undefined}
+                                                        initialValues={forhold.kategorisering}
+                                                    />
+                                                    <HStack gap="2">
+                                                        <Button
+                                                            variant="tertiary"
+                                                            size="small"
+                                                            icon={<PencilIcon aria-hidden />}
+                                                            onClick={() => handleRediger(forhold.id)}
+                                                            disabled={
+                                                                redigererId !== null && redigererId !== forhold.id
+                                                            }
+                                                            aria-label={`Rediger inntektsforhold ${index + 1}`}
+                                                        >
+                                                            Rediger
+                                                        </Button>
+                                                        <Button
+                                                            className="text-red-500"
+                                                            variant="tertiary"
+                                                            size="small"
+                                                            icon={<TrashIcon aria-hidden />}
+                                                            onClick={() => handleSlett(forhold.id)}
+                                                            disabled={slettMutation.isPending}
+                                                            aria-label={`Slett inntektsforhold ${index + 1}`}
+                                                        >
+                                                            Slett
+                                                        </Button>
+                                                    </HStack>
+                                                </VStack>
+                                            )
+                                        }
+                                    >
+                                        <TableDataCell>
+                                            <BodyShort>
+                                                {getInntektsforholdDisplayText(forhold.kategorisering)}
+                                            </BodyShort>
+                                        </TableDataCell>
+                                        <TableDataCell>
+                                            <VStack gap="1">
+                                                {forhold.kategorisering['ORGNAVN'] && (
+                                                    <BodyShort weight="semibold">
+                                                        {forhold.kategorisering['ORGNAVN']}
+                                                    </BodyShort>
                                                 )}
-                                        </VStack>
-                                    </TableDataCell>
-                                    <TableDataCell>
-                                        <BodyShort>
-                                            {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA' ? 'Ja' : 'Nei'}
-                                        </BodyShort>
-                                    </TableDataCell>
-                                </TableExpandableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                                                {forhold.kategorisering['ORGNUMMER'] && (
+                                                    <BodyShort className="font-mono text-sm text-gray-600">
+                                                        {forhold.kategorisering['ORGNUMMER']}
+                                                    </BodyShort>
+                                                )}
+                                                {!forhold.kategorisering['ORGNUMMER'] &&
+                                                    !forhold.kategorisering['ORGNAVN'] && (
+                                                        <BodyShort className="text-gray-500">-</BodyShort>
+                                                    )}
+                                            </VStack>
+                                        </TableDataCell>
+                                        <TableDataCell>
+                                            <BodyShort>
+                                                {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA'
+                                                    ? 'Ja'
+                                                    : 'Nei'}
+                                            </BodyShort>
+                                        </TableDataCell>
+                                    </TableExpandableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 ) : (
                     <Alert variant="info">
                         <BodyShort>Ingen inntektsforhold registrert for denne saksbehandlingsperioden.</BodyShort>
@@ -204,6 +214,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         size="small"
                         icon={<PlusIcon aria-hidden />}
                         onClick={() => setVisOpprettForm((prev) => !prev)}
+                        aria-label="Legg til nytt inntektsforhold"
                     >
                         Legg til inntektsforhold
                     </Button>

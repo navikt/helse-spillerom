@@ -14,7 +14,7 @@ export function Dokumenter(): ReactElement {
     if (dokumenter.length === 0) return <BodyShort>Ingen dokumenter</BodyShort>
 
     return (
-        <VStack as="ul">
+        <VStack as="ul" role="list" aria-label="Dokumenter">
             {dokumenter.map((dokument) => (
                 <Dokument key={dokument.id} dokument={dokument} />
             ))}
@@ -24,7 +24,7 @@ export function Dokumenter(): ReactElement {
 
 function DokumenterSkeleton(): ReactElement {
     return (
-        <VStack as="ul">
+        <VStack as="ul" role="list" aria-label="Laster dokumenter">
             <DokumentSkeleton />
             <DokumentSkeleton />
             <DokumentSkeleton />

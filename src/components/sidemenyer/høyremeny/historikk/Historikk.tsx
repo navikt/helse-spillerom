@@ -11,7 +11,7 @@ export function Historikk(): ReactElement {
     if (historikk.length === 0) return <BodyShort>Ingen historikk</BodyShort>
 
     return (
-        <VStack as="ul">
+        <VStack as="ul" role="list" aria-label="Historikk over endringer">
             {historikk.map((historikkinnslag) => (
                 <Historikkinnslag key={historikkinnslag} historikkinnslag={historikkinnslag} />
             ))}
@@ -21,7 +21,7 @@ export function Historikk(): ReactElement {
 
 function HistorikkSkeleton(): ReactElement {
     return (
-        <VStack as="ul">
+        <VStack as="ul" role="list" aria-label="Laster historikk">
             <HistorikkinnslagSkeleton />
             <HistorikkinnslagSkeleton />
             <HistorikkinnslagSkeleton />

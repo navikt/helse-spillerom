@@ -8,8 +8,11 @@ interface MenyProps extends PropsWithChildren {
 }
 
 export function Sidemeny({ side, className, children }: MenyProps): ReactElement {
+    const sideLabel = side === 'left' ? 'venstre' : 'høyre'
+
     return (
-        <section
+        <aside
+            aria-label={`${sideLabel} sidemeny`}
             className={cn(
                 'w-sm min-w-sm border-border-divider p-4',
                 className,
@@ -17,6 +20,6 @@ export function Sidemeny({ side, className, children }: MenyProps): ReactElement
             )}
         >
             {children}
-        </section>
+        </aside>
     )
 }

@@ -39,7 +39,7 @@ export function Høyremeny(): ReactElement {
     }
 
     return (
-        <HStack wrap={false}>
+        <HStack wrap={false} role="region" aria-label="Høyremeny kontroller">
             <AnimatePresence initial={false}>
                 {showSidemeny && (
                     <motion.div
@@ -59,23 +59,34 @@ export function Høyremeny(): ReactElement {
                                 <Heading level="1" size="xsmall" className="font-medium text-gray-600">
                                     {filter}
                                 </Heading>
-                                {høyremenyElementer[filter]}
+                                <div role="region" aria-label={`${filter.toLowerCase()} innhold`}>
+                                    {høyremenyElementer[filter]}
+                                </div>
                             </VStack>
                         </Sidemeny>
                     </motion.div>
                 )}
             </AnimatePresence>
-            <VStack className="border-l-1 border-border-divider px-3 py-6" gap="6">
+            <VStack
+                className="border-l-1 border-border-divider px-3 py-6"
+                gap="6"
+                role="toolbar"
+                aria-label="Høyremeny navigasjon"
+            >
                 <FilterButton
-                    icon={<ClockIcon title="Historikk" />}
+                    icon={<ClockIcon aria-hidden />}
                     active={filter === 'Historikk' && showSidemeny}
                     onClick={() => handleClick('Historikk')}
+                    label="Vis historikk"
+                    pressed={filter === 'Historikk' && showSidemeny}
                 />
                 {erISaksbehandlingsperiode && (
                     <FilterButton
-                        icon={<FolderIcon title="Dokumenter" />}
+                        icon={<FolderIcon aria-hidden />}
                         active={filter === 'Dokumenter' && showSidemeny}
                         onClick={() => handleClick('Dokumenter')}
+                        label="Vis dokumenter"
+                        pressed={filter === 'Dokumenter' && showSidemeny}
                     />
                 )}
             </VStack>
@@ -98,9 +109,11 @@ interface FilterButtonProps {
     icon: ReactElement
     active: boolean
     onClick: () => void
+    label: string
+    pressed: boolean
 }
 
-function FilterButton({ icon, active, onClick }: FilterButtonProps): ReactElement {
+function FilterButton({ icon, active, onClick, label, pressed }: FilterButtonProps): ReactElement {
     return (
         <button
             className={cn(
@@ -111,6 +124,9 @@ function FilterButton({ icon, active, onClick }: FilterButtonProps): ReactElemen
                 },
             )}
             onClick={onClick}
+            aria-label={label}
+            aria-pressed={pressed}
+            type="button"
         >
             {icon}
         </button>
