@@ -36,7 +36,12 @@ export async function handlePostSaksbehandlingsperioder(
         if (!person.inntektsforhold) {
             person.inntektsforhold = {}
         }
-        person.inntektsforhold[resultat.saksbehandlingsperiode.id] = resultat.inntektsforhold
+        // Inkluder dagoversikt i inntektsforhold
+        const inntektsforholdMedDagoversikt = resultat.inntektsforhold.map((forhold) => ({
+            ...forhold,
+            dagoversikt: resultat.dagoversikt[forhold.id] || [],
+        }))
+        person.inntektsforhold[resultat.saksbehandlingsperiode.id] = inntektsforholdMedDagoversikt
     }
 
     // Legg til dagoversikt hvis det finnes noen

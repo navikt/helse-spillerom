@@ -17,8 +17,8 @@ import {
     handleGetInntektsforhold,
     handlePostInntektsforhold,
     handleDeleteInntektsforhold,
-    handleGetDagoversikt,
     handlePutInntektsforholdKategorisering,
+    handlePutInntektsforholdDagoversikt,
 } from '@/mock-api/handlers/inntektsforhold-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
@@ -81,10 +81,11 @@ const handlers: Record<string, HandlerFunction> = {
         inntektsforholdId,
     }) => handleDeleteInntektsforhold(await person, uuid!, inntektsforholdId!),
 
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
+        request,
         person,
         inntektsforholdId,
-    }) => handleGetDagoversikt(await person, inntektsforholdId!),
+    }) => handlePutInntektsforholdDagoversikt(request, await person, inntektsforholdId!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
@@ -110,7 +111,12 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
-        if (path.includes('/inntektsforhold/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
+        if (
+            path.includes('/inntektsforhold/') &&
+            path.split('/').length > 6 &&
+            !path.includes('/dagoversikt') &&
+            !path.includes('/kategorisering')
+        ) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 

@@ -7,7 +7,6 @@ import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { useDagoversikt } from '@hooks/queries/useDagoversikt'
 
 interface DagoversiktProps {
     value: string
@@ -20,9 +19,9 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         isError: inntektsforholdError,
     } = useInntektsforhold()
 
-    // Filtrer kun inntektsforhold hvor personen er sykmeldt fra
+    // Filtrer kun inntektsforhold hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
-        inntektsforhold?.filter((forhold) => forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA') || []
+        inntektsforhold?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
 
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
 
@@ -30,14 +29,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const aktivtForhold = aktivtInntektsforholdId
         ? sykmeldingsforhold.find((f) => f.id === aktivtInntektsforholdId)
         : sykmeldingsforhold[0]
-
-    const {
-        data: dagoversikt,
-        isLoading: dagoversiktLoading,
-        isError: dagoversiktError,
-    } = useDagoversikt({
-        inntektsforholdId: aktivtForhold?.id,
-    })
 
     const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): string => {
         const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
@@ -129,10 +120,9 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         return (
             <SaksbildePanel value={value}>
                 <Alert variant="info">
-                    <Heading size="small">Ingen sykmeldingsforhold funnet</Heading>
+                    <Heading size="small">Ingen dagoversikt funnet</Heading>
                     <BodyShort>
-                        Det finnes ingen inntektsforhold for denne saksbehandlingsperioden hvor personen er sykmeldt fra
-                        forholdet.
+                        Det finnes ingen inntektsforhold for denne saksbehandlingsperioden med dagoversikt.
                     </BodyShort>
                 </Alert>
             </SaksbildePanel>
@@ -157,11 +147,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
                 {sykmeldingsforhold.map((forhold) => (
                     <TabsPanel key={forhold.id} value={forhold.id}>
-                        {dagoversiktLoading && <BodyShort>Laster dagoversikt...</BodyShort>}
-
-                        {dagoversiktError && <Alert variant="error">Kunne ikke laste dagoversikt</Alert>}
-
-                        {dagoversikt && dagoversikt.length > 0 && (
+                        {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
                             <Table size="medium">
                                 <TableHeader>
                                     <TableRow>
@@ -171,7 +157,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {dagoversikt.map((dag) => (
+                                    {forhold.dagoversikt.map((dag) => (
                                         <TableRow key={dag.id}>
                                             <TableDataCell>
                                                 <BodyShort>
@@ -197,7 +183,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                             </Table>
                         )}
 
-                        {dagoversikt && dagoversikt.length === 0 && (
+                        {(!forhold.dagoversikt || forhold.dagoversikt.length === 0) && (
                             <Alert variant="info">Ingen dagoversikt funnet for dette inntektsforholdet.</Alert>
                         )}
                     </TabsPanel>

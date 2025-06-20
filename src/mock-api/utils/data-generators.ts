@@ -158,6 +158,9 @@ export function opprettSaksbehandlingsperiode(
                     ...mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
                     ORGNAVN: getOrgnavn(forhold.orgnummer, forhold.orgnavn) ?? '',
                 },
+                sykmeldtFraForholdet: true,
+                dagoversikt: [],
+                generertFraDokumenter: [],
             }
 
             inntektsforhold.push(nyttInntektsforhold)
