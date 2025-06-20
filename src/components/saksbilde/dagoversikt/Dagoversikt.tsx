@@ -1,12 +1,15 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Heading, Table, Tabs, Tag } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
+import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { getFormattedDateString } from '@utils/date-format'
+import { kildeIcon } from '@components/ikoner/kilde/kildeIcon'
 
 interface DagoversiktProps {
     value: string
@@ -73,34 +76,17 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const getDagtypeText = (type: string): string => {
         switch (type) {
             case 'SYKEDAG':
-                return 'Sykedag'
+                return 'Syk'
             case 'HELGEDAG':
-                return 'Helgedag'
+                return 'Helg'
             case 'FERIEDAG':
-                return 'Feriedag'
+                return 'Ferie'
             case 'ARBEIDSDAG':
-                return 'Arbeidsdag'
+                return 'Arbeid'
             case 'PERMISJONSDAG':
-                return 'Permisjonsdag'
+                return 'Permisjon'
             default:
                 return type
-        }
-    }
-
-    const getDagtypeVariant = (type: string): 'success' | 'warning' | 'info' | 'neutral' | 'error' => {
-        switch (type) {
-            case 'SYKEDAG':
-                return 'error'
-            case 'HELGEDAG':
-                return 'neutral'
-            case 'FERIEDAG':
-                return 'info'
-            case 'ARBEIDSDAG':
-                return 'success'
-            case 'PERMISJONSDAG':
-                return 'warning'
-            default:
-                return 'neutral'
         }
     }
 
@@ -148,39 +134,66 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 {sykmeldingsforhold.map((forhold) => (
                     <TabsPanel key={forhold.id} value={forhold.id}>
                         {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
-                            <Table size="medium">
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHeaderCell>Dato</TableHeaderCell>
-                                        <TableHeaderCell>Dagtype</TableHeaderCell>
-                                        <TableHeaderCell>Status</TableHeaderCell>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {forhold.dagoversikt.map((dag) => (
-                                        <TableRow key={dag.id}>
-                                            <TableDataCell>
-                                                <BodyShort>
-                                                    {new Date(dag.dato).toLocaleDateString('nb-NO', {
-                                                        weekday: 'short',
-                                                        day: '2-digit',
-                                                        month: '2-digit',
-                                                        year: 'numeric',
-                                                    })}
-                                                </BodyShort>
-                                            </TableDataCell>
-                                            <TableDataCell>
-                                                <BodyShort>{getDagtypeText(dag.type)}</BodyShort>
-                                            </TableDataCell>
-                                            <TableDataCell>
-                                                <Tag variant={getDagtypeVariant(dag.type)} size="small">
-                                                    {getDagtypeText(dag.type)}
-                                                </Tag>
-                                            </TableDataCell>
+                            <>
+                                <Button
+                                    size="small"
+                                    type="button"
+                                    variant="tertiary"
+                                    className="my-6"
+                                    icon={<PersonPencilIcon />}
+                                >
+                                    Endre dager
+                                </Button>
+                                <Table size="small">
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHeaderCell>Dato</TableHeaderCell>
+                                            <TableHeaderCell>Dagtype</TableHeaderCell>
+                                            <TableHeaderCell align="right">Grad</TableHeaderCell>
+                                            <TableHeaderCell>Kilde</TableHeaderCell>
+                                            <TableHeaderCell align="right">Total grad</TableHeaderCell>
+                                            <TableHeaderCell align="right">Refusjon</TableHeaderCell>
+                                            <TableHeaderCell align="right">Utbetaling</TableHeaderCell>
+                                            <TableHeaderCell align="right">Dager igjen</TableHeaderCell>
+                                            <TableHeaderCell>Merknader</TableHeaderCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {forhold.dagoversikt.map((dag, i) => (
+                                            <TableRow key={dag.id}>
+                                                <TableDataCell>
+                                                    <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell>
+                                                    <HStack wrap={false} gap="2" align="center">
+                                                        {getDagtypeIcon(dag.type)}
+                                                        <BodyShort>{getDagtypeText(dag.type)}</BodyShort>
+                                                    </HStack>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>100 %</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell>
+                                                    <div className="ml-2">{kildeIcon['SØKNAD']}</div>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>100 %</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>100,00 kr</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>-</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>{248 - i}</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell />
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </>
                         )}
 
                         {(!forhold.dagoversikt || forhold.dagoversikt.length === 0) && (
@@ -191,4 +204,13 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
             </Tabs>
         </SaksbildePanel>
     )
+}
+
+function getDagtypeIcon(dagtype: string): ReactElement {
+    switch (dagtype) {
+        case 'SYKEDAG':
+            return <BandageIcon />
+        default:
+            return <span className="w-[18px]" />
+    }
 }
