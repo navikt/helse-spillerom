@@ -111,12 +111,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
-        if (
-            path.includes('/inntektsforhold/') &&
-            path.split('/').length > 6 &&
-            !path.includes('/dagoversikt') &&
-            !path.includes('/kategorisering')
-        ) {
+        if (path.includes('/inntektsforhold/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
