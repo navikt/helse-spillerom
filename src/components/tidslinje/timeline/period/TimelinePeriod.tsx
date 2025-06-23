@@ -70,12 +70,14 @@ TimelinePeriod.componentType = 'TimelinePeriod'
 const iconColors: Record<string, string> = {
     test: 'text-icon-default',
     utbetalt: 'text-border-success',
+    behandling: 'text-border-warning',
 }
 
 // TODO utvide - avhengig av hvordan "behandling" blir seendes ut, og hvilke statuser vi ser for oss
 const periodColors: Record<string, string> = {
     test: 'navds-timeline__period--neutral hover:bg-surface-neutral-subtle-hover',
     utbetalt: 'navds-timeline__period--success hover:bg-surface-success-subtle-hover',
+    behandling: 'navds-timeline__period--warning hover:bg-surface-warning-subtle-hover',
 }
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {

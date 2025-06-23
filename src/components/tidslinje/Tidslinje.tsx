@@ -3,7 +3,7 @@
 import { ReactElement, useState } from 'react'
 import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon } from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, ClockFillIcon } from '@navikt/aksel-icons'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
@@ -12,16 +12,29 @@ import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePe
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
+import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
 
 export function Tidslinje(): ReactElement {
     const [activePeriod, setActivePeriod] = useState<string>('')
-    const { data: søknader, isLoading, isError, refetch } = useSoknader(dayjs('2020-01-01'))
+    const {
+        data: søknader,
+        isLoading: søknaderLoading,
+        isError: søknaderError,
+        refetch: refetchSøknader,
+    } = useSoknader(dayjs('2020-01-01'))
+    const {
+        data: saksbehandlingsperioder,
+        isLoading: saksbehandlingsperioderLoading,
+        isError: saksbehandlingsperioderError,
+        refetch: refetchSaksbehandlingsperioder,
+    } = useSaksbehandlingsperioder()
 
-    if (isLoading) return <TimelineSkeleton />
-    if (isError || !søknader) return <TimelineError refetch={() => refetch()} />
-    if (søknader.length === 0) return <TimelineEmpty />
+    if (søknaderLoading || saksbehandlingsperioderLoading) return <TimelineSkeleton />
+    if (søknaderError || saksbehandlingsperioderError)
+        return <TimelineError refetch={() => Promise.all([refetchSøknader(), refetchSaksbehandlingsperioder()])} />
+    if (søknader?.length === 0 && saksbehandlingsperioder?.length === 0) return <TimelineEmpty />
 
-    const søknaderGruppert = søknader.reduce((acc: Record<string, Søknad[]>, soknad) => {
+    const søknaderGruppert = (søknader || []).reduce((acc: Record<string, Søknad[]>, soknad) => {
         const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
 
         acc[key] = acc[key] || []
@@ -31,6 +44,27 @@ export function Tidslinje(): ReactElement {
 
     return (
         <Timeline>
+            {saksbehandlingsperioder && saksbehandlingsperioder.length > 0 && (
+                <TimelineRow label="Behandlinger">
+                    {saksbehandlingsperioder.map((periode) => (
+                        <TimelinePeriod
+                            key={periode.id}
+                            startDate={dayjs(periode.fom)}
+                            endDate={dayjs(periode.tom)}
+                            onSelectPeriod={() => setActivePeriod(periode.id)}
+                            activePeriod={activePeriod === periode.id}
+                            icon={<ClockFillIcon />}
+                            status="behandling"
+                        >
+                            <BodyShort size="small">Saksbehandlingsperiode</BodyShort>
+                            <BodyShort size="small">
+                                Periode:{' '}
+                                {getFormattedDateString(periode.fom) + ' - ' + getFormattedDateString(periode.tom)}
+                            </BodyShort>
+                        </TimelinePeriod>
+                    ))}
+                </TimelineRow>
+            )}
             {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
                 <TimelineRow key={i} label={label}>
                     {søknader.map((søknad, i) => (
