@@ -3,7 +3,7 @@
 import { ReactElement, useState } from 'react'
 import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, ClockFillIcon } from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, FolderFileFillIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -60,7 +60,7 @@ export function Tidslinje(): ReactElement {
                                 }
                             }}
                             activePeriod={params.saksbehandlingsperiodeId === periode.id}
-                            icon={<ClockFillIcon />}
+                            icon={<FolderFileFillIcon />}
                             status="behandling"
                         >
                             <BodyShort size="small">Saksbehandlingsperiode</BodyShort>
