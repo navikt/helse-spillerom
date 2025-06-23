@@ -4,6 +4,7 @@ import { ReactElement, useState } from 'react'
 import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { CheckmarkCircleFillIcon, ClockFillIcon } from '@navikt/aksel-icons'
+import { useParams, useRouter } from 'next/navigation'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
@@ -15,7 +16,9 @@ import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
 
 export function Tidslinje(): ReactElement {
-    const [activePeriod, setActivePeriod] = useState<string>('')
+    const [activeSoknadId, setActiveSoknadId] = useState<string>('')
+    const router = useRouter()
+    const params = useParams()
     const {
         data: søknader,
         isLoading: søknaderLoading,
@@ -51,8 +54,12 @@ export function Tidslinje(): ReactElement {
                             key={periode.id}
                             startDate={dayjs(periode.fom)}
                             endDate={dayjs(periode.tom)}
-                            onSelectPeriod={() => setActivePeriod(periode.id)}
-                            activePeriod={activePeriod === periode.id}
+                            onSelectPeriod={() => {
+                                if (params.saksbehandlingsperiodeId !== periode.id) {
+                                    router.push(`/person/${params.personId as string}/${periode.id}`)
+                                }
+                            }}
+                            activePeriod={params.saksbehandlingsperiodeId === periode.id}
                             icon={<ClockFillIcon />}
                             status="behandling"
                         >
@@ -67,13 +74,13 @@ export function Tidslinje(): ReactElement {
             )}
             {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
                 <TimelineRow key={i} label={label}>
-                    {søknader.map((søknad, i) => (
+                    {søknader.map((søknad) => (
                         <TimelinePeriod
-                            key={i}
+                            key={søknad.id}
                             startDate={dayjs(søknad.fom!)}
                             endDate={dayjs(søknad.tom!)}
-                            onSelectPeriod={() => setActivePeriod(søknad.id)}
-                            activePeriod={activePeriod === søknad.id}
+                            onSelectPeriod={() => setActiveSoknadId(søknad.id)}
+                            activePeriod={activeSoknadId === søknad.id}
                             icon={<CheckmarkCircleFillIcon />} // TODO velge ikon avhengig av status på behandling
                             status="utbetalt" // TODO ta inn status fra behandling og utvide farge map-ene i TimelinePeriod
                         >
