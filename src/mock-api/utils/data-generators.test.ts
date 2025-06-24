@@ -1,6 +1,8 @@
 import { describe, test, expect } from 'vitest'
-import { genererDagoversikt } from './data-generators'
+
 import { Bosse } from '../testpersoner/BosseBunntrål'
+
+import { genererDagoversikt } from './data-generators'
 
 describe('data-generators', () => {
     describe('genererDagoversikt', () => {
@@ -44,4 +46,4 @@ describe('data-generators', () => {
             expect(sisteHverdag.kilde).toBe('Søknad')
         })
     })
-}) 
+})

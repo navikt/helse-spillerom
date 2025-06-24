@@ -177,22 +177,22 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     </HStack>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
-                                                    <BodyShort>100 %</BodyShort>
+                                                    <BodyShort>{dag.grad ? `${dag.grad} %` : '-'}</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell>
                                                     <div className="ml-2">{kildeIcon[dag.kilde]}</div>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
-                                                    <BodyShort>100 %</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>100,00 kr</BodyShort>
+                                                    <BodyShort>-</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
                                                     <BodyShort>-</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
-                                                    <BodyShort>{248 - i}</BodyShort>
+                                                    <BodyShort>-</BodyShort>
+                                                </TableDataCell>
+                                                <TableDataCell align="right">
+                                                    <BodyShort>-</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell />
                                             </TableRow>
