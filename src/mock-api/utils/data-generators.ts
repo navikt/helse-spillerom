@@ -61,6 +61,60 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
         }
     })
 
+    // Legg til permisjon fra fraværslisten
+    søknad.fravar
+        ?.filter((fravar) => fravar.type === 'PERMISJON')
+        ?.forEach((fravar) => {
+            const fravarFom = new Date(fravar.fom)
+            const fravarTom = new Date(fravar.tom || fravar.fom)
+            const overlappendeFom = new Date(Math.max(startDato.getTime(), fravarFom.getTime()))
+            const overlappendeTom = new Date(Math.min(sluttDato.getTime(), fravarTom.getTime()))
+
+            if (overlappendeFom <= overlappendeTom) {
+                const currentDato = new Date(overlappendeFom)
+                while (currentDato <= overlappendeTom) {
+                    const datoString = currentDato.toISOString().split('T')[0]
+                    const eksisterendeDag = dagerMap.get(datoString)
+                    if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                        dagerMap.set(datoString, {
+                            ...eksisterendeDag,
+                            dagtype: 'Permisjon',
+                            grad: null,
+                            kilde: 'Søknad',
+                        })
+                    }
+                    currentDato.setDate(currentDato.getDate() + 1)
+                }
+            }
+        })
+
+    // Legg til ferie fra fraværslisten (tar presedens over permisjon)
+    søknad.fravar
+        ?.filter((fravar) => fravar.type === 'FERIE')
+        ?.forEach((fravar) => {
+            const fravarFom = new Date(fravar.fom)
+            const fravarTom = new Date(fravar.tom || fravar.fom)
+            const overlappendeFom = new Date(Math.max(startDato.getTime(), fravarFom.getTime()))
+            const overlappendeTom = new Date(Math.min(sluttDato.getTime(), fravarTom.getTime()))
+
+            if (overlappendeFom <= overlappendeTom) {
+                const currentDato = new Date(overlappendeFom)
+                while (currentDato <= overlappendeTom) {
+                    const datoString = currentDato.toISOString().split('T')[0]
+                    const eksisterendeDag = dagerMap.get(datoString)
+                    if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                        dagerMap.set(datoString, {
+                            ...eksisterendeDag,
+                            dagtype: 'Ferie',
+                            grad: null,
+                            kilde: 'Søknad',
+                        })
+                    }
+                    currentDato.setDate(currentDato.getDate() + 1)
+                }
+            }
+        })
+
     // Håndter arbeidGjenopptatt - sett alle dager fra og med denne til arbeidsdager (med mindre det er helg)
     if (søknad.arbeidGjenopptatt) {
         const arbeidGjenopptattDato = new Date(søknad.arbeidGjenopptatt)
@@ -106,18 +160,6 @@ export function genererDagoversikt(fom: string, tom: string, søknader?: Søknad
     return dager
 }
 
-export function getOrgnavn(orgnummer?: string, fallbackNavn?: string): string | undefined {
-    if (!orgnummer) return fallbackNavn
-
-    const mockOrganisasjoner: Record<string, string> = {
-        '123456789': 'Krankompisen',
-        '987654321': 'Kranførerkompaniet',
-        '889955555': 'Danskebåten',
-    }
-
-    return mockOrganisasjoner[orgnummer] || fallbackNavn || `Organisasjon ${orgnummer}`
-}
-
 export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<string, string> {
     switch (arbeidssituasjon) {
         case 'ARBEIDSTAKER':
@@ -129,7 +171,7 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
             return {
                 INNTEKTSKATEGORI: 'FRILANSER',
             }
-        case 'NAERINGSDRIVENDE':
+        case 'SELVSTENDIG_NARINGSDRIVENDE':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
@@ -140,16 +182,41 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'FISKER',
                 FISKER_BLAD: 'FISKER_BLAD_B',
             }
+        case 'JORDBRUKER':
+            return {
+                INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
+                TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'JORDBRUKER',
+            }
         case 'ARBEIDSLEDIG':
             return {
                 INNTEKTSKATEGORI: 'INAKTIV',
             }
+        case 'ANNET':
+            return {
+                INNTEKTSKATEGORI: 'ANNET',
+            }
         default:
             return {
-                INNTEKTSKATEGORI: 'ARBEIDSTAKER',
-                TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
+                INNTEKTSKATEGORI: 'IKKE SATT',
             }
     }
+}
+
+// Ny funksjon som matcher bakrommet sin kategorisering
+function lagKategorisering(søknad: Søknad): Record<string, string> {
+    const kategorisering = mapArbeidssituasjonTilSvar(søknad.arbeidssituasjon || 'ANNET')
+
+    const orgnummer = søknad.arbeidsgiver?.orgnummer
+    const orgnavn = søknad.arbeidsgiver?.navn
+
+    if (orgnummer) {
+        kategorisering.ORGNUMMER = orgnummer
+        if (orgnavn) {
+            kategorisering.ORGNAVN = orgnavn
+        }
+    }
+
+    return kategorisering
 }
 
 export function genererDokumenterFraSøknader(søknader: Søknad[], søknadIder: string[]): Dokument[] {
@@ -202,48 +269,34 @@ export function opprettSaksbehandlingsperiode(
     if (søknadIder && søknadIder.length > 0) {
         const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
 
-        // Opprett unike inntektsforhold basert på orgnummer + arbeidssituasjon
-        const unikeInntektsforhold = new Map<
-            string,
-            {
-                orgnummer?: string
-                orgnavn?: string
-                arbeidssituasjon: string
-            }
-        >()
+        // Grupper søknader basert på kategorisering (matcher bakrommet sin logikk)
+        const kategorierOgSøknader = new Map<string, { kategorisering: Record<string, string>; søknader: Søknad[] }>()
 
         valgteSøknader.forEach((søknad) => {
-            const orgnummer = søknad.arbeidsgiver?.orgnummer
-            const arbeidssituasjon = søknad.arbeidssituasjon || 'ANNET'
+            const kategorisering = lagKategorisering(søknad)
+            const key = JSON.stringify(kategorisering)
 
-            // Lag unik nøkkel basert på orgnummer + arbeidssituasjon
-            const key = `${orgnummer || 'ingen'}_${arbeidssituasjon}`
-
-            if (!unikeInntektsforhold.has(key)) {
-                unikeInntektsforhold.set(key, {
-                    orgnummer,
-                    orgnavn: søknad.arbeidsgiver?.navn,
-                    arbeidssituasjon,
+            if (!kategorierOgSøknader.has(key)) {
+                kategorierOgSøknader.set(key, {
+                    kategorisering,
+                    søknader: [],
                 })
             }
+            kategorierOgSøknader.get(key)!.søknader.push(søknad)
         })
 
-        unikeInntektsforhold.forEach((forhold) => {
+        kategorierOgSøknader.forEach(({ kategorisering, søknader: søknaderForKategori }) => {
             const nyttInntektsforhold: Inntektsforhold = {
                 id: uuidv4(),
-                kategorisering: {
-                    ...mapArbeidssituasjonTilSvar(forhold.arbeidssituasjon),
-                    ORGNAVN: getOrgnavn(forhold.orgnummer, forhold.orgnavn) ?? '',
-                },
-                sykmeldtFraForholdet: true,
+                kategorisering,
                 dagoversikt: [],
-                generertFraDokumenter: [],
+                generertFraDokumenter: søknaderForKategori.map((s) => s.id),
             }
 
             inntektsforhold.push(nyttInntektsforhold)
 
-            // Opprett dagoversikt automatisk siden alle er sykmeldt
-            dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(fom, tom)
+            // Opprett dagoversikt fra søknader (matcher bakrommet sin logikk)
+            dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(fom, tom, søknaderForKategori)
         })
     }
 

@@ -52,6 +52,16 @@ const søknadsperiodeSchema = z.object({
     sykmeldingstype: z.string(),
 })
 
+export type Fravartype = z.infer<typeof fravartypeSchema>
+const fravartypeSchema = z.enum(['FERIE', 'PERMISJON'])
+
+export type Fravar = z.infer<typeof fravarSchema>
+const fravarSchema = z.object({
+    fom: z.string(),
+    tom: z.string().nullable().optional(),
+    type: fravartypeSchema,
+})
+
 export const svartypeEnum = z.enum([
     'CHECKBOX',
     'RADIO',
@@ -129,6 +139,7 @@ export const søknadSchema = z.object({
     sendtArbeidsgiver: z.string().nullable(),
     arbeidsgiver: arbeidsgiverSchema.nullable().optional(),
     soknadsperioder: z.array(søknadsperiodeSchema),
+    fravar: z.array(fravarSchema).nullable().optional(),
     arbeidGjenopptatt: z.string().nullable().optional(),
     egenmeldingsdagerFraSykmelding: z.array(z.string()).nullable().optional(),
     sporsmal: z.array(sporsmalSchema).optional(),

@@ -65,8 +65,8 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ person, uuid }) =>
         handleGetInntektsforhold(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid, personId }) =>
-        handlePostInntektsforhold(request, await person, uuid!, personId),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid }) =>
+        handlePostInntektsforhold(request, await person, uuid!),
 
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/kategorisering': async ({
         request,

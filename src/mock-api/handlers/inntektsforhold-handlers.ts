@@ -4,11 +4,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { Person } from '@/mock-api/session'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { genererDagoversikt } from '@/mock-api/utils/data-generators'
-import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']
-    return erSykmeldt === 'ER_SYKMELDT_JA' || erSykmeldt === undefined
+    return erSykmeldt === 'ER_SYKMELDT_JA' || erSykmeldt === undefined || erSykmeldt === null
 }
 
 export async function handleGetInntektsforhold(person: Person | undefined, uuid: string): Promise<Response> {
@@ -27,7 +26,6 @@ export async function handlePostInntektsforhold(
     request: Request,
     person: Person | undefined,
     uuid: string,
-    personIdFraRequest: string,
 ): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
@@ -41,24 +39,12 @@ export async function handlePostInntektsforhold(
     const body = await request.json()
     const kategorisering = body.kategorisering
 
-    // Finn relevante søknader for denne perioden
-    const testperson = finnPerson(personIdFraRequest)
-    const søknader =
-        testperson?.soknader.filter((søknad) => {
-            const søknadFom = new Date(søknad.fom || '')
-            const søknadTom = new Date(søknad.tom || '')
-            const periodeFom = new Date(saksbehandlingsperiode.fom)
-            const periodeTom = new Date(saksbehandlingsperiode.tom)
-            return søknadFom <= periodeTom && søknadTom >= periodeFom
-        }) || []
-
     const nyttInntektsforhold: Inntektsforhold = {
         id: uuidv4(),
         kategorisering,
         dagoversikt: skalHaDagoversikt(kategorisering)
-            ? genererDagoversikt(saksbehandlingsperiode.fom, saksbehandlingsperiode.tom, søknader)
+            ? genererDagoversikt(saksbehandlingsperiode.fom, saksbehandlingsperiode.tom)
             : [],
-        sykmeldtFraForholdet: kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA',
         generertFraDokumenter: [],
     }
 
