@@ -65,8 +65,8 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ person, uuid }) =>
         handleGetInntektsforhold(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid }) =>
-        handlePostInntektsforhold(request, await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid, personId }) =>
+        handlePostInntektsforhold(request, await person, uuid!, personId),
 
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/kategorisering': async ({
         request,
@@ -84,8 +84,9 @@ const handlers: Record<string, HandlerFunction> = {
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
         request,
         person,
+        uuid,
         inntektsforholdId,
-    }) => handlePutInntektsforholdDagoversikt(request, await person, inntektsforholdId!),
+    }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, inntektsforholdId!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

@@ -5,8 +5,8 @@ import { dagoversiktSchema } from './dagoversikt'
 export const inntektsforholdSchema = z.object({
     id: z.string(),
     kategorisering: z.record(z.string(), z.union([z.string(), z.array(z.string())])),
-    sykmeldtFraForholdet: z.boolean(),
     dagoversikt: dagoversiktSchema,
+    sykmeldtFraForholdet: z.boolean(),
     generertFraDokumenter: z.array(z.string()),
 })
 

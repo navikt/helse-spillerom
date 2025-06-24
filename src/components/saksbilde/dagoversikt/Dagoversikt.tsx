@@ -75,16 +75,22 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
     const getDagtypeText = (type: string): string => {
         switch (type) {
-            case 'SYKEDAG':
+            case 'Syk':
                 return 'Syk'
-            case 'HELGEDAG':
+            case 'SykNav':
+                return 'Syk (NAV)'
+            case 'Helg':
                 return 'Helg'
-            case 'FERIEDAG':
+            case 'Ferie':
                 return 'Ferie'
-            case 'ARBEIDSDAG':
+            case 'Arbeidsdag':
                 return 'Arbeid'
-            case 'PERMISJONSDAG':
+            case 'Permisjon':
                 return 'Permisjon'
+            case 'Foreldet':
+                return 'Foreldet'
+            case 'Avvist':
+                return 'Avvist'
             default:
                 return type
         }
@@ -160,21 +166,21 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     </TableHeader>
                                     <TableBody>
                                         {forhold.dagoversikt.map((dag, i) => (
-                                            <TableRow key={dag.id}>
+                                            <TableRow key={i}>
                                                 <TableDataCell>
                                                     <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell>
                                                     <HStack wrap={false} gap="2" align="center">
-                                                        {getDagtypeIcon(dag.type)}
-                                                        <BodyShort>{getDagtypeText(dag.type)}</BodyShort>
+                                                        {getDagtypeIcon(dag.dagtype)}
+                                                        <BodyShort>{getDagtypeText(dag.dagtype)}</BodyShort>
                                                     </HStack>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
                                                     <BodyShort>100 %</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell>
-                                                    <div className="ml-2">{kildeIcon['SØKNAD']}</div>
+                                                    <div className="ml-2">{kildeIcon[dag.kilde]}</div>
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
                                                     <BodyShort>100 %</BodyShort>
@@ -208,7 +214,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
 function getDagtypeIcon(dagtype: string): ReactElement {
     switch (dagtype) {
-        case 'SYKEDAG':
+        case 'Syk':
+        case 'SykNav':
             return <BandageIcon />
         default:
             return <span className="w-[18px]" />

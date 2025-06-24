@@ -6,24 +6,101 @@ import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Søknad } from '@/schemas/søknad'
 import { Dokument } from '@/schemas/dokument'
 
-export function genererDagoversikt(fom: string, tom: string): Dagoversikt {
+function erHelg(dato: Date): boolean {
+    return dato.getDay() === 0 || dato.getDay() === 6
+}
+
+function initialiserDager(fom: string, tom: string): Dagoversikt {
     const dager: Dag[] = []
     const startDato = new Date(fom)
     const sluttDato = new Date(tom)
 
-    // Generer dager fra fom til tom
     const currentDato = new Date(startDato)
     while (currentDato <= sluttDato) {
-        const erHelg = currentDato.getDay() === 0 || currentDato.getDay() === 6
-
         dager.push({
-            id: uuidv4(),
-            type: erHelg ? 'HELGEDAG' : 'SYKEDAG',
             dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
+            dagtype: erHelg(currentDato) ? 'Helg' : 'Arbeidsdag',
+            grad: null,
+            avvistBegrunnelse: [],
+            kilde: 'Saksbehandler',
         })
 
-        // Gå til neste dag
         currentDato.setDate(currentDato.getDate() + 1)
+    }
+
+    return dager
+}
+
+function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom: string, tom: string): Dagoversikt {
+    const dagerMap = new Map(dager.map((dag) => [dag.dato, dag]))
+    const startDato = new Date(fom)
+    const sluttDato = new Date(tom)
+
+    // Legg til sykedager fra søknadsperioder
+    søknad.soknadsperioder?.forEach((periode) => {
+        const periodeFom = new Date(periode.fom)
+        const periodeTom = new Date(periode.tom)
+        const overlappendeFom = new Date(Math.max(startDato.getTime(), periodeFom.getTime()))
+        const overlappendeTom = new Date(Math.min(sluttDato.getTime(), periodeTom.getTime()))
+
+        if (overlappendeFom <= overlappendeTom) {
+            const currentDato = new Date(overlappendeFom)
+            while (currentDato <= overlappendeTom) {
+                const datoString = currentDato.toISOString().split('T')[0]
+                const eksisterendeDag = dagerMap.get(datoString)
+                if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                    dagerMap.set(datoString, {
+                        ...eksisterendeDag,
+                        dagtype: 'Syk',
+                        grad: periode.faktiskGrad ?? periode.grad ?? periode.sykmeldingsgrad ?? null,
+                        kilde: 'Søknad',
+                    })
+                }
+                currentDato.setDate(currentDato.getDate() + 1)
+            }
+        }
+    })
+
+    // Håndter arbeidGjenopptatt - sett alle dager fra og med denne til arbeidsdager (med mindre det er helg)
+    if (søknad.arbeidGjenopptatt) {
+        const arbeidGjenopptattDato = new Date(søknad.arbeidGjenopptatt)
+        if (arbeidGjenopptattDato <= sluttDato) {
+            const currentDato = new Date(Math.max(startDato.getTime(), arbeidGjenopptattDato.getTime()))
+            while (currentDato <= sluttDato) {
+                const datoString = currentDato.toISOString().split('T')[0]
+                const eksisterendeDag = dagerMap.get(datoString)
+                if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                    dagerMap.set(datoString, {
+                        ...eksisterendeDag,
+                        dagtype: 'Arbeidsdag',
+                        grad: null,
+                        kilde: 'Søknad',
+                    })
+                }
+                currentDato.setDate(currentDato.getDate() + 1)
+            }
+        }
+    }
+
+    return Array.from(dagerMap.values())
+}
+
+export function genererDagoversikt(fom: string, tom: string, søknader?: Søknad[]): Dagoversikt {
+    let dager = initialiserDager(fom, tom)
+
+    if (søknader && søknader.length > 0) {
+        // Sorter søknader etter sendtNav eller opprettet, nyeste først
+        const sorterteSøknader = søknader.sort((a, b) => {
+            const aTid = a.sendtNav || a.opprettet
+            const bTid = b.sendtNav || b.opprettet
+            return new Date(bTid).getTime() - new Date(aTid).getTime()
+        })
+
+        // Oppdater dager med data fra hver søknad
+        dager = sorterteSøknader.reduce(
+            (oppdaterteDager, søknad) => oppdaterDagerMedSøknadsdata(oppdaterteDager, søknad, fom, tom),
+            dager,
+        )
     }
 
     return dager
