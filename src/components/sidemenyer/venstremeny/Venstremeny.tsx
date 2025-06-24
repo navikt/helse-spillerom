@@ -3,7 +3,7 @@
 import { ReactElement } from 'react'
 import { useParams } from 'next/navigation'
 import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
-import { CalendarIcon, PencilIcon } from '@navikt/aksel-icons'
+import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
@@ -38,7 +38,7 @@ export function Venstremeny(): ReactElement {
                         <Button
                             variant="tertiary"
                             size="small"
-                            icon={<PencilIcon aria-hidden fontSize="1.25rem" />}
+                            icon={<DocPencilIcon aria-hidden fontSize="1.25rem" />}
                             className="w-fit"
                             onClick={() => {
                                 // TODO: Implementer individuell begrunnelse funksjonalitet
