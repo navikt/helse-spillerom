@@ -7,6 +7,7 @@ export const allowedAPIs = [
     'GET /v1/[personId]/arbeidsforhold',
     'GET /v1/[personId]/ainntekt',
     'GET /v1/[personId]/inntektsmeldinger',
+    'GET /v1/[personId]/pensjonsgivendeinntekt',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]',
