@@ -10,6 +10,7 @@ import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/dokumenter/Dokumenter'
 import { AaregKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AaregKnapp'
 import { AinntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AinntektKnapp'
+import { PensjonsgivendeInntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektKnapp'
 import { cn } from '@utils/tw'
 import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
@@ -113,6 +114,7 @@ const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {
             <VStack gap="2" className="mt-4">
                 <AaregKnapp />
                 <AinntektKnapp />
+                <PensjonsgivendeInntektKnapp />
             </VStack>
         </>
     ),

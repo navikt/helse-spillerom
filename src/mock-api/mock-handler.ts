@@ -22,6 +22,7 @@ import {
 } from '@/mock-api/handlers/inntektsforhold-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
+import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
 
 interface HandlerContext {
     request: Request
@@ -50,6 +51,8 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/arbeidsforhold': async ({ personId }) => handleGetArbeidsforhold(personId),
 
     'GET /v1/[personId]/ainntekt': async ({ personId }) => handleGetAinntekt(personId),
+
+    'GET /v1/[personId]/pensjonsgivendeinntekt': async ({ personId }) => handleGetPensjonsgivendeInntekt(personId),
 
     'POST /v1/personsok': async ({ request }) => personsøk(request),
 
