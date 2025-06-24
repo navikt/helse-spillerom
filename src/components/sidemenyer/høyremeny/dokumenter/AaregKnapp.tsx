@@ -2,7 +2,7 @@
 
 import { Fragment, ReactElement, useState } from 'react'
 import { BodyShort, Button, Detail, HStack, Modal, Table, VStack } from '@navikt/ds-react'
-import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
+import { ChevronDownIcon, ChevronUpIcon, ExternalLinkIcon } from '@navikt/aksel-icons'
 
 import { useAareg } from '@hooks/queries/useAareg'
 import { Arbeidsforhold } from '@schemas/aareg'
@@ -33,9 +33,17 @@ export function AaregKnapp(): ReactElement {
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setOpen(true)} aria-label="Vis arbeidsforhold fra Aa-registeret">
-                Arbeidsforhold
-            </Button>
+            <div className="inline-block">
+                <Button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => setOpen(true)}
+                    aria-label="Vis arbeidsforhold fra Aa-registeret"
+                    icon={<ExternalLinkIcon aria-hidden />}
+                >
+                    Arbeidsforhold
+                </Button>
+            </div>
             <Modal open={open} onClose={() => setOpen(false)} header={{ heading: 'Arbeidsforhold' }}>
                 <Modal.Body>
                     {isLoading ? (

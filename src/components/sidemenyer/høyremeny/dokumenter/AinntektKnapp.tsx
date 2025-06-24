@@ -2,6 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { Button, Modal, Table } from '@navikt/ds-react'
+import { ExternalLinkIcon } from '@navikt/aksel-icons'
 
 import { useAinntekt } from '@hooks/queries/useAinntekt'
 
@@ -11,9 +12,17 @@ export function AinntektKnapp(): ReactElement {
 
     return (
         <>
-            <Button variant="secondary" onClick={() => setOpen(true)} aria-label="Vis A-inntekt data">
-                A-inntekt
-            </Button>
+            <div className="inline-block">
+                <Button
+                    variant="tertiary"
+                    size="small"
+                    onClick={() => setOpen(true)}
+                    aria-label="Vis A-inntekt data"
+                    icon={<ExternalLinkIcon aria-hidden />}
+                >
+                    A-inntekt
+                </Button>
+            </div>
             <Modal open={open} onClose={() => setOpen(false)} header={{ heading: 'A-inntekt' }}>
                 <Modal.Body>
                     {isLoading ? (

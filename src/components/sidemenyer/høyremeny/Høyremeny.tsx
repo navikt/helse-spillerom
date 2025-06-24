@@ -110,8 +110,10 @@ const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {
     Dokumenter: (
         <>
             <Dokumenter />
-            <AaregKnapp />
-            <AinntektKnapp />
+            <VStack gap="2" className="mt-4">
+                <AaregKnapp />
+                <AinntektKnapp />
+            </VStack>
         </>
     ),
     Historikk: <Historikk />,
