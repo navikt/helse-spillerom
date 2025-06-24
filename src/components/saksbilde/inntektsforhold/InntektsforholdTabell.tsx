@@ -176,18 +176,11 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                         </TableDataCell>
                                         <TableDataCell>
                                             <VStack gap="1">
-                                                {forhold.kategorisering['ORGNAVN'] && (
-                                                    <BodyShort weight="semibold">
-                                                        {forhold.kategorisering['ORGNAVN']}
-                                                    </BodyShort>
-                                                )}
                                                 {forhold.kategorisering['ORGNUMMER'] && (
                                                     <BodyShort className="font-mono text-sm">
                                                         {forhold.kategorisering['ORGNUMMER']}
                                                     </BodyShort>
                                                 )}
-                                                {!forhold.kategorisering['ORGNUMMER'] &&
-                                                    !forhold.kategorisering['ORGNAVN'] && <BodyShort>-</BodyShort>}
                                             </VStack>
                                         </TableDataCell>
                                         <TableDataCell>

@@ -132,7 +132,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         <TabsTab
                             key={forhold.id}
                             value={forhold.id}
-                            label={`${getInntektsforholdDisplayText(forhold.kategorisering)}${forhold.kategorisering['ORGNAVN'] ? ` - ${forhold.kategorisering['ORGNAVN']}` : ''}`}
+                            label={getInntektsforholdDisplayText(forhold.kategorisering)}
                         />
                     ))}
                 </TabsList>

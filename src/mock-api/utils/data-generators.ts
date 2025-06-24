@@ -213,13 +213,9 @@ function lagKategorisering(søknad: Søknad): Record<string, string> {
     const kategorisering = mapArbeidssituasjonTilSvar(søknad.arbeidssituasjon || 'ANNET')
 
     const orgnummer = søknad.arbeidsgiver?.orgnummer
-    const orgnavn = søknad.arbeidsgiver?.navn
 
     if (orgnummer) {
         kategorisering.ORGNUMMER = orgnummer
-        if (orgnavn) {
-            kategorisering.ORGNAVN = orgnavn
-        }
     }
 
     return kategorisering
