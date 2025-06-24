@@ -166,30 +166,36 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
             return {
                 INNTEKTSKATEGORI: 'ARBEIDSTAKER',
                 TYPE_ARBEIDSTAKER: 'ORDINÆRT_ARBEIDSFORHOLD',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'FRILANSER':
             return {
                 INNTEKTSKATEGORI: 'FRILANSER',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'SELVSTENDIG_NARINGSDRIVENDE':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'FISKER':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'FISKER',
                 FISKER_BLAD: 'FISKER_BLAD_B',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'JORDBRUKER':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'JORDBRUKER',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'ARBEIDSLEDIG':
             return {
-                INNTEKTSKATEGORI: 'INAKTIV',
+                INNTEKTSKATEGORI: 'ARBEIDSLEDIG',
+                ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'ANNET':
             return {
@@ -197,7 +203,7 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
             }
         default:
             return {
-                INNTEKTSKATEGORI: 'IKKE SATT',
+                INNTEKTSKATEGORI: 'ANNET',
             }
     }
 }
