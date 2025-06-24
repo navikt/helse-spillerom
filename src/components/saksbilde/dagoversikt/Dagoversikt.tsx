@@ -10,6 +10,7 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { getFormattedDateString } from '@utils/date-format'
 import { kildeIcon } from '@components/ikoner/kilde/kildeIcon'
+import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 
 interface DagoversiktProps {
     value: string
@@ -33,44 +34,70 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         ? sykmeldingsforhold.find((f) => f.id === aktivtInntektsforholdId)
         : sykmeldingsforhold[0]
 
-    const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): string => {
+    const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): ReactElement => {
         const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
+        const orgnummer = kategorisering['ORGNUMMER'] as string
 
+        let typeText = ''
         switch (inntektskategori) {
             case 'ARBEIDSTAKER': {
                 const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
                 switch (typeArbeidstaker) {
                     case 'ORDINÆRT_ARBEIDSFORHOLD':
-                        return 'Ordinært arbeidsforhold'
+                        typeText = 'Ordinært arbeidsforhold'
+                        break
                     case 'MARITIMT_ARBEIDSFORHOLD':
-                        return 'Maritimt arbeidsforhold'
+                        typeText = 'Maritimt arbeidsforhold'
+                        break
                     case 'FISKER':
-                        return 'Fisker (arbeidstaker)'
+                        typeText = 'Fisker (arbeidstaker)'
+                        break
                     default:
-                        return 'Arbeidstaker'
+                        typeText = 'Arbeidstaker'
                 }
+                break
             }
             case 'FRILANSER':
-                return 'Frilanser'
+                typeText = 'Frilanser'
+                break
             case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
                 // TODO Her må det gjøres noe
                 const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
                 switch (typeSelvstendig) {
                     case 'FISKER':
-                        return 'Fisker (selvstendig)'
+                        typeText = 'Fisker (selvstendig)'
+                        break
                     case 'JORDBRUKER':
-                        return 'Jordbruker'
+                        typeText = 'Jordbruker'
+                        break
                     case 'REINDRIFT':
-                        return 'Reindrift'
+                        typeText = 'Reindrift'
+                        break
                     default:
-                        return 'Selvstendig næringsdrivende'
+                        typeText = 'Selvstendig næringsdrivende'
                 }
+                break
             }
             case 'INAKTIV':
-                return 'Inaktiv'
+                typeText = 'Inaktiv'
+                break
             default:
-                return inntektskategori || 'Ukjent'
+                typeText = inntektskategori || 'Ukjent'
         }
+
+        // Hvis det finnes orgnummer, vis organisasjonsnavn
+        if (orgnummer) {
+            return (
+                <div className="text-center">
+                    <div className="text-sm font-medium">
+                        <Organisasjonsnavn orgnummer={orgnummer} />
+                    </div>
+                    <div className="text-xs text-gray-600">{typeText}</div>
+                </div>
+            )
+        }
+
+        return <span>{typeText}</span>
     }
 
     const getDagtypeText = (type: string): string => {

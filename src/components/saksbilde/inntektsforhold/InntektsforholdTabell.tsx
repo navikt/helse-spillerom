@@ -22,6 +22,7 @@ import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOp
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
+import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -177,8 +178,10 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                         <TableDataCell>
                                             <VStack gap="1">
                                                 {forhold.kategorisering['ORGNUMMER'] && (
-                                                    <BodyShort className="font-mono text-sm">
-                                                        {forhold.kategorisering['ORGNUMMER']}
+                                                    <BodyShort className="text-sm">
+                                                        <Organisasjonsnavn
+                                                            orgnummer={forhold.kategorisering['ORGNUMMER'] as string}
+                                                        />
                                                     </BodyShort>
                                                 )}
                                             </VStack>
