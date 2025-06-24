@@ -74,9 +74,16 @@ export default function InntektsforholdForm({
     }, [initialValues])
 
     // Sjekk om det allerede finnes et inntektsforhold med SELVSTENDIG_NÆRINGSDRIVENDE
-    const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some(
-        (forhold) => forhold.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE',
-    )
+    const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some((forhold) => {
+        // Skip checking the current relationship being edited
+        if (
+            initialValues['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE' &&
+            forhold.kategorisering['INNTEKTSKATEGORI'] === initialValues['INNTEKTSKATEGORI']
+        ) {
+            return false
+        }
+        return forhold.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE'
+    })
 
     // Filtrer bort SELVSTENDIG_NÆRINGSDRIVENDE hvis det allerede finnes
     const availableAlternatives = inntektsforholdKodeverk.alternativer.filter(
