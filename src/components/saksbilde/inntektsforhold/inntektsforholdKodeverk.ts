@@ -62,7 +62,7 @@ export const inntektsforholdKodeverk = {
                         },
                         {
                             kode: 'INGEN_FORSIKRING',
-                            navn: 'Ingen Ingen forsikring / ikke aktuelt pga også selvstendig næringsdrivende',
+                            navn: ' Ingen forsikring / ikke aktuelt pga også selvstendig næringsdrivende',
                         },
                     ],
                 },
