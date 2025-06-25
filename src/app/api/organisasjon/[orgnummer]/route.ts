@@ -7,10 +7,8 @@ const organisasjonsnavnMap: Record<string, string> = {
     '987654321': 'Kranførerkompaniet',
     '123456789': 'Krankompisen',
     '889955555': 'Danskebåten',
-    // Legg til flere organisasjoner fra andre testdata hvis nødvendig
-    '963743254': 'Høyskolen i Bergen',
-    '805824352': 'IT-Konsulentene AS',
-    '896929119': 'Matservering Nord',
+    '972674818': 'Pengeløs Sparebank',
+    '222222222': 'Ruter, avd Nesoddbåten',
 }
 
 export async function GET(
