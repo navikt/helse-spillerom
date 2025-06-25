@@ -1,15 +1,18 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Switch, useDatepicker } from '@navikt/ds-react'
+import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Modal, Switch, useDatepicker } from '@navikt/ds-react'
+import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
+import { useSoknad } from '@hooks/queries/useSoknad'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
 import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
+import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 
 interface StartBehandlingProps {
     value: string
@@ -26,6 +29,9 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const [manualTom, setManualTom] = useState<Date | undefined>(undefined)
     const { data: søknader, isError } = useSoknader(validFromDate)
     const { mutate: opprettSaksbehandlingsperiode, isPending } = useOpprettSaksbehandlingsperiode()
+    const [openSoknadModal, setOpenSoknadModal] = useState(false)
+    const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
+    const { data: aktivSøknad, isLoading: lasterSoknad } = useSoknad(activeSoknadId)
 
     const [errorTekst, setErrorTekst] = useState<string | undefined>(undefined)
 
@@ -183,10 +189,14 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                                         getFormattedDateString(søknad.tom)}
                                                 </Checkbox>
                                                 <Button
-                                                    as="a"
-                                                    href="#" // TODO: Bytt til faktisk søknadslenke
                                                     variant="tertiary"
                                                     size="small"
+                                                    type="button"
+                                                    icon={<ExternalLinkIcon aria-hidden />}
+                                                    onClick={() => {
+                                                        setActiveSoknadId(søknad.id)
+                                                        setOpenSoknadModal(true)
+                                                    }}
                                                 >
                                                     Se søknad
                                                 </Button>
@@ -215,6 +225,20 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 <Button className="mt-8 block" size="small" type="submit" loading={isPending}>
                     Start behandling
                 </Button>
+
+                <Modal open={openSoknadModal} onClose={() => setOpenSoknadModal(false)} header={{ heading: 'Søknad' }}>
+                    <Modal.Body>
+                        {lasterSoknad ? (
+                            <div role="status" aria-live="polite">
+                                Laster søknad...
+                            </div>
+                        ) : aktivSøknad ? (
+                            <Søknadsinnhold søknad={aktivSøknad} />
+                        ) : (
+                            <div>Fant ikke søknad</div>
+                        )}
+                    </Modal.Body>
+                </Modal>
             </form>
         </SaksbildePanel>
     )

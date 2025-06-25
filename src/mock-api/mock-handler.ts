@@ -4,14 +4,19 @@ import { NextResponse } from 'next/server'
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
 import { hentPerson } from '@/mock-api/session'
-import { hentPersonIdFraUrl, hentUuidFraUrl, hentInntektsforholdUuidFraUrl } from '@/mock-api/utils/url-utils'
+import {
+    hentPersonIdFraUrl,
+    hentUuidFraUrl,
+    hentInntektsforholdUuidFraUrl,
+    hentSoknadUuidFraUrl,
+} from '@/mock-api/utils/url-utils'
 import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
 import { handleDokumenter } from '@/mock-api/handlers/dokument-handlers'
 import {
     handleGetSaksbehandlingsperioder,
     handlePostSaksbehandlingsperioder,
 } from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
-import { handleGetSoknader } from '@/mock-api/handlers/soknad-handlers'
+import { handleGetSoknader, handleGetSoknad } from '@/mock-api/handlers/soknad-handlers'
 import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
 import {
     handleGetInntektsforhold,
@@ -90,6 +95,8 @@ const handlers: Record<string, HandlerFunction> = {
         uuid,
         inntektsforholdId,
     }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, inntektsforholdId!),
+
+    'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
@@ -121,6 +128,10 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         if (path.includes('/vilkaar/') && path.split('/').length > 6) {
             context.kode = request.url.split('/').pop()!
+        }
+
+        if (path.includes('/soknader/') && path.includes('[uuid]')) {
+            context.uuid = hentSoknadUuidFraUrl(request.url)
         }
 
         // Find and execute handler

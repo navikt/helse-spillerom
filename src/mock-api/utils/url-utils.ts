@@ -27,3 +27,12 @@ export function hentInntektsforholdUuidFraUrl(url: string): string {
     }
     return parts[inntektsforholdIndex + 1]
 }
+
+export function hentSoknadUuidFraUrl(url: string): string {
+    const parts = url.split('/')
+    const soknaderIndex = parts.findIndex((part) => part === 'soknader')
+    if (soknaderIndex === -1 || soknaderIndex + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne søknad UUID i URL')
+    }
+    return parts[soknaderIndex + 1]
+}
