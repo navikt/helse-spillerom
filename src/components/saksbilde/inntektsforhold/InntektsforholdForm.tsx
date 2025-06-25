@@ -204,7 +204,6 @@ export default function InntektsforholdForm({
                         label={spørsmål.navn}
                         value={(selectedValues[spørsmål.kode] as string) || ''}
                         onChange={(value) => handleTextFieldChange(spørsmål.kode, value.target.value)}
-                        placeholder="123456789" // kan ikke hardkodes
                         description="9-sifret organisasjonsnummer" // kan ikke hardkodes
                         size="small"
                         disabled={disabled}

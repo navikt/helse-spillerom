@@ -16,6 +16,7 @@ const skalVisesIOppsummering = (sporsmal: Sporsmal) => {
         case 'VAER_KLAR_OVER_AT':
         case 'BEKREFT_OPPLYSNINGER_UTLAND_INFO':
         case 'IKKE_SOKT_UTENLANDSOPPHOLD_INFORMASJON':
+        case 'TIL_SLUTT':
             return false
         default:
             return true
