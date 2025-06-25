@@ -27,7 +27,7 @@ describe('data-generators', () => {
             const sykedager = dagoversikt.filter((dag) => dag.dagtype === 'Syk')
             expect(sykedager).toHaveLength(5)
             sykedager.forEach((dag) => {
-                expect(dag.grad).toBe(11) // Faktisk grad fra søknaden
+                expect(dag.grad).toBe(89) // 100 - faktiskGrad som beregnet i logikken
                 expect(dag.kilde).toBe('Søknad')
             })
 
@@ -35,14 +35,14 @@ describe('data-generators', () => {
             const førstedag = dagoversikt[0]
             expect(førstedag.dato).toBe('2025-06-09')
             expect(førstedag.dagtype).toBe('Syk')
-            expect(førstedag.grad).toBe(11)
+            expect(førstedag.grad).toBe(89)
             expect(førstedag.kilde).toBe('Søknad')
 
             // Verifiser at siste hverdag er en sykedag
             const sisteHverdag = dagoversikt[4]
             expect(sisteHverdag.dato).toBe('2025-06-13')
             expect(sisteHverdag.dagtype).toBe('Syk')
-            expect(sisteHverdag.grad).toBe(11)
+            expect(sisteHverdag.grad).toBe(89)
             expect(sisteHverdag.kilde).toBe('Søknad')
         })
     })
