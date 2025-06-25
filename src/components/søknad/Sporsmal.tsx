@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 
 import { Sporsmal } from '@/schemas/søknad'
+import { getFormattedDateString } from '@utils/date-format'
 
 import Avkrysset from './Avkrysset'
 
@@ -165,6 +166,27 @@ const SporsmalVarianter = ({ sporsmal }: SporsmalVarianterProps) => {
             return <Avkrysset tekst={sporsmal.sporsmalstekst ?? ''} />
         case 'BELOP':
             return `${Number(svar[0]?.verdi) / 100} kr`
+        case 'PERIODER':
+        case 'PERIODE': {
+            try {
+                const verdi = JSON.parse(svar[0]?.verdi ?? '')
+
+                const perioder = Array.isArray(verdi) ? verdi : [verdi]
+
+                return perioder
+                    .filter((p) => p && p.fom)
+                    .map((p) => {
+                        const fom = getFormattedDateString(p.fom)
+                        const tom = getFormattedDateString(p.tom)
+
+                        return tom && tom !== fom ? `${fom} - ${tom}` : fom
+                    })
+                    .join(', ')
+            } catch {
+                // Dersom parsing feiler, vis råverdi som fallback
+                return svar[0]?.verdi
+            }
+        }
         default:
             return svar[0]?.verdi
     }
