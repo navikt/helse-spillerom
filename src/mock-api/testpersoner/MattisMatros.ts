@@ -47,7 +47,7 @@ const mattisGrunndata = {
                     avtaltTimer: 4.0,
                     faktiskTimer: 1.0,
                     sykmeldingstype: 'AKTIVITET_IKKE_MULIG',
-                    grad: 100,
+                    grad: 93,
                 },
             ],
             sporsmal: [
@@ -443,7 +443,7 @@ const mattisGrunndata = {
                     avtaltTimer: 37.5,
                     faktiskTimer: 5.0,
                     sykmeldingstype: 'AKTIVITET_IKKE_MULIG',
-                    grad: 100,
+                    grad: 96,
                 },
             ],
             sporsmal: [
