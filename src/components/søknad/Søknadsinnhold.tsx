@@ -31,14 +31,14 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
                                 </h3>
                                 <div className="text-sm leading-6 text-gray-700">
                                     {søknadsperiode.grad || søknadsperiode.sykmeldingsgrad ? (
-                                        <>Sykegrad: {søknadsperiode.grad || søknadsperiode.sykmeldingsgrad} %</>
+                                        <>{søknadsperiode.grad || søknadsperiode.sykmeldingsgrad} % sykmeldt</>
                                     ) : (
                                         'Sykmeldingsgrad ikke oppgitt'
                                     )}
                                     {søknadsperiode.faktiskGrad && (
                                         <>
                                             <br />
-                                            Arbeidsgrad: {søknadsperiode.faktiskGrad} %
+                                            Oppgitt faktisk arbeidsgrad {søknadsperiode.faktiskGrad} %
                                         </>
                                     )}
                                 </div>
