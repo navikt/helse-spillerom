@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
+import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
@@ -38,7 +39,7 @@ export function Tidslinje(): ReactElement {
     if (søknader?.length === 0 && saksbehandlingsperioder?.length === 0) return <TimelineEmpty />
 
     const søknaderGruppert = (søknader || []).reduce((acc: Record<string, Søknad[]>, soknad) => {
-        const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
+        const key = soknad.arbeidsgiver?.navn || formaterArbeidssituasjon(soknad.arbeidssituasjon) || soknad.type
 
         acc[key] = acc[key] || []
         acc[key].push(soknad)
@@ -84,7 +85,7 @@ export function Tidslinje(): ReactElement {
                             icon={<CheckmarkCircleFillIcon />} // TODO velge ikon avhengig av status på behandling
                             status="utbetalt" // TODO ta inn status fra behandling og utvide farge map-ene i TimelinePeriod
                         >
-                            <BodyShort size="small">{søknad.arbeidssituasjon}</BodyShort>
+                            <BodyShort size="small">{formaterArbeidssituasjon(søknad.arbeidssituasjon)}</BodyShort>
                             <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
                             <BodyShort size="small">
                                 Periode:{' '}

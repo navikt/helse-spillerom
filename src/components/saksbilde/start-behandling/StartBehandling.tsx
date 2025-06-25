@@ -11,6 +11,7 @@ import { useSoknader } from '@hooks/queries/useSoknader'
 import { useSoknad } from '@hooks/queries/useSoknad'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
+import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
 import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 
@@ -58,7 +59,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     if (isError) return <></> // vis noe fornuftig
 
     const søknaderGruppert = søknader?.reduce((acc: Record<string, Søknad[]>, soknad) => {
-        const key = soknad.arbeidsgiver?.navn || soknad.arbeidssituasjon || soknad.type
+        const key = soknad.arbeidsgiver?.navn || formaterArbeidssituasjon(soknad.arbeidssituasjon) || soknad.type
 
         acc[key] = acc[key] || []
         acc[key].push(soknad)
