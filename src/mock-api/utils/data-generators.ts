@@ -52,7 +52,10 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
                     dagerMap.set(datoString, {
                         ...eksisterendeDag,
                         dagtype: 'Syk',
-                        grad: periode.faktiskGrad ?? periode.grad ?? periode.sykmeldingsgrad ?? null,
+                        grad:
+                            periode.faktiskGrad !== null && periode.faktiskGrad !== undefined
+                                ? 100 - periode.faktiskGrad
+                                : (periode.grad ?? periode.sykmeldingsgrad ?? null),
                         kilde: 'Søknad',
                     })
                 }
