@@ -1,5 +1,4 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
-import { genererSaksbehandlingsperioder } from '@/mock-api/utils/data-generators'
 
 // Grunndata for Mattis
 const mattisGrunndata = {
@@ -34,6 +33,7 @@ const mattisGrunndata = {
                     fom: '2025-03-01',
                     tom: '2025-03-31',
                     grad: 100,
+                    faktiskGrad: 82,
                     sykmeldingstype: 'Sykemldingstype',
                 },
             ],
@@ -41,26 +41,10 @@ const mattisGrunndata = {
     ],
 }
 
-// Generer saksbehandlingsperioder, inntektsforhold og dagoversikt basert på søknader
-const periodeDefinisjon = [
-    {
-        fom: '2025-03-01',
-        tom: '2025-03-31',
-        søknadIder: ['3'], // Refererer til søknad med id '3'
-        uuid: 'c600b6d4-558c-4515-a017-5b6d34cb1f62',
-    },
-]
-
-const generertData = genererSaksbehandlingsperioder(
-    mattisGrunndata.personId,
-    mattisGrunndata.soknader,
-    periodeDefinisjon,
-)
-
 export const Mattis: Testperson = {
     ...mattisGrunndata,
-    saksbehandlingsperioder: generertData.saksbehandlingsperioder,
-    inntektsforhold: generertData.inntektsforhold,
-    dagoversikt: generertData.dagoversikt,
-    dokumenter: generertData.dokumenter,
+    saksbehandlingsperioder: [],
+    inntektsforhold: {},
+    dagoversikt: {},
+    dokumenter: {},
 }
