@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
-import { genererDagoversikt } from '@/mock-api/utils/data-generators'
+import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { Person } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
-import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/data-generators'
+import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
 export async function handleGetSaksbehandlingsperioder(person: Person | undefined): Promise<Response> {
     return NextResponse.json(person?.saksbehandlingsperioder || [])

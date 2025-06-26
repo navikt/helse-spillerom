@@ -1,5 +1,5 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
-import { genererSaksbehandlingsperioder } from '@/mock-api/utils/data-generators'
+import { genererSaksbehandlingsperioder } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
 // Grunndata for Kalle
 const kalleGrunndata = {
