@@ -5,6 +5,9 @@ import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Modal, Switch, useD
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -19,41 +22,92 @@ interface StartBehandlingProps {
     value: string
 }
 
+const startBehandlingSchema = z
+    .object({
+        isManualMode: z.boolean(),
+        validFromDate: z.date(),
+        selectedSøknader: z.array(z.string()),
+        manualFom: z.date().optional(),
+        manualTom: z.date().optional(),
+    })
+    .refine(
+        (data) => {
+            if (!data.isManualMode) {
+                return data.selectedSøknader.length > 0
+            }
+            return true
+        },
+        {
+            message: 'Du må velge minst én søknad',
+            path: ['selectedSøknader'],
+        },
+    )
+    .refine(
+        (data) => {
+            if (data.isManualMode) {
+                return data.manualFom && data.manualTom
+            }
+            return true
+        },
+        {
+            message: 'Du må velge både fra og til dato',
+            path: ['manualFom'],
+        },
+    )
+
+type StartBehandlingFormData = z.infer<typeof startBehandlingSchema>
+
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const router = useRouter()
     const params = useParams()
 
-    const [validFromDate, setValidFromDate] = useState(dayjs().subtract(3, 'month').startOf('month'))
-    const [selectedSøknader, setSelectedSøknader] = useState<string[]>([])
-    const [isManualMode, setIsManualMode] = useState(false)
-    const [manualFom, setManualFom] = useState<Date | undefined>(undefined)
-    const [manualTom, setManualTom] = useState<Date | undefined>(undefined)
-    const { data: søknader, isError } = useSoknader(validFromDate)
-    const { mutate: opprettSaksbehandlingsperiode, isPending } = useOpprettSaksbehandlingsperiode()
     const [openSoknadModal, setOpenSoknadModal] = useState(false)
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
     const { data: aktivSøknad, isLoading: lasterSoknad } = useSoknad(activeSoknadId)
 
-    const [errorTekst, setErrorTekst] = useState<string | undefined>(undefined)
+    const { mutate: opprettSaksbehandlingsperiode, isPending, isSuccess } = useOpprettSaksbehandlingsperiode()
+
+    const {
+        control,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm<StartBehandlingFormData>({
+        resolver: zodResolver(startBehandlingSchema),
+        defaultValues: {
+            isManualMode: false,
+            validFromDate: dayjs().subtract(3, 'month').startOf('month').toDate(),
+            selectedSøknader: [],
+            manualFom: undefined,
+            manualTom: undefined,
+        },
+    })
+
+    const isManualMode = watch('isManualMode')
+    const validFromDate = watch('validFromDate')
+    const selectedSøknader = watch('selectedSøknader')
+
+    const { data: søknader, isError } = useSoknader(dayjs(validFromDate))
 
     const { datepickerProps, inputProps } = useDatepicker({
         onDateChange: (d) => {
             const parsedDate = dayjs(d)
             if (parsedDate.isValid()) {
-                setValidFromDate(parsedDate)
+                setValue('validFromDate', parsedDate.toDate())
             }
         },
-        defaultSelected: validFromDate.toDate(),
+        defaultSelected: validFromDate,
     })
 
     const { datepickerProps: fomDatepickerProps, inputProps: fomInputProps } = useDatepicker({
-        onDateChange: (d) => setManualFom(d),
-        defaultSelected: manualFom,
+        onDateChange: (d) => setValue('manualFom', d),
+        defaultSelected: watch('manualFom'),
     })
 
     const { datepickerProps: tomDatepickerProps, inputProps: tomInputProps } = useDatepicker({
-        onDateChange: (d) => setManualTom(d),
-        defaultSelected: manualTom,
+        onDateChange: (d) => setValue('manualTom', d),
+        defaultSelected: watch('manualTom'),
     })
 
     if (isError) return <></> // vis noe fornuftig
@@ -66,28 +120,16 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         return acc
     }, {})
 
-    const handleSubmit = () => {
-        setErrorTekst(undefined)
-
-        if (!isManualMode && selectedSøknader.length === 0) {
-            setErrorTekst('Du må velge minst én søknad')
-            return
-        }
-
-        if (isManualMode && (!manualFom || !manualTom)) {
-            setErrorTekst('Du må velge både fra og til dato')
-            return
-        }
-
+    const onSubmit = (data: StartBehandlingFormData) => {
         let fom: string
         let tom: string
 
-        if (isManualMode) {
-            if (!manualFom || !manualTom) return // TypeScript guard
-            fom = dayjs(manualFom).format('YYYY-MM-DD')
-            tom = dayjs(manualTom).format('YYYY-MM-DD')
+        if (data.isManualMode) {
+            if (!data.manualFom || !data.manualTom) return // TypeScript guard
+            fom = dayjs(data.manualFom).format('YYYY-MM-DD')
+            tom = dayjs(data.manualTom).format('YYYY-MM-DD')
         } else {
-            const valgteSøknader = søknader?.filter((s) => selectedSøknader.includes(s.id)) || []
+            const valgteSøknader = søknader?.filter((s) => data.selectedSøknader.includes(s.id)) || []
             if (valgteSøknader.length === 0) return
 
             const minFom = valgteSøknader.reduce((min, søknad) => {
@@ -110,55 +152,73 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 request: {
                     fom,
                     tom,
-                    søknader: isManualMode ? [] : selectedSøknader,
+                    søknader: data.isManualMode ? [] : data.selectedSøknader,
                 },
-                callback: (periode) => {
-                    router.push(`/person/${params.personId}/${periode.id}`)
+                callback: () => {
+                    // Callback er påkrevd men vi håndterer navigering i onSuccess
                 },
             },
             {
-                onSuccess: () => {
-                    // Navigasjon skjer i callback
+                onSuccess: (periode) => {
+                    router.push(`/person/${params.personId}/${periode.id}`)
                 },
-                onError: (error) => {
-                    setErrorTekst(error.message)
+                onError: () => {
+                    // Error handling kan legges til her hvis nødvendig
+                    // TODO: Implementer proper error handling
                 },
             },
         )
     }
 
+    const handleManualModeChange = (checked: boolean) => {
+        setValue('isManualMode', checked)
+        if (checked) {
+            setValue('selectedSøknader', [])
+        } else {
+            setValue('manualFom', undefined)
+            setValue('manualTom', undefined)
+        }
+    }
+
+    const handleSøknadSelection = (søknadId: string, checked: boolean) => {
+        const currentSelected = selectedSøknader || []
+        if (checked) {
+            setValue('selectedSøknader', [...currentSelected, søknadId])
+        } else {
+            setValue(
+                'selectedSøknader',
+                currentSelected.filter((id) => id !== søknadId),
+            )
+        }
+    }
+
     return (
         <SaksbildePanel value={value}>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSubmit()
-                }}
-            >
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-8">
-                    <Switch
-                        checked={isManualMode}
-                        onChange={(e) => {
-                            setIsManualMode(e.target.checked)
-                            setErrorTekst(undefined)
-                            if (e.target.checked) {
-                                setSelectedSøknader([])
-                            } else {
-                                setManualFom(undefined)
-                                setManualTom(undefined)
-                            }
-                        }}
-                    >
-                        Manuell periode
-                    </Switch>
+                    <Controller
+                        name="isManualMode"
+                        control={control}
+                        render={() => (
+                            <Switch checked={isManualMode} onChange={(e) => handleManualModeChange(e.target.checked)}>
+                                Manuell periode
+                            </Switch>
+                        )}
+                    />
                 </div>
 
                 {!isManualMode && (
                     <>
                         <div className="mb-8">
-                            <DatePicker {...datepickerProps}>
-                                <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
-                            </DatePicker>
+                            <Controller
+                                name="validFromDate"
+                                control={control}
+                                render={() => (
+                                    <DatePicker {...datepickerProps}>
+                                        <DatePicker.Input {...inputProps} label="Hent alle søknader etter" />
+                                    </DatePicker>
+                                )}
+                            />
                         </div>
 
                         <Label spacing>Velg hvilken søknad som skal behandles</Label>
@@ -166,7 +226,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                         {søknaderGruppert &&
                             Object.entries(søknaderGruppert).map(([key, gruppe]) => (
                                 <div key={key} className="mt-4">
-                                    <CheckboxGroup legend={key} error={errorTekst}>
+                                    <CheckboxGroup legend={key} error={errors.selectedSøknader?.message}>
                                         {gruppe.map((søknad, j) => (
                                             <div
                                                 key={j}
@@ -174,16 +234,8 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                             >
                                                 <Checkbox
                                                     value={søknad.id}
-                                                    checked={selectedSøknader.includes(søknad.id)}
-                                                    onChange={(e) => {
-                                                        if (e.target.checked) {
-                                                            setSelectedSøknader([...selectedSøknader, søknad.id])
-                                                        } else {
-                                                            setSelectedSøknader(
-                                                                selectedSøknader.filter((id) => id !== søknad.id),
-                                                            )
-                                                        }
-                                                    }}
+                                                    checked={selectedSøknader?.includes(søknad.id) || false}
+                                                    onChange={(e) => handleSøknadSelection(søknad.id, e.target.checked)}
                                                 >
                                                     {getFormattedDateString(søknad.fom) +
                                                         ' - ' +
@@ -213,17 +265,37 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     <div className="space-y-4">
                         <Label spacing>Velg periode</Label>
                         <div className="flex gap-4">
-                            <DatePicker {...fomDatepickerProps}>
-                                <DatePicker.Input {...fomInputProps} label="Fra og med" error={errorTekst} />
-                            </DatePicker>
-                            <DatePicker {...tomDatepickerProps}>
-                                <DatePicker.Input {...tomInputProps} label="Til og med" error={errorTekst} />
-                            </DatePicker>
+                            <Controller
+                                name="manualFom"
+                                control={control}
+                                render={() => (
+                                    <DatePicker {...fomDatepickerProps}>
+                                        <DatePicker.Input
+                                            {...fomInputProps}
+                                            label="Fra og med"
+                                            error={errors.manualFom?.message}
+                                        />
+                                    </DatePicker>
+                                )}
+                            />
+                            <Controller
+                                name="manualTom"
+                                control={control}
+                                render={() => (
+                                    <DatePicker {...tomDatepickerProps}>
+                                        <DatePicker.Input
+                                            {...tomInputProps}
+                                            label="Til og med"
+                                            error={errors.manualTom?.message}
+                                        />
+                                    </DatePicker>
+                                )}
+                            />
                         </div>
                     </div>
                 )}
 
-                <Button className="mt-8 block" size="small" type="submit" loading={isPending}>
+                <Button className="mt-8 block" size="small" type="submit" loading={isPending || isSuccess}>
                     Start behandling
                 </Button>
 

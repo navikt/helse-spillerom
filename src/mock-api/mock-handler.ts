@@ -10,6 +10,7 @@ import {
     hentInntektsforholdUuidFraUrl,
     hentSoknadUuidFraUrl,
 } from '@/mock-api/utils/url-utils'
+import { addRandomDelay } from '@/mock-api/utils/delay-utils'
 import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
 import { handleDokumenter } from '@/mock-api/handlers/dokument-handlers'
 import {
@@ -103,6 +104,9 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
     logger.info(`Mocking path: ${path}`)
 
     try {
+        // Add random delay to simulate realistic API response times
+        await addRandomDelay()
+
         const personId = hentPersonIdFraUrl(request.url)
         const person = hentPerson(personId)
 
