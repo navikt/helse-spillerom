@@ -1,4 +1,5 @@
 import React from 'react'
+import { BodyShort, HStack } from '@navikt/ds-react'
 import { CheckmarkIcon } from '@navikt/aksel-icons'
 
 interface AvkryssetProps {
@@ -7,10 +8,10 @@ interface AvkryssetProps {
 
 const Avkrysset = ({ tekst }: AvkryssetProps) => {
     return (
-        <div className="mt-1 flex items-center gap-2">
+        <HStack gap="2" align="center">
             <CheckmarkIcon aria-hidden={true} className="h-4 min-h-4 w-4 min-w-4" title="Avkrysset" />
-            <span className="text-sm">{tekst}</span>
-        </div>
+            <BodyShort size="small">{tekst}</BodyShort>
+        </HStack>
     )
 }
 

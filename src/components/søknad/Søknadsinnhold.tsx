@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import React, { ReactElement } from 'react'
+import { BodyShort, Box, VStack } from '@navikt/ds-react'
 
 import { NORSK_DATOFORMAT, NORSK_DATOFORMAT_MED_KLOKKESLETT } from '@utils/date-format'
 import { Søknad } from '@/schemas/søknad'
@@ -14,22 +15,24 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
     return (
         <div>
             {søknad && (
-                <div className="flex flex-col gap-4 rounded bg-gray-50 p-4">
+                <Box className="flex flex-col gap-4 rounded bg-gray-50 p-4">
                     {søknad.type && (
-                        <div className="flex flex-col gap-2">
-                            <h3 className="m-0 text-sm font-semibold text-gray-900">Type</h3>
-                            <div className="text-sm leading-6 text-gray-700">{søknad.type.replace(/_/g, ' ')}</div>
-                        </div>
+                        <VStack gap="2">
+                            <BodyShort size="small" className="font-bold">
+                                Type
+                            </BodyShort>
+                            <BodyShort size="small">{søknad.type.replace(/_/g, ' ')}</BodyShort>
+                        </VStack>
                     )}
                     {søknad.soknadsperioder &&
                         søknad.soknadsperioder.length > 0 &&
                         søknad.soknadsperioder.map((søknadsperiode) => (
-                            <div key={`søknadsperiode${søknadsperiode.fom}`} className="flex flex-col gap-2">
-                                <h3 className="m-0 text-sm font-semibold text-gray-900">
+                            <VStack key={`søknadsperiode${søknadsperiode.fom}`} gap="2">
+                                <BodyShort size="small" className="font-bold">
                                     {dayjs(søknadsperiode.fom).format(NORSK_DATOFORMAT)} –{' '}
                                     {dayjs(søknadsperiode.tom).format(NORSK_DATOFORMAT)}
-                                </h3>
-                                <div className="text-sm leading-6 text-gray-700">
+                                </BodyShort>
+                                <BodyShort size="small">
                                     {søknadsperiode.grad || søknadsperiode.sykmeldingsgrad ? (
                                         <>{søknadsperiode.grad || søknadsperiode.sykmeldingsgrad} % sykmeldt</>
                                     ) : (
@@ -41,31 +44,35 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
                                             Oppgitt faktisk arbeidsgrad {søknadsperiode.faktiskGrad} %
                                         </>
                                     )}
-                                </div>
-                            </div>
+                                </BodyShort>
+                            </VStack>
                         ))}
                     {søknad.arbeidGjenopptatt && (
-                        <div className="flex flex-col gap-2">
-                            <h3 className="m-0 text-sm font-semibold text-gray-900">Arbeid gjenopptatt</h3>
-                            <div className="text-sm leading-6 text-gray-700">
+                        <VStack gap="2">
+                            <BodyShort size="small" className="font-bold">
+                                Arbeid gjenopptatt
+                            </BodyShort>
+                            <BodyShort size="small">
                                 {dayjs(søknad.arbeidGjenopptatt).format(NORSK_DATOFORMAT)}
-                            </div>
-                        </div>
+                            </BodyShort>
+                        </VStack>
                     )}
                     {søknad.sykmeldingSkrevet && (
-                        <div className="flex flex-col gap-2">
-                            <h3 className="m-0 text-sm font-semibold text-gray-900">Sykmelding skrevet</h3>
-                            <div className="text-sm leading-6 text-gray-700">
+                        <VStack gap="2">
+                            <BodyShort size="small" className="font-bold">
+                                Sykmelding skrevet
+                            </BodyShort>
+                            <BodyShort size="small">
                                 {dayjs(søknad.sykmeldingSkrevet).format(NORSK_DATOFORMAT_MED_KLOKKESLETT)}
-                            </div>
-                        </div>
+                            </BodyShort>
+                        </VStack>
                     )}
                     {(søknad.egenmeldingsdagerFraSykmelding?.length ?? 0) > 0 && (
-                        <div className="flex flex-col gap-2">
-                            <h3 className="m-0 text-sm font-semibold text-gray-900">
+                        <VStack gap="2">
+                            <BodyShort size="small" className="font-bold">
                                 Egenmeldingsdager fra sykmelding
-                            </h3>
-                            <div className="text-sm leading-6 text-gray-700">
+                            </BodyShort>
+                            <BodyShort size="small">
                                 {søknad.egenmeldingsdagerFraSykmelding
                                     ?.map((it) => dayjs(it).format(NORSK_DATOFORMAT))
                                     .sort((a, b) =>
@@ -73,11 +80,11 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
                                     )
                                     .join(', ')
                                     .replace(/,(?=[^,]*$)/, ' og')}
-                            </div>
-                        </div>
+                            </BodyShort>
+                        </VStack>
                     )}
                     {søknad.sporsmal && <Spørsmål spørsmål={søknad.sporsmal} />}
-                </div>
+                </Box>
             )}
         </div>
     )
