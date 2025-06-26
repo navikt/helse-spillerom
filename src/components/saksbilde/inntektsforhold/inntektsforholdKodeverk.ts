@@ -52,6 +52,15 @@ export const inntektsforholdKodeverk = {
                     variant: 'TEXTFIELD',
                 },
                 {
+                    kode: 'ER_SYKMELDT',
+                    navn: 'Er sykmeldt fra forholdet',
+                    variant: 'RADIO',
+                    alternativer: [
+                        { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
+                        { kode: 'ER_SYKMELDT_NEI', navn: 'Nei' },
+                    ],
+                },
+                {
                     kode: 'FRILANSER_FORSIKRING',
                     navn: 'Nav-kjøpt forsikring',
                     variant: 'RADIO',
