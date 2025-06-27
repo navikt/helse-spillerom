@@ -113,7 +113,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
                         <Textarea
                             {...field}
                             error={fieldState.error?.message}
-                            label="Notat til beslutter"
+                            label="Utvidet begrunnelse"
                             description="Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn."
                             size="small"
                             minRows={5}
