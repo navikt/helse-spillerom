@@ -257,12 +257,7 @@ export const kodeverk: Kodeverk = [
                     beskrivelse: 'Her må det stå noe',
                 },
             ],
-            IKKE_OPPFYLT: [
-                {
-                    kode: 'en_annen_kode',
-                    beskrivelse: 'Her må det stå noe',
-                },
-            ],
+            IKKE_OPPFYLT: [],
             SKAL_IKKE_VURDERES: [],
         },
     },

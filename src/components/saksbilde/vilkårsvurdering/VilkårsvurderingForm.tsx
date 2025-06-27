@@ -29,6 +29,15 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
     })
 
     async function onSubmit(values: VilkårsvurderingSchema) {
+        // Ekstra validering: sjekk om årsak er påkrevd
+        const selectedVurdering = values.vurdering as keyof typeof vilkår.mulige_resultater
+        const årsaker = vilkår.mulige_resultater[selectedVurdering] ?? []
+
+        if (selectedVurdering !== 'SKAL_IKKE_VURDERES' && årsaker.length > 0 && !values.årsak) {
+            form.setError('årsak', { message: 'Du må velge en begrunnelse' })
+            return
+        }
+
         await mutation.mutateAsync({
             kode: values.vilkårskode,
             vurdering: values.vurdering as Vurdering,
@@ -73,6 +82,11 @@ export function VilkårsvurderingForm({ vilkår, vurdering, nesteAction }: Vilk�
                         render={({ field, fieldState }) => {
                             const vurderingKey = selectedVurdering as keyof typeof vilkår.mulige_resultater
                             const årsaker = vilkår.mulige_resultater[vurderingKey] ?? []
+
+                            // Ikke vis begrunnelse-seksjonen hvis det ikke finnes noen årsaker å velge mellom
+                            if (årsaker.length === 0) {
+                                return <></>
+                            }
 
                             return (
                                 <RadioGroup
