@@ -37,7 +37,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await navigerTilStartBehandling()(page)
         })
 
-        test('should vise feilmelding når ingen søknader er valgt', async ({ page }) => {
+        test('viser feilmelding når ingen søknader er valgt', async ({ page }) => {
             // Prøv å starte behandling uten å velge søknader
             await startBehandling()(page)
 
@@ -45,7 +45,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserFeilmelding('Du må velge minst én søknad')(page)
         })
 
-        test('should vise feilmelding når alle søknader fjernes', async ({ page }) => {
+        test('viser feilmelding når alle søknader fjernes', async ({ page }) => {
             // Endre dato til en tid hvor det er søknader tilgjengelige
             await endreSøknadDato('01.01.2024')(page)
 
@@ -65,7 +65,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserFeilmelding('Du må velge minst én søknad')(page)
         })
 
-        test('should ikke vise feilmelding når søknad er valgt', async ({ page }) => {
+        test('viser ikke feilmelding når søknad er valgt', async ({ page }) => {
             // Endre dato til en tid hvor det er søknader tilgjengelige
             await endreSøknadDato('01.01.2024')(page)
 
@@ -82,7 +82,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserIngenFeilmelding()(page)
         })
 
-        test('should vise feilmelding når dato endres og ingen søknader er tilgjengelige', async ({ page }) => {
+        test('viser feilmelding når dato endres og ingen søknader er tilgjengelige', async ({ page }) => {
             // Endre dato til en tid hvor det ikke er søknader
             await endreSøknadDato('01.01.2028')(page)
 
@@ -110,7 +110,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await navigerTilStartBehandling()(page)
         })
 
-        test('should vise feilmelding når manuell periode aktiveres uten datoer', async ({ page }) => {
+        test('viser feilmelding når manuell periode aktiveres uten datoer', async ({ page }) => {
             // Aktiver manuell periode
             await aktiverManuellPeriode()(page)
 
@@ -121,7 +121,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserFeilmelding('Du må velge både fra og til dato')(page)
         })
 
-        test('should vise feilmelding når kun fra-dato er fylt ut', async ({ page }) => {
+        test('viser feilmelding når kun fra-dato er fylt ut', async ({ page }) => {
             // Aktiver manuell periode
             await aktiverManuellPeriode()(page)
 
@@ -135,7 +135,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserFeilmelding('Du må velge både fra og til dato')(page)
         })
 
-        test('should vise feilmelding når kun til-dato er fylt ut', async ({ page }) => {
+        test('viser feilmelding når kun til-dato er fylt ut', async ({ page }) => {
             // Aktiver manuell periode
             await aktiverManuellPeriode()(page)
 
@@ -149,7 +149,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserFeilmelding('Du må velge både fra og til dato')(page)
         })
 
-        test('should ikke vise feilmelding når begge datoer er fylt ut', async ({ page }) => {
+        test('viser ikke feilmelding når begge datoer er fylt ut', async ({ page }) => {
             // Aktiver manuell periode
             await aktiverManuellPeriode()(page)
 
@@ -163,7 +163,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserIngenFeilmelding()(page)
         })
 
-        test('should fjerne feilmelding når manuell periode deaktiveres', async ({ page }) => {
+        test('fjerner feilmelding når manuell periode deaktiveres', async ({ page }) => {
             // Aktiver manuell periode og fyll ut kun fra-dato
             await aktiverManuellPeriode()(page)
             await fyllUtManuellPeriodeUtenTom('01.01.2024')(page)
@@ -181,7 +181,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
     })
 
     test.describe('Kombinerte scenarier', () => {
-        test('should håndtere overgang mellom manuell og søknad-basert periode', async ({ page }) => {
+        test('håndterer overgang mellom manuell og søknad-basert periode', async ({ page }) => {
             // Start med Kalle Kranfører
             await søkPerson('12345678901')(page)
             await page.waitForURL('**/person/*')
@@ -206,7 +206,7 @@ test.describe('StartBehandling Form - Feilhåndtering', () => {
             await verifiserIngenFeilmelding()(page)
         })
 
-        test('should vise riktig feilmelding når man bytter mellom personer', async ({ page }) => {
+        test('viser riktig feilmelding når man bytter mellom personer', async ({ page }) => {
             // Start med Kalle Kranfører
             await søkPerson('12345678901')(page)
             await page.waitForURL('**/person/*')
