@@ -234,3 +234,139 @@ export function slettInntektsforhold(radIndex: number = 0) {
         })
     }
 }
+
+export function navigerTilStartBehandling() {
+    return async (page: Page) => {
+        await test.step('Naviger til start behandling-fanen', async () => {
+            const startBehandlingButton = page.getByRole('button', { name: 'Start ny behandling' })
+            await startBehandlingButton.click()
+        })
+    }
+}
+
+export function aktiverManuellPeriode() {
+    return async (page: Page) => {
+        await test.step('Aktiver manuell periode-modus', async () => {
+            const manuellPeriodeCheckbox = page.getByRole('checkbox', { name: 'Manuell periode' })
+            await manuellPeriodeCheckbox.check()
+        })
+    }
+}
+
+export function deaktiverManuellPeriode() {
+    return async (page: Page) => {
+        await test.step('Deaktiver manuell periode-modus', async () => {
+            const manuellPeriodeCheckbox = page.getByRole('checkbox', { name: 'Manuell periode' })
+            await manuellPeriodeCheckbox.uncheck()
+        })
+    }
+}
+
+export function fyllUtManuellPeriode(fom: string, tom: string) {
+    return async (page: Page) => {
+        await test.step(`Fyll ut manuell periode fra ${fom} til ${tom}`, async () => {
+            const fomInput = page.getByRole('textbox', { name: 'Fra og med' })
+            const tomInput = page.getByRole('textbox', { name: 'Til og med' })
+
+            await fomInput.fill(fom)
+            await tomInput.fill(tom)
+        })
+    }
+}
+
+export function fyllUtManuellPeriodeUtenTom(fom: string) {
+    return async (page: Page) => {
+        await test.step(`Fyll ut manuell periode fra ${fom} uten til-dato`, async () => {
+            const fomInput = page.getByRole('textbox', { name: 'Fra og med' })
+            await fomInput.fill(fom)
+        })
+    }
+}
+
+export function fyllUtManuellPeriodeUtenFom(tom: string) {
+    return async (page: Page) => {
+        await test.step(`Fyll ut manuell periode til ${tom} uten fra-dato`, async () => {
+            const tomInput = page.getByRole('textbox', { name: 'Til og med' })
+            await tomInput.fill(tom)
+        })
+    }
+}
+
+export function endreSøknadDato(dato: string) {
+    return async (page: Page) => {
+        await test.step(`Endre søknad-dato til ${dato}`, async () => {
+            const datoInput = page.getByRole('textbox', { name: 'Hent alle søknader etter' })
+            await datoInput.fill(dato)
+            await datoInput.press('Enter')
+        })
+    }
+}
+
+export function velgSøknad(søknadIndex: number = 0) {
+    return async (page: Page) => {
+        await test.step(`Velg søknad ${søknadIndex + 1}`, async () => {
+            const søknadCheckboxes = page.getByRole('checkbox', {
+                name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/,
+            })
+            await søknadCheckboxes.nth(søknadIndex).check()
+        })
+    }
+}
+
+export function fjernSøknad(søknadIndex: number = 0) {
+    return async (page: Page) => {
+        await test.step(`Fjern søknad ${søknadIndex + 1}`, async () => {
+            const søknadCheckboxes = page.getByRole('checkbox', {
+                name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/,
+            })
+            await søknadCheckboxes.nth(søknadIndex).uncheck()
+        })
+    }
+}
+
+export function startBehandling() {
+    return async (page: Page) => {
+        await test.step('Klikk på start behandling-knappen', async () => {
+            const startButton = page.getByRole('button', { name: 'Start behandling' })
+            await startButton.click()
+        })
+    }
+}
+
+export function verifiserFeilmelding(forventetTekst: string) {
+    return async (page: Page) => {
+        await test.step(`Verifiser at feilmelding "${forventetTekst}" vises`, async () => {
+            const feilmelding = page.getByText(forventetTekst)
+            await expect(feilmelding).toBeVisible()
+        })
+    }
+}
+
+export function verifiserIngenFeilmelding() {
+    return async (page: Page) => {
+        await test.step('Verifiser at ingen feilmelding vises', async () => {
+            const feilmeldinger = page.locator('.text-red-600')
+            await expect(feilmeldinger).toHaveCount(0)
+        })
+    }
+}
+
+export function verifiserIngenSøknader() {
+    return async (page: Page) => {
+        await test.step('Verifiser at ingen søknader er tilgjengelige', async () => {
+            const ingenSøknader = page.getByText('Ingen søknader etter valgt dato')
+            await expect(ingenSøknader).toBeVisible()
+        })
+    }
+}
+
+export function verifiserSøknaderTilgjengelige() {
+    return async (page: Page) => {
+        await test.step('Verifiser at søknader er tilgjengelige', async () => {
+            const søknadCheckboxes = page.getByRole('checkbox', {
+                name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/,
+            })
+            await expect(søknadCheckboxes.first()).toBeVisible()
+        })
+    }
+}

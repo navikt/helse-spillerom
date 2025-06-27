@@ -226,7 +226,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                         {søknaderGruppert &&
                             Object.entries(søknaderGruppert).map(([key, gruppe]) => (
                                 <div key={key} className="mt-4">
-                                    <CheckboxGroup legend={key} error={errors.selectedSøknader?.message}>
+                                    <CheckboxGroup legend={key}>
                                         {gruppe.map((søknad, j) => (
                                             <div
                                                 key={j}
@@ -258,6 +258,9 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                     </CheckboxGroup>
                                 </div>
                             ))}
+                        {errors.selectedSøknader?.message && (
+                            <div className="mt-2 text-sm text-red-600">{errors.selectedSøknader.message}</div>
+                        )}
                     </>
                 )}
 
