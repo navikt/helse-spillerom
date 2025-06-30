@@ -12,7 +12,7 @@ import {
 } from '@/mock-api/utils/url-utils'
 import { addRandomDelay } from '@/mock-api/utils/delay-utils'
 import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
-import { handleDokumenter } from '@/mock-api/handlers/dokument-handlers'
+import { handleDokumenter, handleAinntektHent } from '@/mock-api/handlers/dokument-handlers'
 import {
     handleGetSaksbehandlingsperioder,
     handlePostSaksbehandlingsperioder,
@@ -53,6 +53,9 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter': async ({ person, uuid }) =>
         handleDokumenter(await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent': async ({ request, person, uuid }) =>
+        handleAinntektHent(request, await person, uuid!),
 
     'GET /v1/[personId]/arbeidsforhold': async ({ personId }) => handleGetArbeidsforhold(personId),
 
