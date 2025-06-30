@@ -1,3 +1,28 @@
+const ordnaerForsikring = [
+    {
+        kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING',
+        navn: 'Nav-kjøpt forsikring',
+        variant: 'RADIO',
+        alternativer: [
+            {
+                kode: 'FORSIKRING_80_PROSENT_FRA_FØRSTE_SYKEDAG',
+                navn: '80 prosent fra første sykedag',
+            },
+            {
+                kode: 'FORSIKRING_100_PROSENT_FRA_17_SYKEDAG',
+                navn: '100 prosent fra 17. sykedag',
+            },
+            {
+                kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
+                navn: '100 prosent fra første sykedag',
+            },
+            {
+                kode: 'INGEN_FORSIKRING',
+                navn: 'Ingen forsikring',
+            },
+        ],
+    },
+]
 export const inntektsforholdKodeverk = {
     kode: 'INNTEKTSKATEGORI',
     navn: 'Type inntektsforhold',
@@ -37,6 +62,14 @@ export const inntektsforholdKodeverk = {
                         {
                             kode: 'FISKER',
                             navn: 'Fisker på blad B',
+                        },
+                        {
+                            kode: 'VERNEPLIKTIG',
+                            navn: 'Vernepliktig',
+                        },
+                        {
+                            kode: 'DAGMAMMA_BARNETS_HJEM',
+                            navn: 'Dagmamma/dagpappa i barnets hjem)',
                         },
                     ],
                 },
@@ -98,31 +131,12 @@ export const inntektsforholdKodeverk = {
                         {
                             kode: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
                             navn: 'Ordinær selvstendig næringsdrivende',
-                            underspørsmål: [
-                                {
-                                    kode: 'SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING',
-                                    navn: 'Nav-kjøpt forsikring',
-                                    variant: 'RADIO',
-                                    alternativer: [
-                                        {
-                                            kode: 'FORSIKRING_80_PROSENT_FRA_FØRSTE_SYKEDAG',
-                                            navn: '80 prosent fra første sykedag',
-                                        },
-                                        {
-                                            kode: 'FORSIKRING_100_PROSENT_FRA_17_SYKEDAG',
-                                            navn: '100 prosent fra 17. sykedag',
-                                        },
-                                        {
-                                            kode: 'FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG',
-                                            navn: '100 prosent fra første sykedag',
-                                        },
-                                        {
-                                            kode: 'INGEN_FORSIKRING',
-                                            navn: 'Ingen forsikring',
-                                        },
-                                    ],
-                                },
-                            ],
+                            underspørsmål: ordnaerForsikring,
+                        },
+                        {
+                            kode: 'DAGMAMMA_EGET_HJEM',
+                            navn: 'Dagmamma/dagpappa i eget hjem',
+                            underspørsmål: ordnaerForsikring,
                         },
                         {
                             kode: 'FISKER',
@@ -182,11 +196,6 @@ export const inntektsforholdKodeverk = {
         {
             kode: 'ARBEIDSLEDIG',
             navn: 'Arbeidsledig',
-        },
-        {
-            kode: 'DIMMITERT_VERNEPLIKTIG',
-            navn: 'Dimmittert vernepliktig',
-            kanIkkeKombineresMedAndre: true,
         },
         {
             kode: 'ANNET',

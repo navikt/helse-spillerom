@@ -52,6 +52,9 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                     case 'FISKER':
                         typeText = 'Fisker (arbeidstaker)'
                         break
+                    case 'VERNEPLIKTIG':
+                        typeText = 'Vernepliktig'
+                        break
                     default:
                         typeText = 'Arbeidstaker'
                 }
