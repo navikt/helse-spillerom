@@ -16,7 +16,7 @@ type Period = {
     onSelectPeriod?: () => void
     startDate: Dayjs
     endDate: Dayjs
-    icon: ReactElement
+    icon?: ReactElement
     status: string // finne ut hvilke statuser vi skal ha på behandlinger
     cropLeft: boolean
     cropRight: boolean

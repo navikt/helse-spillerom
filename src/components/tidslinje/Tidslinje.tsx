@@ -3,7 +3,7 @@
 import { ReactElement, useState } from 'react'
 import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, FolderFileFillIcon } from '@navikt/aksel-icons'
+import { FolderFileFillIcon, TasklistFillIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -82,8 +82,8 @@ export function Tidslinje(): ReactElement {
                             endDate={dayjs(søknad.tom!)}
                             onSelectPeriod={() => setActiveSoknadId(søknad.id)}
                             activePeriod={activeSoknadId === søknad.id}
-                            icon={<CheckmarkCircleFillIcon />} // TODO velge ikon avhengig av status på behandling
-                            status="utbetalt" // TODO ta inn status fra behandling og utvide farge map-ene i TimelinePeriod
+                            icon={<TasklistFillIcon />}
+                            status="soknad"
                         >
                             <BodyShort size="small">{formaterArbeidssituasjon(søknad.arbeidssituasjon)}</BodyShort>
                             <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
