@@ -70,8 +70,9 @@ const dokumentVisningstekst: Record<Dokumenttype, string> = {
     INNTEKTSMELDING: 'Inntektsmelding mottatt',
     SYKMELDING: 'Sykmelding mottatt',
     AAREG: 'Aa-reg',
-    ainntekt828: 'A-inntekt 828',
+    ainntekt828: 'A-inntekt 8-28',
     arbeidsforhold: 'Arbeidsforhold',
+    pensjonsgivendeinntekt: 'Pensjonsgivende inntekt',
 }
 
 export function DokumentSkeleton(): ReactElement {

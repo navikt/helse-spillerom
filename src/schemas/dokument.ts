@@ -19,6 +19,7 @@ export const dokumenttypeSchema = z.enum([
     'AAREG',
     'ainntekt828',
     'arbeidsforhold',
+    'pensjonsgivendeinntekt',
 ])
 
 export const dokumentSchema = z.object({
