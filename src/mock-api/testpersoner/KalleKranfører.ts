@@ -206,10 +206,17 @@ const kalleGrunndata = {
 // Generer saksbehandlingsperioder, inntektsforhold og dagoversikt basert på søknader
 const periodeDefinisjon = [
     {
+        fom: '2025-01-01',
+        tom: '2025-02-28',
+        søknadIder: ['3', '4', '5'], // Søknad 3 og 5 har samme periode, men ulik arbeidsgiver
+        uuid: '607f8e85-b0ba-4240-9950-383f6d7eac9e',
+    },
+
+    {
         fom: '2024-08-02',
         tom: '2024-08-09',
         søknadIder: ['1'], // Refererer til søknad med id '1'
-        uuid: '607f8e85-b0ba-4240-9950-383f6d7eac9e',
+        uuid: '607f8e85-aaaa-4240-9950-383f6d7eac9e',
     },
 ]
 
