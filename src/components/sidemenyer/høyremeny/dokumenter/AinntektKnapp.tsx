@@ -2,19 +2,20 @@
 
 import { ReactElement } from 'react'
 import { Button } from '@navikt/ds-react'
-import { ExternalLinkIcon } from '@navikt/aksel-icons'
-import { useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
+import { DownloadIcon } from '@navikt/aksel-icons'
 
 import { useHentAinntektDokument } from '@/hooks/mutations/useHentAinntektDokument'
-import { Dokument } from '@/schemas/dokument'
+import { useDokumenter } from '@/hooks/queries/useDokumenter'
 
-const NYLIG_OPPRETTET_DOKUMENT_KEY = 'nyligOpprettetDokument'
-
-export function AinntektKnapp(): ReactElement {
-    const params = useParams()
-    const queryClient = useQueryClient()
+export function AinntektKnapp(): ReactElement | null {
     const hentAinntektDokument = useHentAinntektDokument()
+    const { data: dokumenter } = useDokumenter()
+
+    // Skjul knappen hvis det allerede finnes et ainntekt-dokument
+    const harAinntektDokument = dokumenter?.some((dokument) => dokument.dokumentType === 'ainntekt828')
+    if (harAinntektDokument) {
+        return null
+    }
 
     const handleHentAinntekt = () => {
         // Hent A-inntekt for siste 12 måneder som default
@@ -25,23 +26,7 @@ export function AinntektKnapp(): ReactElement {
         const fomString = `${fom.getFullYear()}-${String(fom.getMonth() + 1).padStart(2, '0')}`
         const tomString = `${tom.getFullYear()}-${String(tom.getMonth() + 1).padStart(2, '0')}`
 
-        hentAinntektDokument.mutate(
-            { fom: fomString, tom: tomString },
-            {
-                onSuccess: (nyttDokument: Dokument) => {
-                    // Oppdater dokumenter-cachen direkte uten invalidering
-                    const queryKey = ['dokumenter', params.personId, params.saksbehandlingsperiodeId]
-
-                    queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
-                        // Legg det nye dokumentet øverst i listen
-                        return [nyttDokument, ...existingDokumenter]
-                    })
-
-                    // Marker dokumentet for automatisk åpning
-                    localStorage.setItem(NYLIG_OPPRETTET_DOKUMENT_KEY, nyttDokument.id)
-                },
-            },
-        )
+        hentAinntektDokument.mutate({ fom: fomString, tom: tomString })
     }
 
     return (
@@ -51,8 +36,8 @@ export function AinntektKnapp(): ReactElement {
                 size="small"
                 onClick={handleHentAinntekt}
                 loading={hentAinntektDokument.isPending}
-                aria-label="Hent A-inntekt som dokument"
-                icon={<ExternalLinkIcon aria-hidden />}
+                aria-label="Last ned A-inntekt som dokument"
+                icon={<DownloadIcon aria-hidden />}
             >
                 A-inntekt
             </Button>

@@ -21,10 +21,13 @@ export function useHentAinntektDokument() {
                 { fom, tom },
             )
         },
-        onSuccess: () => {
-            // Invalider dokumenter-query så den oppdateres med det nye dokumentet
-            queryClient.invalidateQueries({
-                queryKey: ['dokumenter', params.personId, params.saksbehandlingsperiodeId],
+        onSuccess: (nyttDokument: Dokument) => {
+            // Oppdater dokumenter-cachen direkte uten invalidering
+            const queryKey = ['dokumenter', params.personId, params.saksbehandlingsperiodeId]
+
+            queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
+                // Legg det nye dokumentet øverst i listen
+                return [nyttDokument, ...existingDokumenter]
             })
         },
     })
