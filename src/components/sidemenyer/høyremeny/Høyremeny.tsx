@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/dokumenter/Dokumenter'
-import { AaregKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AaregKnapp'
+import { ArbeidsforholdKnapp } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdKnapp'
 import { AinntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AinntektKnapp'
 import { PensjonsgivendeInntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektKnapp'
 import { cn } from '@utils/tw'
@@ -113,7 +113,7 @@ const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {
             <Dokumenter />
             <VStack gap="2" className="mt-4">
                 <AinntektKnapp />
-                <AaregKnapp />
+                <ArbeidsforholdKnapp />
                 <PensjonsgivendeInntektKnapp />
             </VStack>
         </>

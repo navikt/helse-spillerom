@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Person } from '@/mock-api/session'
 import { Dokument, Dokumenttype } from '@/schemas/dokument'
 import { ainntektData } from '@/mock-api/ainntekt'
+import { mockArbeidsforhold } from '@/mock-api/aareg'
 
 export async function handleDokumenter(
     person: Person | undefined,
@@ -61,6 +62,52 @@ export async function handleAinntektHent(
             tidsstempel: new Date().toISOString(),
             fom: body.fom,
             tom: body.tom,
+        },
+    }
+
+    // Legg til dokumentet i person-objektet
+    person.dokumenter[saksbehandlingsperiodeId].push(nyttDokument)
+
+    // Bygg Location-header URL (simulerer bakrommet-strukturen)
+    const locationUrl = `/v1/${person.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/dokumenter/${dokumentId}`
+
+    // Returner dokumentet med 201 Created og Location-header
+    return NextResponse.json(nyttDokument, {
+        status: 201,
+        headers: {
+            Location: locationUrl,
+        },
+    })
+}
+
+export async function handleArbeidsforholdHent(
+    request: Request,
+    person: Person | undefined,
+    saksbehandlingsperiodeId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    // Initialiser dokumenter hvis de ikke finnes
+    if (!person.dokumenter) {
+        person.dokumenter = {}
+    }
+    if (!person.dokumenter[saksbehandlingsperiodeId]) {
+        person.dokumenter[saksbehandlingsperiodeId] = []
+    }
+
+    // Opprett nytt arbeidsforhold-dokument
+    const dokumentId = uuidv4()
+    const nyttDokument: Dokument = {
+        id: dokumentId,
+        dokumentType: 'arbeidsforhold' as Dokumenttype,
+        eksternId: null,
+        innhold: mockArbeidsforhold, // Bruk mock aareg-data
+        opprettet: new Date().toISOString(),
+        request: {
+            kilde: 'Aa-registeret',
+            tidsstempel: new Date().toISOString(),
         },
     }
 

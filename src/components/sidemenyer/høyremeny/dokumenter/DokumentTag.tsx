@@ -19,6 +19,7 @@ const dokumentTag: Record<Dokumenttype, ComponentType> = {
     SYKMELDING: SykmeldingTag,
     AAREG: AaregTag,
     ainntekt828: () => <ExtendedTag variant="neutral">A8</ExtendedTag>,
+    arbeidsforhold: () => <ExtendedTag variant="neutral">AF</ExtendedTag>,
 }
 
 function SøknadTag(): ReactElement {

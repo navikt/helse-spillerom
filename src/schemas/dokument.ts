@@ -12,7 +12,14 @@ export const kildesporSchema = z
 
 export type Dokument = z.infer<typeof dokumentSchema>
 export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
-export const dokumenttypeSchema = z.enum(['SØKNAD', 'INNTEKTSMELDING', 'SYKMELDING', 'AAREG', 'ainntekt828'])
+export const dokumenttypeSchema = z.enum([
+    'SØKNAD',
+    'INNTEKTSMELDING',
+    'SYKMELDING',
+    'AAREG',
+    'ainntekt828',
+    'arbeidsforhold',
+])
 
 export const dokumentSchema = z.object({
     id: z.string().uuid(),
