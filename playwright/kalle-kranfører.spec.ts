@@ -19,7 +19,7 @@ test.describe('Kalle Kranfører', () => {
         await expect(navn).toBeVisible()
 
         // Finn og klikk på lenken til eksisterende behandling (forvent én behandling i tabellen)
-        const behandlingLink = page.getByRole('link', { name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/ })
+        const behandlingLink = page.getByRole('link', { name: '01.01.2025 - 28.02.2025' })
         await behandlingLink.click()
         await page.waitForURL('**/person/*/*')
 

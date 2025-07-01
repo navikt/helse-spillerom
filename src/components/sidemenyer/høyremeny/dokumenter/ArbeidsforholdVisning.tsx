@@ -4,6 +4,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
 import { Arbeidsforhold } from '@schemas/aareg'
 import { getFormattedDateString } from '@utils/date-format'
+import { Organisasjonsnavn } from '@/components/organisasjon/Organisasjonsnavn'
 
 interface ArbeidsforholdVisningProps {
     arbeidsforhold: Arbeidsforhold[]
@@ -75,6 +76,11 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         <BodyShort size="small">
+                                            <Organisasjonsnavn
+                                                orgnummer={getOrganisasjonsnummer(forhold.arbeidssted)}
+                                            />
+                                        </BodyShort>
+                                        <BodyShort size="small" className="text-gray-800">
                                             {getOrganisasjonsnummer(forhold.arbeidssted)}
                                         </BodyShort>
                                     </Table.DataCell>

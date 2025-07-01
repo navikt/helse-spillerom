@@ -3,6 +3,7 @@ import { Table, BodyShort, Detail, VStack, HStack, Button } from '@navikt/ds-rea
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
 import { Ainntekt } from '@schemas/ainntekt'
+import { Organisasjonsnavn } from '@/components/organisasjon/Organisasjonsnavn'
 
 interface AinntektVisningProps {
     ainntekt: Ainntekt
@@ -47,9 +48,13 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
             <Table size="small" className="w-full">
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell scope="col">Måned</Table.HeaderCell>
-                        <Table.HeaderCell scope="col">Antall inntekter</Table.HeaderCell>
-                        <Table.HeaderCell scope="col">Total</Table.HeaderCell>
+                        <Table.HeaderCell scope="col" className="text-xs">
+                            Måned
+                        </Table.HeaderCell>
+                        <Table.HeaderCell scope="col">Antall</Table.HeaderCell>
+                        <Table.HeaderCell scope="col" className="text-xs">
+                            Total
+                        </Table.HeaderCell>
                         <Table.HeaderCell scope="col"></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -123,6 +128,11 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                     Virksomhet
                                                                 </Detail>
                                                                 <BodyShort size="small">
+                                                                    <Organisasjonsnavn
+                                                                        orgnummer={inntekt.virksomhet.identifikator}
+                                                                    />
+                                                                </BodyShort>
+                                                                <BodyShort size="small" className="text-gray-800">
                                                                     {inntekt.virksomhet.identifikator}
                                                                 </BodyShort>
                                                             </VStack>
