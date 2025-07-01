@@ -10,6 +10,10 @@ import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 import { Søknad } from '@schemas/søknad'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
+import { AinntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/AinntektVisning'
+import { ArbeidsforholdVisning } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdVisning'
+import { Ainntekt } from '@schemas/ainntekt'
+import { Arbeidsforhold } from '@schemas/aareg'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -53,6 +57,10 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                     >
                         {dokument.dokumentType === 'SØKNAD' ? (
                             <Søknadsinnhold søknad={dokument.innhold as Søknad} />
+                        ) : dokument.dokumentType === 'ainntekt828' ? (
+                            <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
+                        ) : dokument.dokumentType === 'arbeidsforhold' ? (
+                            <ArbeidsforholdVisning arbeidsforhold={dokument.innhold as Arbeidsforhold[]} />
                         ) : (
                             <pre className="overflow-x-auto rounded bg-gray-50 p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
