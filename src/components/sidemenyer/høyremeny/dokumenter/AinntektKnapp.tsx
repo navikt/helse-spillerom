@@ -1,68 +1,61 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
-import { Button, Modal, Table } from '@navikt/ds-react'
+import { ReactElement } from 'react'
+import { Button } from '@navikt/ds-react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
+import { useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'next/navigation'
 
-import { useAinntekt } from '@hooks/queries/useAinntekt'
+import { useHentAinntektDokument } from '@/hooks/mutations/useHentAinntektDokument'
+import { Dokument } from '@/schemas/dokument'
+
+const NYLIG_OPPRETTET_DOKUMENT_KEY = 'nyligOpprettetDokument'
 
 export function AinntektKnapp(): ReactElement {
-    const [open, setOpen] = useState(false)
-    const { data: ainntekt, isLoading } = useAinntekt()
+    const params = useParams()
+    const queryClient = useQueryClient()
+    const hentAinntektDokument = useHentAinntektDokument()
+
+    const handleHentAinntekt = () => {
+        // Hent A-inntekt for siste 12 måneder som default
+        const tom = new Date()
+        const fom = new Date()
+        fom.setFullYear(tom.getFullYear() - 1)
+
+        const fomString = `${fom.getFullYear()}-${String(fom.getMonth() + 1).padStart(2, '0')}`
+        const tomString = `${tom.getFullYear()}-${String(tom.getMonth() + 1).padStart(2, '0')}`
+
+        hentAinntektDokument.mutate(
+            { fom: fomString, tom: tomString },
+            {
+                onSuccess: (nyttDokument: Dokument) => {
+                    // Oppdater dokumenter-cachen direkte uten invalidering
+                    const queryKey = ['dokumenter', params.personId, params.saksbehandlingsperiodeId]
+
+                    queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
+                        // Legg det nye dokumentet øverst i listen
+                        return [nyttDokument, ...existingDokumenter]
+                    })
+
+                    // Marker dokumentet for automatisk åpning
+                    localStorage.setItem(NYLIG_OPPRETTET_DOKUMENT_KEY, nyttDokument.id)
+                },
+            },
+        )
+    }
 
     return (
-        <>
-            <div className="inline-block">
-                <Button
-                    variant="tertiary"
-                    size="small"
-                    onClick={() => setOpen(true)}
-                    aria-label="Vis A-inntekt data"
-                    icon={<ExternalLinkIcon aria-hidden />}
-                >
-                    A-inntekt
-                </Button>
-            </div>
-            <Modal open={open} onClose={() => setOpen(false)} header={{ heading: 'A-inntekt' }}>
-                <Modal.Body>
-                    {isLoading ? (
-                        <div role="status" aria-live="polite">
-                            Laster A-inntekt...
-                        </div>
-                    ) : !ainntekt ? (
-                        <div>Ingen A-inntekt funnet</div>
-                    ) : (
-                        <div role="region" aria-label="A-inntekt oversikt">
-                            <Table aria-label="A-inntekt tabell">
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.HeaderCell scope="col">Måned</Table.HeaderCell>
-                                        <Table.HeaderCell scope="col">Type</Table.HeaderCell>
-                                        <Table.HeaderCell scope="col">Beløp</Table.HeaderCell>
-                                        <Table.HeaderCell scope="col">Beskrivelse</Table.HeaderCell>
-                                        <Table.HeaderCell scope="col">Status</Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {ainntekt.arbeidsInntektMaaned.map((maaned) =>
-                                        maaned.arbeidsInntektInformasjon.inntektListe.map((inntekt, index) => (
-                                            <Table.Row key={`${maaned.aarMaaned}-${index}`}>
-                                                <Table.DataCell>{maaned.aarMaaned}</Table.DataCell>
-                                                <Table.DataCell>{inntekt.inntektType}</Table.DataCell>
-                                                <Table.DataCell>
-                                                    {inntekt.beloep.toLocaleString('nb-NO')} kr
-                                                </Table.DataCell>
-                                                <Table.DataCell>{inntekt.beskrivelse}</Table.DataCell>
-                                                <Table.DataCell>{inntekt.inntektsstatus}</Table.DataCell>
-                                            </Table.Row>
-                                        )),
-                                    )}
-                                </Table.Body>
-                            </Table>
-                        </div>
-                    )}
-                </Modal.Body>
-            </Modal>
-        </>
+        <div className="inline-block">
+            <Button
+                variant="tertiary"
+                size="small"
+                onClick={handleHentAinntekt}
+                loading={hentAinntektDokument.isPending}
+                aria-label="Hent A-inntekt som dokument"
+                icon={<ExternalLinkIcon aria-hidden />}
+            >
+                A-inntekt
+            </Button>
+        </div>
     )
 }

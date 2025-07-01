@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement, useState } from 'react'
+import { PropsWithChildren, ReactElement, useState, useEffect } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
@@ -15,9 +15,23 @@ interface DokumentProps {
     dokument: _Dokument
 }
 
+const NYLIG_OPPRETTET_DOKUMENT_KEY = 'nyligOpprettetDokument'
+
 export function Dokument({ dokument }: DokumentProps): ReactElement {
     const [open, setOpen] = useState(false)
+
+    // Sjekk om dette dokumentet skal åpnes automatisk
+    useEffect(() => {
+        const nyligOpprettetId = localStorage.getItem(NYLIG_OPPRETTET_DOKUMENT_KEY)
+        if (nyligOpprettetId === dokument.id) {
+            setOpen(true)
+            // Fjern fra localStorage etter åpning
+            localStorage.removeItem(NYLIG_OPPRETTET_DOKUMENT_KEY)
+        }
+    }, [dokument.id])
+
     const toggleOpen = () => setOpen((prev) => !prev)
+
     return (
         <li className="border-b-1 border-border-divider py-2">
             <button
