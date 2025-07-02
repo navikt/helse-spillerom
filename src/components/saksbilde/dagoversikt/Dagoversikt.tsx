@@ -1,16 +1,18 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs, Checkbox, Select, VStack } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useOppdaterInntektsforholdDagoversikt } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { getFormattedDateString } from '@utils/date-format'
 import { kildeIcon } from '@components/ikoner/kilde/kildeIcon'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
+import { Dag, Dagtype } from '@/schemas/dagoversikt'
 
 interface DagoversiktProps {
     value: string
@@ -23,16 +25,70 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         isError: inntektsforholdError,
     } = useInntektsforhold()
 
+    const oppdaterDagoversiktMutation = useOppdaterInntektsforholdDagoversikt()
+
     // Filtrer kun inntektsforhold hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
         inntektsforhold?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
 
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
+    const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
+    const [valgteDataer, setValgteDataer] = useState<Set<string>>(new Set())
+    const [nyDagtype, setNyDagtype] = useState<Dagtype>('Syk')
+    const [nyGrad, setNyGrad] = useState<string>('')
 
-    // Sett første sykmeldingsforhold som aktivt hvis det ikke er satt
+    // Sett første sykmeldingsforhold som aktivt hvis det ikke er sett
     const aktivtForhold = aktivtInntektsforholdId
         ? sykmeldingsforhold.find((f) => f.id === aktivtInntektsforholdId)
         : sykmeldingsforhold[0]
+
+    const handleDatoToggle = (dato: string, valgt: boolean) => {
+        const nyeValgteDataer = new Set(valgteDataer)
+        if (valgt) {
+            nyeValgteDataer.add(dato)
+        } else {
+            nyeValgteDataer.delete(dato)
+        }
+        setValgteDataer(nyeValgteDataer)
+    }
+
+    const handleAvbrytRedigering = () => {
+        setErIRedigeringsmodus(false)
+        setValgteDataer(new Set())
+        setNyDagtype('Syk')
+        setNyGrad('')
+    }
+
+    const handleFerdigRedigering = async () => {
+        if (!aktivtForhold || valgteDataer.size === 0) return
+
+        const oppdaterteDager: Dag[] = []
+
+        // Opprett kun de dagene som skal oppdateres
+        valgteDataer.forEach((dato) => {
+            const eksisterendeDag = aktivtForhold.dagoversikt?.find((d) => d.dato === dato)
+            if (eksisterendeDag) {
+                oppdaterteDager.push({
+                    ...eksisterendeDag,
+                    dagtype: nyDagtype,
+                    grad: nyGrad ? parseInt(nyGrad) : null,
+                    kilde: 'Saksbehandler',
+                })
+            }
+        })
+
+        try {
+            await oppdaterDagoversiktMutation.mutateAsync({
+                inntektsforholdId: aktivtForhold.id,
+                dager: oppdaterteDager,
+            })
+
+            // Tilbakestill state etter vellykket oppdatering
+            handleAvbrytRedigering()
+        } catch (error) {
+            // Feilen blir håndtert av mutation-hooken
+        }
+    }
 
     const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): ReactElement => {
         const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
@@ -177,12 +233,16 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     variant="tertiary"
                                     className="my-6"
                                     icon={<PersonPencilIcon />}
+                                    onClick={() =>
+                                        erIRedigeringsmodus ? handleAvbrytRedigering() : setErIRedigeringsmodus(true)
+                                    }
                                 >
-                                    Endre dager
+                                    {erIRedigeringsmodus ? 'Avbryt' : 'Endre dager'}
                                 </Button>
                                 <Table size="small">
                                     <TableHeader>
                                         <TableRow>
+                                            {erIRedigeringsmodus && <TableHeaderCell>Velg</TableHeaderCell>}
                                             <TableHeaderCell>Dato</TableHeaderCell>
                                             <TableHeaderCell>Dagtype</TableHeaderCell>
                                             <TableHeaderCell align="right">Grad</TableHeaderCell>
@@ -197,6 +257,20 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     <TableBody>
                                         {forhold.dagoversikt.map((dag, i) => (
                                             <TableRow key={i}>
+                                                {erIRedigeringsmodus && (
+                                                    <TableDataCell>
+                                                        <Checkbox
+                                                            value={dag.dato}
+                                                            checked={valgteDataer.has(dag.dato)}
+                                                            onChange={(e) =>
+                                                                handleDatoToggle(dag.dato, e.target.checked)
+                                                            }
+                                                            hideLabel
+                                                        >
+                                                            Velg dag
+                                                        </Checkbox>
+                                                    </TableDataCell>
+                                                )}
                                                 <TableDataCell>
                                                     <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
                                                 </TableDataCell>
@@ -229,6 +303,69 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         ))}
                                     </TableBody>
                                 </Table>
+
+                                {erIRedigeringsmodus && valgteDataer.size > 0 && (
+                                    <div className="mt-6 rounded-lg border bg-gray-50 p-4">
+                                        <Heading size="small" className="mb-4">
+                                            Fyll inn hva de {valgteDataer.size} valgte dagene skal endres til
+                                        </Heading>
+                                        <VStack gap="4">
+                                            <Select
+                                                label="Dagtype"
+                                                value={nyDagtype}
+                                                onChange={(e) => setNyDagtype(e.target.value as Dagtype)}
+                                            >
+                                                <option value="Syk">Syk</option>
+                                                <option value="SykNav">Syk (NAV)</option>
+                                                <option value="Arbeidsdag">Arbeidsdag</option>
+                                                <option value="Helg">Helg</option>
+                                                <option value="Ferie">Ferie</option>
+                                                <option value="Permisjon">Permisjon</option>
+                                                <option value="Foreldet">Foreldet</option>
+                                                <option value="Avvist">Avvist</option>
+                                            </Select>
+
+                                            <Select
+                                                label="Grad"
+                                                value={nyGrad}
+                                                onChange={(e) => setNyGrad(e.target.value)}
+                                            >
+                                                <option value="">Ingen grad</option>
+                                                <option value="20">20%</option>
+                                                <option value="40">40%</option>
+                                                <option value="50">50%</option>
+                                                <option value="60">60%</option>
+                                                <option value="80">80%</option>
+                                                <option value="100">100%</option>
+                                            </Select>
+
+                                            <div className="text-sm text-gray-600">
+                                                Begrunn hvorfor det er gjort endringer i sykdomstidslinjen. Teksten
+                                                vises ikke til den sykmeldte, men den blir henvist til for behandlers
+                                                egen kreditering.
+                                            </div>
+
+                                            <HStack gap="2">
+                                                <Button
+                                                    type="button"
+                                                    variant="primary"
+                                                    onClick={handleFerdigRedigering}
+                                                    loading={oppdaterDagoversiktMutation.isPending}
+                                                    disabled={valgteDataer.size === 0}
+                                                >
+                                                    Ferdig
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    onClick={handleAvbrytRedigering}
+                                                >
+                                                    Avbryt
+                                                </Button>
+                                            </HStack>
+                                        </VStack>
+                                    </div>
+                                )}
                             </>
                         )}
 
