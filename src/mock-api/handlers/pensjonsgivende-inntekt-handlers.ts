@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server'
 
+import type { PensjonsgivendeInntekt } from '../../schemas/pensjonsgivende'
+
 // Ny testdata for pensjonsgivende inntekt
-const testPensjonsgivendeInntekt = [
+const testPensjonsgivendeInntekt: PensjonsgivendeInntekt = [
     {
         norskPersonidentifikator: '10419045026',
-        inntektsaar: '2024',
+        inntektsaar: 2024,
         pensjonsgivendeInntekt: [
             {
                 skatteordning: 'FASTLAND',
@@ -18,7 +20,7 @@ const testPensjonsgivendeInntekt = [
     },
     {
         norskPersonidentifikator: '10419045026',
-        inntektsaar: '2023',
+        inntektsaar: 2023,
         pensjonsgivendeInntekt: [
             {
                 skatteordning: 'FASTLAND',
@@ -32,7 +34,7 @@ const testPensjonsgivendeInntekt = [
     },
     {
         norskPersonidentifikator: '10419045026',
-        inntektsaar: '2022',
+        inntektsaar: 2022,
         pensjonsgivendeInntekt: [
             {
                 skatteordning: 'FASTLAND',
@@ -46,12 +48,12 @@ const testPensjonsgivendeInntekt = [
     },
     {
         norskPersonidentifikator: '10419045026',
-        inntektsaar: '2021',
+        inntektsaar: 2021,
         pensjonsgivendeInntekt: null,
     },
     {
         norskPersonidentifikator: '10419045026',
-        inntektsaar: '2020',
+        inntektsaar: 2020,
         pensjonsgivendeInntekt: null,
     },
 ]

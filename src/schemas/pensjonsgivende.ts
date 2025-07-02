@@ -11,7 +11,7 @@ const pensjonsgivendeInntektItemSchema = z.object({
 
 const pensjonsgivendeInntektÅrSchema = z.object({
     norskPersonidentifikator: z.string(),
-    inntektsaar: z.string(),
+    inntektsaar: z.number(),
     pensjonsgivendeInntekt: z.array(pensjonsgivendeInntektItemSchema).nullable(),
 })
 

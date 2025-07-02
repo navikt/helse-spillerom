@@ -12,8 +12,10 @@ import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { AinntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/AinntektVisning'
 import { ArbeidsforholdVisning } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdVisning'
+import { PensjonsgivendeInntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektVisning'
 import { Ainntekt } from '@schemas/ainntekt'
 import { Arbeidsforhold } from '@schemas/aareg'
+import { PensjonsgivendeInntekt } from '@schemas/pensjonsgivende'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -61,6 +63,10 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                             <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
                         ) : dokument.dokumentType === 'arbeidsforhold' ? (
                             <ArbeidsforholdVisning arbeidsforhold={dokument.innhold as Arbeidsforhold[]} />
+                        ) : dokument.dokumentType === 'pensjonsgivendeinntekt' ? (
+                            <PensjonsgivendeInntektVisning
+                                pensjonsgivendeInntekt={dokument.innhold as PensjonsgivendeInntekt}
+                            />
                         ) : (
                             <pre className="overflow-x-auto rounded bg-gray-50 p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
