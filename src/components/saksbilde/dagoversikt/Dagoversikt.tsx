@@ -231,7 +231,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     type="button"
                                     variant="tertiary"
                                     className="my-6"
-                                    icon={<PersonPencilIcon />}
+                                    icon={<PersonPencilIcon aria-hidden />}
                                     onClick={() =>
                                         erIRedigeringsmodus ? handleAvbrytRedigering() : setErIRedigeringsmodus(true)
                                     }
@@ -383,7 +383,7 @@ function getDagtypeIcon(dagtype: string): ReactElement {
     switch (dagtype) {
         case 'Syk':
         case 'SykNav':
-            return <BandageIcon />
+            return <BandageIcon aria-hidden />
         default:
             return <span className="w-[18px]" />
     }

@@ -52,5 +52,20 @@ test.describe('Kalle Kranfører', () => {
         const firstCell = firstRow.locator('td p').first()
         await expect(firstCell).toBeVisible()
         await expect(firstCell).toHaveText('Arbeidstaker')
+
+        // Naviger til "Dagoversikt"-fanen
+        const dagoversiktTab = page.getByRole('tab', { name: /Dagoversikt/i })
+        await dagoversiktTab.click()
+
+        // Sjekk at tabellen for dagoversikt er synlig
+        const dagoversiktTable = page.locator('table', {
+            has: page.locator('th', { hasText: 'Dato' }),
+        })
+        await expect(dagoversiktTable).toBeVisible()
+
+        // Sjekk antall dager i tabellen
+        const rows = dagoversiktTable.locator('tbody tr')
+        const rowCount = await rows.count()
+        await expect(rowCount).toBe(59)
     })
 })
