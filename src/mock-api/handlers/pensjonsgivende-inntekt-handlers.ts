@@ -58,6 +58,7 @@ const testPensjonsgivendeInntekt = [
 
 export async function handleGetPensjonsgivendeInntekt(personId: string) {
     if (personId === 'bosse') {
+        // TODO noe eget på bosse
         return NextResponse.json(testPensjonsgivendeInntekt)
     }
     return NextResponse.json(testPensjonsgivendeInntekt)
