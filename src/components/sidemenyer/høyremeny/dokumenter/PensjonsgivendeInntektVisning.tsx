@@ -124,8 +124,6 @@ export function PensjonsgivendeInntektVisning({
 
     return (
         <VStack gap="2" className="mt-2">
-            <Detail className="text-gray-600">Pensjonsgivende inntekt for {pensjonsgivendeInntekt.length} år</Detail>
-
             <Table size="small" className="w-full text-xs">
                 <Table.Header>
                     <Table.Row>
@@ -137,9 +135,6 @@ export function PensjonsgivendeInntektVisning({
                         </Table.HeaderCell>
                         <Table.HeaderCell scope="col" className="text-xs">
                             Inntektstype
-                        </Table.HeaderCell>
-                        <Table.HeaderCell scope="col" className="text-xs">
-                            Ordning
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -166,11 +161,6 @@ export function PensjonsgivendeInntektVisning({
                                     className={rad.beløp === null || rad.beløp === 0 ? 'text-gray-500 italic' : ''}
                                 >
                                     {rad.type}
-                                </BodyShort>
-                            </Table.DataCell>
-                            <Table.DataCell>
-                                <BodyShort size="small" className="text-gray-600">
-                                    {rad.skatteordning}
                                 </BodyShort>
                             </Table.DataCell>
                         </Table.Row>
