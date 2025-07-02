@@ -1,64 +1,64 @@
 import { NextResponse } from 'next/server'
 
-const bossePensjonsgivendeInntekt = {
-    inntektsaar: '2023',
-    personidentifikator: '30816199456',
-    skjermet: false,
-    grunnlag: [
-        {
-            tekniskNavn: 'SUM_BARNS_INNTEKT',
-            verdi: 0,
-            kategori: 'Barns inntekt',
-        },
-        {
-            tekniskNavn: 'LOENNSINNTEKT',
-            verdi: 450000,
-            kategori: 'Lønnsinntekt',
-        },
-        {
-            tekniskNavn: 'NAERINGSINNTEKT',
-            verdi: 0,
-            kategori: 'Næringsinntekt',
-        },
-        {
-            tekniskNavn: 'PENSJON_ELLER_TRYGD',
-            verdi: 0,
-            kategori: 'Pensjon eller trygd',
-        },
-    ],
-}
-
-const defaultPensjonsgivendeInntekt = {
-    inntektsaar: '2023',
-    personidentifikator: '11838999850',
-    skjermet: false,
-    grunnlag: [
-        {
-            tekniskNavn: 'SUM_BARNS_INNTEKT',
-            verdi: 0,
-            kategori: 'Barns inntekt',
-        },
-        {
-            tekniskNavn: 'LOENNSINNTEKT',
-            verdi: 480000,
-            kategori: 'Lønnsinntekt',
-        },
-        {
-            tekniskNavn: 'NAERINGSINNTEKT',
-            verdi: 0,
-            kategori: 'Næringsinntekt',
-        },
-        {
-            tekniskNavn: 'PENSJON_ELLER_TRYGD',
-            verdi: 0,
-            kategori: 'Pensjon eller trygd',
-        },
-    ],
-}
+// Ny testdata for pensjonsgivende inntekt
+const testPensjonsgivendeInntekt = [
+    {
+        norskPersonidentifikator: '10419045026',
+        inntektsaar: '2024',
+        pensjonsgivendeInntekt: [
+            {
+                skatteordning: 'FASTLAND',
+                datoForFastsetting: '2025-06-24T07:31:26.035Z',
+                pensjonsgivendeInntektAvLoennsinntekt: 3222,
+                pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel: null,
+                pensjonsgivendeInntektAvNaeringsinntekt: 200000,
+                pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage: 50000,
+            },
+        ],
+    },
+    {
+        norskPersonidentifikator: '10419045026',
+        inntektsaar: '2023',
+        pensjonsgivendeInntekt: [
+            {
+                skatteordning: 'FASTLAND',
+                datoForFastsetting: '2025-06-24T07:32:30.396Z',
+                pensjonsgivendeInntektAvLoennsinntekt: null,
+                pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel: null,
+                pensjonsgivendeInntektAvNaeringsinntekt: 400000,
+                pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage: null,
+            },
+        ],
+    },
+    {
+        norskPersonidentifikator: '10419045026',
+        inntektsaar: '2022',
+        pensjonsgivendeInntekt: [
+            {
+                skatteordning: 'FASTLAND',
+                datoForFastsetting: '2025-06-24T07:32:48.777Z',
+                pensjonsgivendeInntektAvLoennsinntekt: null,
+                pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel: null,
+                pensjonsgivendeInntektAvNaeringsinntekt: 350000,
+                pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage: 10000,
+            },
+        ],
+    },
+    {
+        norskPersonidentifikator: '10419045026',
+        inntektsaar: '2021',
+        pensjonsgivendeInntekt: null,
+    },
+    {
+        norskPersonidentifikator: '10419045026',
+        inntektsaar: '2020',
+        pensjonsgivendeInntekt: null,
+    },
+]
 
 export async function handleGetPensjonsgivendeInntekt(personId: string) {
     if (personId === 'bosse') {
-        return NextResponse.json(bossePensjonsgivendeInntekt)
+        return NextResponse.json(testPensjonsgivendeInntekt)
     }
-    return NextResponse.json(defaultPensjonsgivendeInntekt)
+    return NextResponse.json(testPensjonsgivendeInntekt)
 }
