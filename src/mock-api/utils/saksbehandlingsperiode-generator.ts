@@ -118,7 +118,13 @@ export function genererSaksbehandlingsperioder(
         )
 
         saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
-        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = resultat.inntektsforhold
+
+        // Inkluder dagoversikt i inntektsforhold (matcher logikken i saksbehandlingsperiode-handlers.ts)
+        const inntektsforholdMedDagoversikt = resultat.inntektsforhold.map((forhold) => ({
+            ...forhold,
+            dagoversikt: resultat.dagoversikt[forhold.id] || [],
+        }))
+        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = inntektsforholdMedDagoversikt
 
         // Kombiner dagoversikt
         Object.assign(alleDagoversikt, resultat.dagoversikt)
