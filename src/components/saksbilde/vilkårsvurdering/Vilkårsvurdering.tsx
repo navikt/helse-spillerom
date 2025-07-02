@@ -25,7 +25,7 @@ export function Vilkårsvurdering({ value }: { value: string }): ReactElement {
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverk()
 
     if (isLoading || kodeverkLoading) return <VilkårsvurderingSkeleton />
-    if (kodeverkError || isError || !kodeverk) return <></> // vis noe fornuftig
+    if (kodeverkError || isError || !kodeverk || !Array.isArray(kodeverk)) return <></> // vis noe fornuftig
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {
