@@ -107,7 +107,22 @@ export async function handlePutInntektsforholdDagoversikt(
     }
 
     const body = await request.json()
-    inntektsforhold.dagoversikt = body
+    // body er et array av dager som skal oppdateres
+    if (!Array.isArray(body)) {
+        return NextResponse.json({ message: 'Body must be an array of days' }, { status: 400 })
+    }
+    if (!Array.isArray(inntektsforhold.dagoversikt)) {
+        return NextResponse.json({ message: 'Ingen dagoversikt på inntektsforhold' }, { status: 400 })
+    }
+    // Oppdater kun dagene som finnes i body, behold andre dager uendret
+    const oppdaterteDager = [...inntektsforhold.dagoversikt]
+    for (const oppdatertDag of body) {
+        const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
+        if (index !== -1) {
+            oppdaterteDager[index] = { ...oppdaterteDager[index], ...oppdatertDag, kilde: 'saksbehandler' }
+        }
+    }
+    inntektsforhold.dagoversikt = oppdaterteDager
 
     return new Response(null, { status: 204 })
 }
