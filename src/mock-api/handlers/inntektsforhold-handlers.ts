@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Dag } from '@/schemas/dagoversikt'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
@@ -114,12 +115,18 @@ export async function handlePutInntektsforholdDagoversikt(
     if (!Array.isArray(inntektsforhold.dagoversikt)) {
         return NextResponse.json({ message: 'Ingen dagoversikt på inntektsforhold' }, { status: 400 })
     }
+
     // Oppdater kun dagene som finnes i body, behold andre dager uendret
-    const oppdaterteDager = [...inntektsforhold.dagoversikt]
-    for (const oppdatertDag of body) {
+    // Ignorer helgdager ved oppdatering
+    const oppdaterteDager: Dag[] = [...inntektsforhold.dagoversikt]
+    for (const oppdatertDag of body as Dag[]) {
         const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
         if (index !== -1) {
-            oppdaterteDager[index] = { ...oppdaterteDager[index], ...oppdatertDag, kilde: 'saksbehandler' }
+            const eksisterendeDag = oppdaterteDager[index]
+            // Ignorer oppdatering hvis den eksisterende dagen er en helg
+            if (eksisterendeDag.dagtype !== 'Helg') {
+                oppdaterteDager[index] = { ...eksisterendeDag, ...oppdatertDag, kilde: 'Saksbehandler' }
+            }
         }
     }
     inntektsforhold.dagoversikt = oppdaterteDager

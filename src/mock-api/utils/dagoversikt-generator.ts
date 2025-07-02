@@ -12,12 +12,13 @@ function initialiserDager(fom: string, tom: string): Dagoversikt {
 
     const currentDato = new Date(startDato)
     while (currentDato <= sluttDato) {
+        const erHelgdag = erHelg(currentDato)
         dager.push({
             dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
-            dagtype: erHelg(currentDato) ? 'Helg' : 'Arbeidsdag',
+            dagtype: erHelgdag ? 'Helg' : 'Arbeidsdag',
             grad: null,
             avvistBegrunnelse: [],
-            kilde: 'Saksbehandler',
+            kilde: erHelgdag ? null : 'Saksbehandler',
         })
 
         currentDato.setDate(currentDato.getDate() + 1)

@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs, Checkbox, Select, VStack } from '@navikt/ds-react'
+import { Fragment, ReactElement, useState } from 'react'
+import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs, Checkbox, Select, VStack, Tag } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
@@ -10,9 +10,8 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useOppdaterInntektsforholdDagoversikt } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { getFormattedDateString } from '@utils/date-format'
-import { kildeIcon } from '@components/ikoner/kilde/kildeIcon'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
-import { Dag, Dagtype } from '@/schemas/dagoversikt'
+import { Dag, Dagtype, Kilde } from '@/schemas/dagoversikt'
 
 interface DagoversiktProps {
     value: string
@@ -35,7 +34,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [valgteDataer, setValgteDataer] = useState<Set<string>>(new Set())
     const [nyDagtype, setNyDagtype] = useState<Dagtype>('Syk')
-    const [nyGrad, setNyGrad] = useState<string>('')
+    const [nyGrad, setNyGrad] = useState<string>('100')
 
     // Sett første sykmeldingsforhold som aktivt hvis det ikke er sett
     const aktivtForhold = aktivtInntektsforholdId
@@ -56,7 +55,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         setErIRedigeringsmodus(false)
         setValgteDataer(new Set())
         setNyDagtype('Syk')
-        setNyGrad('')
+        setNyGrad('100')
     }
 
     const handleFerdigRedigering = async () => {
@@ -71,7 +70,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 oppdaterteDager.push({
                     ...eksisterendeDag,
                     dagtype: nyDagtype,
-                    grad: nyGrad ? parseInt(nyGrad) : null,
+                    grad: nyDagtype === 'Syk' || nyDagtype === 'SykNav' ? parseInt(nyGrad) : null,
                     kilde: 'Saksbehandler',
                 })
             }
@@ -284,7 +283,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     <BodyShort>{dag.grad ? `${dag.grad} %` : '-'}</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell>
-                                                    <div className="ml-2">{kildeIcon[dag.kilde]}</div>
+                                                    <KildeTag kilde={dag.kilde} />
                                                 </TableDataCell>
                                                 <TableDataCell align="right">
                                                     <BodyShort>-</BodyShort>
@@ -313,42 +312,43 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             <Select
                                                 label="Dagtype"
                                                 value={nyDagtype}
-                                                onChange={(e) => setNyDagtype(e.target.value as Dagtype)}
+                                                onChange={(e) => {
+                                                    const valgtDagtype = e.target.value as Dagtype
+                                                    setNyDagtype(valgtDagtype)
+                                                    // Sett grad til standardverdi når man velger dagtype som støtter grad
+                                                    if (valgtDagtype === 'Syk' || valgtDagtype === 'SykNav') {
+                                                        if (!nyGrad) {
+                                                            setNyGrad('100')
+                                                        }
+                                                    }
+                                                }}
                                             >
                                                 <option value="Syk">Syk</option>
                                                 <option value="SykNav">Syk (NAV)</option>
                                                 <option value="Arbeidsdag">Arbeidsdag</option>
-                                                <option value="Helg">Helg</option>
                                                 <option value="Ferie">Ferie</option>
                                                 <option value="Permisjon">Permisjon</option>
-                                                <option value="Foreldet">Foreldet</option>
                                                 <option value="Avvist">Avvist</option>
                                             </Select>
 
-                                            <Select
-                                                label="Grad"
-                                                value={nyGrad}
-                                                onChange={(e) => setNyGrad(e.target.value)}
-                                            >
-                                                <option value="">Ingen grad</option>
-                                                <option value="20">20%</option>
-                                                <option value="40">40%</option>
-                                                <option value="50">50%</option>
-                                                <option value="60">60%</option>
-                                                <option value="80">80%</option>
-                                                <option value="100">100%</option>
-                                            </Select>
+                                            {(nyDagtype === 'Syk' || nyDagtype === 'SykNav') && (
+                                                <Select
+                                                    label="Grad"
+                                                    value={nyGrad}
+                                                    onChange={(e) => setNyGrad(e.target.value)}
+                                                >
+                                                    <option value="20">20%</option>
+                                                    <option value="40">40%</option>
+                                                    <option value="50">50%</option>
+                                                    <option value="60">60%</option>
+                                                    <option value="80">80%</option>
+                                                    <option value="100">100%</option>
+                                                </Select>
+                                            )}
 
-                                            <div className="text-sm text-gray-600">
-                                                Begrunn hvorfor det er gjort endringer i sykdomstidslinjen. Teksten
-                                                vises ikke til den sykmeldte, men den blir henvist til for behandlers
-                                                egen kreditering.
-                                            </div>
-
-                                            <HStack gap="2">
+                                            <HStack gap="2" className="mt-4">
                                                 <Button
-                                                    type="button"
-                                                    variant="primary"
+                                                    size="small"
                                                     onClick={handleFerdigRedigering}
                                                     loading={oppdaterDagoversiktMutation.isPending}
                                                     disabled={valgteDataer.size === 0}
@@ -356,7 +356,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     Ferdig
                                                 </Button>
                                                 <Button
-                                                    type="button"
+                                                    size="small"
                                                     variant="secondary"
                                                     onClick={handleAvbrytRedigering}
                                                 >
@@ -387,4 +387,22 @@ function getDagtypeIcon(dagtype: string): ReactElement {
         default:
             return <span className="w-[18px]" />
     }
+}
+
+function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
+    if (kilde === 'Søknad') {
+        return (
+            <Tag variant="alt1" className="mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small leading-0">
+                SØ
+            </Tag>
+        )
+    }
+    if (kilde === 'Saksbehandler') {
+        return (
+            <Tag variant="neutral" className="mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small leading-0">
+                SB
+            </Tag>
+        )
+    }
+    return <Fragment />
 }

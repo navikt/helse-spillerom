@@ -30,7 +30,7 @@ export const dagSchema = z.object({
     dagtype: dagtypeSchema,
     grad: z.number().nullable(),
     avvistBegrunnelse: z.array(avvistBegrunnelseSchema),
-    kilde: kildeSchema,
+    kilde: kildeSchema.nullable(),
 })
 
 export const dagoversiktSchema = z.array(dagSchema)

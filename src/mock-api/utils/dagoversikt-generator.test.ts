@@ -32,6 +32,11 @@ describe('dagoversikt-generator', () => {
                 expect(dag.kilde).toBe('Søknad')
             })
 
+            // Sjekk at helgedager har null som kilde
+            helgedager.forEach((dag) => {
+                expect(dag.kilde).toBeNull()
+            })
+
             // Sjekk at alle dager har riktig struktur
             resultat.forEach((dag) => {
                 expect(dag).toHaveProperty('dato')
@@ -39,6 +44,19 @@ describe('dagoversikt-generator', () => {
                 expect(dag).toHaveProperty('grad')
                 expect(dag).toHaveProperty('avvistBegrunnelse')
                 expect(dag).toHaveProperty('kilde')
+            })
+        })
+
+        it('skal sette kilde til null for helgdager når ingen søknader', () => {
+            const fom = '2025-06-14' // Lørdag
+            const tom = '2025-06-15' // Søndag
+
+            const resultat = genererDagoversikt(fom, tom, [])
+
+            expect(resultat).toHaveLength(2)
+            resultat.forEach((dag) => {
+                expect(dag.dagtype).toBe('Helg')
+                expect(dag.kilde).toBeNull()
             })
         })
     })
