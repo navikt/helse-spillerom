@@ -9,16 +9,7 @@ import { Personsøk } from '@components/personsøk/Personsøk'
 
 export function Header(): ReactElement {
     return (
-        <InternalHeader
-            className="h-14"
-            style={
-                {
-                    '--ac-internalheader-hover-bg': 'var(--a-blue-700)',
-                    '--ac-internalheader-bg': 'var(--a-blue-800)',
-                    '--ac-internalheader-active-bg': 'var(--a-blue-600)',
-                } as React.CSSProperties
-            }
-        >
+        <InternalHeader className="h-header">
             <InternalHeaderTitle as={NextLink} href="/">
                 Spillerom
             </InternalHeaderTitle>
