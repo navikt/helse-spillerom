@@ -9,6 +9,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import 'dayjs/locale/nb'
 import dayjs from 'dayjs'
 
+import { ThemeProvider } from '@components/ThemeProvider'
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
 import { DemoPersonsøk } from '@/mock-api/DemoPersonsøk'
 import { VilkarsvurderingDebugging } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingDebug'
@@ -36,14 +37,16 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
     )
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <ShortcutProvider>
-                <VilkarsvurderingDebugging>
-                    <InntektsforholdDebugging>
-                        <DemoPersonsøk>{children}</DemoPersonsøk>
-                    </InntektsforholdDebugging>
-                </VilkarsvurderingDebugging>
-            </ShortcutProvider>
-        </QueryClientProvider>
+        <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+                <ShortcutProvider>
+                    <VilkarsvurderingDebugging>
+                        <InntektsforholdDebugging>
+                            <DemoPersonsøk>{children}</DemoPersonsøk>
+                        </InntektsforholdDebugging>
+                    </VilkarsvurderingDebugging>
+                </ShortcutProvider>
+            </QueryClientProvider>
+        </ThemeProvider>
     )
 }

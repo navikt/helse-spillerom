@@ -4,6 +4,7 @@ import navikt from '@navikt/ds-tailwind'
 const config: Config = {
     presets: [navikt],
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
+    darkMode: 'class',
     plugins: [],
 }
 export default config

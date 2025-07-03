@@ -14,6 +14,7 @@ import {
 
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { Tastatursnarveier } from '@components/header/brukermeny/Tastatursnarveier'
+import { DarkModeToggle } from '@components/header/brukermeny/DarkModeToggle'
 
 export function BrukerMeny(): ReactElement {
     const { data: brukerinfo, isLoading } = useBrukerinfo()
@@ -33,6 +34,8 @@ export function BrukerMeny(): ReactElement {
                         </dl>
                         <DropdownMenuDivider />
                         <Tastatursnarveier />
+                        <DropdownMenuDivider />
+                        <DarkModeToggle />
                         <DropdownMenuDivider />
                         <DropdownMenuList>
                             <DropdownMenuListItem as="a" href="/oauth2/logout">
