@@ -6,10 +6,12 @@ import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykep
 import { Vilkårsvurdering } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
 import { InntektsforholdTabell } from '@components/saksbilde/inntektsforhold/InntektsforholdTabell'
+import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
 
 export default async function PersonPage(): Promise<ReactElement> {
     return (
         <section className="flex-auto">
+            <SaksbehandlingsperiodeHeading />
             <Tabs defaultValue="inntektsforhold">
                 <TabsList>
                     <TabsTab value="inntektsforhold" label="Inntektsforhold" />
