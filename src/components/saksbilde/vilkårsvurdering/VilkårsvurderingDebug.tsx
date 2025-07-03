@@ -22,7 +22,7 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
         <div className="relative min-h-screen">
             {children}
 
-            <div className="fixed right-20 bottom-4 z-50">
+            <div className="fixed bottom-4 right-20 z-50">
                 <Tooltip content="Vilkårsvurderinger">
                     <Button
                         type="button"
@@ -39,7 +39,7 @@ export function VilkarsvurderingDebugging({ children }: PropsWithChildren): Reac
                         setShowModal(false)
                     }}
                     header={{ heading: 'Vurderte vilkår', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] min-w-[800px] max-w-[1200px] rounded-none p-0"
                 >
                     <ModalBody>
                         <Vilkårsvurdering />

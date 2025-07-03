@@ -158,7 +158,7 @@ export function PensjonsgivendeInntektVisning({
                             <Table.DataCell>
                                 <BodyShort
                                     size="small"
-                                    className={rad.beløp === null || rad.beløp === 0 ? 'text-gray-500 italic' : ''}
+                                    className={rad.beløp === null || rad.beløp === 0 ? 'italic text-gray-500' : ''}
                                 >
                                     {rad.type}
                                 </BodyShort>

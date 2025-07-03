@@ -21,7 +21,7 @@ export function DemoPersonsøk({ children }: PropsWithChildren): ReactElement {
         <div className="relative min-h-screen">
             {children}
 
-            <div className="fixed right-4 bottom-4 z-50">
+            <div className="fixed bottom-4 right-4 z-50">
                 <Tooltip content="Testpersoner">
                     <Button
                         type="button"

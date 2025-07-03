@@ -1,8 +1,7 @@
 import type { Config } from 'tailwindcss'
-import navikt from '@navikt/ds-tailwind'
 
 const config: Config = {
-    presets: [navikt],
+    presets: [require('@navikt/ds-tailwind')],
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
     darkMode: 'class',
     plugins: [],

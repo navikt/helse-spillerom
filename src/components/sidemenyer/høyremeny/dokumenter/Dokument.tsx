@@ -42,7 +42,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         {getFormattedDatetimeString(dokument.opprettet)}
                     </BodyShort>
                 </VStack>
-                <span aria-hidden="true" className="mt-1 ml-2">
+                <span aria-hidden="true" className="ml-2 mt-1">
                     {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </span>
             </button>

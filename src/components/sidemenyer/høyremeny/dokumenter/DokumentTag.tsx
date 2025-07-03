@@ -49,7 +49,7 @@ interface ExtendedTagProps extends ComponentPropsWithoutRef<'div'> {
 
 function ExtendedTag({ variant, children, className }: ExtendedTagProps): ReactElement {
     return (
-        <Tag variant={variant} className={cn('mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small leading-0', className)}>
+        <Tag variant={variant} className={cn('leading-0 mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small', className)}>
             {children}
         </Tag>
     )

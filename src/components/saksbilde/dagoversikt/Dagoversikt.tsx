@@ -392,14 +392,14 @@ function getDagtypeIcon(dagtype: string): ReactElement {
 function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     if (kilde === 'Søknad') {
         return (
-            <Tag variant="alt1" className="mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small leading-0">
+            <Tag variant="alt1" className="leading-0 mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small">
                 SØ
             </Tag>
         )
     }
     if (kilde === 'Saksbehandler') {
         return (
-            <Tag variant="neutral" className="mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small leading-0">
+            <Tag variant="neutral" className="leading-0 mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small">
                 SB
             </Tag>
         )

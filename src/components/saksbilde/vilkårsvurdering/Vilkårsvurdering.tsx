@@ -84,7 +84,7 @@ export function VilkårsvurderingAccordionContent({
 
     return (
         <HStack wrap={false}>
-            <Table size="medium" className="h-fit w-3/5 min-w-3/5">
+            <Table size="medium" className="min-w-3/5 h-fit w-3/5">
                 <TableHeader>
                     <TableRow>
                         <TableHeaderCell className="w-full">Vilkår</TableHeaderCell>

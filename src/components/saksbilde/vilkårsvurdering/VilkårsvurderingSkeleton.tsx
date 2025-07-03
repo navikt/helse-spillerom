@@ -16,7 +16,7 @@ export function VilkårsvurderingSkeleton(): ReactElement {
                     </AccordionHeader>
                     <AccordionContent className="p-0">
                         <HStack wrap={false}>
-                            <Table size="medium" className="h-fit w-3/5 min-w-3/5">
+                            <Table size="medium" className="min-w-3/5 h-fit w-3/5">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHeaderCell className="w-full">Vilkår</TableHeaderCell>
@@ -35,7 +35,7 @@ export function VilkårsvurderingSkeleton(): ReactElement {
                                 </TableBody>
                             </Table>
                             <VStack
-                                className="mt-12 -ml-px grow border-t-2 border-l border-border-default bg-surface-selected px-4 py-3"
+                                className="-ml-px mt-12 grow border-l border-t-2 border-border-default bg-surface-selected px-4 py-3"
                                 gap="8"
                             >
                                 <HStack wrap={false} gap="4" align="center">

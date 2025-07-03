@@ -158,7 +158,7 @@ export default function InntektsforholdForm({
                                         </Checkbox>
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
-                                                <div key={us.kode} className="mt-2 ml-6">
+                                                <div key={us.kode} className="ml-6 mt-2">
                                                     {renderUnderspørsmål(toKodeverkSpørsmål(us))}
                                                 </div>
                                             ))}
@@ -187,7 +187,7 @@ export default function InntektsforholdForm({
                                         </Radio>
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
-                                                <div key={us.kode} className="mt-2 ml-6">
+                                                <div key={us.kode} className="ml-6 mt-2">
                                                     {renderUnderspørsmål(toKodeverkSpørsmål(us))}
                                                 </div>
                                             ))}

@@ -1,5 +1,8 @@
-@import 'tailwindcss';
-@import '@navikt/ds-css' layer(components);
-@import '@navikt/ds-css/darkside' layer(components);
+@layer twBase, dsComponents, twComponents, twUtilities;
+
+@import 'tailwindcss/base' layer(twBase);
+@import '@navikt/ds-css/darkside' layer(dsComponents);
+@import 'tailwindcss/components' layer(twComponents);
+@import 'tailwindcss/utilities' layer(twUtilities);
 
 @config '../../tailwind.config.ts';
