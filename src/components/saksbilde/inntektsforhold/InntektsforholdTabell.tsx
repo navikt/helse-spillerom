@@ -229,18 +229,12 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                             exit={{ height: 0 }}
                             className="overflow-hidden"
                         >
-                            <Box
-                                background="surface-subtle"
-                                padding="8"
-                                borderRadius="medium"
-                                borderColor="border-subtle"
-                                borderWidth="1"
-                            >
+                            <Box.New className="rounded-md border border-border-subtle bg-surface-subtle p-8">
                                 <InntektsforholdForm
                                     closeForm={() => setVisOpprettForm(false)}
                                     title="Legg til nytt inntektsforhold"
                                 />
-                            </Box>
+                            </Box.New>
                         </motion.div>
                     )}
                 </AnimatePresenceWrapper>
