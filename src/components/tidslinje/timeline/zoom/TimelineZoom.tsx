@@ -22,7 +22,7 @@ export const TimelineZoom: ComponentWithType<TimelineZoomProps> = (): ReactEleme
     const { zoomLevel, setZoomLevel, setZoomSpanInDays } = useTimelineContext()
 
     return (
-        <HStack className="border-1 self-end rounded-sm">
+        <HStack className="border-ax-border-neutral self-end rounded-sm border">
             {(Object.keys(zoomLevels) as ZoomLevel[]).map((label) => (
                 <TimelineZoomButton
                     key={label}
@@ -50,7 +50,7 @@ function TimelineZoomButton({ label, selected, onSelect }: TimelineZoomButtonPro
     return (
         <button
             onClick={onSelect}
-            className={cn('border-l p-[6px_9px_6px_8px] leading-medium first:border-l-0', {
+            className={cn('border-ax-border-neutral border-l p-[6px_9px_6px_8px] leading-medium first:border-l-0', {
                 'cursor-pointer hover:bg-surface-action-subtle-hover': !selected,
                 'bg-surface-inverted text-text-on-inverted': selected,
             })}

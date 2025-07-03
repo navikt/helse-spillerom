@@ -27,7 +27,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
     const toggleOpen = () => setOpen((prev) => !prev)
 
     return (
-        <li className="border-b-1 border-border-divider py-2">
+        <li className="border-b-1 border-ax-border-neutral-subtle py-2">
             <button
                 type="button"
                 aria-expanded={open}
@@ -103,7 +103,7 @@ export function DokumentSkeleton(): ReactElement {
 
 function DokumentContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="li" className="border-b-1 border-border-divider py-2" gap="2">
+        <HStack as="li" className="border-b-1 border-ax-border-neutral-subtle py-2" gap="2">
             {children}
         </HStack>
     )

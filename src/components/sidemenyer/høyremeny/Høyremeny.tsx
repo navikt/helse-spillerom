@@ -81,7 +81,7 @@ export function Høyremeny(): ReactElement {
                 )}
             </AnimatePresenceWrapper>
             <VStack
-                className="border-l-1 border-border-divider px-3 py-6"
+                className="border-l-1 border-ax-border-neutral-subtle px-3 py-6"
                 gap="6"
                 role="toolbar"
                 aria-label="Høyremeny navigasjon"

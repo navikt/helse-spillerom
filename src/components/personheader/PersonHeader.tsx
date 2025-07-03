@@ -29,7 +29,11 @@ export function PersonHeader(): ReactElement {
 
 function PersonHeaderContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="header" className="h-12 border-b bg-[#f8f8f8] px-8" align="center">
+        <HStack
+            as="header"
+            className="border-ax-border-neutral-subtle bg-ax-bg-raised text-ax-text-neutral h-12 border-b px-8"
+            align="center"
+        >
             {children}
         </HStack>
     )

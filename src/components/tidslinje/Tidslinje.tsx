@@ -102,7 +102,7 @@ export function Tidslinje(): ReactElement {
 
 function TimelineSkeleton(): ReactElement {
     return (
-        <VStack className="border-b-1 mt-7 border-border-divider p-8 pb-4" gap="3">
+        <VStack className="border-b-1 border-ax-border-neutral-subtle mt-7 p-8 pb-4" gap="3">
             <TimelineRowSkeleton />
             <TimelineRowSkeleton />
             <Skeleton variant="rectangle" height={14} className="ml-[265px] mt-[15px] grow" />
@@ -122,7 +122,12 @@ function TimelineRowSkeleton(): ReactElement {
 
 function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
     return (
-        <HStack className="border-b-1 h-60 w-full border-border-divider" align="center" justify="center" gap="4">
+        <HStack
+            className="border-b-1 border-ax-border-neutral-subtle h-60 w-full"
+            align="center"
+            justify="center"
+            gap="4"
+        >
             <BodyShort>Kunne ikke hente data for å vise tidslinjen akkurat nå.</BodyShort>
             <Button type="button" size="xsmall" variant="secondary" onClick={refetch}>
                 Prøv igjen
@@ -133,7 +138,12 @@ function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
 
 function TimelineEmpty(): ReactElement {
     return (
-        <HStack className="border-b-1 h-60 w-full border-border-divider" align="center" justify="center" gap="4">
+        <HStack
+            className="border-b-1 border-ax-border-neutral-subtle h-60 w-full"
+            align="center"
+            justify="center"
+            gap="4"
+        >
             <BodyShort>Fant ingen søknader/behandlinger.</BodyShort>
         </HStack>
     )

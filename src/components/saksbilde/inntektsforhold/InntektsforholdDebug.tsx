@@ -54,8 +54,8 @@ function InntektsforholdDebug(): ReactElement {
     return (
         <div className="space-y-6">
             {inntektsforhold.map((forhold, index) => (
-                <div key={forhold.id} className="rounded-lg border border-gray-200 p-4">
-                    <div className="mb-3 border-b border-gray-200 pb-2">
+                <div key={forhold.id} className="border-ax-border-neutral-subtle rounded-lg border p-4">
+                    <div className="border-ax-border-neutral-subtle mb-3 border-b pb-2">
                         <h3 className="text-sm font-semibold text-gray-700">Inntektsforhold #{index + 1}</h3>
                     </div>
                     <Table>

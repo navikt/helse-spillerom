@@ -212,7 +212,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                     (inntekt, index) => (
                                                                         <div
                                                                             key={index}
-                                                                            className="border-l-4 border-blue-300 pl-3"
+                                                                            className="border-ax-border-info border-l-4 pl-3"
                                                                         >
                                                                             <HStack gap="4" className="mb-2">
                                                                                 <VStack gap="1">

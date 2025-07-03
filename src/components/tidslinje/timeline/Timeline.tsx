@@ -35,7 +35,7 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
                 setZoomSpanInDays,
             }}
         >
-            <VStack gap="4" className="ignore-axe border-b-1 w-full border-border-divider p-8 pb-4">
+            <VStack gap="4" className="ignore-axe border-ax-border-neutral-subtle w-full border-b p-8 pb-4">
                 <HStack gap="2" wrap={false}>
                     <TimelineRowLabels labels={rowLabels} />
                     <TimelineScrollableRows ref={timelineScrollableContainerRef}>

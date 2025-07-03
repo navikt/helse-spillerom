@@ -106,7 +106,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                         <Table.DataCell colSpan={4}>
                                             <VStack gap="3" className="p-3">
                                                 {/* Ansettelsesperiode */}
-                                                <div className="border-l-4 border-blue-300 pl-3">
+                                                <div className="border-ax-border-info border-l-4 pl-3">
                                                     <Detail className="mb-1 text-xs text-gray-600">
                                                         Ansettelsesperiode
                                                     </Detail>
@@ -130,7 +130,10 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
 
                                                 {/* Ansettelsesdetaljer */}
                                                 {forhold.ansettelsesdetaljer.map((detalj, index) => (
-                                                    <div key={index} className="border-l-4 border-green-300 pl-3">
+                                                    <div
+                                                        key={index}
+                                                        className="border-ax-border-success border-l-4 pl-3"
+                                                    >
                                                         <Detail className="mb-2 text-xs text-gray-600">
                                                             Ansettelsesdetaljer ({detalj.type})
                                                         </Detail>
@@ -219,7 +222,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                 ))}
 
                                                 {/* Metadata */}
-                                                <div className="border-l-4 border-gray-300 pl-3">
+                                                <div className="border-ax-border-neutral-subtle border-l-4 pl-3">
                                                     <Detail className="mb-2 text-xs text-gray-600">Metadata</Detail>
                                                     <HStack gap="4" wrap>
                                                         <VStack gap="1">

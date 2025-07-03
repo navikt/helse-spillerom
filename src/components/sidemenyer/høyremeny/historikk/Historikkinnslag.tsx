@@ -38,7 +38,7 @@ export function HistorikkinnslagSkeleton(): ReactElement {
 
 function HistorikkinnslagContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="li" className="border-b-1 border-border-divider py-2" gap="2">
+        <HStack as="li" className="border-b-1 border-ax-border-neutral-subtle py-2" gap="2">
             {children}
         </HStack>
     )
