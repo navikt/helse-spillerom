@@ -34,6 +34,7 @@ export type ShortcutId =
     | 'open_rutiner'
     | 'open_modia_sykefraværsoppfølging'
     | 'open_testdata'
+    | 'toggle_dark_mode'
 
 export type ShortcutMetadata = {
     id: ShortcutId
@@ -64,6 +65,13 @@ export const shortcutMetadata: ShortcutMetadata[] = [
         key: 'KeyC',
         modifier: 'Alt',
         visningstekst: 'Kopier fødselsnummer',
+        ignoreIfModifiers: false,
+    },
+    {
+        id: 'toggle_dark_mode',
+        key: 'KeyD',
+        modifier: 'Alt',
+        visningstekst: 'Bytt mellom lys og mørk modus',
         ignoreIfModifiers: false,
     },
     {

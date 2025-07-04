@@ -1,3 +1,5 @@
+import { useTheme } from 'next-themes'
+
 import { ShortcutId } from '@components/tastatursnarveier/shortcutMetadata'
 import { ShortcutHandler } from '@components/tastatursnarveier/context'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
@@ -9,8 +11,13 @@ type GlobalHandlersResponse = {
 
 export function useGlobalHandlers(): GlobalHandlersResponse {
     const { data: personinfo } = usePersoninfo()
+    const { theme, setTheme } = useTheme()
     const fødselsnummer = personinfo?.fødselsnummer
     const aktørId = personinfo?.aktørId
+
+    const toggleDarkMode = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark')
+    }
 
     const externalLinks: Partial<Record<ShortcutId, ShortcutHandler>> = {
         open_aa_reg: () =>
@@ -56,7 +63,7 @@ export function useGlobalHandlers(): GlobalHandlersResponse {
     }
 
     return {
-        allGlobalHandlers: { ...externalLinks },
+        allGlobalHandlers: { ...externalLinks, toggle_dark_mode: toggleDarkMode },
         externalLinks: externalLinks,
     }
 }
