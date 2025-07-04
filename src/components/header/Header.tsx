@@ -9,7 +9,7 @@ import { Personsøk } from '@components/personsøk/Personsøk'
 
 export function Header(): ReactElement {
     return (
-        <InternalHeader className="h-header">
+        <InternalHeader className="h-14">
             <InternalHeaderTitle as={NextLink} href="/">
                 Spillerom
             </InternalHeaderTitle>

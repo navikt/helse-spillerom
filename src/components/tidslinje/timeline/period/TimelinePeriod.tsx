@@ -37,17 +37,28 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
     const daysFromEnd = timelineEnd.diff(endDate, 'day')
     const placement = daysFromEnd * dayLength
 
+    function statusTilDataColor(status: string) {
+        switch (status) {
+            case 'behandling':
+                return 'warning'
+            case 'soknad':
+                return 'info'
+            default:
+                return 'neutral'
+        }
+    }
+
     return (
         <>
             <button
+                data-color={statusTilDataColor(status)}
                 className={cn(
-                    'absolute h-[24px] rounded-full hover:cursor-pointer',
+                    'aksel-timeline__period--clickable aksel-timeline__period absolute h-[24px] rounded-full hover:cursor-pointer',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
-                        'navds-timeline__period--selected': isActive,
+                        'aksel-timeline__period--selected': isActive,
                     },
-                    periodColors[status],
                 )}
                 style={{ left: placement, width }}
                 ref={buttonRef}
@@ -55,7 +66,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                 onMouseOut={onMouseOut}
                 onClick={() => onSelectPeriod?.()}
             >
-                {showIcon && <span className={cn('navds-timeline__period--inner', iconColors[status])}>{icon}</span>}
+                {showIcon && <span className={cn('aksel-timeline__period--inner')}>{icon}</span>}
             </button>
             <Popover strategy="fixed" {...popoverProps}>
                 <PopoverContent>{children}</PopoverContent>
@@ -65,22 +76,6 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 }
 
 TimelinePeriod.componentType = 'TimelinePeriod'
-
-// TODO utvide - avhengig av hvordan "behandling" blir seendes ut, og hvilke statuser vi ser for oss
-const iconColors: Record<string, string> = {
-    test: 'text-icon-default',
-    utbetalt: 'text-border-success',
-    behandling: 'text-border-warning',
-    soknad: 'text-border-info',
-}
-
-// TODO utvide - avhengig av hvordan "behandling" blir seendes ut, og hvilke statuser vi ser for oss
-const periodColors: Record<string, string> = {
-    test: 'navds-timeline__period--neutral hover:bg-surface-neutral-subtle-hover',
-    utbetalt: 'navds-timeline__period--success hover:bg-surface-success-subtle-hover',
-    behandling: 'navds-timeline__period--warning hover:bg-surface-warning-subtle-hover',
-    soknad: 'navds-timeline__period--info hover:bg-surface-info-subtle-hover',
-}
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {
     const [isWider, setIsWider] = useState(false)
