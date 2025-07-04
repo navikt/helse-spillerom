@@ -154,9 +154,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                             onClick={() => toggleYear(year)}
                                             icon={isYearExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                                             iconPosition="right"
-                                        >
-                                            {isYearExpanded ? 'Skjul' : 'Vis'}
-                                        </Button>
+                                        ></Button>
                                     </Table.DataCell>
                                 </Table.Row>
                                 {isYearExpanded &&
@@ -199,9 +197,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                 )
                                                             }
                                                             iconPosition="right"
-                                                        >
-                                                            {isMonthExpanded ? 'Skjul' : 'Vis'}
-                                                        </Button>
+                                                        ></Button>
                                                     </Table.DataCell>
                                                 </Table.Row>
                                                 {isMonthExpanded && (

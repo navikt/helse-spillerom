@@ -96,9 +96,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                             onClick={() => toggleForhold(forhold.id)}
                                             icon={isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                                             iconPosition="right"
-                                        >
-                                            {isExpanded ? 'Skjul' : 'Vis'}
-                                        </Button>
+                                        ></Button>
                                     </Table.DataCell>
                                 </Table.Row>
                                 {isExpanded && (
