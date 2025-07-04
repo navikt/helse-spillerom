@@ -259,7 +259,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                 </div>
                             ))}
                         {errors.selectedSøknader?.message && (
-                            <div className="mt-2 text-sm text-red-600">{errors.selectedSøknader.message}</div>
+                            <div className="text-red-600 mt-2 text-sm">{errors.selectedSøknader.message}</div>
                         )}
                     </>
                 )}

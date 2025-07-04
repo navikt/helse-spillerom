@@ -56,7 +56,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={radio.id} className="ml-4">
                                         <VStack gap="2">
                                             {!(radio.svartype === 'CHECKBOX' || radio.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="font-semibold text-gray-800">
+                                                <BodyShort size="small" className="text-gray-800 font-semibold">
                                                     {radio.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -85,7 +85,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={checkbox.id} className="ml-4">
                                         <VStack gap="2">
                                             {!(checkbox.svartype === 'CHECKBOX' || checkbox.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="font-semibold text-gray-800">
+                                                <BodyShort size="small" className="text-gray-800 font-semibold">
                                                     {checkbox.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -120,7 +120,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={us.id} className="ml-4">
                                         <VStack gap="2">
                                             {!(us.svartype === 'CHECKBOX' || us.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="font-semibold text-gray-800">
+                                                <BodyShort size="small" className="text-gray-800 font-semibold">
                                                     {us.sporsmalstekst}
                                                 </BodyShort>
                                             )}

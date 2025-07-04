@@ -35,7 +35,7 @@ interface ExternalLinkButtonProps {
 }
 
 const ExternalLinkButton = ({ tekst, action, keyCode, modifier }: ExternalLinkButtonProps): ReactElement => (
-    <DropdownMenuGroupedListItem key={tekst} as="button" className="whitespace-nowrap px-4 py-2" onClick={action}>
+    <DropdownMenuGroupedListItem key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
         {tekst}
         <ExternalLinkIcon fontSize="1.1rem" title="Åpne ekstern lenke" />
         <Spacer />

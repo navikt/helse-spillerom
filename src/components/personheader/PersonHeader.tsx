@@ -31,7 +31,7 @@ function PersonHeaderContainer({ children }: PropsWithChildren): ReactElement {
     return (
         <HStack
             as="header"
-            className="border-ax-border-neutral-subtle bg-ax-bg-raised text-ax-text-neutral h-12 border-b px-8"
+            className="h-12 border-b border-ax-border-neutral-subtle bg-ax-bg-raised px-8 text-ax-text-neutral"
             align="center"
         >
             {children}

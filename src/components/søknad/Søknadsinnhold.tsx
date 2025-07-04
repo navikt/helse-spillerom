@@ -15,7 +15,7 @@ export const Søknadsinnhold = ({ søknad }: SøknadsinnholdProps): ReactElement
     return (
         <div>
             {søknad && (
-                <Box className="flex flex-col gap-4 rounded bg-gray-50 p-4">
+                <Box className="bg-gray-50 flex flex-col gap-4 rounded p-4">
                     {søknad.type && (
                         <VStack gap="2">
                             <BodyShort size="small" className="font-bold">
