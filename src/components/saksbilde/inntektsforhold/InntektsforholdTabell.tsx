@@ -155,7 +155,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                             Rediger
                                                         </Button>
                                                         <Button
-                                                            className="text-red-500"
+                                                            className="text-text-danger"
                                                             variant="tertiary"
                                                             size="small"
                                                             icon={<TrashIcon aria-hidden />}
@@ -229,7 +229,13 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                             exit={{ height: 0 }}
                             className="overflow-hidden"
                         >
-                            <Box.New className="border-ax-border-neutral-subtle rounded-md border bg-surface-subtle p-8">
+                            <Box.New
+                                background="accent-soft"
+                                borderColor="neutral-subtle"
+                                borderWidth="1"
+                                borderRadius="medium"
+                                className="rounded-md p-8"
+                            >
                                 <InntektsforholdForm
                                     closeForm={() => setVisOpprettForm(false)}
                                     title="Legg til nytt inntektsforhold"
