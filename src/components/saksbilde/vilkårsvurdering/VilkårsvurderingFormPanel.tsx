@@ -21,7 +21,7 @@ export function VilkårsvurderingFormPanel({
 
     return (
         <VStack
-            className="bg-surface-selected mt-12 -ml-px grow border-t-2 border-l border-ax-border-neutral px-4 py-3"
+            className="mt-12 -ml-px grow border-t-2 border-l border-ax-border-neutral-subtle bg-ax-bg-accent-soft px-4 py-3"
             gap="8"
         >
             <HStack gap="4" wrap={false}>
