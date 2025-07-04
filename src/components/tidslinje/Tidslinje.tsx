@@ -102,10 +102,10 @@ export function Tidslinje(): ReactElement {
 
 function TimelineSkeleton(): ReactElement {
     return (
-        <VStack className="border-b-1 border-ax-border-neutral-subtle mt-7 p-8 pb-4" gap="3">
+        <VStack className="mt-7 border-b-1 border-ax-border-neutral-subtle p-8 pb-4" gap="3">
             <TimelineRowSkeleton />
             <TimelineRowSkeleton />
-            <Skeleton variant="rectangle" height={14} className="ml-[265px] mt-[15px] grow" />
+            <Skeleton variant="rectangle" height={14} className="mt-[15px] ml-[265px] grow" />
             <Skeleton variant="rectangle" height={36} width={246} className="self-end" />
         </VStack>
     )
@@ -123,7 +123,7 @@ function TimelineRowSkeleton(): ReactElement {
 function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
     return (
         <HStack
-            className="border-b-1 border-ax-border-neutral-subtle h-60 w-full"
+            className="h-60 w-full border-b-1 border-ax-border-neutral-subtle"
             align="center"
             justify="center"
             gap="4"
@@ -139,7 +139,7 @@ function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
 function TimelineEmpty(): ReactElement {
     return (
         <HStack
-            className="border-b-1 border-ax-border-neutral-subtle h-60 w-full"
+            className="h-60 w-full border-b-1 border-ax-border-neutral-subtle"
             align="center"
             justify="center"
             gap="4"

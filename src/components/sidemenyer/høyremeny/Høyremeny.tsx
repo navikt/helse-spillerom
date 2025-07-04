@@ -60,7 +60,7 @@ export function Høyremeny(): ReactElement {
                         <Sidemeny side="right" className="h-full">
                             <VStack gap="4">
                                 <HStack justify="space-between">
-                                    <Heading level="1" size="xsmall" className="font-medium text-gray-600">
+                                    <Heading level="1" size="xsmall" className="text-gray-600 font-medium">
                                         {filter}
                                     </Heading>
                                     <Button
@@ -133,7 +133,7 @@ function FilterButton({ icon, active, onClick, label, pressed }: FilterButtonPro
     return (
         <button
             className={cn(
-                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full active:bg-surface-action active:text-text-on-action',
+                'active:bg-surface-action active:text-text-on-action flex h-8 w-8 cursor-pointer items-center justify-center rounded-full',
                 {
                     'bg-surface-subtle hover:bg-surface-action-subtle-hover': !active,
                     'bg-surface-action text-text-on-action hover:bg-surface-action-hover': active,

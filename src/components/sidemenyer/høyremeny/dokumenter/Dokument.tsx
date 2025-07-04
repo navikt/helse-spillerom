@@ -42,7 +42,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         {getFormattedDatetimeString(dokument.opprettet)}
                     </BodyShort>
                 </VStack>
-                <span aria-hidden="true" className="ml-2 mt-1">
+                <span aria-hidden="true" className="mt-1 ml-2">
                     {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 </span>
             </button>
@@ -68,7 +68,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 pensjonsgivendeInntekt={dokument.innhold as PensjonsgivendeInntekt}
                             />
                         ) : (
-                            <pre className="overflow-x-auto rounded bg-gray-50 p-2 text-xs">
+                            <pre className="bg-gray-50 overflow-x-auto rounded p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
                             </pre>
                         )}

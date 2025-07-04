@@ -16,7 +16,7 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
     const { periods } = useRowContext()
 
     return (
-        <HStack className="relative my-4 h-[24px] grow bg-tidslinjebakgrunn" style={{ width }}>
+        <HStack className="relative my-4 h-[24px] grow bg-ax-bg-accent-soft" style={{ width }}>
             {periods.map((period) => (
                 <PeriodContext.Provider
                     key={period.id}

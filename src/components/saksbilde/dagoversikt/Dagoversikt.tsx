@@ -150,7 +150,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                     <div className="text-sm font-medium">
                         <Organisasjonsnavn orgnummer={orgnummer} />
                     </div>
-                    <div className="text-xs text-gray-600">{typeText}</div>
+                    <div className="text-gray-600 text-xs">{typeText}</div>
                 </div>
             )
         }
@@ -304,7 +304,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                 </Table>
 
                                 {erIRedigeringsmodus && valgteDataer.size > 0 && (
-                                    <div className="mt-6 rounded-lg border bg-gray-50 p-4">
+                                    <div className="bg-gray-50 mt-6 rounded-lg border p-4">
                                         <Heading size="small" className="mb-4">
                                             Fyll inn hva de {valgteDataer.size} valgte dagene skal endres til
                                         </Heading>
@@ -392,14 +392,14 @@ function getDagtypeIcon(dagtype: string): ReactElement {
 function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     if (kilde === 'Søknad') {
         return (
-            <Tag variant="alt1" className="leading-0 mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small">
+            <Tag variant="alt1" className="text-small mt-[2px] h-5 min-h-5 w-6 rounded-sm leading-0">
                 SØ
             </Tag>
         )
     }
     if (kilde === 'Saksbehandler') {
         return (
-            <Tag variant="neutral" className="leading-0 mt-[2px] h-5 min-h-5 w-6 rounded-sm text-small">
+            <Tag variant="neutral" className="text-small mt-[2px] h-5 min-h-5 w-6 rounded-sm leading-0">
                 SB
             </Tag>
         )

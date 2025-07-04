@@ -20,7 +20,7 @@ export function InntektsforholdDebugging({ children }: PropsWithChildren): React
         <div className="relative min-h-screen">
             {children}
 
-            <div className="fixed bottom-4 right-32 z-50">
+            <div className="fixed right-32 bottom-4 z-50">
                 <Tooltip content="Inntektsforhold">
                     <Button
                         type="button"
@@ -37,7 +37,7 @@ export function InntektsforholdDebugging({ children }: PropsWithChildren): React
                         setShowModal(false)
                     }}
                     header={{ heading: 'Inntektsforhold', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] min-w-[800px] max-w-[1200px] rounded-none p-0"
+                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>
                         <InntektsforholdDebug />
@@ -54,9 +54,9 @@ function InntektsforholdDebug(): ReactElement {
     return (
         <div className="space-y-6">
             {inntektsforhold.map((forhold, index) => (
-                <div key={forhold.id} className="border-ax-border-neutral-subtle rounded-lg border p-4">
-                    <div className="border-ax-border-neutral-subtle mb-3 border-b pb-2">
-                        <h3 className="text-sm font-semibold text-gray-700">Inntektsforhold #{index + 1}</h3>
+                <div key={forhold.id} className="rounded-lg border border-ax-border-neutral-subtle p-4">
+                    <div className="mb-3 border-b border-ax-border-neutral-subtle pb-2">
+                        <h3 className="text-gray-700 text-sm font-semibold">Inntektsforhold #{index + 1}</h3>
                     </div>
                     <Table>
                         <Table.Body>

@@ -208,11 +208,11 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                     (inntekt, index) => (
                                                                         <div
                                                                             key={index}
-                                                                            className="border-ax-border-info border-l-4 pl-3"
+                                                                            className="border-l-4 border-ax-border-info pl-3"
                                                                         >
                                                                             <HStack gap="4" className="mb-2">
                                                                                 <VStack gap="1">
-                                                                                    <Detail className="text-xs text-gray-600">
+                                                                                    <Detail className="text-gray-600 text-xs">
                                                                                         Beløp
                                                                                     </Detail>
                                                                                     <BodyShort
@@ -223,7 +223,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                                     </BodyShort>
                                                                                 </VStack>
                                                                                 <VStack gap="1">
-                                                                                    <Detail className="text-xs text-gray-600">
+                                                                                    <Detail className="text-gray-600 text-xs">
                                                                                         Type
                                                                                     </Detail>
                                                                                     <BodyShort size="small">
@@ -231,7 +231,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                                     </BodyShort>
                                                                                 </VStack>
                                                                                 <VStack gap="1">
-                                                                                    <Detail className="text-xs text-gray-600">
+                                                                                    <Detail className="text-gray-600 text-xs">
                                                                                         Beskrivelse
                                                                                     </Detail>
                                                                                     <BodyShort size="small">
@@ -241,7 +241,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                             </HStack>
                                                                             <HStack gap="4">
                                                                                 <VStack gap="1">
-                                                                                    <Detail className="text-xs text-gray-600">
+                                                                                    <Detail className="text-gray-600 text-xs">
                                                                                         Virksomhet
                                                                                     </Detail>
                                                                                     <BodyShort size="small">
@@ -263,7 +263,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                                     </BodyShort>
                                                                                 </VStack>
                                                                                 <VStack gap="1">
-                                                                                    <Detail className="text-xs text-gray-600">
+                                                                                    <Detail className="text-gray-600 text-xs">
                                                                                         Status
                                                                                     </Detail>
                                                                                     <BodyShort size="small">
@@ -272,7 +272,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                                 </VStack>
                                                                                 {inntekt.antall && (
                                                                                     <VStack gap="1">
-                                                                                        <Detail className="text-xs text-gray-600">
+                                                                                        <Detail className="text-gray-600 text-xs">
                                                                                             Antall
                                                                                         </Detail>
                                                                                         <BodyShort size="small">
