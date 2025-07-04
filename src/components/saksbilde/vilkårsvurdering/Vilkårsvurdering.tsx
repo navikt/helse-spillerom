@@ -138,19 +138,19 @@ export function VilkårsvurderingAccordionContent({
 export function getVurderingIcon(vurdering?: Vurdering): ReactElement {
     switch (vurdering) {
         case 'OPPFYLT': {
-            return <CheckmarkCircleFillIcon fontSize={24} className="text-icon-success" />
+            return <CheckmarkCircleFillIcon fontSize={24} className="text-ax-text-success-decoration" />
         }
         case 'IKKE_OPPFYLT': {
-            return <CircleSlashFillIcon fontSize={24} className="text-icon-danger" />
+            return <CircleSlashFillIcon fontSize={24} className="text-ax-text-danger-decoration" />
         }
         case 'IKKE_RELEVANT': {
-            return <QuestionmarkCircleFillIcon fontSize={24} className="text-icon-default" /> // må byttes til et annet ikon
+            return <QuestionmarkCircleFillIcon fontSize={24} className="text-ax-text-neutral-decoration" /> // må byttes til et annet ikon
         }
         case 'SKAL_IKKE_VURDERES': {
-            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-gray-400" />
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-ax-text-neutral-decoration" />
         }
         default: {
-            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-icon-warning" />
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-ax-text-warning-decoration" />
         }
     }
 }
