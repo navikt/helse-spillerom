@@ -17,7 +17,7 @@ export function RetroTemaToggle({ className }: RetroTemaToggleProps): ReactEleme
             setIsRetroTema(false)
             toggleRetroTema()
         }
-    }, [theme])
+    }, [theme, isRetroTema])
 
     const toggleRetroTema = () => {
         const newRetroTema = !isRetroTema
