@@ -1,4 +1,5 @@
 export const allowedAPIs = [
+    'GET /v1/bruker',
     'GET /v1/[personId]/personinfo',
     'GET /v1/[personId]/soknader',
     'POST /v1/personsok',
