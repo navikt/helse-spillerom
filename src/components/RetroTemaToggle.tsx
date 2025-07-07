@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import { Button, Tooltip } from '@navikt/ds-react'
 import { CodeIcon } from '@navikt/aksel-icons'
 import { useTheme } from 'next-themes'
@@ -12,14 +12,8 @@ interface RetroTemaToggleProps {
 export function RetroTemaToggle({ className }: RetroTemaToggleProps): ReactElement {
     const [isRetroTema, setIsRetroTema] = useState(false)
     const { theme, setTheme } = useTheme()
-    useEffect(() => {
-        if (theme === 'light' && isRetroTema) {
-            setIsRetroTema(false)
-            toggleRetroTema()
-        }
-    }, [theme, isRetroTema])
 
-    const toggleRetroTema = () => {
+    const toggleRetroTema = useCallback(() => {
         const newRetroTema = !isRetroTema
         setIsRetroTema(newRetroTema)
 
@@ -28,7 +22,14 @@ export function RetroTemaToggle({ className }: RetroTemaToggleProps): ReactEleme
         } else {
             document.documentElement.classList.remove('retro-tema')
         }
-    }
+    }, [isRetroTema])
+
+    useEffect(() => {
+        if (theme === 'light' && isRetroTema) {
+            setIsRetroTema(false)
+            toggleRetroTema()
+        }
+    }, [theme, isRetroTema, setIsRetroTema, toggleRetroTema])
 
     const handleRetroToggle = () => {
         if (theme !== 'dark' && !isRetroTema) {
