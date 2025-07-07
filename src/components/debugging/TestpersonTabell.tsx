@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { Table } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableRow } from '@navikt/ds-react/Table'
 
