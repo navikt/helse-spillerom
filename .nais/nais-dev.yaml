@@ -33,6 +33,8 @@ spec:
           - 'NAVident'
         groups:
           - id: '4373da97-ad06-40c0-893e-98ba4d0aeecb' # helse-spillerom-saksbehandler
+          - id: '50522674-8a68-467d-8689-c71074a84dcc' # helse-spillerom-beslutter
+          - id: '101064bf-99ea-40a2-9285-e38cfbb74f10' # helse-spillerom-lesemodus
     sidecar:
       enabled: true
       autoLogin: true
