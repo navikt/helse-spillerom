@@ -1,56 +1,14 @@
 'use client'
 
-import React, { PropsWithChildren, ReactElement, useState } from 'react'
-import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, TrashIcon } from '@navikt/aksel-icons'
-import { ModalBody } from '@navikt/ds-react/Modal'
-import { useParams } from 'next/navigation'
+import React, { ReactElement } from 'react'
+import { Button, Table } from '@navikt/ds-react'
+import { TrashIcon } from '@navikt/aksel-icons'
 
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
-import { erProd } from '@/env'
 import { useKodeverk } from '@hooks/queries/useKodeverk'
 
-export function VilkarsvurderingDebugging({ children }: PropsWithChildren): ReactElement {
-    const [showModal, setShowModal] = useState(false)
-    const params = useParams()
-
-    if (erProd || !params.saksbehandlingsperiodeId) {
-        return <>{children}</>
-    }
-    return (
-        <div className="relative min-h-screen">
-            {children}
-
-            <div className="fixed right-20 bottom-4 z-50">
-                <Tooltip content="Vilkårsvurderinger">
-                    <Button
-                        type="button"
-                        onClick={() => setShowModal((prev) => !prev)}
-                        icon={<ParagraphIcon title="Åpne vilkårsvurdering debugging" aria-hidden />}
-                        variant="tertiary-neutral"
-                    />
-                </Tooltip>
-            </div>
-            {showModal && (
-                <Modal
-                    open={showModal}
-                    onClose={() => {
-                        setShowModal(false)
-                    }}
-                    header={{ heading: 'Vurderte vilkår', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
-                >
-                    <ModalBody>
-                        <Vilkårsvurdering />
-                    </ModalBody>
-                </Modal>
-            )}
-        </div>
-    )
-}
-
-function Vilkårsvurdering(): ReactElement {
+export function VilkårsvurderingDebug(): ReactElement {
     const { data: vurderinger = [] } = useVilkaarsvurderinger()
     const { data: kodeverk = [] } = useKodeverk()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()

@@ -11,9 +11,7 @@ import dayjs from 'dayjs'
 
 import { ThemeProvider } from '@components/ThemeProvider'
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
-import { DemoPersonsøk } from '@/mock-api/DemoPersonsøk'
-import { VilkarsvurderingDebugging } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingDebug'
-import { InntektsforholdDebugging } from '@components/saksbilde/inntektsforhold/InntektsforholdDebug'
+import { DebuggingProvider } from '@components/DebuggingProvider'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -40,11 +38,7 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
                 <ShortcutProvider>
-                    <VilkarsvurderingDebugging>
-                        <InntektsforholdDebugging>
-                            <DemoPersonsøk>{children}</DemoPersonsøk>
-                        </InntektsforholdDebugging>
-                    </VilkarsvurderingDebugging>
+                    <DebuggingProvider>{children}</DebuggingProvider>
                 </ShortcutProvider>
             </QueryClientProvider>
         </ThemeProvider>

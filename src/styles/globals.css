@@ -2,3 +2,20 @@
 @import '@navikt/ds-css/darkside' layer(components);
 
 @config '../../tailwind.config.ts';
+
+/* Retro tema styling */
+.retro-tema {
+    font-family:
+        'Courier New', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
+        monospace;
+    --ax-bg-strong: #00fefe !important; /* Sterk rødfarge */
+    --ax-text-subtle: #00fefe !important; /* Sterk rødfarge */
+}
+
+.retro-tema *,
+.retro-tema *::before,
+.retro-tema *::after {
+    font-family:
+        'Courier New', 'Monaco', 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
+        monospace !important;
+}
