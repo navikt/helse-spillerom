@@ -13,6 +13,10 @@ test.describe('Dokumentnedlasting fra høyremeny', () => {
         await navigerTilPersonOgBehandling('13064512348', 'Blanke Ark')(page)
 
         // Åpne høyremenyen med dokumenter
+        // Åpne høyremenyen ved å klikke på "Vis dokumenter" knappen
+        const viseDokumenterKnapp = page.getByRole('button', { name: 'Vis dokumenter' })
+        await expect(viseDokumenterKnapp).toBeVisible()
+        await viseDokumenterKnapp.click()
 
         // Fortsett med resten av testen...
         const ainntektKnapp = page.getByRole('button', { name: 'Last ned A-inntekt som dokument' })

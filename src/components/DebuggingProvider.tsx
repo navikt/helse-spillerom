@@ -31,7 +31,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
             {children}
 
             {/* Debugging knapper */}
-            <div className="fixed right-4 bottom-4 z-50 flex flex-col gap-2">
+            <div className="fixed bottom-4 left-16 z-50 flex flex-row gap-2">
                 {/* Testdata knapp (øverst) */}
                 {showTestdataButton && (
                     <Tooltip content="Testpersoner">
