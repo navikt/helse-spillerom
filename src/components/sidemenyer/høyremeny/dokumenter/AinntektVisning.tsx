@@ -386,9 +386,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                         Arbeidsgiver/År/Måned
                     </Table.HeaderCell>
                     <Table.HeaderCell scope="col" className="text-xs">
-                        Unike
-                    </Table.HeaderCell>
-                    <Table.HeaderCell scope="col" className="text-xs">
                         Total
                     </Table.HeaderCell>
                     <Table.HeaderCell scope="col"></Table.HeaderCell>
@@ -402,7 +399,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                     return (
                         <Fragment key={employer}>
                             <Table.Row className="bg-green-50">
-                                <Table.DataCell colSpan={3}>
+                                <Table.DataCell colSpan={2}>
                                     <VStack gap="0">
                                         <BodyShort size="small" className="font-semibold">
                                             <Organisasjonsnavn orgnummer={employer} />
@@ -439,11 +436,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                             0,
                                         )
 
-                                        const allYearInntekter = yearData.flatMap(
-                                            (maaned) => maaned.arbeidsInntektInformasjon.inntektListe,
-                                        )
-                                        const yearUniqueCount = getUniqueInntekterCount(allYearInntekter)
-
                                         const employerYearKey = `${employer}-${year}`
                                         const isEmployerYearExpanded = expandedEmployerYears.has(employerYearKey)
 
@@ -453,11 +445,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                     <Table.DataCell className="pl-8">
                                                         <BodyShort size="small" className="font-semibold">
                                                             {year}
-                                                        </BodyShort>
-                                                    </Table.DataCell>
-                                                    <Table.DataCell>
-                                                        <BodyShort size="small" className="font-semibold">
-                                                            {yearUniqueCount}
                                                         </BodyShort>
                                                     </Table.DataCell>
                                                     <Table.DataCell>
@@ -488,9 +475,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                 (sum, inntekt) => sum + inntekt.beloep,
                                                                 0,
                                                             )
-                                                        const uniqueCount = getUniqueInntekterCount(
-                                                            maaned.arbeidsInntektInformasjon.inntektListe,
-                                                        )
                                                         const monthKey = `${employer}-${maaned.aarMaaned}`
                                                         const isMonthExpanded = expandedMonths.has(monthKey)
 
@@ -500,11 +484,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                     <Table.DataCell className="pl-16">
                                                                         <BodyShort size="small">
                                                                             {formatMonth(maaned.aarMaaned)}
-                                                                        </BodyShort>
-                                                                    </Table.DataCell>
-                                                                    <Table.DataCell>
-                                                                        <BodyShort size="small">
-                                                                            {uniqueCount}
                                                                         </BodyShort>
                                                                     </Table.DataCell>
                                                                     <Table.DataCell>
@@ -530,7 +509,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                 </Table.Row>
                                                                 {isMonthExpanded && (
                                                                     <Table.Row className="bg-gray-50">
-                                                                        <Table.DataCell colSpan={4}>
+                                                                        <Table.DataCell colSpan={3}>
                                                                             <VStack gap="2" className="p-2">
                                                                                 {maaned.arbeidsInntektInformasjon.inntektListe.map(
                                                                                     (inntekt, index) => (
