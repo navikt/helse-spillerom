@@ -1,4 +1,4 @@
-import { type Kodeverk } from '@/schemas/kodeverkV2'
+import { type Kodeverk } from '@schemas/kodeverkV2'
 
 export const kategoriLabels = {
     generelle_bestemmelser: 'Generelle bestemmelser',
@@ -995,7 +995,7 @@ export const lokalUtviklingKodeverkV2: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'DAGER_IGJEN',
+        vilkårskode: 'DAGER_IGJEN_V2',
         beskrivelse: 'Antall sykepengedager',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
