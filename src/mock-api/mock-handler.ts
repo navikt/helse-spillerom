@@ -52,7 +52,7 @@ const handlers: Record<string, HandlerFunction> = {
         const roller = await hentBrukerRoller()
 
         const mockBruker = {
-            navn: 'Test Testsen',
+            navn: 'Saks McBehandlersen',
             navIdent: 'Z999999',
             preferredUsername: 'test.testsen@nav.no',
             roller: roller,

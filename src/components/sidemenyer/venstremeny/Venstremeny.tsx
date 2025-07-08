@@ -7,6 +7,7 @@ import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
+import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { getFormattedDateString } from '@utils/date-format'
 
 import { KategoriTag } from './KategoriTag'
@@ -14,6 +15,7 @@ import { KategoriTag } from './KategoriTag'
 export function Venstremeny(): ReactElement {
     const params = useParams()
     const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
+    const { data: brukerRoller } = useBrukerRoller()
 
     // Finn aktiv saksbehandlingsperiode hvis vi er inne i en
     const aktivSaksbehandlingsperiode = saksbehandlingsperioder?.find(
@@ -35,28 +37,32 @@ export function Venstremeny(): ReactElement {
                             </BodyShort>
                         </HStack>
 
-                        <Button
-                            variant="tertiary"
-                            size="small"
-                            icon={<DocPencilIcon aria-hidden fontSize="1.25rem" />}
-                            className="w-fit"
-                            onClick={() => {
-                                // TODO: Implementer individuell begrunnelse funksjonalitet
-                            }}
-                        >
-                            Skriv individuell begrunnelse
-                        </Button>
+                        {brukerRoller.saksbehandler && (
+                            <>
+                                <Button
+                                    variant="tertiary"
+                                    size="small"
+                                    icon={<DocPencilIcon aria-hidden fontSize="1.25rem" />}
+                                    className="w-fit"
+                                    onClick={() => {
+                                        // TODO: Implementer individuell begrunnelse funksjonalitet
+                                    }}
+                                >
+                                    Skriv individuell begrunnelse
+                                </Button>
 
-                        <Button
-                            variant="primary"
-                            size="small"
-                            className="w-fit"
-                            onClick={() => {
-                                // TODO: Implementer send til godkjenning funksjonalitet
-                            }}
-                        >
-                            Send til godkjenning
-                        </Button>
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    className="w-fit"
+                                    onClick={() => {
+                                        // TODO: Implementer send til godkjenning funksjonalitet
+                                    }}
+                                >
+                                    Send til godkjenning
+                                </Button>
+                            </>
+                        )}
                     </>
                 )}
             </VStack>

@@ -39,12 +39,8 @@ export function RolleModal({ open, onClose }: RolleModalProps): React.ReactEleme
         if (data.saksbehandler) roller.push('SAKSBEHANDLER')
         if (data.beslutter) roller.push('BESLUTTER')
 
-        try {
-            await oppdaterRoller.mutateAsync({ roller })
-            onClose()
-        } catch (error) {
-            console.error('Feil ved oppdatering av roller:', error)
-        }
+        await oppdaterRoller.mutateAsync({ roller })
+        onClose()
     }
 
     const handleAvbryt = () => {

@@ -16,6 +16,7 @@ import { motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOppdaterInntektsforhold'
@@ -30,6 +31,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
+    const { data: brukerRoller } = useBrukerRoller()
     const slettMutation = useSlettInntektsforhold()
     const oppdaterMutation = useOppdaterInntektsforholdKategorisering()
 
@@ -203,7 +205,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         <BodyShort>Ingen inntektsforhold registrert for denne saksbehandlingsperioden.</BodyShort>
                     </Alert>
                 )}
-                {!visOpprettForm && (
+                {!visOpprettForm && brukerRoller.saksbehandler && (
                     <Button
                         className="w-fit"
                         variant="tertiary"
