@@ -47,6 +47,17 @@ interface HandlerContext {
 type HandlerFunction = (context: HandlerContext) => Promise<Response>
 
 const handlers: Record<string, HandlerFunction> = {
+    'GET /v1/bruker': async () => {
+        // Mock bruker data matching bakrommet structure
+        const mockBruker = {
+            navn: 'Test Testsen',
+            navIdent: 'Z999999',
+            preferredUsername: 'test.testsen@nav.no',
+            roller: ['LES', 'SAKSBEHANDLER'],
+        }
+        return NextResponse.json(mockBruker)
+    },
+
     'GET /v1/[personId]/personinfo': async ({ person }) => handlePersoninfo(await person),
 
     'GET /v1/[personId]/saksbehandlingsperioder': async ({ person }) => handleGetSaksbehandlingsperioder(await person),

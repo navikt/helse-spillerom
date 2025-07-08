@@ -6,6 +6,6 @@ import { fetchAndParse } from '@utils/fetch'
 export function useBrukerinfo() {
     return useQuery<Bruker, Error>({
         queryKey: ['brukerinfo'],
-        queryFn: async () => fetchAndParse('/api/v1/bruker', brukerSchema),
+        queryFn: async () => fetchAndParse('/api/bakrommet/v1/bruker', brukerSchema),
     })
 }
