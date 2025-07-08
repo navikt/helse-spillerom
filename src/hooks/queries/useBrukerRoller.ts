@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { useBrukerinfo } from './useBrukerinfo'
 
 type BrukerRoller = {
@@ -9,11 +11,14 @@ type BrukerRoller = {
 export function useBrukerRoller() {
     const { data: brukerinfo } = useBrukerinfo()
 
-    const data: BrukerRoller = {
-        leserolle: brukerinfo?.roller?.includes('LES') ?? false,
-        saksbehandler: brukerinfo?.roller?.includes('SAKSBEHANDLER') ?? false,
-        beslutter: brukerinfo?.roller?.includes('BESLUTTER') ?? false,
-    }
+    const data: BrukerRoller = useMemo(
+        () => ({
+            leserolle: brukerinfo?.roller?.includes('LES') ?? false,
+            saksbehandler: brukerinfo?.roller?.includes('SAKSBEHANDLER') ?? false,
+            beslutter: brukerinfo?.roller?.includes('BESLUTTER') ?? false,
+        }),
+        [brukerinfo?.roller],
+    )
 
     return {
         data,

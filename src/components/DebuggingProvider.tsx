@@ -2,7 +2,7 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, BriefcaseIcon, SandboxIcon } from '@navikt/aksel-icons'
+import { ParagraphIcon, BriefcaseIcon, SandboxIcon, PersonIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
@@ -12,8 +12,9 @@ import { VilkårsvurderingDebug } from '@components/saksbilde/vilkårsvurdering/
 import { InntektsforholdDebug } from '@components/saksbilde/inntektsforhold/InntektsforholdDebug'
 import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
+import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
-type ModalType = 'vilkårsvurdering' | 'inntektsforhold' | 'testdata' | null
+type ModalType = 'vilkårsvurdering' | 'inntektsforhold' | 'testdata' | 'roller' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
@@ -23,6 +24,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
 
     const showDebuggingButtons = !erProd && params.saksbehandlingsperiodeId
     const showTestdataButton = erLokalEllerDemo
+    const showRolleButton = erLokalEllerDemo
 
     const closeModal = () => setActiveModal(null)
 
@@ -32,13 +34,25 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
 
             {/* Debugging knapper */}
             <div className="fixed bottom-4 left-16 z-50 flex flex-row gap-2">
-                {/* Testdata knapp (øverst) */}
+                {/* Testdata knapp */}
                 {showTestdataButton && (
                     <Tooltip content="Testpersoner">
                         <Button
                             type="button"
                             onClick={() => setActiveModal('testdata')}
                             icon={<SandboxIcon title="Åpne testdataverktøy" aria-hidden />}
+                            variant="tertiary-neutral"
+                        />
+                    </Tooltip>
+                )}
+
+                {/* Rolle knapp */}
+                {showRolleButton && (
+                    <Tooltip content="Endre roller">
+                        <Button
+                            type="button"
+                            onClick={() => setActiveModal('roller')}
+                            icon={<PersonIcon title="Endre brukerroller" aria-hidden />}
                             variant="tertiary-neutral"
                         />
                     </Tooltip>
@@ -110,6 +124,8 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                     </ModalBody>
                 </Modal>
             )}
+
+            {activeModal === 'roller' && <RolleModal open={true} onClose={closeModal} />}
         </div>
     )
 }

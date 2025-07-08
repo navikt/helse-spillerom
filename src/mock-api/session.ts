@@ -11,6 +11,7 @@ import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
+import { Rolle } from '@/schemas/bruker'
 
 export interface Person {
     fnr: string
@@ -26,6 +27,7 @@ export interface Person {
 type Session = {
     expires: Dayjs
     testpersoner: Person[]
+    brukerRoller: Rolle[]
 }
 
 // Deep copy funksjon for å unngå delte referanser mellom sesjoner
@@ -84,6 +86,7 @@ export async function getSession(): Promise<Session> {
                 skapPerson('12345678903'),
                 skapPerson('33423422323'),
             ],
+            brukerRoller: ['LES', 'SAKSBEHANDLER'],
         }
     }
 
@@ -125,4 +128,14 @@ export async function hentEllerOpprettPerson(fnr: string) {
 export async function hentPerson(personid: string) {
     const session = await getSession()
     return session.testpersoner.find((p) => p.personId === personid)
+}
+
+export async function oppdaterBrukerRoller(roller: Rolle[]) {
+    const session = await getSession()
+    session.brukerRoller = roller
+}
+
+export async function hentBrukerRoller(): Promise<Rolle[]> {
+    const session = await getSession()
+    return session.brukerRoller
 }
