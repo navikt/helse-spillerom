@@ -10,22 +10,19 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { getVurderingIcon } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { VilkårsvurderingV2Form } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingV2Form'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
-import {
-    lokalUtviklingKodeverkV2,
-    kategoriLabels,
-} from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
+import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Vilkår } from '@schemas/kodeverkV2'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
+import { useKodeverkV2 } from '@hooks/queries/useKodeverkV2'
 
 export function VilkårsvurderingV2({ value }: { value: string }): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
+    const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverkV2()
 
-    if (isLoading) return <VilkårsvurderingSkeleton />
-    if (isError) return <></>
-
-    const kodeverk = lokalUtviklingKodeverkV2
+    if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
+    if (isError || kodeverkError) return <></>
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {
