@@ -11,7 +11,6 @@ import {
     QuestionmarkCircleFillIcon,
 } from '@navikt/aksel-icons'
 
-import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { Vilkår } from '@components/saksbilde/vilkårsvurdering/kodeverk'
 import { VilkårsvurderingFormPanel } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingFormPanel'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
@@ -20,7 +19,7 @@ import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
 import { cn } from '@utils/tw'
 import { useKodeverk } from '@hooks/queries/useKodeverk'
 
-export function Vilkårsvurdering({ value }: { value: string }): ReactElement {
+export function Vilkårsvurdering(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverk()
 
@@ -36,7 +35,7 @@ export function Vilkårsvurdering({ value }: { value: string }): ReactElement {
     )
 
     return (
-        <SaksbildePanel value={value}>
+        <div>
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
                     const vurdertAntall = vilkårListe.filter((v) =>
@@ -59,7 +58,7 @@ export function Vilkårsvurdering({ value }: { value: string }): ReactElement {
                     )
                 })}
             </Accordion>
-        </SaksbildePanel>
+        </div>
     )
 }
 

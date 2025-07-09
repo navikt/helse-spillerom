@@ -6,7 +6,6 @@ import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-rea
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
-import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { getVurderingIcon } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { VilkårsvurderingV2Form } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingV2Form'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
@@ -16,7 +15,7 @@ import { Vilkår } from '@schemas/kodeverkV2'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useKodeverkV2 } from '@hooks/queries/useKodeverkV2'
 
-export function VilkårsvurderingV2({ value }: { value: string }): ReactElement {
+export function VilkårsvurderingV2(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverkV2()
@@ -43,7 +42,7 @@ export function VilkårsvurderingV2({ value }: { value: string }): ReactElement 
     }
 
     return (
-        <SaksbildePanel value={value}>
+        <div>
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
                     const vurdertAntall = vilkårListe.filter((v) =>
@@ -147,7 +146,7 @@ export function VilkårsvurderingV2({ value }: { value: string }): ReactElement 
                     )
                 })}
             </Accordion>
-        </SaksbildePanel>
+        </div>
     )
 }
 
