@@ -7,6 +7,14 @@ import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
 
+export function useAlleSaksbehandlingsperioder() {
+    return useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
+        queryKey: ['alle-saksbehandlingsperioder'],
+        queryFn: () =>
+            fetchAndParse(`/api/bakrommet/v1/saksbehandlingsperioder`, z.array(saksbehandlingsperiodeSchema)),
+    })
+}
+
 export function useSaksbehandlingsperioder() {
     const params = useParams()
     const router = useRouter()

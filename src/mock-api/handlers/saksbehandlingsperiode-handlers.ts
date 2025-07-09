@@ -9,7 +9,7 @@ export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> 
     const alleSaksbehandlingsperioder = session.testpersoner.flatMap((person) =>
         person.saksbehandlingsperioder.map((periode) => ({
             ...periode,
-            personId: person.personId,
+            spilleromPersonId: person.personId,
         })),
     )
 
@@ -17,7 +17,13 @@ export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> 
 }
 
 export async function handleGetSaksbehandlingsperioder(person: Person | undefined): Promise<Response> {
-    return NextResponse.json(person?.saksbehandlingsperioder || [])
+    const saksbehandlingsperioder =
+        person?.saksbehandlingsperioder.map((periode) => ({
+            ...periode,
+            spilleromPersonId: person.personId,
+        })) || []
+
+    return NextResponse.json(saksbehandlingsperioder)
 }
 
 export async function handlePostSaksbehandlingsperioder(
