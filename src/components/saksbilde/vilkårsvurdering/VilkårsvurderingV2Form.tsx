@@ -161,7 +161,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
 
     const determineOverallAssessment = (): Vurdering => {
         // Logic to determine overall assessment based on selected values
-        // This is a simplified version - you may need to adjust based on your business logic
+        // IKKE_OPPFYLT takes precedence over OPPFYLT - if any condition is not met, the entire assessment fails
 
         // Check if any selected alternative has an oppfylt status
         const hasOppfylt = Object.values(selectedValues).some((value) => {
@@ -184,8 +184,9 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
             return false
         })
 
-        if (hasOppfylt) return 'OPPFYLT'
+        // IKKE_OPPFYLT takes precedence - if anything is not fulfilled, the entire assessment fails
         if (hasIkkeOppfylt) return 'IKKE_OPPFYLT'
+        if (hasOppfylt) return 'OPPFYLT'
         return 'IKKE_RELEVANT'
     }
 
