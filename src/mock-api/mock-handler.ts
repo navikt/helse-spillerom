@@ -21,6 +21,7 @@ import {
 import {
     handleGetSaksbehandlingsperioder,
     handlePostSaksbehandlingsperioder,
+    handleGetAlleSaksbehandlingsperioder,
 } from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
 import { handleGetSoknader, handleGetSoknad } from '@/mock-api/handlers/soknad-handlers'
 import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
@@ -59,6 +60,8 @@ const handlers: Record<string, HandlerFunction> = {
         }
         return NextResponse.json(mockBruker)
     },
+
+    'GET /v1/saksbehandlingsperioder': async () => handleGetAlleSaksbehandlingsperioder(),
 
     'GET /v1/[personId]/personinfo': async ({ person }) => handlePersoninfo(await person),
 

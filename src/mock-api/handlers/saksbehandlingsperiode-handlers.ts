@@ -1,8 +1,20 @@
 import { NextResponse } from 'next/server'
 
-import { Person } from '@/mock-api/session'
+import { Person, getSession } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
+
+export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> {
+    const session = await getSession()
+    const alleSaksbehandlingsperioder = session.testpersoner.flatMap((person) =>
+        person.saksbehandlingsperioder.map((periode) => ({
+            ...periode,
+            personId: person.personId,
+        })),
+    )
+
+    return NextResponse.json(alleSaksbehandlingsperioder)
+}
 
 export async function handleGetSaksbehandlingsperioder(person: Person | undefined): Promise<Response> {
     return NextResponse.json(person?.saksbehandlingsperioder || [])
