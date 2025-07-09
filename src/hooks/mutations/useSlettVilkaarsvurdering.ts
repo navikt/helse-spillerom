@@ -19,8 +19,12 @@ export function useSlettVilkaarsvurdering() {
             )
         },
         onSuccess: () => {
+            // Invalidate both v1 and v2 cache keys
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'vilkaarsvurderinger-v2', params.saksbehandlingsperiodeId],
             })
         },
     })
