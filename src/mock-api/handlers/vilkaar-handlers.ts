@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { Person } from '@/mock-api/session'
-import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
+import { VilkaarsvurderingV2 } from '@/schemas/vilkaarsvurdering'
 
 export async function handleGetVilkaar(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -24,10 +24,12 @@ export async function handlePutVilkaar(
     }
 
     const body = await request.json()
-    const nyVurdering: Vilkaarsvurdering = {
+
+    // Create V2 vurdering object
+    const nyVurdering: VilkaarsvurderingV2 = {
         kode,
         vurdering: body.vurdering,
-        årsak: body.årsak,
+        årsaker: body.årsaker,
         notat: body.notat,
     }
 

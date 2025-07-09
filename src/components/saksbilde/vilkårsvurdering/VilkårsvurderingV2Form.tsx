@@ -3,9 +3,9 @@
 import { ReactElement, useState, useEffect, Fragment } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
-import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
+import { useOpprettVilkaarsvurderingV2 } from '@hooks/mutations/useOpprettVilkaarsvurderingV2'
 import { Vilkår } from '@schemas/kodeverkV2'
-import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
+import { VilkaarsvurderingV2, Vurdering, VilkaarsvurderingV2Arsak } from '@schemas/vilkaarsvurdering'
 
 interface UnderspørsmålSchema {
     kode: string
@@ -24,21 +24,99 @@ interface AlternativSchema {
 
 interface VilkårsvurderingV2FormProps {
     vilkår: Vilkår
-    vurdering?: Vilkaarsvurdering
+    vurdering?: VilkaarsvurderingV2
     onSuccess?: () => void
 }
 
 export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: VilkårsvurderingV2FormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
     const [notat, setNotat] = useState<string>(vurdering?.notat ?? '')
-    const mutation = useOpprettVilkaarsvurdering()
+    const mutation = useOpprettVilkaarsvurderingV2()
+
+    const findSpørsmålForAlternativ = (alternativKode: string): string | null => {
+        const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {
+            if (spørsmål.alternativer) {
+                for (const alt of spørsmål.alternativer) {
+                    if (alt.kode === alternativKode) {
+                        return spørsmål.kode
+                    }
+                    if (alt.underspørsmål) {
+                        for (const us of alt.underspørsmål) {
+                            const found = searchInUnderspørsmål(us)
+                            if (found) return found
+                        }
+                    }
+                }
+            }
+            return null
+        }
+
+        for (const spørsmål of vilkår.underspørsmål) {
+            const found = searchInUnderspørsmål(spørsmål)
+            if (found) return found
+        }
+        return null
+    }
+
+    const findSpørsmålByKode = (kode: string): UnderspørsmålSchema | null => {
+        const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): UnderspørsmålSchema | null => {
+            if (spørsmål.kode === kode) return spørsmål
+            if (spørsmål.alternativer) {
+                for (const alt of spørsmål.alternativer) {
+                    if (alt.underspørsmål) {
+                        for (const us of alt.underspørsmål) {
+                            const found = searchInUnderspørsmål(us)
+                            if (found) return found
+                        }
+                    }
+                }
+            }
+            return null
+        }
+
+        for (const spørsmål of vilkår.underspørsmål) {
+            const found = searchInUnderspørsmål(spørsmål)
+            if (found) return found
+        }
+        return null
+    }
+
+    const reconstructSelectedValuesFromArsaker = (
+        årsaker: VilkaarsvurderingV2Arsak[],
+    ): Record<string, string | string[]> => {
+        const reconstructedValues: Record<string, string | string[]> = {}
+
+        // For each årsak, find which spørsmål it belongs to and set the value
+        for (const årsak of årsaker) {
+            const spørsmålKode = findSpørsmålForAlternativ(årsak.vurdering)
+            if (spørsmålKode) {
+                const spørsmål = findSpørsmålByKode(spørsmålKode)
+                if (spørsmål) {
+                    if (spørsmål.variant === 'CHECKBOX') {
+                        const existing = (reconstructedValues[spørsmålKode] as string[]) || []
+                        reconstructedValues[spørsmålKode] = [...existing, årsak.vurdering]
+                    } else {
+                        reconstructedValues[spørsmålKode] = årsak.vurdering
+                    }
+                }
+            }
+        }
+
+        return reconstructedValues
+    }
 
     useEffect(() => {
         if (vurdering) {
             // Initialize form with existing values if available
-            // This might need adjustment based on how the API stores V2 data
             setNotat(vurdering.notat ?? '')
+
+            // Reconstruct selectedValues based on existing årsaker
+            if (vurdering.årsaker && vurdering.årsaker.length > 0) {
+                const reconstructedValues = reconstructSelectedValuesFromArsaker(vurdering.årsaker)
+                setSelectedValues(reconstructedValues)
+            }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vurdering])
 
     const handleRadioChange = (kode: string, value: string) => {
@@ -66,13 +144,13 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
         // Determine the overall assessment based on selected values
         const overallAssessment = determineOverallAssessment()
 
-        // Find the selected reason/årsak
-        const selectedReason = findSelectedReason()
+        // Create årsaker array from selected values
+        const årsaker = createArsakerFromSelectedValues()
 
         await mutation.mutateAsync({
             kode: vilkår.vilkårskode,
             vurdering: overallAssessment,
-            årsak: selectedReason,
+            årsaker,
             notat,
         })
 
@@ -111,25 +189,29 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
         return 'IKKE_RELEVANT'
     }
 
-    const findSelectedReason = (): string => {
-        // Find the deepest selected alternative that has an oppfylt status
-        for (const value of Object.values(selectedValues)) {
-            if (typeof value === 'string') {
-                const alternative = findAlternativeByKode(value)
-                if (alternative?.oppfylt) {
-                    return value
-                }
-            }
-            if (Array.isArray(value)) {
-                for (const v of value) {
-                    const alternative = findAlternativeByKode(v)
-                    if (alternative?.oppfylt) {
-                        return v
+    const createArsakerFromSelectedValues = (): VilkaarsvurderingV2Arsak[] => {
+        const årsaker: VilkaarsvurderingV2Arsak[] = []
+
+        // Convert selectedValues to årsaker format
+        Object.entries(selectedValues).forEach(([spørsmålKode, value]) => {
+            if (typeof value === 'string' && value) {
+                årsaker.push({
+                    kode: spørsmålKode,
+                    vurdering: value,
+                })
+            } else if (Array.isArray(value)) {
+                value.forEach((v) => {
+                    if (v) {
+                        årsaker.push({
+                            kode: spørsmålKode,
+                            vurdering: v,
+                        })
                     }
-                }
+                })
             }
-        }
-        return ''
+        })
+
+        return årsaker
     }
 
     const findAlternativeByKode = (kode: string): AlternativSchema | undefined => {

@@ -10,13 +10,13 @@ import { getVurderingIcon } from '@components/saksbilde/vilkårsvurdering/Vilkå
 import { VilkårsvurderingV2Form } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingV2Form'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
-import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
+import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
 import { Vilkår } from '@schemas/kodeverkV2'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useKodeverkV2 } from '@hooks/queries/useKodeverkV2'
 
 export function VilkårsvurderingV2(): ReactElement {
-    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
+    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderingerV2()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverkV2()
 

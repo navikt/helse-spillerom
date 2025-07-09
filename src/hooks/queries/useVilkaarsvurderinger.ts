@@ -1,11 +1,9 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { z } from 'zod'
 
-import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import { Vilkaarsvurdering, vilkaarsvurderingSchema } from '@/schemas/vilkaarsvurdering'
+import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 
 export function useVilkaarsvurderinger() {
     const params = useParams()
@@ -13,11 +11,7 @@ export function useVilkaarsvurderinger() {
 
     const query = useQuery<Vilkaarsvurdering[], ProblemDetailsError>({
         queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
-        queryFn: () =>
-            fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaar`,
-                z.array(vilkaarsvurderingSchema),
-            ),
+        queryFn: () => [],
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
     })
 
