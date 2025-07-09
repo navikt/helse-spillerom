@@ -10,6 +10,7 @@ export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> 
         person.saksbehandlingsperioder.map((periode) => ({
             ...periode,
             spilleromPersonId: person.personId,
+            status: periode.status || 'UNDER_BEHANDLING',
         })),
     )
 
@@ -21,6 +22,7 @@ export async function handleGetSaksbehandlingsperioder(person: Person | undefine
         person?.saksbehandlingsperioder.map((periode) => ({
             ...periode,
             spilleromPersonId: person.personId,
+            status: periode.status || 'UNDER_BEHANDLING',
         })) || []
 
     return NextResponse.json(saksbehandlingsperioder)
