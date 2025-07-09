@@ -13,8 +13,8 @@ export function VilkårsvurderingTabs({ value }: { value: string }): ReactElemen
         <SaksbildePanel value={value}>
             <Tabs defaultValue="ny">
                 <TabsList>
-                    <TabsTab value="ny" label="Ny vilkårsvurdering" />
-                    <TabsTab value="gammel" label="Gammel vilkårsvurdering" />
+                    <TabsTab value="ny" label="Vilkårsvurdering" />
+                    <TabsTab value="gammel" label="Gammel versjon" />
                 </TabsList>
                 <TabsPanel value="ny">
                     <VilkårsvurderingV2 />
