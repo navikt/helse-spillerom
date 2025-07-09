@@ -9,12 +9,6 @@ test.describe('Førstesiden', () => {
         await page.goto('/')
     })
 
-    test('Har innhold', async ({ page }) => {
-        const main = page.locator('main')
-        const hello = main.getByText('Fødselsnummer/Aktør-ID')
-        await expect(hello).toHaveCount(1)
-    })
-
     test('Viser feilmelding ved ugyldig input med 6 siffer', async ({ page }) => {
         await søkPerson('123456')(page)
 

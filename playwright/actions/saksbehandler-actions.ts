@@ -14,8 +14,7 @@ export function tilFørstesiden({ clearCookies }: { clearCookies: boolean } = { 
 export function søkPerson(ident: string) {
     return async (page: Page) => {
         await test.step(`Søk etter person med ident ${ident}`, async () => {
-            const main = page.locator('main')
-            const searchInput = main.getByRole('searchbox', { name: 'Fødselsnummer/Aktør-ID' })
+            const searchInput = page.getByRole('searchbox', { name: 'Fødselsnummer/Aktør-ID' })
             await searchInput.fill(ident)
             await searchInput.press('Enter')
         })
