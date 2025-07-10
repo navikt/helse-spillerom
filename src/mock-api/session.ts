@@ -12,6 +12,8 @@ import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
 import { Rolle } from '@/schemas/bruker'
+import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
+import { Bruker } from '@/schemas/bruker'
 
 export interface Person {
     fnr: string
@@ -27,7 +29,7 @@ export interface Person {
 type Session = {
     expires: Dayjs
     testpersoner: Person[]
-    brukerRoller: Rolle[]
+    aktivBruker: Bruker
 }
 
 // Deep copy funksjon for å unngå delte referanser mellom sesjoner
@@ -86,7 +88,7 @@ export async function getSession(): Promise<Session> {
                 skapPerson('12345678903'),
                 skapPerson('33423422323'),
             ],
-            brukerRoller: ['LES', 'SAKSBEHANDLER'],
+            aktivBruker: predefinerteBrukere[0], // Default til Saks McBehandlersen
         }
     }
 
@@ -130,12 +132,20 @@ export async function hentPerson(personid: string) {
     return session.testpersoner.find((p) => p.personId === personid)
 }
 
-export async function oppdaterBrukerRoller(roller: Rolle[]) {
+export async function oppdaterAktivBruker(navIdent: string) {
     const session = await getSession()
-    session.brukerRoller = roller
+    const bruker = predefinerteBrukere.find((b) => b.navIdent === navIdent)
+    if (bruker) {
+        session.aktivBruker = bruker
+    }
+}
+
+export async function hentAktivBruker(): Promise<Bruker> {
+    const session = await getSession()
+    return session.aktivBruker
 }
 
 export async function hentBrukerRoller(): Promise<Rolle[]> {
     const session = await getSession()
-    return session.brukerRoller
+    return session.aktivBruker.roller
 }

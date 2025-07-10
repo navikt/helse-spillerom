@@ -13,6 +13,7 @@ type FilterType = 'UNDER_BEHANDLING' | 'TIL_BESLUTNING' | 'GODKJENT'
 const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
     UNDER_BEHANDLING: 'Under behandling',
     TIL_BESLUTNING: 'Til beslutning',
+    UNDER_BESLUTNING: 'Under beslutning',
     GODKJENT: 'Godkjent',
 }
 
@@ -21,6 +22,8 @@ const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'wa
         case 'UNDER_BEHANDLING':
             return 'info'
         case 'TIL_BESLUTNING':
+            return 'warning'
+        case 'UNDER_BESLUTNING':
             return 'warning'
         case 'GODKJENT':
             return 'success'
@@ -36,7 +39,7 @@ export function Oppgaveliste(): ReactElement {
     const filteredPerioder = (saksbehandlingsperioder as Saksbehandlingsperiode[]).filter(
         (periode: Saksbehandlingsperiode) => {
             if (activeTab === 'TIL_BESLUTNING') {
-                return periode.status === 'TIL_BESLUTNING'
+                return periode.status === 'TIL_BESLUTNING' || periode.status === 'UNDER_BESLUTNING'
             } else if (activeTab === 'GODKJENT') {
                 return periode.status === 'GODKJENT'
             } else {

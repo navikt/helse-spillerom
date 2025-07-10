@@ -82,3 +82,86 @@ export async function handlePostSaksbehandlingsperioder(
 
     return NextResponse.json(resultat.saksbehandlingsperiode, { status: 201 })
 }
+
+export async function handleSendTilBeslutning(person: Person | undefined, periodeId: string): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Verifiser at statusendring er gyldig
+    if (periode.status !== 'UNDER_BEHANDLING') {
+        return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
+    }
+
+    periode.status = 'TIL_BESLUTNING'
+
+    return NextResponse.json(periode, { status: 200 })
+}
+
+export async function handleTaTilBeslutning(person: Person | undefined, periodeId: string): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Verifiser at statusendring er gyldig
+    if (periode.status !== 'TIL_BESLUTNING') {
+        return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
+    }
+
+    periode.status = 'UNDER_BESLUTNING'
+    periode.beslutter = 'B123456' // Mock beslutter NAV ident
+
+    return NextResponse.json(periode, { status: 200 })
+}
+
+export async function handleSendTilbake(person: Person | undefined, periodeId: string): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Verifiser at statusendring er gyldig
+    if (periode.status !== 'UNDER_BESLUTNING') {
+        return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
+    }
+
+    periode.status = 'UNDER_BEHANDLING'
+    periode.beslutter = null // Nullstill beslutter
+
+    return NextResponse.json(periode, { status: 200 })
+}
+
+export async function handleGodkjenn(person: Person | undefined, periodeId: string): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Verifiser at statusendring er gyldig
+    if (periode.status !== 'UNDER_BESLUTNING') {
+        return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
+    }
+
+    periode.status = 'GODKJENT'
+    periode.beslutter = 'B123456' // Mock beslutter NAV ident
+
+    return NextResponse.json(periode, { status: 200 })
+}

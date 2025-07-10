@@ -203,7 +203,6 @@ const kalleGrunndata = {
     ],
 }
 
-// Generer saksbehandlingsperioder, inntektsforhold og dagoversikt basert på søknader
 const periodeDefinisjon = [
     {
         fom: '2025-01-01',

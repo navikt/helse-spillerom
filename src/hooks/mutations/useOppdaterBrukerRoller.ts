@@ -1,16 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { Rolle } from '@/schemas/bruker'
-
-interface OppdaterBrukerRollerRequest {
-    roller: Rolle[]
+interface OppdaterBrukerRequest {
+    navIdent: string
 }
 
 export function useOppdaterBrukerRoller() {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: async (request: OppdaterBrukerRollerRequest) => {
+        mutationFn: async (request: OppdaterBrukerRequest) => {
             const response = await fetch('/api/rolle', {
                 method: 'POST',
                 headers: {
@@ -20,14 +18,14 @@ export function useOppdaterBrukerRoller() {
             })
 
             if (!response.ok) {
-                throw new Error('Feil ved oppdatering av roller')
+                throw new Error('Feil ved oppdatering av bruker')
             }
 
             return response.json()
         },
         onSuccess: () => {
-            // Invalider brukerinfo query slik at nye roller hentes
-            queryClient.invalidateQueries({ queryKey: ['brukerinfo'] })
+            // Invalider aktiv bruker query slik at ny bruker hentes
+            queryClient.invalidateQueries({ queryKey: ['aktiv-bruker'] })
         },
     })
 }

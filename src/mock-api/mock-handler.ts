@@ -22,6 +22,10 @@ import {
     handleGetSaksbehandlingsperioder,
     handlePostSaksbehandlingsperioder,
     handleGetAlleSaksbehandlingsperioder,
+    handleSendTilBeslutning,
+    handleTaTilBeslutning,
+    handleSendTilbake,
+    handleGodkjenn,
 } from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
 import { handleGetSoknader, handleGetSoknad } from '@/mock-api/handlers/soknad-handlers'
 import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
@@ -134,6 +138,18 @@ const handlers: Record<string, HandlerFunction> = {
     }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, inntektsforholdId!),
 
     'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning': async ({ person, uuid }) =>
+        handleSendTilBeslutning(await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tatilbeslutning': async ({ person, uuid }) =>
+        handleTaTilBeslutning(await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbake': async ({ person, uuid }) =>
+        handleSendTilbake(await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/godkjenn': async ({ person, uuid }) =>
+        handleGodkjenn(await person, uuid!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

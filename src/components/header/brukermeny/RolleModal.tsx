@@ -1,96 +1,79 @@
 'use client'
 
 import React from 'react'
-import { Modal, VStack, Checkbox, Alert, Button } from '@navikt/ds-react'
+import { Modal, VStack, Alert, Button, HStack, BodyShort, Heading } from '@navikt/ds-react'
 import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
-import { useForm } from 'react-hook-form'
+import { PersonIcon, CheckmarkIcon } from '@navikt/aksel-icons'
 
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useOppdaterBrukerRoller } from '@hooks/mutations/useOppdaterBrukerRoller'
-import { Rolle } from '@/schemas/bruker'
+import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 
 interface RolleModalProps {
     open: boolean
     onClose: () => void
 }
 
-interface RolleFormData {
-    leserolle: boolean
-    saksbehandler: boolean
-    beslutter: boolean
-}
-
 export function RolleModal({ open, onClose }: RolleModalProps): React.ReactElement {
-    const { data: brukerRoller } = useBrukerRoller()
-    const oppdaterRoller = useOppdaterBrukerRoller()
+    const { aktivBruker } = useBrukerRoller()
+    const oppdaterBruker = useOppdaterBrukerRoller()
 
-    const { register, handleSubmit, reset } = useForm<RolleFormData>({
-        defaultValues: {
-            leserolle: brukerRoller.leserolle,
-            saksbehandler: brukerRoller.saksbehandler,
-            beslutter: brukerRoller.beslutter,
-        },
-    })
-
-    const onSubmit = async (data: RolleFormData) => {
-        const roller: Rolle[] = []
-
-        if (data.leserolle) roller.push('LES')
-        if (data.saksbehandler) roller.push('SAKSBEHANDLER')
-        if (data.beslutter) roller.push('BESLUTTER')
-
-        await oppdaterRoller.mutateAsync({ roller })
-        onClose()
-    }
-
-    const handleAvbryt = () => {
-        // Reset form til opprinnelige verdier
-        reset({
-            leserolle: brukerRoller.leserolle,
-            saksbehandler: brukerRoller.saksbehandler,
-            beslutter: brukerRoller.beslutter,
-        })
+    const handleBrukerValg = async (navIdent: string) => {
+        await oppdaterBruker.mutateAsync({ navIdent })
         onClose()
     }
 
     return (
         <Modal
             open={open}
-            onClose={handleAvbryt}
-            header={{ heading: 'Endre brukerroller', closeButton: true }}
-            className="max-w-md"
+            onClose={onClose}
+            header={{ heading: 'Velg bruker', closeButton: true }}
+            className="max-w-lg"
         >
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalBody>
-                    <VStack gap="4">
-                        <Alert variant="info" size="small">
-                            Her kan du endre rollene for demo-modus. Endringene lagres på sesjonen.
-                        </Alert>
+            <ModalBody>
+                <VStack gap="4">
+                    <Alert variant="info" size="small">
+                        Her kan du velge mellom forskjellige brukere i demo-modus.
+                    </Alert>
 
-                        <VStack gap="3">
-                            <Checkbox {...register('leserolle')}>Leserolle</Checkbox>
-
-                            <Checkbox {...register('saksbehandler')}>Saksbehandler</Checkbox>
-
-                            <Checkbox {...register('beslutter')}>Beslutter</Checkbox>
-                        </VStack>
+                    <VStack gap="3">
+                        {predefinerteBrukere.map((bruker) => (
+                            <Button
+                                key={bruker.navIdent}
+                                variant={aktivBruker?.navIdent === bruker.navIdent ? 'primary' : 'secondary'}
+                                size="medium"
+                                onClick={() => handleBrukerValg(bruker.navIdent)}
+                                loading={oppdaterBruker.isPending}
+                                disabled={oppdaterBruker.isPending}
+                                className="w-full justify-start"
+                            >
+                                <HStack gap="3" align="center" className="w-full">
+                                    <PersonIcon aria-hidden />
+                                    <VStack gap="1" className="flex-1 text-left">
+                                        <HStack gap="2" align="center">
+                                            <Heading size="xsmall" className="text-current">
+                                                {bruker.navn}
+                                            </Heading>
+                                            {aktivBruker?.navIdent === bruker.navIdent && (
+                                                <CheckmarkIcon aria-hidden className="text-green-600" />
+                                            )}
+                                        </HStack>
+                                        <BodyShort size="small" className="text-current opacity-75">
+                                            {bruker.navIdent} • {bruker.roller.join(', ')}
+                                        </BodyShort>
+                                    </VStack>
+                                </HStack>
+                            </Button>
+                        ))}
                     </VStack>
-                </ModalBody>
+                </VStack>
+            </ModalBody>
 
-                <ModalFooter>
-                    <Button type="submit" variant="primary" loading={oppdaterRoller.isPending}>
-                        Lagre
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={handleAvbryt}
-                        disabled={oppdaterRoller.isPending}
-                    >
-                        Avbryt
-                    </Button>
-                </ModalFooter>
-            </form>
+            <ModalFooter>
+                <Button type="button" variant="secondary" onClick={onClose} disabled={oppdaterBruker.isPending}>
+                    Lukk
+                </Button>
+            </ModalFooter>
         </Modal>
     )
 }

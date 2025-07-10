@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-export const saksbehandlingsperiodeStatusSchema = z.enum(['UNDER_BEHANDLING', 'TIL_BESLUTNING', 'GODKJENT'])
+export const saksbehandlingsperiodeStatusSchema = z.enum([
+    'UNDER_BEHANDLING',
+    'TIL_BESLUTNING',
+    'UNDER_BESLUTNING',
+    'GODKJENT',
+])
 
 export const saksbehandlingsperiodeSchema = z.object({
     id: z.string().uuid(),
