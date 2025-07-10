@@ -1,13 +1,13 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
 import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
-import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
-import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
+import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
@@ -16,11 +16,10 @@ import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
 
 export function Venstremeny(): ReactElement {
-    const params = useParams()
     const router = useRouter()
     const { visToast } = useToast()
-    const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
-    const { data: brukerRoller } = useBrukerRoller()
+    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const kanSaksbehandles = useKanSaksbehandles()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
 
     const sendTilBeslutning = useSendTilBeslutning({
@@ -30,11 +29,6 @@ export function Venstremeny(): ReactElement {
             router.push('/')
         },
     })
-
-    // Finn aktiv saksbehandlingsperiode hvis vi er inne i en
-    const aktivSaksbehandlingsperiode = saksbehandlingsperioder?.find(
-        (periode) => periode.id === params.saksbehandlingsperiodeId,
-    )
 
     const håndterSendTilGodkjenning = () => {
         if (aktivSaksbehandlingsperiode) {
@@ -59,7 +53,7 @@ export function Venstremeny(): ReactElement {
                             </BodyShort>
                         </HStack>
 
-                        {brukerRoller.saksbehandler && (
+                        {kanSaksbehandles && (
                             <>
                                 <Button
                                     variant="tertiary"
