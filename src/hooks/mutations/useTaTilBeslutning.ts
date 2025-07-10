@@ -26,4 +26,4 @@ export function useTaTilBeslutning() {
             await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
         },
     })
-} 
+}

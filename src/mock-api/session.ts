@@ -97,9 +97,13 @@ export async function getSession(): Promise<Session> {
 
 function skapPerson(fnr: string): Person {
     faker.seed(Number(fnr))
+
+    // Generate a deterministic personId based on the fnr, padded to 5 chars
+    const personId = (Number(fnr) % 100000).toString(36).padStart(5, '0')
+
     return {
         fnr: fnr,
-        personId: Math.random().toString(36).substring(2, 7),
+        personId: personId,
         personinfo: {
             fødselsnummer: fnr,
             aktørId: fnr + '00',

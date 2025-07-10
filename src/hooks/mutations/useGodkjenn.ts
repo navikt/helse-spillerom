@@ -26,4 +26,4 @@ export function useGodkjenn() {
             await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
         },
     })
-} 
+}

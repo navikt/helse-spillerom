@@ -26,4 +26,4 @@ export function useSendTilbake() {
             await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
         },
     })
-} 
+}
