@@ -9,7 +9,11 @@ interface MutationProps {
     saksbehandlingsperiodeId: string
 }
 
-export function useSendTilBeslutning() {
+interface UseSendTilBeslutningProps {
+    onSuccess?: () => void
+}
+
+export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = {}) {
     const params = useParams()
     const queryClient = useQueryClient()
 
@@ -21,9 +25,18 @@ export function useSendTilBeslutning() {
                 {},
             ),
         onSuccess: async () => {
+            // Lagre personId før navigering kan endre den
+            const personId = params.personId
+
             // Invalidate all saksbehandlingsperioder caches
             await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
-            await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
+
+            if (personId) {
+                await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', personId] })
+            }
+
+            // Kjør callback etter at cache invalidation er ferdig
+            onSuccess?.()
         },
     })
 }

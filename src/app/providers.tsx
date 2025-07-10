@@ -12,6 +12,7 @@ import dayjs from 'dayjs'
 import { ThemeProvider } from '@components/ThemeProvider'
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
 import { DebuggingProvider } from '@components/DebuggingProvider'
+import { ToastProvider } from '@components/ToastProvider'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -27,8 +28,9 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
                     queries: {
                         /* Setting this to true causes the request to be immediately executed after initial
                            mount Even if the query had data hydrated from the server side render */
-                        refetchOnMount: false,
+                        refetchOnMount: true, // Lar React Query refetche invalidated queries ved mount
                         refetchOnWindowFocus: false,
+                        staleTime: 5 * 60 * 1000, // Data er ferske i 5 minutter som standard
                     },
                 },
             }),
@@ -38,7 +40,9 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
                 <ShortcutProvider>
-                    <DebuggingProvider>{children}</DebuggingProvider>
+                    <DebuggingProvider>
+                        <ToastProvider>{children}</ToastProvider>
+                    </DebuggingProvider>
                 </ShortcutProvider>
             </QueryClientProvider>
         </ThemeProvider>

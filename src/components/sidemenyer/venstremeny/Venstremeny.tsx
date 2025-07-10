@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
 import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
@@ -10,16 +10,26 @@ import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsper
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { getFormattedDateString } from '@utils/date-format'
+import { useToast } from '@components/ToastProvider'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
 
 export function Venstremeny(): ReactElement {
     const params = useParams()
+    const router = useRouter()
+    const { visToast } = useToast()
     const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
     const { data: brukerRoller } = useBrukerRoller()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
-    const sendTilBeslutning = useSendTilBeslutning()
+
+    const sendTilBeslutning = useSendTilBeslutning({
+        onSuccess: () => {
+            // Vis success toast og naviger etter at cache invalidation er ferdig
+            visToast('Saken er sendt til beslutter', 'success')
+            router.push('/')
+        },
+    })
 
     // Finn aktiv saksbehandlingsperiode hvis vi er inne i en
     const aktivSaksbehandlingsperiode = saksbehandlingsperioder?.find(
