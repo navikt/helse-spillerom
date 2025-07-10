@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { Person, getSession } from '@/mock-api/session'
+import { Person, getSession, hentAktivBruker } from '@/mock-api/session'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
@@ -119,7 +119,8 @@ export async function handleTaTilBeslutning(person: Person | undefined, periodeI
     }
 
     periode.status = 'UNDER_BESLUTNING'
-    periode.beslutter = 'B123456' // Mock beslutter NAV ident
+    const aktivBruker = await hentAktivBruker()
+    periode.beslutter = aktivBruker.navIdent
 
     return NextResponse.json(periode, { status: 200 })
 }
@@ -161,7 +162,8 @@ export async function handleGodkjenn(person: Person | undefined, periodeId: stri
     }
 
     periode.status = 'GODKJENT'
-    periode.beslutter = 'B123456' // Mock beslutter NAV ident
+    const aktivBruker = await hentAktivBruker()
+    periode.beslutter = aktivBruker.navIdent
 
     return NextResponse.json(periode, { status: 200 })
 }
