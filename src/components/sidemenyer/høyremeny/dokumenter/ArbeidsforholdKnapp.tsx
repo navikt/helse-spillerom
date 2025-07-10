@@ -6,15 +6,15 @@ import { DownloadIcon } from '@navikt/aksel-icons'
 
 import { useHentArbeidsforholdDokument } from '@/hooks/mutations/useHentArbeidsforholdDokument'
 import { useDokumenter } from '@/hooks/queries/useDokumenter'
-import { useBrukerRoller } from '@/hooks/queries/useBrukerRoller'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 export function ArbeidsforholdKnapp(): ReactElement | null {
     const hentArbeidsforholdDokument = useHentArbeidsforholdDokument()
     const { data: dokumenter } = useDokumenter()
-    const { data: brukerRoller } = useBrukerRoller()
+    const kanSaksbehandles = useKanSaksbehandles()
 
     // Only show button if user has saksbehandler role
-    if (!brukerRoller.saksbehandler) {
+    if (!kanSaksbehandles) {
         return null
     }
 

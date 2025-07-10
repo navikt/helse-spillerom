@@ -15,6 +15,7 @@ import {
 import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 interface KodeverkAlternativ {
     kode: string
@@ -66,6 +67,7 @@ export default function InntektsforholdForm({
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
     const mutation = useOpprettInntektsforhold()
     const { data: existingInntektsforhold = [] } = useInntektsforhold()
+    const kansaksbehandles = useKanSaksbehandles()
 
     useEffect(() => {
         if (Object.keys(initialValues).length > 0) {
@@ -252,7 +254,7 @@ export default function InntektsforholdForm({
             {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
                 <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
             ))}
-            {!disabled && (
+            {!disabled && kansaksbehandles && (
                 <HStack gap="4">
                     <Button
                         variant="primary"

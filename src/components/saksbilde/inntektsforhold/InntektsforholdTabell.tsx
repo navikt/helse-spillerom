@@ -16,7 +16,6 @@ import { motion } from 'motion/react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
 import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
 import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOppdaterInntektsforhold'
@@ -24,6 +23,7 @@ import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/i
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -31,9 +31,9 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
-    const { data: brukerRoller } = useBrukerRoller()
     const slettMutation = useSlettInntektsforhold()
     const oppdaterMutation = useOppdaterInntektsforholdKategorisering()
+    const kanSaksbehandles = useKanSaksbehandles()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -143,31 +143,33 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                         title={undefined}
                                                         initialValues={forhold.kategorisering}
                                                     />
-                                                    <HStack gap="2">
-                                                        <Button
-                                                            variant="tertiary"
-                                                            size="small"
-                                                            icon={<PencilIcon aria-hidden />}
-                                                            onClick={() => handleRediger(forhold.id)}
-                                                            disabled={
-                                                                redigererId !== null && redigererId !== forhold.id
-                                                            }
-                                                            aria-label={`Rediger inntektsforhold ${index + 1}`}
-                                                        >
-                                                            Rediger
-                                                        </Button>
-                                                        <Button
-                                                            className="text-text-danger"
-                                                            variant="tertiary"
-                                                            size="small"
-                                                            icon={<TrashIcon aria-hidden />}
-                                                            onClick={() => handleSlett(forhold.id)}
-                                                            disabled={slettMutation.isPending}
-                                                            aria-label={`Slett inntektsforhold ${index + 1}`}
-                                                        >
-                                                            Slett
-                                                        </Button>
-                                                    </HStack>
+                                                    {kanSaksbehandles && (
+                                                        <HStack gap="2">
+                                                            <Button
+                                                                variant="tertiary"
+                                                                size="small"
+                                                                icon={<PencilIcon aria-hidden />}
+                                                                onClick={() => handleRediger(forhold.id)}
+                                                                disabled={
+                                                                    redigererId !== null && redigererId !== forhold.id
+                                                                }
+                                                                aria-label={`Rediger inntektsforhold ${index + 1}`}
+                                                            >
+                                                                Rediger
+                                                            </Button>
+                                                            <Button
+                                                                className="text-text-danger"
+                                                                variant="tertiary"
+                                                                size="small"
+                                                                icon={<TrashIcon aria-hidden />}
+                                                                onClick={() => handleSlett(forhold.id)}
+                                                                disabled={slettMutation.isPending}
+                                                                aria-label={`Slett inntektsforhold ${index + 1}`}
+                                                            >
+                                                                Slett
+                                                            </Button>
+                                                        </HStack>
+                                                    )}
                                                 </VStack>
                                             )
                                         }
@@ -205,7 +207,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         <BodyShort>Ingen inntektsforhold registrert for denne saksbehandlingsperioden.</BodyShort>
                     </Alert>
                 )}
-                {!visOpprettForm && brukerRoller.saksbehandler && (
+                {!visOpprettForm && kanSaksbehandles && (
                     <Button
                         className="w-fit"
                         variant="tertiary"

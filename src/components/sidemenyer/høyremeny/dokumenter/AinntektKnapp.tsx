@@ -6,18 +6,17 @@ import { DownloadIcon } from '@navikt/aksel-icons'
 
 import { useHentAinntektDokument } from '@/hooks/mutations/useHentAinntektDokument'
 import { useDokumenter } from '@/hooks/queries/useDokumenter'
-import { useBrukerRoller } from '@/hooks/queries/useBrukerRoller'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 export function AinntektKnapp(): ReactElement | null {
     const hentAinntektDokument = useHentAinntektDokument()
     const { data: dokumenter } = useDokumenter()
-    const { data: brukerRoller } = useBrukerRoller()
+    const kanSaksbehandles = useKanSaksbehandles()
 
     // Only show button if user has saksbehandler role
-    if (!brukerRoller.saksbehandler) {
+    if (!kanSaksbehandles) {
         return null
     }
-
     // Skjul knappen hvis det allerede finnes et ainntekt-dokument
     const harAinntektDokument = dokumenter?.some((dokument) => dokument.dokumentType === 'ainntekt828')
     if (harAinntektDokument) {

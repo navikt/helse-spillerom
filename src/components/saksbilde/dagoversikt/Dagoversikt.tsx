@@ -12,6 +12,7 @@ import { useOppdaterInntektsforholdDagoversikt } from '@hooks/mutations/useOppda
 import { getFormattedDateString } from '@utils/date-format'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { Dag, Dagtype, Kilde } from '@/schemas/dagoversikt'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 interface DagoversiktProps {
     value: string
@@ -30,6 +31,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const sykmeldingsforhold =
         inntektsforhold?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
 
+    const kanSaksbehandles = useKanSaksbehandles()
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [valgteDataer, setValgteDataer] = useState<Set<string>>(new Set())
@@ -226,18 +228,22 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                     <TabsPanel key={forhold.id} value={forhold.id}>
                         {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
                             <>
-                                <Button
-                                    size="small"
-                                    type="button"
-                                    variant="tertiary"
-                                    className="my-6"
-                                    icon={<PersonPencilIcon aria-hidden />}
-                                    onClick={() =>
-                                        erIRedigeringsmodus ? handleAvbrytRedigering() : setErIRedigeringsmodus(true)
-                                    }
-                                >
-                                    {erIRedigeringsmodus ? 'Avbryt' : 'Endre dager'}
-                                </Button>
+                                {kanSaksbehandles && (
+                                    <Button
+                                        size="small"
+                                        type="button"
+                                        variant="tertiary"
+                                        className="my-6"
+                                        icon={<PersonPencilIcon aria-hidden />}
+                                        onClick={() =>
+                                            erIRedigeringsmodus
+                                                ? handleAvbrytRedigering()
+                                                : setErIRedigeringsmodus(true)
+                                        }
+                                    >
+                                        {erIRedigeringsmodus ? 'Avbryt' : 'Endre dager'}
+                                    </Button>
+                                )}
                                 <Table size="small">
                                     <TableHeader>
                                         <TableRow>
