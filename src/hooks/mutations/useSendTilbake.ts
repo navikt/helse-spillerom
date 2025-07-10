@@ -6,30 +6,24 @@ import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
 
 interface MutationProps {
-    request: {
-        fom: string
-        tom: string
-        søknader: string[] // Array of søknad IDs
-    }
-    callback: (periode: Saksbehandlingsperiode) => void
+    saksbehandlingsperiodeId: string
 }
 
-export function useOpprettSaksbehandlingsperiode() {
+export function useSendTilbake() {
     const params = useParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ request }) =>
+        mutationFn: async ({ saksbehandlingsperiodeId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sendtilbake`,
                 saksbehandlingsperiodeSchema,
-                request,
+                {},
             ),
-        onSuccess: async (periode, r) => {
+        onSuccess: async () => {
             // Invalidate all saksbehandlingsperioder caches
             await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
-            await queryClient.refetchQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
-            r.callback(periode)
+            await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
         },
     })
-}
+} 
