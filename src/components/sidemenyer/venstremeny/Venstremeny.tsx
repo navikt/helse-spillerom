@@ -14,6 +14,7 @@ import { useToast } from '@components/ToastProvider'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
+import { StatusTag } from './StatusTag'
 
 export function Venstremeny(): ReactElement {
     const router = useRouter()
@@ -42,6 +43,7 @@ export function Venstremeny(): ReactElement {
         <Sidemeny side="left">
             <VStack gap="4">
                 <KategoriTag />
+                <StatusTag />
 
                 {aktivSaksbehandlingsperiode && (
                     <>
