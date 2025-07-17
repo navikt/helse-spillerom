@@ -132,13 +132,12 @@ interface FilterButtonProps {
 function FilterButton({ icon, active, onClick, label, pressed }: FilterButtonProps): ReactElement {
     return (
         <button
-            className={cn(
-                'active:bg-surface-action active:text-text-on-action flex h-8 w-8 cursor-pointer items-center justify-center rounded-full',
-                {
-                    'bg-surface-subtle hover:bg-surface-action-subtle-hover': !active,
-                    'bg-surface-action text-text-on-action hover:bg-surface-action-hover': active,
-                },
-            )}
+            className={cn('flex h-8 w-8 cursor-pointer items-center justify-center rounded-full', {
+                'bg-ax-bg-accent-moderate hover:bg-ax-bg-accent-moderate-hover active:bg-ax-bg-accent-moderate-pressed':
+                    !active,
+                'bg-ax-bg-accent-strong text-ax-text-accent-contrast hover:bg-ax-bg-accent-strong-hover active:bg-ax-bg-accent-strong-pressed':
+                    active,
+            })}
             onClick={onClick}
             aria-label={label}
             aria-pressed={pressed}
