@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement } from 'react'
-import { Search, SearchProps } from '@navikt/ds-react'
+import { Search } from '@navikt/ds-react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -9,13 +9,7 @@ import { useRouter } from 'next/navigation'
 import { usePersonsøk } from '@hooks/mutations/usePersonsøk'
 import { PersonsøkSchema, personsøkSchema } from '@/schemas/personsøk'
 
-interface PersonsøkProps {
-    hideLabel?: boolean
-    size?: SearchProps['size']
-    variant?: SearchProps['variant']
-}
-
-export function Personsøk({ hideLabel = false, size = 'medium', variant = 'primary' }: PersonsøkProps): ReactElement {
+export function Personsøk(): ReactElement {
     const router = useRouter()
     const mutation = usePersonsøk()
     const form = useForm<PersonsøkSchema>({
@@ -41,7 +35,12 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
 
     return (
         <FormProvider {...form}>
-            <form role="search" onSubmit={form.handleSubmit(onSubmit)} className="self-center px-5">
+            <form
+                data-color="neutral"
+                role="search"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="self-center px-5"
+            >
                 <Controller
                     control={form.control}
                     name="ident"
@@ -50,10 +49,10 @@ export function Personsøk({ hideLabel = false, size = 'medium', variant = 'prim
                             {...field}
                             error={fieldState.error?.message || error()}
                             label="Fødselsnummer/Aktør-ID"
-                            size={size}
-                            variant={variant}
+                            size="small"
+                            variant="secondary"
                             placeholder="Søk"
-                            hideLabel={hideLabel}
+                            hideLabel
                         />
                     )}
                 />

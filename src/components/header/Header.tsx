@@ -13,7 +13,7 @@ export function Header(): ReactElement {
             <InternalHeaderTitle as={NextLink} href="/">
                 Spillerom
             </InternalHeaderTitle>
-            <Personsøk size="small" variant="secondary" hideLabel />
+            <Personsøk />
             <Spacer />
             <SystemMeny />
             <BrukerMeny />
