@@ -1,7 +1,21 @@
 'use client'
 
 import { Fragment, ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Heading, HStack, Table, Tabs, Checkbox, Select, VStack, Tag } from '@navikt/ds-react'
+import {
+    Alert,
+    BodyShort,
+    Button,
+    Checkbox,
+    Heading,
+    HStack,
+    Select,
+    Table,
+    Tabs,
+    Tag,
+    Textarea,
+    TextField,
+    VStack,
+} from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
@@ -13,6 +27,7 @@ import { getFormattedDateString } from '@utils/date-format'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { Dag, Dagtype, Kilde } from '@/schemas/dagoversikt'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
+import { cn } from '@utils/tw'
 
 interface DagoversiktProps {
     value: string
@@ -91,98 +106,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         }
     }
 
-    const getInntektsforholdDisplayText = (kategorisering: Record<string, string | string[]>): ReactElement => {
-        const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
-        const orgnummer = kategorisering['ORGNUMMER'] as string
-
-        let typeText = ''
-        switch (inntektskategori) {
-            case 'ARBEIDSTAKER': {
-                const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
-                switch (typeArbeidstaker) {
-                    case 'ORDINÆRT_ARBEIDSFORHOLD':
-                        typeText = 'Ordinært arbeidsforhold'
-                        break
-                    case 'MARITIMT_ARBEIDSFORHOLD':
-                        typeText = 'Maritimt arbeidsforhold'
-                        break
-                    case 'FISKER':
-                        typeText = 'Fisker (arbeidstaker)'
-                        break
-                    case 'VERNEPLIKTIG':
-                        typeText = 'Vernepliktig'
-                        break
-                    default:
-                        typeText = 'Arbeidstaker'
-                }
-                break
-            }
-            case 'FRILANSER':
-                typeText = 'Frilanser'
-                break
-            case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
-                // TODO Her må det gjøres noe
-                const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
-                switch (typeSelvstendig) {
-                    case 'FISKER':
-                        typeText = 'Fisker (selvstendig)'
-                        break
-                    case 'JORDBRUKER':
-                        typeText = 'Jordbruker'
-                        break
-                    case 'REINDRIFT':
-                        typeText = 'Reindrift'
-                        break
-                    default:
-                        typeText = 'Selvstendig næringsdrivende'
-                }
-                break
-            }
-            case 'INAKTIV':
-                typeText = 'Inaktiv'
-                break
-            default:
-                typeText = inntektskategori || 'Ukjent'
-        }
-
-        // Hvis det finnes orgnummer, vis organisasjonsnavn
-        if (orgnummer) {
-            return (
-                <div className="text-center">
-                    <div className="text-sm font-medium">
-                        <Organisasjonsnavn orgnummer={orgnummer} />
-                    </div>
-                    <div className="text-gray-600 text-xs">{typeText}</div>
-                </div>
-            )
-        }
-
-        return <span>{typeText}</span>
-    }
-
-    const getDagtypeText = (type: string): string => {
-        switch (type) {
-            case 'Syk':
-                return 'Syk'
-            case 'SykNav':
-                return 'Syk (NAV)'
-            case 'Helg':
-                return 'Helg'
-            case 'Ferie':
-                return 'Ferie'
-            case 'Arbeidsdag':
-                return 'Arbeid'
-            case 'Permisjon':
-                return 'Permisjon'
-            case 'Foreldet':
-                return 'Foreldet'
-            case 'Avvist':
-                return 'Avvist'
-            default:
-                return type
-        }
-    }
-
     if (inntektsforholdLoading) {
         return <SaksbildePanel value={value}>Laster inntektsforhold...</SaksbildePanel>
     }
@@ -209,8 +132,9 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     }
 
     return (
-        <SaksbildePanel value={value}>
+        <SaksbildePanel value={value} className="pl-0">
             <Tabs
+                className="pl-8"
                 value={aktivtForhold?.id || sykmeldingsforhold[0]?.id}
                 onChange={(value) => setAktivtInntektsforholdId(value)}
             >
@@ -225,7 +149,14 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 </TabsList>
 
                 {sykmeldingsforhold.map((forhold) => (
-                    <TabsPanel key={forhold.id} value={forhold.id}>
+                    <TabsPanel
+                        className={cn({
+                            '-mx-8 border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pr-8 pl-[26px]':
+                                erIRedigeringsmodus,
+                        })}
+                        key={forhold.id}
+                        value={forhold.id}
+                    >
                         {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
                             <>
                                 {kanSaksbehandles && (
@@ -249,7 +180,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         <TableRow>
                                             {erIRedigeringsmodus && <TableHeaderCell>Velg</TableHeaderCell>}
                                             <TableHeaderCell>Dato</TableHeaderCell>
-                                            <TableHeaderCell>Dagtype</TableHeaderCell>
+                                            <TableHeaderCell className="min-w-24">Dagtype</TableHeaderCell>
                                             <TableHeaderCell align="right">Grad</TableHeaderCell>
                                             <TableHeaderCell>Kilde</TableHeaderCell>
                                             <TableHeaderCell align="right">Total grad</TableHeaderCell>
@@ -309,13 +240,17 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                     </TableBody>
                                 </Table>
 
-                                {erIRedigeringsmodus && valgteDataer.size > 0 && (
-                                    <div className="bg-gray-50 mt-6 rounded-lg border p-4">
-                                        <Heading size="small" className="mb-4">
-                                            Fyll inn hva de {valgteDataer.size} valgte dagene skal endres til
+                                {erIRedigeringsmodus && (
+                                    <VStack gap="4" className="py-8">
+                                        <Heading size="small">
+                                            {valgteDataer.size > 0
+                                                ? `Fyll inn hva de ${valgteDataer.size} valgte dagene skal endres til`
+                                                : 'Velg én eller flere dager du vil endre i tabellen ovenfor'}
                                         </Heading>
-                                        <VStack gap="4">
+                                        <HStack gap="4">
                                             <Select
+                                                size="small"
+                                                disabled={valgteDataer.size === 0}
                                                 label="Dagtype"
                                                 value={nyDagtype}
                                                 onChange={(e) => {
@@ -326,6 +261,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         if (!nyGrad) {
                                                             setNyGrad('100')
                                                         }
+                                                    } else {
+                                                        setNyGrad('')
                                                     }
                                                 }}
                                             >
@@ -336,41 +273,46 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 <option value="Permisjon">Permisjon</option>
                                                 <option value="Avvist">Avvist</option>
                                             </Select>
-
-                                            {(nyDagtype === 'Syk' || nyDagtype === 'SykNav') && (
-                                                <Select
-                                                    label="Grad"
-                                                    value={nyGrad}
-                                                    onChange={(e) => setNyGrad(e.target.value)}
-                                                >
-                                                    <option value="20">20%</option>
-                                                    <option value="40">40%</option>
-                                                    <option value="50">50%</option>
-                                                    <option value="60">60%</option>
-                                                    <option value="80">80%</option>
-                                                    <option value="100">100%</option>
-                                                </Select>
-                                            )}
-
-                                            <HStack gap="2" className="mt-4">
-                                                <Button
-                                                    size="small"
-                                                    onClick={handleFerdigRedigering}
-                                                    loading={oppdaterDagoversiktMutation.isPending}
-                                                    disabled={valgteDataer.size === 0}
-                                                >
-                                                    Ferdig
-                                                </Button>
-                                                <Button
-                                                    size="small"
-                                                    variant="secondary"
-                                                    onClick={handleAvbrytRedigering}
-                                                >
-                                                    Avbryt
-                                                </Button>
-                                            </HStack>
-                                        </VStack>
-                                    </div>
+                                            <TextField
+                                                className="max-w-12"
+                                                label="Grad"
+                                                value={nyGrad}
+                                                onChange={(e) => setNyGrad(e.target.value)}
+                                                size="small"
+                                                disabled={
+                                                    valgteDataer.size === 0 ||
+                                                    (nyDagtype !== 'Syk' && nyDagtype !== 'SykNav')
+                                                }
+                                            />
+                                        </HStack>
+                                        <Textarea
+                                            className="mt-2 w-[640px]"
+                                            size="small"
+                                            label="Notat til beslutter"
+                                            description={
+                                                <span>
+                                                    Begrunn hvorfor det er gjort endringer i sykdomstidslinjen. <br />
+                                                    Teksten vises ikke til den sykmeldte, med mindre hen ber om innsyn.
+                                                </span>
+                                            }
+                                            maxLength={1000}
+                                            minRows={6}
+                                            disabled={valgteDataer.size === 0}
+                                        />
+                                        <HStack gap="2" className="mt-4">
+                                            <Button
+                                                size="small"
+                                                onClick={handleFerdigRedigering}
+                                                loading={oppdaterDagoversiktMutation.isPending}
+                                                disabled={valgteDataer.size === 0}
+                                            >
+                                                Endre ({valgteDataer.size})
+                                            </Button>
+                                            <Button size="small" variant="secondary" onClick={handleAvbrytRedigering}>
+                                                Avbryt
+                                            </Button>
+                                        </HStack>
+                                    </VStack>
                                 )}
                             </>
                         )}
@@ -411,4 +353,96 @@ function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
         )
     }
     return <Fragment />
+}
+
+function getDagtypeText(type: string): string {
+    switch (type) {
+        case 'Syk':
+            return 'Syk'
+        case 'SykNav':
+            return 'Syk (NAV)'
+        case 'Helg':
+            return 'Helg'
+        case 'Ferie':
+            return 'Ferie'
+        case 'Arbeidsdag':
+            return 'Arbeid'
+        case 'Permisjon':
+            return 'Permisjon'
+        case 'Foreldet':
+            return 'Foreldet'
+        case 'Avvist':
+            return 'Avvist'
+        default:
+            return type
+    }
+}
+
+function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): ReactElement {
+    const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
+    const orgnummer = kategorisering['ORGNUMMER'] as string
+
+    let typeText: string
+    switch (inntektskategori) {
+        case 'ARBEIDSTAKER': {
+            const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
+            switch (typeArbeidstaker) {
+                case 'ORDINÆRT_ARBEIDSFORHOLD':
+                    typeText = 'Ordinært arbeidsforhold'
+                    break
+                case 'MARITIMT_ARBEIDSFORHOLD':
+                    typeText = 'Maritimt arbeidsforhold'
+                    break
+                case 'FISKER':
+                    typeText = 'Fisker (arbeidstaker)'
+                    break
+                case 'VERNEPLIKTIG':
+                    typeText = 'Vernepliktig'
+                    break
+                default:
+                    typeText = 'Arbeidstaker'
+            }
+            break
+        }
+        case 'FRILANSER':
+            typeText = 'Frilanser'
+            break
+        case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+            // TODO Her må det gjøres noe
+            const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
+            switch (typeSelvstendig) {
+                case 'FISKER':
+                    typeText = 'Fisker (selvstendig)'
+                    break
+                case 'JORDBRUKER':
+                    typeText = 'Jordbruker'
+                    break
+                case 'REINDRIFT':
+                    typeText = 'Reindrift'
+                    break
+                default:
+                    typeText = 'Selvstendig næringsdrivende'
+            }
+            break
+        }
+        case 'INAKTIV':
+            typeText = 'Inaktiv'
+            break
+        default:
+            typeText = inntektskategori || 'Ukjent'
+    }
+
+    // Hvis det finnes orgnummer, vis organisasjonsnavn
+    if (orgnummer) {
+        return (
+            <div className="text-center">
+                <div className="text-sm font-medium">
+                    <Organisasjonsnavn orgnummer={orgnummer} />
+                </div>
+                <div className="text-gray-600 text-xs">{typeText}</div>
+            </div>
+        )
+    }
+
+    return <span>{typeText}</span>
 }
