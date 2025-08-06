@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import { Bruker } from '@/schemas/bruker'
-import { Rolle } from '@/schemas/bruker'
+import { Bruker, Rolle } from '@/schemas/bruker'
 
 type BrukerRoller = {
     leserolle: boolean
