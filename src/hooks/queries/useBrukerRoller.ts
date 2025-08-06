@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import { Bruker, Rolle } from '@/schemas/bruker'
+import { Bruker, brukerSchema, Rolle } from '@/schemas/bruker'
+import { erLokalEllerDemo } from '@/env'
+import { fetchAndParse } from '@utils/fetch'
 
 type BrukerRoller = {
     leserolle: boolean
@@ -18,11 +20,19 @@ export function useBrukerRoller() {
     const { data: rolleData } = useQuery<RolleApiResponse>({
         queryKey: ['aktiv-bruker'],
         queryFn: async () => {
-            const response = await fetch('/api/rolle')
-            if (!response.ok) {
-                throw new Error('Feil ved henting av aktiv bruker')
+            if (erLokalEllerDemo) {
+                const response = await fetch('/api/rolle')
+                if (!response.ok) {
+                    throw new Error('Feil ved henting av aktiv bruker')
+                }
+                return response.json()
             }
-            return response.json()
+            // TODO: Snakke med Håvard om dette
+            const bruker = await fetchAndParse('/api/bakrommet/v1/bruker', brukerSchema)
+            return {
+                bruker: bruker,
+                roller: bruker.roller,
+            }
         },
     })
 

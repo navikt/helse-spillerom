@@ -3,8 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ErrorResponse } from '@/auth/beskyttetApi'
 import { erLokalEllerDemo } from '@/env'
 import { hentAktivBruker, oppdaterAktivBruker } from '@/mock-api/session'
-import { Bruker, brukerSchema, Rolle } from '@/schemas/bruker'
-import { fetchAndParse } from '@utils/fetch'
+import { Bruker, Rolle } from '@/schemas/bruker'
 
 export async function GET(): Promise<NextResponse<{ bruker: Bruker; roller: Rolle[] } | ErrorResponse>> {
     if (erLokalEllerDemo) {
@@ -15,13 +14,12 @@ export async function GET(): Promise<NextResponse<{ bruker: Bruker; roller: Roll
         })
     }
 
-    // TODO: Snakke med Håvard om dette
-    const bruker = await fetchAndParse('/api/bakrommet/v1/bruker', brukerSchema)
-
-    return NextResponse.json({
-        bruker: bruker,
-        roller: bruker.roller,
-    })
+    return NextResponse.json(
+        {
+            message: 'Not found',
+        },
+        { status: 404 },
+    )
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse<{ success: boolean } | ErrorResponse>> {
