@@ -12,6 +12,7 @@ type KategoriseringMutationProps = {
 type OppdaterDagerMutationProps = {
     inntektsforholdId: string
     dager: Dagoversikt // Kun dagene som skal oppdateres
+    notat: string
 }
 
 export function useOppdaterInntektsforholdKategorisering() {

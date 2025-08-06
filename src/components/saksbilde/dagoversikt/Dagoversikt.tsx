@@ -1,33 +1,19 @@
 'use client'
 
 import { Fragment, ReactElement, useState } from 'react'
-import {
-    Alert,
-    BodyShort,
-    Button,
-    Checkbox,
-    Heading,
-    HStack,
-    Select,
-    Table,
-    Tabs,
-    Tag,
-    Textarea,
-    TextField,
-    VStack,
-} from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, Tag } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { useOppdaterInntektsforholdDagoversikt } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { getFormattedDateString } from '@utils/date-format'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
-import { Dag, Dagtype, Kilde } from '@/schemas/dagoversikt'
+import { Kilde } from '@/schemas/dagoversikt'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { cn } from '@utils/tw'
+import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
 
 interface DagoversiktProps {
     value: string
@@ -40,8 +26,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         isError: inntektsforholdError,
     } = useInntektsforhold()
 
-    const oppdaterDagoversiktMutation = useOppdaterInntektsforholdDagoversikt()
-
     // Filtrer kun inntektsforhold hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
         inntektsforhold?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
@@ -50,8 +34,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [valgteDataer, setValgteDataer] = useState<Set<string>>(new Set())
-    const [nyDagtype, setNyDagtype] = useState<Dagtype>('Syk')
-    const [nyGrad, setNyGrad] = useState<string>('100')
 
     // Sett første sykmeldingsforhold som aktivt hvis det ikke er sett
     const aktivtForhold = aktivtInntektsforholdId
@@ -71,39 +53,6 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const handleAvbrytRedigering = () => {
         setErIRedigeringsmodus(false)
         setValgteDataer(new Set())
-        setNyDagtype('Syk')
-        setNyGrad('100')
-    }
-
-    const handleFerdigRedigering = async () => {
-        if (!aktivtForhold || valgteDataer.size === 0) return
-
-        const oppdaterteDager: Dag[] = []
-
-        // Opprett kun de dagene som skal oppdateres
-        valgteDataer.forEach((dato) => {
-            const eksisterendeDag = aktivtForhold.dagoversikt?.find((d) => d.dato === dato)
-            if (eksisterendeDag) {
-                oppdaterteDager.push({
-                    ...eksisterendeDag,
-                    dagtype: nyDagtype,
-                    grad: nyDagtype === 'Syk' || nyDagtype === 'SykNav' ? parseInt(nyGrad) : null,
-                    kilde: 'Saksbehandler',
-                })
-            }
-        })
-
-        try {
-            await oppdaterDagoversiktMutation.mutateAsync({
-                inntektsforholdId: aktivtForhold.id,
-                dager: oppdaterteDager,
-            })
-
-            // Tilbakestill state etter vellykket oppdatering
-            handleAvbrytRedigering()
-        } catch (error) {
-            // Feilen blir håndtert av mutation-hooken
-        }
     }
 
     if (inntektsforholdLoading) {
@@ -132,7 +81,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     }
 
     return (
-        <SaksbildePanel value={value} className="pl-0">
+        <SaksbildePanel value={value} className="pb-0 pl-0">
             <Tabs
                 className="pl-8"
                 value={aktivtForhold?.id || sykmeldingsforhold[0]?.id}
@@ -150,7 +99,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
 
                 {sykmeldingsforhold.map((forhold) => (
                     <TabsPanel
-                        className={cn({
+                        className={cn('pb-8', {
                             '-mx-8 border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pr-8 pl-[26px]':
                                 erIRedigeringsmodus,
                         })}
@@ -241,78 +190,11 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                 </Table>
 
                                 {erIRedigeringsmodus && (
-                                    <VStack gap="4" className="py-8">
-                                        <Heading size="small">
-                                            {valgteDataer.size > 0
-                                                ? `Fyll inn hva de ${valgteDataer.size} valgte dagene skal endres til`
-                                                : 'Velg én eller flere dager du vil endre i tabellen ovenfor'}
-                                        </Heading>
-                                        <HStack gap="4">
-                                            <Select
-                                                size="small"
-                                                disabled={valgteDataer.size === 0}
-                                                label="Dagtype"
-                                                value={nyDagtype}
-                                                onChange={(e) => {
-                                                    const valgtDagtype = e.target.value as Dagtype
-                                                    setNyDagtype(valgtDagtype)
-                                                    // Sett grad til standardverdi når man velger dagtype som støtter grad
-                                                    if (valgtDagtype === 'Syk' || valgtDagtype === 'SykNav') {
-                                                        if (!nyGrad) {
-                                                            setNyGrad('100')
-                                                        }
-                                                    } else {
-                                                        setNyGrad('')
-                                                    }
-                                                }}
-                                            >
-                                                <option value="Syk">Syk</option>
-                                                <option value="SykNav">Syk (NAV)</option>
-                                                <option value="Arbeidsdag">Arbeidsdag</option>
-                                                <option value="Ferie">Ferie</option>
-                                                <option value="Permisjon">Permisjon</option>
-                                                <option value="Avvist">Avvist</option>
-                                            </Select>
-                                            <TextField
-                                                className="max-w-12"
-                                                label="Grad"
-                                                value={nyGrad}
-                                                onChange={(e) => setNyGrad(e.target.value)}
-                                                size="small"
-                                                disabled={
-                                                    valgteDataer.size === 0 ||
-                                                    (nyDagtype !== 'Syk' && nyDagtype !== 'SykNav')
-                                                }
-                                            />
-                                        </HStack>
-                                        <Textarea
-                                            className="mt-2 w-[640px]"
-                                            size="small"
-                                            label="Notat til beslutter"
-                                            description={
-                                                <span>
-                                                    Begrunn hvorfor det er gjort endringer i sykdomstidslinjen. <br />
-                                                    Teksten vises ikke til den sykmeldte, med mindre hen ber om innsyn.
-                                                </span>
-                                            }
-                                            maxLength={1000}
-                                            minRows={6}
-                                            disabled={valgteDataer.size === 0}
-                                        />
-                                        <HStack gap="2" className="mt-4">
-                                            <Button
-                                                size="small"
-                                                onClick={handleFerdigRedigering}
-                                                loading={oppdaterDagoversiktMutation.isPending}
-                                                disabled={valgteDataer.size === 0}
-                                            >
-                                                Endre ({valgteDataer.size})
-                                            </Button>
-                                            <Button size="small" variant="secondary" onClick={handleAvbrytRedigering}>
-                                                Avbryt
-                                            </Button>
-                                        </HStack>
-                                    </VStack>
+                                    <DagendringForm
+                                        valgteDataer={valgteDataer}
+                                        avbryt={handleAvbrytRedigering}
+                                        aktivtInntektsForhold={aktivtForhold}
+                                    />
                                 )}
                             </>
                         )}
