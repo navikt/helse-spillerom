@@ -1,14 +1,12 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
-export const kildesporSchema = z
-    .object({
-        // Add specific Kildespor fields here based on your backend implementation
-        // For now, using a flexible object structure
-        kilde: z.string().optional(),
-        tidsstempel: z.string().optional(),
-        // Add more fields as needed
-    })
-    .passthrough() // Allow additional properties
+export const kildesporSchema = z.looseObject({
+    // Add specific Kildespor fields here based on your backend implementation
+    // For now, using a flexible object structure
+    kilde: z.string().optional(),
+    tidsstempel: z.string().optional(),
+    // Add more fields as needed
+}) // Allow additional properties
 
 export type Dokument = z.infer<typeof dokumentSchema>
 export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
@@ -23,7 +21,7 @@ export const dokumenttypeSchema = z.enum([
 ])
 
 export const dokumentSchema = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     dokumentType: dokumenttypeSchema,
     eksternId: z.string().nullable(),
     innhold: z.unknown(), // JsonNode can be any JSON structure

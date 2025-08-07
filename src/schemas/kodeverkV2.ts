@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 // Basert på Maybe<T> = T | null | undefined
 const maybeString = z.string().nullable().optional()
@@ -43,7 +43,7 @@ export const alternativSchema: z.ZodType<{
 }> = z.object({
     kode: z.string().min(2),
     navn: z.string().min(2),
-    oppfylt: oppfyltEnum.default('N/A').optional(),
+    oppfylt: oppfyltEnum.prefault('N/A').optional(),
     vilkårshjemmel: vilkårshjemmelSchema.nullable().optional(),
     underspørsmål: z.array(z.lazy(() => underspørsmålSchema)).optional(),
 })

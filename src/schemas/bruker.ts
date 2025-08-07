@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 export const rolleSchema = z.enum(['LES', 'SAKSBEHANDLER', 'BESLUTTER'])
 export type Rolle = z.infer<typeof rolleSchema>

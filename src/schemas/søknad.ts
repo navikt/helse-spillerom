@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 export type Søknadstype = z.infer<typeof søknadstypeSchema>
 const søknadstypeSchema = z.enum([

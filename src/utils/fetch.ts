@@ -1,4 +1,4 @@
-import { z, ZodError } from 'zod'
+import { z, ZodError } from 'zod/v4'
 
 import { problemDetailsSchema } from '@/schemas/problemDetails'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 export const saksbehandlingsperiodeStatusSchema = z.enum([
     'UNDER_BEHANDLING',
@@ -8,7 +8,7 @@ export const saksbehandlingsperiodeStatusSchema = z.enum([
 ])
 
 export const saksbehandlingsperiodeSchema = z.object({
-    id: z.string().uuid(),
+    id: z.uuid(),
     spilleromPersonId: z.string(),
     opprettet: z.string(), // ISO 8601 datetime string
     opprettetAvNavIdent: z.string(),

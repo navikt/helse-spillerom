@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 export type VilkårsvurderingSchema = z.infer<typeof vilkårsvurderingSchema>
 export const vilkårsvurderingSchema = z.object({

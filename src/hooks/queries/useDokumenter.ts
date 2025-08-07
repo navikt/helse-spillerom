@@ -1,6 +1,6 @@
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 import { fetchAndParse } from '@utils/fetch'
 import { Dokument, dokumentSchema } from '@/schemas/dokument'

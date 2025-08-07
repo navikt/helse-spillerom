@@ -1,7 +1,7 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'

@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Dayjs } from 'dayjs'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 import { Søknad, søknadSchema } from '@/schemas/søknad'
 import { fetchAndParse } from '@utils/fetch'

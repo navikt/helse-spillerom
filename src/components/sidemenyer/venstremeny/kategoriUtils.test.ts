@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import type { Inntektsforhold } from '@/schemas/inntektsforhold'
 
 import {
+    capitalizeFirstLetter,
     getKategorierFraInntektsforhold,
     getKategoriNavn,
-    capitalizeFirstLetter,
-    kategoriSetTilTekstOgWarning,
     KATEGORI_SORTERING,
+    kategoriSetTilTekstOgWarning,
 } from './kategoriUtils'
 
 describe('kategoriUtils', () => {
@@ -22,14 +22,20 @@ describe('kategoriUtils', () => {
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    dagoversikt: null,
+                    generertFraDokumenter: [],
                 } as Inntektsforhold,
                 {
                     id: '2',
                     kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
+                    dagoversikt: null,
+                    generertFraDokumenter: [],
                 } as Inntektsforhold,
                 {
                     id: '3',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
+                    dagoversikt: null,
+                    generertFraDokumenter: [],
                 } as Inntektsforhold,
             ]
 
@@ -42,6 +48,8 @@ describe('kategoriUtils', () => {
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    dagoversikt: null,
+                    generertFraDokumenter: [],
                 } as Inntektsforhold,
                 {
                     id: '2',

@@ -5,9 +5,9 @@ import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Modal, Switch, useD
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -38,8 +38,8 @@ const startBehandlingSchema = z
             return true
         },
         {
-            message: 'Du må velge minst én søknad',
             path: ['selectedSøknader'],
+            error: 'Du må velge minst én søknad',
         },
     )
     .refine(
@@ -50,8 +50,8 @@ const startBehandlingSchema = z
             return true
         },
         {
-            message: 'Du må velge både fra og til dato',
             path: ['manualFom'],
+            error: 'Du må velge både fra og til dato',
         },
     )
 

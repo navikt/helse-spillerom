@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
