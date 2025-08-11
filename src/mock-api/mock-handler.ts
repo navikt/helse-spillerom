@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
-import { hentPerson, hentBrukerRoller } from '@/mock-api/session'
+import { hentPerson, hentAktivBruker } from '@/mock-api/session'
 import {
     hentPersonIdFraUrl,
     hentUuidFraUrl,
@@ -54,15 +54,9 @@ type HandlerFunction = (context: HandlerContext) => Promise<Response>
 const handlers: Record<string, HandlerFunction> = {
     'GET /v1/bruker': async () => {
         // Hent roller fra sesjonen
-        const roller = await hentBrukerRoller()
+        const bruker = await hentAktivBruker()
 
-        const mockBruker = {
-            navn: 'Saks McBehandlersen',
-            navIdent: 'Z999999',
-            preferredUsername: 'test.testsen@nav.no',
-            roller: roller,
-        }
-        return NextResponse.json(mockBruker)
+        return NextResponse.json(bruker)
     },
 
     'GET /v1/saksbehandlingsperioder': async () => handleGetAlleSaksbehandlingsperioder(),

@@ -25,7 +25,7 @@ export function useOppdaterBrukerRoller() {
         },
         onSuccess: () => {
             // Invalider aktiv bruker query slik at ny bruker hentes
-            queryClient.invalidateQueries({ queryKey: ['aktiv-bruker'] })
+            queryClient.invalidateQueries({ queryKey: ['brukerinfo'] })
         },
     })
 }

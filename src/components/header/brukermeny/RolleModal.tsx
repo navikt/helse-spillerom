@@ -5,9 +5,9 @@ import { Modal, VStack, Alert, Button, HStack, BodyShort, Heading } from '@navik
 import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
 import { PersonIcon, CheckmarkIcon } from '@navikt/aksel-icons'
 
-import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useOppdaterBrukerRoller } from '@hooks/mutations/useOppdaterBrukerRoller'
 import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
+import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 
 interface RolleModalProps {
     open: boolean
@@ -15,7 +15,7 @@ interface RolleModalProps {
 }
 
 export function RolleModal({ open, onClose }: RolleModalProps): React.ReactElement {
-    const { aktivBruker } = useBrukerRoller()
+    const { data: aktivBruker } = useBrukerinfo()
     const oppdaterBruker = useOppdaterBrukerRoller()
 
     const handleBrukerValg = async (navIdent: string) => {

@@ -11,7 +11,6 @@ import { VilkaarsvurderingV2 } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
-import { Rolle } from '@/schemas/bruker'
 import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 import { Bruker } from '@/schemas/bruker'
 
@@ -147,9 +146,4 @@ export async function oppdaterAktivBruker(navIdent: string) {
 export async function hentAktivBruker(): Promise<Bruker> {
     const session = await getSession()
     return session.aktivBruker
-}
-
-export async function hentBrukerRoller(): Promise<Rolle[]> {
-    const session = await getSession()
-    return session.aktivBruker.roller
 }

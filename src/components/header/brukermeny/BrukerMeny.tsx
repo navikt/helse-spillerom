@@ -15,9 +15,11 @@ import {
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { Tastatursnarveier } from '@components/header/brukermeny/Tastatursnarveier'
 import { DarkModeToggle } from '@components/header/brukermeny/DarkModeToggle'
+import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 
 export function BrukerMeny(): ReactElement {
-    const { data: roller, aktivBruker } = useBrukerRoller()
+    const { data: aktivBruker } = useBrukerinfo()
+    const { data: roller } = useBrukerRoller()
 
     if (!aktivBruker) {
         return <Skeleton className="m-2" variant="rectangle" width={180} height={40} />
