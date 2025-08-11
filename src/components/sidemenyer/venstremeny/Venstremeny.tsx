@@ -8,7 +8,11 @@ import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
+import { useErBeslutter } from '@hooks/queries/useErBeslutter'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
+import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
+import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
+import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
 
@@ -21,6 +25,7 @@ export function Venstremeny(): ReactElement {
     const { visToast } = useToast()
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const kanSaksbehandles = useKanSaksbehandles()
+    const erBeslutter = useErBeslutter()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
 
     const sendTilBeslutning = useSendTilBeslutning({
@@ -31,11 +36,61 @@ export function Venstremeny(): ReactElement {
         },
     })
 
+    const taTilBeslutning = useTaTilBeslutning()
+    const godkjenn = useGodkjenn()
+    const sendTilbake = useSendTilbake()
+
     const håndterSendTilGodkjenning = () => {
         if (aktivSaksbehandlingsperiode) {
             sendTilBeslutning.mutate({
                 saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
             })
+        }
+    }
+
+    const håndterTaTilBeslutning = () => {
+        if (aktivSaksbehandlingsperiode) {
+            taTilBeslutning.mutate(
+                {
+                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                },
+                {
+                    onSuccess: () => {
+                        visToast('Saken er tatt til beslutning', 'success')
+                    },
+                },
+            )
+        }
+    }
+
+    const håndterGodkjenn = () => {
+        if (aktivSaksbehandlingsperiode) {
+            godkjenn.mutate(
+                {
+                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                },
+                {
+                    onSuccess: () => {
+                        visToast('Saken er godkjent', 'success')
+                        router.push('/')
+                    },
+                },
+            )
+        }
+    }
+
+    const håndterSendTilbake = () => {
+        if (aktivSaksbehandlingsperiode) {
+            sendTilbake.mutate(
+                {
+                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                },
+                {
+                    onSuccess: () => {
+                        visToast('Saken er sendt tilbake til saksbehandler', 'success')
+                    },
+                },
+            )
         }
     }
 
@@ -79,6 +134,49 @@ export function Venstremeny(): ReactElement {
                                 >
                                     Send til godkjenning
                                 </Button>
+                            </>
+                        )}
+
+                        {erBeslutter && (
+                            <>
+                                {aktivSaksbehandlingsperiode?.status === 'TIL_BESLUTNING' && (
+                                    <Button
+                                        variant="primary"
+                                        size="small"
+                                        className="w-fit"
+                                        onClick={håndterTaTilBeslutning}
+                                        loading={taTilBeslutning.isPending}
+                                        disabled={taTilBeslutning.isPending}
+                                    >
+                                        Ta til beslutning
+                                    </Button>
+                                )}
+
+                                {aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' && (
+                                    <>
+                                        <Button
+                                            variant="primary"
+                                            size="small"
+                                            className="w-fit"
+                                            onClick={håndterGodkjenn}
+                                            loading={godkjenn.isPending}
+                                            disabled={godkjenn.isPending}
+                                        >
+                                            Godkjenn
+                                        </Button>
+
+                                        <Button
+                                            variant="secondary"
+                                            size="small"
+                                            className="w-fit"
+                                            onClick={håndterSendTilbake}
+                                            loading={sendTilbake.isPending}
+                                            disabled={sendTilbake.isPending}
+                                        >
+                                            Send tilbake
+                                        </Button>
+                                    </>
+                                )}
                             </>
                         )}
                     </>
