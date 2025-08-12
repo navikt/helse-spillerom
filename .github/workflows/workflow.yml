@@ -123,9 +123,10 @@ jobs:
 
       - name: Make fancy GHA Summary
         run: |
-          total_tests=$(jq '.stats.expected + .stats.unexpected' playwright-report/report.json)
+          total_tests=$(jq '.stats.expected + .stats.unexpected + + .stats.flaky' playwright-report/report.json)
           passed_tests=$(jq '.stats.expected' playwright-report/report.json)
           failed_tests=$(jq '.stats.unexpected' playwright-report/report.json)
+          flaky_tests=$(jq '.stats.flaky' playwright-report/report.json)
           failed_test_info=$(jq -r '.suites[].specs[] | select(.ok == false) | "\(.title) (\(.file), \(.tests[].projectName))"' playwright-report/report.json)
           echo "## Playwright Test Report Summary" >> $GITHUB_STEP_SUMMARY
           echo "Total tests: $total_tests ✅" >> $GITHUB_STEP_SUMMARY
@@ -138,5 +139,8 @@ jobs:
             done <<< "$failed_test_info"
           else
             echo "Failed tests: $failed_tests 🔹" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "$flaky_tests" -gt 0 ]; then
+            echo "Flaky tests: $flaky_tests ⚠️" >> $GITHUB_STEP_SUMMARY
           fi
           echo "Se hele rapporten [her](https://cdn.nav.no/speilvendt/${{ github.repository }}/${{ github.run_number }}/playwright-report/index.html)." >> $GITHUB_STEP_SUMMARY
