@@ -11,9 +11,11 @@ export function Historikk(): ReactElement {
     if (isError || !historikk) return <></> // vis noe fornuftig
     if (historikk.length === 0) return <BodyShort>Ingen historikk</BodyShort>
 
+    const sorterteHistorikkinnslag = [...historikk].sort((a, b) => b.endretTidspunkt.localeCompare(a.endretTidspunkt))
+
     return (
         <VStack as="ul" role="list" aria-label="Historikk over endringer">
-            {historikk.map((historikkinnslag, index) => (
+            {sorterteHistorikkinnslag.map((historikkinnslag, index) => (
                 <Historikkinnslag
                     key={`${historikkinnslag.endretTidspunkt}-${index}`}
                     historikkinnslag={historikkinnslag}

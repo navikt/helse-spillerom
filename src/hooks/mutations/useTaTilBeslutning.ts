@@ -24,6 +24,9 @@ export function useTaTilBeslutning() {
             // Invalidate all saksbehandlingsperioder caches
             await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
             await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
+            await queryClient.invalidateQueries({
+                queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
+            })
         },
     })
 }

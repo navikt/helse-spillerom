@@ -29,6 +29,9 @@ export function useOpprettSaksbehandlingsperiode() {
             // Invalidate all saksbehandlingsperioder caches
             await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
             await queryClient.refetchQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
+            await queryClient.invalidateQueries({
+                queryKey: ['saksbehandlingsperiode-historikk', params.personId, periode.id],
+            })
             r.callback(periode)
         },
     })
