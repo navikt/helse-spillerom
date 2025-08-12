@@ -2,9 +2,10 @@ import { ReactElement } from 'react'
 import { BodyShort, VStack } from '@navikt/ds-react'
 
 import { Historikkinnslag, HistorikkinnslagSkeleton } from '@components/sidemenyer/høyremeny/historikk/Historikkinnslag'
+import { useSaksbehandlingsperiodeHistorikk } from '@/hooks/queries/useSaksbehandlingsperiodeHistorikk'
 
 export function Historikk(): ReactElement {
-    const { data: historikk, isLoading, isError } = { data: [], isLoading: false, isError: false } // useHistorikk()
+    const { data: historikk, isLoading, isError } = useSaksbehandlingsperiodeHistorikk()
 
     if (isLoading) return <HistorikkSkeleton />
     if (isError || !historikk) return <></> // vis noe fornuftig
@@ -12,8 +13,11 @@ export function Historikk(): ReactElement {
 
     return (
         <VStack as="ul" role="list" aria-label="Historikk over endringer">
-            {historikk.map((historikkinnslag) => (
-                <Historikkinnslag key={historikkinnslag} historikkinnslag={historikkinnslag} />
+            {historikk.map((historikkinnslag, index) => (
+                <Historikkinnslag
+                    key={`${historikkinnslag.endretTidspunkt}-${index}`}
+                    historikkinnslag={historikkinnslag}
+                />
             ))}
         </VStack>
     )

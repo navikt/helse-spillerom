@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { Person, getSession, hentAktivBruker } from '@/mock-api/session'
+import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
@@ -166,4 +167,20 @@ export async function handleGodkjenn(person: Person | undefined, periodeId: stri
     periode.beslutter = aktivBruker.navIdent
 
     return NextResponse.json(periode, { status: 200 })
+}
+
+export async function handleGetHistorikk(person: Person | undefined, periodeId: string): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // For nå returnerer vi en tom liste som ønsket
+    const historikk: SaksbehandlingsperiodeEndring[] = []
+
+    return NextResponse.json(historikk, { status: 200 })
 }

@@ -7,6 +7,24 @@ export const saksbehandlingsperiodeStatusSchema = z.enum([
     'GODKJENT',
 ])
 
+export const saksbehandlingsperiodeEndringTypeSchema = z.enum([
+    'STARTET',
+    'SENDT_TIL_BESLUTNING',
+    'TATT_TIL_BESLUTNING',
+    'SENDT_I_RETUR',
+    'GODKJENT',
+])
+
+export const saksbehandlingsperiodeEndringSchema = z.object({
+    saksbehandlingsperiodeId: z.uuid(),
+    status: saksbehandlingsperiodeStatusSchema,
+    beslutterNavIdent: z.string().nullable(),
+    endretTidspunkt: z.string(), // ISO 8601 datetime string
+    endretAvNavIdent: z.string(),
+    endringType: saksbehandlingsperiodeEndringTypeSchema,
+    endringKommentar: z.string().nullable().optional(),
+})
+
 export const saksbehandlingsperiodeSchema = z.object({
     id: z.uuid(),
     spilleromPersonId: z.string(),
@@ -21,3 +39,5 @@ export const saksbehandlingsperiodeSchema = z.object({
 
 export type Saksbehandlingsperiode = z.infer<typeof saksbehandlingsperiodeSchema>
 export type SaksbehandlingsperiodeStatus = z.infer<typeof saksbehandlingsperiodeStatusSchema>
+export type SaksbehandlingsperiodeEndring = z.infer<typeof saksbehandlingsperiodeEndringSchema>
+export type SaksbehandlingsperiodeEndringType = z.infer<typeof saksbehandlingsperiodeEndringTypeSchema>

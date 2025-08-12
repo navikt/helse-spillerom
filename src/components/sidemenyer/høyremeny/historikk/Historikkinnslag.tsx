@@ -2,18 +2,22 @@ import { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 
 import { getFormattedDatetimeString } from '@utils/date-format'
+import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 
 interface HistorikkinnslagProps {
-    historikkinnslag: string // Historikkinnslag
+    historikkinnslag: SaksbehandlingsperiodeEndring
 }
 
 export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): ReactElement {
     return (
         <HistorikkinnslagContainer>
             <VStack>
-                <BodyShort className="font-bold">{historikkinnslagVisningstekst[historikkinnslag]}</BodyShort>
+                <BodyShort className="font-bold">
+                    {historikkinnslagVisningstekst[historikkinnslag.endringType]}
+                </BodyShort>
                 <BodyShort className="text-medium text-gray-600">
-                    {getFormattedDatetimeString(historikkinnslag)}
+                    {getFormattedDatetimeString(historikkinnslag.endretTidspunkt)} av{' '}
+                    {historikkinnslag.endretAvNavIdent}
                 </BodyShort>
             </VStack>
         </HistorikkinnslagContainer>
@@ -21,7 +25,11 @@ export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): R
 }
 
 const historikkinnslagVisningstekst: Record<string, string> = {
-    en_eller_annen_type: 'En eller annen visningstekst',
+    STARTET: 'Saksbehandling startet',
+    SENDT_TIL_BESLUTNING: 'Sendt til beslutning',
+    TATT_TIL_BESLUTNING: 'Tatt til beslutning',
+    SENDT_I_RETUR: 'Sendt i retur',
+    GODKJENT: 'Godkjent',
 }
 
 export function HistorikkinnslagSkeleton(): ReactElement {
