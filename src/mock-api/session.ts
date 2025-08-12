@@ -6,7 +6,7 @@ import dayjs, { Dayjs } from 'dayjs'
 
 import { Personinfo } from '@/schemas/personinfo'
 import { testpersoner, Testperson } from '@/mock-api/testpersoner/testpersoner'
-import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
+import { Saksbehandlingsperiode, SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { VilkaarsvurderingV2 } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
@@ -23,6 +23,7 @@ export interface Person {
     inntektsforhold: Record<string, Inntektsforhold[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
+    historikk: Record<string, SaksbehandlingsperiodeEndring[]>
 }
 
 type Session = {
@@ -45,6 +46,7 @@ function deepCopyPerson(person: Testperson): Person {
         inntektsforhold: JSON.parse(JSON.stringify(person.inntektsforhold || {})),
         dagoversikt: JSON.parse(JSON.stringify(person.dagoversikt || {})),
         dokumenter: JSON.parse(JSON.stringify(person.dokumenter || {})),
+        historikk: {},
     }
 }
 
@@ -114,6 +116,7 @@ function skapPerson(fnr: string): Person {
         inntektsforhold: {},
         dagoversikt: {},
         dokumenter: {},
+        historikk: {},
     }
 }
 

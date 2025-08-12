@@ -4,6 +4,7 @@ import { Person, getSession, hentAktivBruker } from '@/mock-api/session'
 import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
+import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
 
 export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> {
     const session = await getSession()
@@ -51,6 +52,16 @@ export async function handlePostSaksbehandlingsperioder(
     )
 
     person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
+
+    // Legg til historikk for opprettelse
+    const aktivBruker = await hentAktivBruker()
+    leggTilHistorikkinnslag(
+        person,
+        resultat.saksbehandlingsperiode.id,
+        'STARTET',
+        'UNDER_BEHANDLING',
+        aktivBruker.navIdent,
+    )
 
     // Legg til inntektsforhold hvis det finnes noen
     if (resultat.inntektsforhold.length > 0) {
@@ -101,6 +112,10 @@ export async function handleSendTilBeslutning(person: Person | undefined, period
 
     periode.status = 'TIL_BESLUTNING'
 
+    // Legg til historikk
+    const aktivBruker = await hentAktivBruker()
+    leggTilHistorikkinnslag(person, periodeId, 'SENDT_TIL_BESLUTNING', 'TIL_BESLUTNING', aktivBruker.navIdent)
+
     return NextResponse.json(periode, { status: 200 })
 }
 
@@ -123,6 +138,16 @@ export async function handleTaTilBeslutning(person: Person | undefined, periodeI
     const aktivBruker = await hentAktivBruker()
     periode.beslutter = aktivBruker.navIdent
 
+    // Legg til historikk
+    leggTilHistorikkinnslag(
+        person,
+        periodeId,
+        'TATT_TIL_BESLUTNING',
+        'UNDER_BESLUTNING',
+        aktivBruker.navIdent,
+        aktivBruker.navIdent,
+    )
+
     return NextResponse.json(periode, { status: 200 })
 }
 
@@ -142,7 +167,11 @@ export async function handleSendTilbake(person: Person | undefined, periodeId: s
     }
 
     periode.status = 'UNDER_BEHANDLING'
+    const aktivBruker = await hentAktivBruker()
     periode.beslutter = null // Nullstill beslutter
+
+    // Legg til historikk
+    leggTilHistorikkinnslag(person, periodeId, 'SENDT_I_RETUR', 'UNDER_BEHANDLING', aktivBruker.navIdent)
 
     return NextResponse.json(periode, { status: 200 })
 }
@@ -166,6 +195,9 @@ export async function handleGodkjenn(person: Person | undefined, periodeId: stri
     const aktivBruker = await hentAktivBruker()
     periode.beslutter = aktivBruker.navIdent
 
+    // Legg til historikk
+    leggTilHistorikkinnslag(person, periodeId, 'GODKJENT', 'GODKJENT', aktivBruker.navIdent, aktivBruker.navIdent)
+
     return NextResponse.json(periode, { status: 200 })
 }
 
@@ -179,8 +211,8 @@ export async function handleGetHistorikk(person: Person | undefined, periodeId: 
         return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
     }
 
-    // For nå returnerer vi en tom liste som ønsket
-    const historikk: SaksbehandlingsperiodeEndring[] = []
+    // Hent historikk for denne saksbehandlingsperioden
+    const historikk: SaksbehandlingsperiodeEndring[] = person.historikk[periodeId] || []
 
     return NextResponse.json(historikk, { status: 200 })
 }
