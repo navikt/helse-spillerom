@@ -6,6 +6,49 @@ import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
 
+/**
+ * Sjekker om to datoperioder overlapper med hverandre
+ * Matcher logikken i bakrommet for overlappsjekk
+ */
+function perioderOverlapper(fom1: string, tom1: string, fom2: string, tom2: string): boolean {
+    const startDato1 = new Date(fom1)
+    const sluttDato1 = new Date(tom1)
+    const startDato2 = new Date(fom2)
+    const sluttDato2 = new Date(tom2)
+
+    // To perioder overlapper hvis start1 <= slutt2 og start2 <= slutt1
+    return startDato1 <= sluttDato2 && startDato2 <= sluttDato1
+}
+
+/**
+ * Finner eksisterende perioder som overlapper med angitt periode
+ * Matcher bakrommet sin finnPerioderForPersonSomOverlapper-logikk
+ */
+function finnOverlappendePerioderForPerson(person: Person, fom: string, tom: string) {
+    return person.saksbehandlingsperioder.filter((periode) => perioderOverlapper(fom, tom, periode.fom, periode.tom))
+}
+
+/**
+ * Oppretter en ProblemDetails-respons som matcher bakrommet sitt format
+ */
+function opprettProblemDetailsResponse(title: string, status: number = 400) {
+    return NextResponse.json(
+        {
+            type: 'https://spillerom.ansatt.nav.no/validation/input',
+            title: title,
+            status: status,
+            detail: null,
+            instance: null,
+        },
+        {
+            status: status,
+            headers: {
+                'Content-Type': 'application/problem+json',
+            },
+        },
+    )
+}
+
 export async function handleGetAlleSaksbehandlingsperioder(): Promise<Response> {
     const session = await getSession()
     const alleSaksbehandlingsperioder = session.testpersoner.flatMap((person) =>
@@ -40,6 +83,20 @@ export async function handlePostSaksbehandlingsperioder(
     }
 
     const body = await request.json()
+
+    // Valider datoer
+    if (body.fom && body.tom && new Date(body.fom) > new Date(body.tom)) {
+        return opprettProblemDetailsResponse('Fom-dato kan ikke være etter tom-dato')
+    }
+
+    // Sjekk for overlappende perioder - matcher bakrommet sin logikk
+    if (body.fom && body.tom) {
+        const overlappendePerioderForPerson = finnOverlappendePerioderForPerson(person, body.fom, body.tom)
+        if (overlappendePerioderForPerson.length > 0) {
+            return opprettProblemDetailsResponse('Angitte datoer overlapper med en eksisterende periode')
+        }
+    }
+
     const testperson = finnPerson(personIdFraRequest)
     const søknader = testperson?.soknader || []
 
