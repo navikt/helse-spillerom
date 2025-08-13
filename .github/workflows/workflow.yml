@@ -123,7 +123,7 @@ jobs:
 
       - name: Make fancy GHA Summary
         run: |
-          total_tests=$(jq '.stats.expected + .stats.unexpected + + .stats.flaky' playwright-report/report.json)
+          total_tests=$(jq '.stats.expected + .stats.unexpected + .stats.flaky' playwright-report/report.json)
           passed_tests=$(jq '.stats.expected' playwright-report/report.json)
           failed_tests=$(jq '.stats.unexpected' playwright-report/report.json)
           flaky_tests=$(jq '.stats.flaky' playwright-report/report.json)
