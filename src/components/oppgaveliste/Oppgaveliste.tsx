@@ -1,12 +1,17 @@
 'use client'
 
-import { Heading, Table, Tabs, Tag } from '@navikt/ds-react'
+import { BodyShort, Button, Heading, HStack, Table, Tabs, Tag, VStack } from '@navikt/ds-react'
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
+import { FilterIcon, MinusIcon, PlusIcon } from '@navikt/aksel-icons'
+import { motion } from 'motion/react'
 
 import { useAlleSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
 import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@/schemas/saksbehandlingsperiode'
 import { getFormattedDateString, getFormattedDatetimeString } from '@/utils/date-format'
+import { getTestSafeTransition } from '@utils/tsUtils'
+import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 
 type FilterType = 'UNDER_BEHANDLING' | 'TIL_BESLUTNING' | 'GODKJENT'
 
@@ -33,6 +38,7 @@ const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'wa
 }
 
 export function Oppgaveliste(): ReactElement {
+    const [showFilters, setShowFilters] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<FilterType>('UNDER_BEHANDLING')
     const { data: saksbehandlingsperioder = [], isLoading, error } = useAlleSaksbehandlingsperioder()
 
@@ -61,31 +67,75 @@ export function Oppgaveliste(): ReactElement {
     }
 
     return (
-        <div className="p-4">
+        <>
             <Heading level="1" size="large" className="sr-only">
                 Oppgaveliste
             </Heading>
 
-            <Tabs value={activeTab} onChange={handleTabChange} className="mb-4">
-                <Tabs.List>
-                    <Tabs.Tab value="UNDER_BEHANDLING" label="Under behandling" />
-                    <Tabs.Tab value="TIL_BESLUTNING" label="Beslutter" />
-                    <Tabs.Tab value="GODKJENT" label="Behandlet" />
-                </Tabs.List>
+            <HStack wrap={false} className="h-full">
+                <VStack className="h-full border-r border-r-ax-border-neutral-subtle pt-4">
+                    <div className="border-b border-b-ax-border-neutral-subtle">
+                        <Button
+                            className="m-2 mb-[7px] self-start"
+                            size="small"
+                            variant="tertiary-neutral"
+                            icon={<FilterIcon />}
+                            onClick={() => setShowFilters((prev) => !prev)}
+                        />
+                    </div>
+                    <AnimatePresenceWrapper initial={false}>
+                        {showFilters && (
+                            <motion.div
+                                key="høyremeny"
+                                transition={getTestSafeTransition({
+                                    type: 'tween',
+                                    duration: 0.2,
+                                    ease: 'easeInOut',
+                                })}
+                                initial={{ width: 0 }}
+                                animate={{ width: 'auto' }}
+                                exit={{ width: 0 }}
+                                className="flex flex-col gap-4 overflow-hidden p-6"
+                            >
+                                <Filter label="Under behandling" />
+                                <Filter label="Beslutter" />
+                            </motion.div>
+                        )}
+                    </AnimatePresenceWrapper>
+                </VStack>
+                <Tabs value={activeTab} onChange={handleTabChange} className="mb-4 grow pt-4">
+                    <TabsList>
+                        <TabsTab value="UNDER_BEHANDLING" label="Under behandling" />
+                        <TabsTab value="TIL_BESLUTNING" label="Beslutter" />
+                        <TabsTab value="GODKJENT" label="Behandlet" />
+                    </TabsList>
 
-                <Tabs.Panel value="UNDER_BEHANDLING">
-                    <OppgaveTabell perioder={filteredPerioder} />
-                </Tabs.Panel>
+                    <TabsPanel value="UNDER_BEHANDLING">
+                        <OppgaveTabell perioder={filteredPerioder} />
+                    </TabsPanel>
 
-                <Tabs.Panel value="TIL_BESLUTNING">
-                    <OppgaveTabell perioder={filteredPerioder} />
-                </Tabs.Panel>
+                    <TabsPanel value="TIL_BESLUTNING">
+                        <OppgaveTabell perioder={filteredPerioder} />
+                    </TabsPanel>
 
-                <Tabs.Panel value="GODKJENT">
-                    <OppgaveTabell perioder={filteredPerioder} />
-                </Tabs.Panel>
-            </Tabs>
-        </div>
+                    <TabsPanel value="GODKJENT">
+                        <OppgaveTabell perioder={filteredPerioder} />
+                    </TabsPanel>
+                </Tabs>
+            </HStack>
+        </>
+    )
+}
+
+function Filter({ label }: { label: string }): ReactElement {
+    return (
+        <HStack className="w-60 border-b border-b-ax-border-neutral-subtle pb-4" justify="space-between" wrap={false}>
+            <BodyShort className="whitespace-nowrap">{label}</BodyShort>
+            <HStack gap="2" wrap={false}>
+                <Button size="xsmall" variant="secondary" icon={<PlusIcon />} />
+                <Button size="xsmall" variant="secondary" icon={<MinusIcon />} />
+            </HStack>
+        </HStack>
     )
 }
 
@@ -97,7 +147,7 @@ function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): Re
     }
 
     return (
-        <Table>
+        <Table zebraStripes>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell>Saksbehandler</Table.HeaderCell>
