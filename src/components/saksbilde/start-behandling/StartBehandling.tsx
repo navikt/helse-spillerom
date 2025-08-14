@@ -1,7 +1,17 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Checkbox, CheckboxGroup, DatePicker, Label, Modal, Switch, useDatepicker } from '@navikt/ds-react'
+import {
+    Alert,
+    Button,
+    Checkbox,
+    CheckboxGroup,
+    DatePicker,
+    Label,
+    Modal,
+    Switch,
+    useDatepicker,
+} from '@navikt/ds-react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
@@ -17,6 +27,7 @@ import { getFormattedDateString } from '@utils/date-format'
 import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
 import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
+import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 
 interface StartBehandlingProps {
     value: string
@@ -65,7 +76,15 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
     const { data: aktivSøknad, isLoading: lasterSoknad } = useSoknad(activeSoknadId)
 
-    const { mutate: opprettSaksbehandlingsperiode, isPending, isSuccess } = useOpprettSaksbehandlingsperiode()
+    const { mutate: opprettSaksbehandlingsperiode, isPending, isSuccess, error } = useOpprettSaksbehandlingsperiode()
+
+    // Funksjon for å få feilmelding fra error
+    const getErrorMessage = (error: unknown): string => {
+        if (error instanceof ProblemDetailsError) {
+            return error.problem.title || 'En feil oppstod ved opprettelse av saksbehandlingsperiode'
+        }
+        return 'En uventet feil oppstod ved opprettelse av saksbehandlingsperiode'
+    }
 
     const {
         control,
@@ -162,10 +181,6 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 onSuccess: (periode) => {
                     router.push(`/person/${params.personId}/${periode.id}`)
                 },
-                onError: () => {
-                    // Error handling kan legges til her hvis nødvendig
-                    // TODO: Implementer proper error handling
-                },
             },
         )
     }
@@ -195,6 +210,13 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     return (
         <SaksbildePanel value={value}>
             <form onSubmit={handleSubmit(onSubmit)}>
+                {/* Vis feilmelding hvis det oppstod en feil */}
+                {error && (
+                    <Alert variant="error" className="mb-6">
+                        {getErrorMessage(error)}
+                    </Alert>
+                )}
+
                 <div className="mb-8">
                     <Controller
                         name="isManualMode"
