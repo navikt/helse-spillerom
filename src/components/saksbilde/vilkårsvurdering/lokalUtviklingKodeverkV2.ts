@@ -390,7 +390,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
             {
-                kode: 'ARBUFOR_TILSKOTT',
+                kode: 'FYLT_70',
                 beskrivelse:
                     'På grunn av sykdom, skade eller lyte får tilskott til opplæringstiltak etter § 10-7 tredje ledd',
                 vilkårshjemmel: {
