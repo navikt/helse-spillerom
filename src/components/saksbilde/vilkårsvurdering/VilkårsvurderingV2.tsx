@@ -4,31 +4,37 @@ import React, { ReactElement, useState } from 'react'
 import { Accordion, BodyShort, Button, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
-import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
+import {
+    ChevronDownIcon,
+    ChevronUpIcon,
+    CheckmarkCircleFillIcon,
+    CircleSlashFillIcon,
+    ExclamationmarkTriangleFillIcon,
+} from '@navikt/aksel-icons'
 
-import { getVurderingIcon } from '@components/saksbilde/vilkårsvurdering/Vilkårsvurdering'
 import { VilkårsvurderingV2Form } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingV2Form'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
 import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
-import { Vilkår } from '@schemas/kodeverkV2'
+import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
-import { useKodeverkV2 } from '@hooks/queries/useKodeverkV2'
+import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
 
 export function VilkårsvurderingV2(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderingerV2()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
-    const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useKodeverkV2()
+    const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useSaksbehandlerui()
 
     if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
     if (isError || kodeverkError) return <></>
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {
-            ;(acc[item.kategori] ||= []).push(item)
+            const key = item.kategori ?? 'ukjent'
+            ;(acc[key] ||= []).push(item)
             return acc
         },
-        {} as Record<string, Vilkår[]>,
+        {} as Record<string, Hovedspørsmål[]>,
     )
 
     const toggleRowExpansion = (uniqueKey: string) => {
@@ -46,7 +52,7 @@ export function VilkårsvurderingV2(): ReactElement {
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
                     const vurdertAntall = vilkårListe.filter((v) =>
-                        vilkårsvurderinger?.some((vv) => vv.kode === v.vilkårskode),
+                        vilkårsvurderinger?.some((vv) => vv.kode === v.kode),
                     ).length
 
                     return (
@@ -69,31 +75,22 @@ export function VilkårsvurderingV2(): ReactElement {
                                     <TableBody>
                                         {vilkårListe.map((vilkår) => {
                                             const vilkårsvurdering = vilkårsvurderinger?.find(
-                                                (v) => v.kode === vilkår.vilkårskode,
+                                                (v) => v.kode === vilkår.kode,
                                             )
-                                            const isExpanded = expandedRows.has(vilkår.vilkårskode)
+                                            const isExpanded = expandedRows.has(vilkår.kode)
 
                                             return (
-                                                <React.Fragment key={vilkår.vilkårskode}>
+                                                <React.Fragment key={vilkår.kode}>
                                                     <TableRow
                                                         className="hover:bg-surface-subtle cursor-pointer"
-                                                        onClick={() => toggleRowExpansion(vilkår.vilkårskode)}
+                                                        onClick={() => toggleRowExpansion(vilkår.kode)}
                                                     >
                                                         <TableDataCell align="center" className="pl-[13px]">
                                                             <HStack wrap={false} gap="4" align="center">
                                                                 <span className="h-6 w-6">
                                                                     {getVurderingIcon(vilkårsvurdering?.vurdering)}
                                                                 </span>
-                                                                <BodyShort
-                                                                    align="start"
-                                                                    weight="semibold"
-                                                                    className="min-w-[70px]"
-                                                                >
-                                                                    § {vilkår.vilkårshjemmel.paragraf}{' '}
-                                                                    {vilkår.vilkårshjemmel.ledd}{' '}
-                                                                    {vilkår.vilkårshjemmel.bokstav}{' '}
-                                                                    {vilkår.vilkårshjemmel.setning}
-                                                                </BodyShort>
+
                                                                 <BodyShort align="start">
                                                                     {vilkår.beskrivelse}
                                                                 </BodyShort>
@@ -111,7 +108,7 @@ export function VilkårsvurderingV2(): ReactElement {
                                                                 }
                                                                 onClick={(e) => {
                                                                     e.stopPropagation()
-                                                                    toggleRowExpansion(vilkår.vilkårskode)
+                                                                    toggleRowExpansion(vilkår.kode)
                                                                 }}
                                                             />
                                                         </TableDataCell>
@@ -148,6 +145,23 @@ export function VilkårsvurderingV2(): ReactElement {
             </Accordion>
         </div>
     )
+}
+
+function getVurderingIcon(vurdering?: Vurdering): ReactElement {
+    switch (vurdering) {
+        case 'OPPFYLT': {
+            return <CheckmarkCircleFillIcon fontSize={24} className="text-icon-success" />
+        }
+        case 'IKKE_OPPFYLT': {
+            return <CircleSlashFillIcon fontSize={24} className="text-icon-danger" />
+        }
+        case 'IKKE_RELEVANT': {
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-gray-400" />
+        }
+        default: {
+            return <ExclamationmarkTriangleFillIcon fontSize={24} className="text-icon-warning" />
+        }
+    }
 }
 
 function getVurderingText(vurdering?: Vurdering): string {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { beskyttetApi, ErrorResponse } from '@/auth/beskyttetApi'
-import { lokalUtviklingKodeverkV2 } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
+import { lokalUtviklingKodeverk } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
 import { erLokal } from '@/env'
 import { Kodeverk } from '@/schemas/kodeverkV2'
 
@@ -36,7 +36,7 @@ export async function GET(request: Request): Promise<NextResponse<Kodeverk | Err
                 }
             }
 
-            return Promise.resolve(NextResponse.json(lokalUtviklingKodeverkV2))
+            return Promise.resolve(NextResponse.json(lokalUtviklingKodeverk))
         },
     )
 }

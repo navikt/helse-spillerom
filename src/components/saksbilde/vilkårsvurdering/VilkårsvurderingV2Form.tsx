@@ -4,26 +4,26 @@ import { ReactElement, useState, useEffect, Fragment } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOpprettVilkaarsvurderingV2 } from '@hooks/mutations/useOpprettVilkaarsvurderingV2'
-import { Vilkår } from '@schemas/kodeverkV2'
 import { VilkaarsvurderingV2, Vurdering, VilkaarsvurderingV2Arsak } from '@schemas/vilkaarsvurdering'
+import { Hovedspørsmål } from '@/schemas/saksbehandlergrensesnitt'
 
 interface UnderspørsmålSchema {
     kode: string
-    navn: string
+    navn?: string | null | undefined
     variant: 'CHECKBOX' | 'RADIO' | 'SELECT'
     alternativer?: AlternativSchema[]
 }
 
 interface AlternativSchema {
     kode: string
-    navn: string
+    navn?: string | null | undefined
     oppfylt?: 'OPPFYLT' | 'IKKE_OPPFYLT' | 'N/A'
     vilkårshjemmel?: unknown
     underspørsmål?: UnderspørsmålSchema[]
 }
 
 interface VilkårsvurderingV2FormProps {
-    vilkår: Vilkår
+    vilkår: Hovedspørsmål
     vurdering?: VilkaarsvurderingV2
     onSuccess?: () => void
 }
@@ -148,7 +148,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
         const årsaker = createArsakerFromSelectedValues()
 
         await mutation.mutateAsync({
-            kode: vilkår.vilkårskode,
+            kode: vilkår.kode,
             vurdering: overallAssessment,
             årsaker,
             notat,
@@ -241,7 +241,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
             case 'CHECKBOX':
                 return (
                     <CheckboxGroup
-                        legend={spørsmål.navn}
+                        legend={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string[]) || []}
                         onChange={(values) => handleCheckboxChange(spørsmål.kode, values)}
                         size="small"
@@ -254,7 +254,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
                                 return (
                                     <div key={alt.kode}>
                                         <Checkbox value={alt.kode} size="small">
-                                            {alt.navn}
+                                            {alt.navn || ''}
                                         </Checkbox>
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
@@ -271,7 +271,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
             case 'RADIO':
                 return (
                     <RadioGroup
-                        legend={spørsmål.navn}
+                        legend={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string) || ''}
                         onChange={(value) => handleRadioChange(spørsmål.kode, value)}
                         size="small"
@@ -282,7 +282,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
                                 return (
                                     <div key={alt.kode}>
                                         <Radio value={alt.kode} size="small">
-                                            {alt.navn}
+                                            {alt.navn || ''}
                                         </Radio>
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
@@ -299,7 +299,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
             case 'SELECT':
                 return (
                     <Select
-                        label={spørsmål.navn}
+                        label={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string) || ''}
                         onChange={(e) => handleSelectChange(spørsmål.kode, e.target.value)}
                         size="small"
@@ -308,7 +308,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
                         <option value="">Velg...</option>
                         {spørsmål.alternativer?.map((alt) => (
                             <option key={alt.kode} value={alt.kode}>
-                                {alt.navn}
+                                {alt.navn || ''}
                             </option>
                         ))}
                     </Select>

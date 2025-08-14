@@ -1,4 +1,4 @@
-import { z } from 'zod/v4'
+import { z } from 'zod'
 
 // Basert på Maybe<T> = T | null | undefined
 const maybeString = z.string().nullable().optional()
@@ -15,8 +15,6 @@ export const kategoriEnum = z.enum([
     'yrkesskade',
 ])
 
-export const oppfyltEnum = z.enum(['OPPFYLT', 'IKKE_OPPFYLT', 'N/A'])
-
 export const vilkårshjemmelSchema = z.object({
     lovverk: z.string().min(2),
     lovverksversjon: z.string().min(2), // evt. valider som datoformat om ønskelig
@@ -25,54 +23,24 @@ export const vilkårshjemmelSchema = z.object({
     setning: maybeString,
     bokstav: maybeString,
 })
-export type Vilkårshjemmel = z.infer<typeof vilkårshjemmelSchema>
 
-// Definerer typene eksplisitt først for å unngå sirkulær referanse
-export const alternativSchema: z.ZodType<{
-    kode: string
-    navn: string
-    oppfylt?: 'OPPFYLT' | 'IKKE_OPPFYLT' | 'N/A'
-    vilkårshjemmel?: Vilkårshjemmel | null
-    underspørsmål?: Array<{
-        kode: string
-        navn: string
-        variant: 'CHECKBOX' | 'RADIO' | 'SELECT'
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        alternativer?: any[]
-    }>
-}> = z.object({
-    kode: z.string().min(2),
-    navn: z.string().min(2),
-    oppfylt: oppfyltEnum.prefault('N/A').optional(),
-    vilkårshjemmel: vilkårshjemmelSchema.nullable().optional(),
-    underspørsmål: z.array(z.lazy(() => underspørsmålSchema)).optional(),
-})
-
-export const underspørsmålSchema: z.ZodType<{
-    kode: string
-    navn: string
-    variant: 'CHECKBOX' | 'RADIO' | 'SELECT'
-    alternativer?: Array<{
-        kode: string
-        navn: string
-        oppfylt?: 'OPPFYLT' | 'IKKE_OPPFYLT' | 'N/A'
-        vilkårshjemmel?: Vilkårshjemmel | null
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        underspørsmål?: any[]
-    }>
-}> = z.object({
-    kode: z.string().min(2),
-    navn: z.string().min(2),
-    variant: z.enum(['CHECKBOX', 'RADIO', 'SELECT']),
-    alternativer: z.array(z.lazy(() => alternativSchema)).optional(),
+export const årsakSchema = z.object({
+    kode: z
+        .string()
+        .min(2)
+        .regex(/^[A-Z0-9_]+$/, 'Kode må kun inneholde store bokstaver A-Z, tall og underscore'),
+    beskrivelse: z.string().min(2),
+    vilkårshjemmel: vilkårshjemmelSchema.optional(), // noen Årsak-er har dette
 })
 
 export const vilkårSchema = z.object({
     vilkårshjemmel: vilkårshjemmelSchema,
     vilkårskode: z.string().min(5),
     beskrivelse: z.string().min(5),
-    kategori: kategoriEnum,
-    underspørsmål: z.array(underspørsmålSchema),
+    // Valgfri kategori benyttes til gruppering i UI, finnes ikke alltid i kilden
+    kategori: kategoriEnum.optional(),
+    oppfylt: z.array(årsakSchema),
+    ikkeOppfylt: z.array(årsakSchema),
 })
 
 // Hele kodeverket
@@ -83,7 +51,8 @@ export const kodeverkFormSchema = z.object({
 })
 
 // Type exports
+export type Årsak = z.infer<typeof årsakSchema>
 export type Vilkår = z.infer<typeof vilkårSchema>
+export type Vilkårshjemmel = z.infer<typeof vilkårshjemmelSchema>
 export type Kodeverk = z.infer<typeof kodeverkSchema>
 export type KodeverkForm = z.infer<typeof kodeverkFormSchema>
-export type OppfyltStatus = z.infer<typeof oppfyltEnum>
