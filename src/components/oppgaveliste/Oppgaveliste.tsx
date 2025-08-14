@@ -12,50 +12,21 @@ import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@/schemas/
 import { getFormattedDateString, getFormattedDatetimeString } from '@/utils/date-format'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
+import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
+import { Bruker } from '@schemas/bruker'
 
-type FilterType = 'UNDER_BEHANDLING' | 'TIL_BESLUTNING' | 'GODKJENT'
-
-const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
-    UNDER_BEHANDLING: 'Under behandling',
-    TIL_BESLUTNING: 'Til beslutning',
-    UNDER_BESLUTNING: 'Under beslutning',
-    GODKJENT: 'Godkjent',
-}
-
-const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'warning' | 'success' => {
-    switch (status) {
-        case 'UNDER_BEHANDLING':
-            return 'info'
-        case 'TIL_BESLUTNING':
-            return 'warning'
-        case 'UNDER_BESLUTNING':
-            return 'warning'
-        case 'GODKJENT':
-            return 'success'
-        default:
-            return 'info'
-    }
-}
+type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
 export function Oppgaveliste(): ReactElement {
     const [showFilters, setShowFilters] = useState<boolean>(false)
-    const [activeTab, setActiveTab] = useState<FilterType>('UNDER_BEHANDLING')
+    const [activeTab, setActiveTab] = useState<SakerTabs>('ALLE')
     const { data: saksbehandlingsperioder = [], isLoading, error } = useAlleSaksbehandlingsperioder()
+    const { data: aktivBruker } = useBrukerinfo()
 
-    const filteredPerioder = (saksbehandlingsperioder as Saksbehandlingsperiode[]).filter(
-        (periode: Saksbehandlingsperiode) => {
-            if (activeTab === 'TIL_BESLUTNING') {
-                return periode.status === 'TIL_BESLUTNING' || periode.status === 'UNDER_BESLUTNING'
-            } else if (activeTab === 'GODKJENT') {
-                return periode.status === 'GODKJENT'
-            } else {
-                return periode.status === 'UNDER_BEHANDLING'
-            }
-        },
-    )
+    const { mine, behandlet, alle } = splitPerioderForTabs(saksbehandlingsperioder, aktivBruker)
 
     const handleTabChange = (value: string) => {
-        setActiveTab(value as FilterType)
+        setActiveTab(value as SakerTabs)
     }
 
     if (isLoading) {
@@ -92,9 +63,9 @@ export function Oppgaveliste(): ReactElement {
                                     duration: 0.2,
                                     ease: 'easeInOut',
                                 })}
-                                initial={{ width: 0 }}
-                                animate={{ width: 'auto' }}
-                                exit={{ width: 0 }}
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: 'auto', opacity: 1 }}
+                                exit={{ width: 0, opacity: 0 }}
                                 className="flex flex-col gap-4 overflow-hidden p-6"
                             >
                                 <Filter label="Under behandling" />
@@ -105,25 +76,67 @@ export function Oppgaveliste(): ReactElement {
                 </VStack>
                 <Tabs value={activeTab} onChange={handleTabChange} className="mb-4 grow pt-4">
                     <TabsList>
-                        <TabsTab value="UNDER_BEHANDLING" label="Under behandling" />
-                        <TabsTab value="TIL_BESLUTNING" label="Beslutter" />
-                        <TabsTab value="GODKJENT" label="Behandlet" />
+                        <TabsTab value="ALLE" label={`Saker (${alle.length})`} />
+                        <TabsTab value="MINE" label={`Mine saker (${mine.length})`} />
+                        <TabsTab value="BEHANDLET" label={`Behandlet (${behandlet.length})`} />
                     </TabsList>
-
-                    <TabsPanel value="UNDER_BEHANDLING">
-                        <OppgaveTabell perioder={filteredPerioder} />
+                    <TabsPanel value="ALLE">
+                        <OppgaveTabell perioder={alle} />
                     </TabsPanel>
-
-                    <TabsPanel value="TIL_BESLUTNING">
-                        <OppgaveTabell perioder={filteredPerioder} />
+                    <TabsPanel value="MINE">
+                        <OppgaveTabell perioder={mine} />
                     </TabsPanel>
-
-                    <TabsPanel value="GODKJENT">
-                        <OppgaveTabell perioder={filteredPerioder} />
+                    <TabsPanel value="BEHANDLET">
+                        <OppgaveTabell perioder={behandlet} />
                     </TabsPanel>
                 </Tabs>
             </HStack>
         </>
+    )
+}
+
+const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
+    UNDER_BEHANDLING: 'Under behandling',
+    TIL_BESLUTNING: 'Til beslutning',
+    UNDER_BESLUTNING: 'Under beslutning',
+    GODKJENT: 'Godkjent',
+}
+
+const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'warning' | 'success' => {
+    switch (status) {
+        case 'UNDER_BEHANDLING':
+            return 'info'
+        case 'TIL_BESLUTNING':
+            return 'warning'
+        case 'UNDER_BESLUTNING':
+            return 'warning'
+        case 'GODKJENT':
+            return 'success'
+        default:
+            return 'info'
+    }
+}
+
+function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[], aktivBruker?: Bruker) {
+    return (saksbehandlingsperioder as Saksbehandlingsperiode[]).reduce(
+        (acc, periode) => {
+            if (
+                (periode.status === 'TIL_BESLUTNING' && periode.beslutter === aktivBruker?.navIdent) ||
+                periode.opprettetAvNavIdent === aktivBruker?.navIdent
+            ) {
+                acc.mine.push(periode)
+            }
+            if (periode.status === 'GODKJENT') {
+                acc.behandlet.push(periode)
+            }
+            acc.alle.push(periode)
+            return acc
+        },
+        {
+            mine: [] as Saksbehandlingsperiode[],
+            behandlet: [] as Saksbehandlingsperiode[],
+            alle: [] as Saksbehandlingsperiode[],
+        },
     )
 }
 

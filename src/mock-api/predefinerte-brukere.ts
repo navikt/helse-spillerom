@@ -3,7 +3,7 @@ import { Bruker } from '@/schemas/bruker'
 export const predefinerteBrukere: Bruker[] = [
     {
         navn: 'Saks McBehandlersen',
-        navIdent: 'S123456',
+        navIdent: 'Z123456',
         preferredUsername: 'saks.mcbehandlersen@nav.no',
         roller: ['SAKSBEHANDLER'],
     },
