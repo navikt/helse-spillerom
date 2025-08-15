@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 import { erProd, erLokalEllerDemo } from '@/env'
-import { VilkårsvurderingDebug } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingDebug'
+import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
 import { InntektsforholdDebug } from '@components/saksbilde/inntektsforhold/InntektsforholdDebug'
 import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
@@ -94,7 +94,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                     className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>
-                        <VilkårsvurderingDebug />
+                        <VilkårsvurderingInnsikt />
                     </ModalBody>
                 </Modal>
             )}

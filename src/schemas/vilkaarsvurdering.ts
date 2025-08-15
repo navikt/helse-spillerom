@@ -9,13 +9,13 @@ export const vilkaarsvurderingV2ArsakSchema = z.object({
     vurdering: z.string(),
 })
 
-export type VilkaarsvurderingV2Arsak = z.infer<typeof vilkaarsvurderingV2ArsakSchema>
+export type VilkaarsvurderingArsak = z.infer<typeof vilkaarsvurderingV2ArsakSchema>
 
-export const vilkaarsvurderingV2Schema = z.object({
+export const vilkaarsvurderingSchema = z.object({
     kode: z.string(),
     vurdering: vurderingEnum,
     årsaker: z.array(vilkaarsvurderingV2ArsakSchema),
     notat: z.string().optional(),
 })
 
-export type VilkaarsvurderingV2 = z.infer<typeof vilkaarsvurderingV2Schema>
+export type Vilkaarsvurdering = z.infer<typeof vilkaarsvurderingSchema>

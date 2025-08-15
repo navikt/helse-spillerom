@@ -3,11 +3,11 @@
 import { ReactElement, useState, useEffect, Fragment } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
-import { useOpprettVilkaarsvurderingV2 } from '@hooks/mutations/useOpprettVilkaarsvurderingV2'
+import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
 import {
-    VilkaarsvurderingV2 as Vilkaarsvurdering,
+    Vilkaarsvurdering as Vilkaarsvurdering,
     Vurdering,
-    VilkaarsvurderingV2Arsak as VilkaarsvurderingArsak,
+    VilkaarsvurderingArsak as VilkaarsvurderingArsak,
 } from '@schemas/vilkaarsvurdering'
 import { Hovedspørsmål } from '@/schemas/saksbehandlergrensesnitt'
 
@@ -35,7 +35,7 @@ interface VilkårsvurderingFormProps {
 export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: VilkårsvurderingFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
     const [notat, setNotat] = useState<string>(vurdering?.notat ?? '')
-    const mutation = useOpprettVilkaarsvurderingV2()
+    const mutation = useOpprettVilkaarsvurdering()
 
     const findSpørsmålForAlternativ = (alternativKode: string): string | null => {
         const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {

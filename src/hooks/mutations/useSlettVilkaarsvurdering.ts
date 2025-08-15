@@ -24,7 +24,7 @@ export function useSlettVilkaarsvurdering() {
                 queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
             })
             queryClient.invalidateQueries({
-                queryKey: [params.personId, 'vilkaarsvurderinger-v2', params.saksbehandlingsperiodeId],
+                queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
             })
         },
     })

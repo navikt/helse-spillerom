@@ -7,7 +7,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import { Personinfo } from '@/schemas/personinfo'
 import { testpersoner, Testperson } from '@/mock-api/testpersoner/testpersoner'
 import { Saksbehandlingsperiode, SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
-import { VilkaarsvurderingV2 } from '@/schemas/vilkaarsvurdering'
+import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
@@ -19,7 +19,7 @@ export interface Person {
     personId: string
     personinfo: Personinfo
     saksbehandlingsperioder: Saksbehandlingsperiode[]
-    vilkaarsvurderinger: Record<string, VilkaarsvurderingV2[]>
+    vilkaarsvurderinger: Record<string, Vilkaarsvurdering[]>
     inntektsforhold: Record<string, Inntektsforhold[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>

@@ -4,12 +4,12 @@ import React, { ReactElement } from 'react'
 import { Button, Table, Tag } from '@navikt/ds-react'
 import { TrashIcon } from '@navikt/aksel-icons'
 
-import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
+import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
 
-export function VilkårsvurderingDebug(): ReactElement {
-    const { data: vurderinger = [] } = useVilkaarsvurderingerV2()
+export function VilkårsvurderingInnsikt(): ReactElement {
+    const { data: vurderinger = [] } = useVilkaarsvurderinger()
     const { data: kodeverk = [] } = useKodeverk()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 

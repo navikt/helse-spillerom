@@ -15,13 +15,13 @@ import {
 import { VilkårsvurderingForm } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingForm'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
-import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
+import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
 
 export function Vilkårsvurdering(): ReactElement {
-    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderingerV2()
+    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useSaksbehandlerui()
 
