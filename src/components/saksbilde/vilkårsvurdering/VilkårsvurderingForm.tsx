@@ -4,6 +4,7 @@ import { ReactElement, useState, useEffect, Fragment } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
+import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import {
     Vilkaarsvurdering as Vilkaarsvurdering,
     Vurdering,
@@ -21,8 +22,6 @@ interface UnderspørsmålSchema {
 interface AlternativSchema {
     kode: string
     navn?: string | null | undefined
-    oppfylt?: 'OPPFYLT' | 'IKKE_OPPFYLT' | 'N/A'
-    vilkårshjemmel?: unknown
     underspørsmål?: UnderspørsmålSchema[]
 }
 
@@ -36,6 +35,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
     const [notat, setNotat] = useState<string>(vurdering?.notat ?? '')
     const mutation = useOpprettVilkaarsvurdering()
+    const { data: kodeverk = [] } = useKodeverk()
 
     const findSpørsmålForAlternativ = (alternativKode: string): string | null => {
         const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {
@@ -167,23 +167,25 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         // Logic to determine overall assessment based on selected values
         // IKKE_OPPFYLT takes precedence over OPPFYLT - if any condition is not met, the entire assessment fails
 
-        // Check if any selected alternative has an oppfylt status
+        // Looper gjennom alle oppfylt og ikkeOppfylt lister i hele kodeverket
         const hasOppfylt = Object.values(selectedValues).some((value) => {
             if (typeof value === 'string') {
-                return findAlternativeByKode(value)?.oppfylt === 'OPPFYLT'
+                return kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === value))
             }
             if (Array.isArray(value)) {
-                return value.some((v) => findAlternativeByKode(v)?.oppfylt === 'OPPFYLT')
+                return value.some((v) => kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === v)))
             }
             return false
         })
 
         const hasIkkeOppfylt = Object.values(selectedValues).some((value) => {
             if (typeof value === 'string') {
-                return findAlternativeByKode(value)?.oppfylt === 'IKKE_OPPFYLT'
+                return kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === value))
             }
             if (Array.isArray(value)) {
-                return value.some((v) => findAlternativeByKode(v)?.oppfylt === 'IKKE_OPPFYLT')
+                return value.some((v) =>
+                    kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === v)),
+                )
             }
             return false
         })
@@ -217,27 +219,6 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         })
 
         return årsaker
-    }
-
-    const findAlternativeByKode = (kode: string): AlternativSchema | undefined => {
-        const searchInUnderspørsmål = (underspørsmål: UnderspørsmålSchema[]): AlternativSchema | undefined => {
-            for (const spørsmål of underspørsmål) {
-                if (spørsmål.alternativer) {
-                    for (const alt of spørsmål.alternativer) {
-                        if (alt.kode === kode) {
-                            return alt
-                        }
-                        if (alt.underspørsmål) {
-                            const found = searchInUnderspørsmål(alt.underspørsmål)
-                            if (found) return found
-                        }
-                    }
-                }
-            }
-            return undefined
-        }
-
-        return searchInUnderspørsmål(vilkår.underspørsmål)
     }
 
     const renderUnderspørsmål = (spørsmål: UnderspørsmålSchema): ReactElement => {
