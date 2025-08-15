@@ -6,11 +6,11 @@ import { TrashIcon } from '@navikt/aksel-icons'
 
 import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
 import { useSlettVilkaarsvurdering } from '@hooks/mutations/useSlettVilkaarsvurdering'
-import { useKodeverkV2 } from '@hooks/queries/useKodeverkV2'
+import { useKodeverk } from '@/hooks/queries/useKodeverk'
 
 export function VilkårsvurderingDebug(): ReactElement {
     const { data: vurderinger = [] } = useVilkaarsvurderingerV2()
-    const { data: kodeverk = [] } = useKodeverkV2()
+    const { data: kodeverk = [] } = useKodeverk()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 
     // Samle alle vurderte årsakskoder (bruker årsak.vurdering som koden)

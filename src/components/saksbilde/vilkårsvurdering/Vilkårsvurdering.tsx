@@ -12,7 +12,7 @@ import {
     ExclamationmarkTriangleFillIcon,
 } from '@navikt/aksel-icons'
 
-import { VilkårsvurderingV2Form } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingV2Form'
+import { VilkårsvurderingForm } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingForm'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
 import { useVilkaarsvurderingerV2 } from '@hooks/queries/useVilkaarsvurderingerV2'
@@ -20,7 +20,7 @@ import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
 
-export function VilkårsvurderingV2(): ReactElement {
+export function Vilkårsvurdering(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderingerV2()
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useSaksbehandlerui()
@@ -117,7 +117,7 @@ export function VilkårsvurderingV2(): ReactElement {
                                                         <TableRow>
                                                             <TableDataCell colSpan={3} className="bg-surface-subtle">
                                                                 <div className="p-4">
-                                                                    <VilkårsvurderingV2Form
+                                                                    <VilkårsvurderingForm
                                                                         vilkår={vilkår}
                                                                         vurdering={vilkårsvurdering}
                                                                         onSuccess={() => {

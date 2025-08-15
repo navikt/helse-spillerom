@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 
 import { Kodeverk } from '@schemas/kodeverkV2'
 
-export function useKodeverkV2() {
+export function useKodeverk() {
     return useQuery<Kodeverk, Error>({
-        queryKey: ['kodeverk-v2'],
+        queryKey: ['kodeverk'],
         queryFn: async () => {
             const response = await fetch(`/api/v2/kodeverk`)
             const data = await response.json()

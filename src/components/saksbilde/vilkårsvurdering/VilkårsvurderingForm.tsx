@@ -4,7 +4,11 @@ import { ReactElement, useState, useEffect, Fragment } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOpprettVilkaarsvurderingV2 } from '@hooks/mutations/useOpprettVilkaarsvurderingV2'
-import { VilkaarsvurderingV2, Vurdering, VilkaarsvurderingV2Arsak } from '@schemas/vilkaarsvurdering'
+import {
+    VilkaarsvurderingV2 as Vilkaarsvurdering,
+    Vurdering,
+    VilkaarsvurderingV2Arsak as VilkaarsvurderingArsak,
+} from '@schemas/vilkaarsvurdering'
 import { Hovedspørsmål } from '@/schemas/saksbehandlergrensesnitt'
 
 interface UnderspørsmålSchema {
@@ -22,13 +26,13 @@ interface AlternativSchema {
     underspørsmål?: UnderspørsmålSchema[]
 }
 
-interface VilkårsvurderingV2FormProps {
+interface VilkårsvurderingFormProps {
     vilkår: Hovedspørsmål
-    vurdering?: VilkaarsvurderingV2
+    vurdering?: Vilkaarsvurdering
     onSuccess?: () => void
 }
 
-export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: VilkårsvurderingV2FormProps): ReactElement {
+export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: VilkårsvurderingFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
     const [notat, setNotat] = useState<string>(vurdering?.notat ?? '')
     const mutation = useOpprettVilkaarsvurderingV2()
@@ -82,7 +86,7 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
     }
 
     const reconstructSelectedValuesFromArsaker = (
-        årsaker: VilkaarsvurderingV2Arsak[],
+        årsaker: VilkaarsvurderingArsak[],
     ): Record<string, string | string[]> => {
         const reconstructedValues: Record<string, string | string[]> = {}
 
@@ -190,8 +194,8 @@ export function VilkårsvurderingV2Form({ vilkår, vurdering, onSuccess }: Vilk�
         return 'IKKE_RELEVANT'
     }
 
-    const createArsakerFromSelectedValues = (): VilkaarsvurderingV2Arsak[] => {
-        const årsaker: VilkaarsvurderingV2Arsak[] = []
+    const createArsakerFromSelectedValues = (): VilkaarsvurderingArsak[] => {
+        const årsaker: VilkaarsvurderingArsak[] = []
 
         // Convert selectedValues to årsaker format
         Object.entries(selectedValues).forEach(([spørsmålKode, value]) => {
