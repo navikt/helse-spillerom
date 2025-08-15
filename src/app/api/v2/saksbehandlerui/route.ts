@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { beskyttetApi, type ErrorResponse } from '@/auth/beskyttetApi'
 import { erLokal } from '@/env'
 import { type HovedspørsmålArray } from '@/schemas/saksbehandlergrensesnitt'
-import { saksbehandlerUi } from '@/components/saksbilde/vilkårsvurdering/lokalSaksbehandlerui'
+import { saksbehandlerUi } from '@/mock-api/kodeverk/saksbehandlerui'
 
 export async function GET(request: Request): Promise<NextResponse<HovedspørsmålArray | ErrorResponse>> {
     return await beskyttetApi<HovedspørsmålArray | ErrorResponse>(

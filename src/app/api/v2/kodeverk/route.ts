@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { beskyttetApi, ErrorResponse } from '@/auth/beskyttetApi'
-import { lokalUtviklingKodeverk } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
+import { lokalUtviklingKodeverk } from '@/mock-api/kodeverk/vilkårkodeverk'
 import { erLokal } from '@/env'
 import { Kodeverk } from '@/schemas/kodeverkV2'
 

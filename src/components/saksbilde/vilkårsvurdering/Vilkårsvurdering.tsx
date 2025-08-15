@@ -14,11 +14,12 @@ import {
 
 import { VilkårsvurderingForm } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingForm'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
-import { kategoriLabels } from '@components/saksbilde/vilkårsvurdering/lokalUtviklingKodeverkV2'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
+
+import { kategoriLabels } from './kategorier'
 
 export function Vilkårsvurdering(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
