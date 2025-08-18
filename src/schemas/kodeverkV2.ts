@@ -18,6 +18,7 @@ export const kategoriEnum = z.enum([
 export const vilkårshjemmelSchema = z.object({
     lovverk: z.string().min(2),
     lovverksversjon: z.string().min(2), // evt. valider som datoformat om ønskelig
+    kapittel: z.string(),
     paragraf: z.string(),
     ledd: maybeString,
     setning: maybeString,
@@ -37,8 +38,6 @@ export const vilkårSchema = z.object({
     vilkårshjemmel: vilkårshjemmelSchema,
     vilkårskode: z.string().min(5),
     beskrivelse: z.string().min(5),
-    // Valgfri kategori benyttes til gruppering i UI, finnes ikke alltid i kilden
-    kategori: kategoriEnum.optional(),
     oppfylt: z.array(årsakSchema),
     ikkeOppfylt: z.array(årsakSchema),
 })
