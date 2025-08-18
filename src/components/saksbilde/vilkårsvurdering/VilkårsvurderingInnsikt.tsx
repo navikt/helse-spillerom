@@ -28,24 +28,13 @@ export function VilkårsvurderingInnsikt(): ReactElement {
         return harVurdertOppfylt || harVurdertIkkeOppfylt
     })
 
-    // Hjelpefunksjon for å finne vurdering basert på vurderingskode
-    const finnVurderingForÅrsak = (vurderingskode: string) => {
-        for (const vurdering of vurderinger) {
-            const usp = vurdering.underspørsmål.find((u) => u.svar === vurderingskode)
-            if (usp) {
-                return { vurdering, årsak: usp }
-            }
-        }
-        return null
-    }
-
     return (
         <div className="space-y-6">
             <Table>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Vilkårskode</Table.HeaderCell>
-                        <Table.HeaderCell>Vurderte årsaker</Table.HeaderCell>
+                        <Table.HeaderCell>Vilkår</Table.HeaderCell>
+                        <Table.HeaderCell>Vurdering</Table.HeaderCell>
                         <Table.HeaderCell>Notat</Table.HeaderCell>
                         <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
@@ -92,22 +81,17 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                 <Table.DataCell>
                                     <div className="space-y-3">
                                         {alleVurderteÅrsaker.map((årsak) => {
-                                            const vurderingInfo = finnVurderingForÅrsak(årsak.kode)
-
                                             return (
                                                 <div key={årsak.kode} className="border-gray-200 border-l-2 pl-3">
                                                     <div className="mb-1 flex items-center gap-2">
                                                         <span className="font-mono text-sm">{årsak.kode}</span>
-                                                        <Tag
-                                                            variant={årsak.type === 'oppfylt' ? 'success' : 'error'}
-                                                            size="xsmall"
-                                                        >
-                                                            {årsak.type === 'oppfylt'
-                                                                ? '✅ Oppfylt'
-                                                                : '❌ Ikke oppfylt'}
-                                                        </Tag>
                                                     </div>
-
+                                                    <Tag
+                                                        variant={årsak.type === 'oppfylt' ? 'success' : 'error'}
+                                                        size="xsmall"
+                                                    >
+                                                        {årsak.type === 'oppfylt' ? 'Oppfylt' : 'Ikke oppfylt'}
+                                                    </Tag>
                                                     <div className="mb-1 text-sm font-medium">{årsak.beskrivelse}</div>
 
                                                     {årsak.vilkårshjemmel && (
@@ -120,13 +104,6 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                                                 ` setning ${årsak.vilkårshjemmel.setning}`}
                                                             {årsak.vilkårshjemmel.bokstav &&
                                                                 ` bokstav ${årsak.vilkårshjemmel.bokstav}`}
-                                                        </div>
-                                                    )}
-
-                                                    {vurderingInfo && (
-                                                        <div className="text-gray-600 bg-gray-50 rounded p-2 text-sm">
-                                                            <div className="font-medium">Vurdering:</div>
-                                                            <div>{vurderingInfo.årsak.svar}</div>
                                                         </div>
                                                     )}
                                                 </div>
