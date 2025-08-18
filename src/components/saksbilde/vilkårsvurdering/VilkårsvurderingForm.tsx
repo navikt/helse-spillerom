@@ -37,8 +37,8 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     const mutation = useOpprettVilkaarsvurdering()
     const { data: kodeverk = [] } = useKodeverk()
 
-    const findSpørsmålForAlternativ = (alternativKode: string): string | null => {
-        const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {
+    const finnSpørsmålForAlternativ = (alternativKode: string): string | null => {
+        const søkIUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {
             if (spørsmål.alternativer) {
                 for (const alt of spørsmål.alternativer) {
                     if (alt.kode === alternativKode) {
@@ -46,7 +46,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                     }
                     if (alt.underspørsmål) {
                         for (const us of alt.underspørsmål) {
-                            const found = searchInUnderspørsmål(us)
+                            const found = søkIUnderspørsmål(us)
                             if (found) return found
                         }
                     }
@@ -56,20 +56,20 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         }
 
         for (const spørsmål of vilkår.underspørsmål) {
-            const found = searchInUnderspørsmål(spørsmål)
+            const found = søkIUnderspørsmål(spørsmål)
             if (found) return found
         }
         return null
     }
 
-    const findSpørsmålByKode = (kode: string): UnderspørsmålSchema | null => {
-        const searchInUnderspørsmål = (spørsmål: UnderspørsmålSchema): UnderspørsmålSchema | null => {
+    const finnSpørsmålByKode = (kode: string): UnderspørsmålSchema | null => {
+        const søkIUnderspørsmål = (spørsmål: UnderspørsmålSchema): UnderspørsmålSchema | null => {
             if (spørsmål.kode === kode) return spørsmål
             if (spørsmål.alternativer) {
                 for (const alt of spørsmål.alternativer) {
                     if (alt.underspørsmål) {
                         for (const us of alt.underspørsmål) {
-                            const found = searchInUnderspørsmål(us)
+                            const found = søkIUnderspørsmål(us)
                             if (found) return found
                         }
                     }
@@ -79,34 +79,85 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         }
 
         for (const spørsmål of vilkår.underspørsmål) {
-            const found = searchInUnderspørsmål(spørsmål)
+            const found = søkIUnderspørsmål(spørsmål)
             if (found) return found
         }
         return null
     }
 
-    const reconstructSelectedValuesFromUnderspørsmål = (
-        underspørsmål: VilkaarsvurderingUnderspørsmål[],
-    ): Record<string, string | string[]> => {
-        const reconstructedValues: Record<string, string | string[]> = {}
+    const samleUnderspørsmålKoder = (alternativ: AlternativSchema): string[] => {
+        const koder: string[] = []
 
-        // For each underspørsmål, find which spørsmål it belongs to and set the value
-        for (const usp of underspørsmål) {
-            const spørsmålKode = findSpørsmålForAlternativ(usp.svar)
-            if (spørsmålKode) {
-                const spørsmål = findSpørsmålByKode(spørsmålKode)
-                if (spørsmål) {
-                    if (spørsmål.variant === 'CHECKBOX') {
-                        const existing = (reconstructedValues[spørsmålKode] as string[]) || []
-                        reconstructedValues[spørsmålKode] = [...existing, usp.svar]
-                    } else {
-                        reconstructedValues[spørsmålKode] = usp.svar
+        const samleFraUnderspørsmål = (underspørsmål: UnderspørsmålSchema[]) => {
+            for (const us of underspørsmål) {
+                koder.push(us.kode)
+                if (us.alternativer) {
+                    for (const alt of us.alternativer) {
+                        if (alt.underspørsmål) {
+                            samleFraUnderspørsmål(alt.underspørsmål)
+                        }
                     }
                 }
             }
         }
 
-        return reconstructedValues
+        if (alternativ.underspørsmål) {
+            samleFraUnderspørsmål(alternativ.underspørsmål)
+        }
+
+        return koder
+    }
+
+    const fjernUnderspørsmålForAndreAlternativer = (
+        spørsmålKode: string,
+        valgtAlternativKode: string,
+    ): Record<string, string | string[]> => {
+        const spørsmål = finnSpørsmålByKode(spørsmålKode)
+        if (!spørsmål || !spørsmål.alternativer) {
+            return selectedValues
+        }
+
+        const alternativerTilFjerning: string[] = []
+
+        // Samle alle underspørsmål-koder fra andre alternativer
+        for (const alternativ of spørsmål.alternativer) {
+            if (alternativ.kode !== valgtAlternativKode) {
+                const koder = samleUnderspørsmålKoder(alternativ)
+                alternativerTilFjerning.push(...koder)
+            }
+        }
+
+        // Fjern alle disse koder fra selectedValues
+        const nyeValgteVerdier = { ...selectedValues }
+        alternativerTilFjerning.forEach((kode) => {
+            delete nyeValgteVerdier[kode]
+        })
+
+        return nyeValgteVerdier
+    }
+
+    const gjenopprettValgteVerdierFraUnderspørsmål = (
+        underspørsmål: VilkaarsvurderingUnderspørsmål[],
+    ): Record<string, string | string[]> => {
+        const gjenopprettedeVerdier: Record<string, string | string[]> = {}
+
+        // For each underspørsmål, find which spørsmål it belongs to and set the value
+        for (const usp of underspørsmål) {
+            const spørsmålKode = finnSpørsmålForAlternativ(usp.svar)
+            if (spørsmålKode) {
+                const spørsmål = finnSpørsmålByKode(spørsmålKode)
+                if (spørsmål) {
+                    if (spørsmål.variant === 'CHECKBOX') {
+                        const existing = (gjenopprettedeVerdier[spørsmålKode] as string[]) || []
+                        gjenopprettedeVerdier[spørsmålKode] = [...existing, usp.svar]
+                    } else {
+                        gjenopprettedeVerdier[spørsmålKode] = usp.svar
+                    }
+                }
+            }
+        }
+
+        return gjenopprettedeVerdier
     }
 
     useEffect(() => {
@@ -116,44 +167,77 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
 
             // Reconstruct selectedValues based on existing underspørsmål
             if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
-                const reconstructedValues = reconstructSelectedValuesFromUnderspørsmål(vurdering.underspørsmål)
-                setSelectedValues(reconstructedValues)
+                const gjenopprettedeVerdier = gjenopprettValgteVerdierFraUnderspørsmål(vurdering.underspørsmål)
+                setSelectedValues(gjenopprettedeVerdier)
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vurdering])
 
-    const handleRadioChange = (kode: string, value: string) => {
-        setSelectedValues((prev) => ({
-            ...prev,
-            [kode]: value,
-        }))
+    const håndterRadioEndring = (kode: string, value: string) => {
+        setSelectedValues(() => {
+            const nyeVerdier = fjernUnderspørsmålForAndreAlternativer(kode, value)
+            return {
+                ...nyeVerdier,
+                [kode]: value,
+            }
+        })
     }
 
-    const handleCheckboxChange = (kode: string, values: string[]) => {
-        setSelectedValues((prev) => ({
-            ...prev,
-            [kode]: values,
-        }))
+    const håndterCheckboxEndring = (kode: string, values: string[]) => {
+        setSelectedValues(() => {
+            // For checkbox grupper, fjern underspørsmål for alternativer som ikke lenger er valgt
+            const spørsmål = finnSpørsmålByKode(kode)
+            if (!spørsmål || !spørsmål.alternativer) {
+                return {
+                    ...selectedValues,
+                    [kode]: values,
+                }
+            }
+
+            const alternativerTilFjerning: string[] = []
+
+            // Samle alle underspørsmål-koder fra alternativer som ikke lenger er valgt
+            for (const alternativ of spørsmål.alternativer) {
+                if (!values.includes(alternativ.kode)) {
+                    const koder = samleUnderspørsmålKoder(alternativ)
+                    alternativerTilFjerning.push(...koder)
+                }
+            }
+
+            // Fjern alle disse koder fra selectedValues
+            const nyeValgteVerdier = { ...selectedValues }
+            alternativerTilFjerning.forEach((kodeTilFjerning) => {
+                delete nyeValgteVerdier[kodeTilFjerning]
+            })
+
+            return {
+                ...nyeValgteVerdier,
+                [kode]: values,
+            }
+        })
     }
 
-    const handleSelectChange = (kode: string, value: string) => {
-        setSelectedValues((prev) => ({
-            ...prev,
-            [kode]: value,
-        }))
+    const håndterSelectEndring = (kode: string, value: string) => {
+        setSelectedValues(() => {
+            const nyeVerdier = fjernUnderspørsmålForAndreAlternativer(kode, value)
+            return {
+                ...nyeVerdier,
+                [kode]: value,
+            }
+        })
     }
 
-    const handleSubmit = async () => {
+    const håndterInnsending = async () => {
         // Determine the overall assessment based on selected values
-        const overallAssessment = determineOverallAssessment()
+        const samletVurdering = bestemSamletVurdering()
 
         // Create underspørsmål array from selected values
-        const underspørsmål = createUnderspørsmålFromSelectedValues()
+        const underspørsmål = opprettUnderspørsmålFraValgteVerdier()
 
         await mutation.mutateAsync({
             kode: vilkår.kode,
-            vurdering: overallAssessment,
+            vurdering: samletVurdering,
             underspørsmål,
             notat,
         })
@@ -163,12 +247,12 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         }
     }
 
-    const determineOverallAssessment = (): Vurdering => {
+    const bestemSamletVurdering = (): Vurdering => {
         // Logic to determine overall assessment based on selected values
         // IKKE_OPPFYLT takes precedence over OPPFYLT - if any condition is not met, the entire assessment fails
 
         // Looper gjennom alle oppfylt og ikkeOppfylt lister i hele kodeverket
-        const hasOppfylt = Object.values(selectedValues).some((value) => {
+        const harOppfylt = Object.values(selectedValues).some((value) => {
             if (typeof value === 'string') {
                 return kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === value))
             }
@@ -178,7 +262,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
             return false
         })
 
-        const hasIkkeOppfylt = Object.values(selectedValues).some((value) => {
+        const harIkkeOppfylt = Object.values(selectedValues).some((value) => {
             if (typeof value === 'string') {
                 return kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === value))
             }
@@ -191,12 +275,12 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         })
 
         // IKKE_OPPFYLT takes precedence - if anything is not fulfilled, the entire assessment fails
-        if (hasIkkeOppfylt) return 'IKKE_OPPFYLT'
-        if (hasOppfylt) return 'OPPFYLT'
+        if (harIkkeOppfylt) return 'IKKE_OPPFYLT'
+        if (harOppfylt) return 'OPPFYLT'
         return 'IKKE_RELEVANT'
     }
 
-    const createUnderspørsmålFromSelectedValues = (): VilkaarsvurderingUnderspørsmål[] => {
+    const opprettUnderspørsmålFraValgteVerdier = (): VilkaarsvurderingUnderspørsmål[] => {
         const underspørsmål: VilkaarsvurderingUnderspørsmål[] = []
 
         // Convert selectedValues to underspørsmål format
@@ -221,14 +305,14 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         return underspørsmål
     }
 
-    const renderUnderspørsmål = (spørsmål: UnderspørsmålSchema): ReactElement => {
+    const rendreUnderspørsmål = (spørsmål: UnderspørsmålSchema): ReactElement => {
         switch (spørsmål.variant) {
             case 'CHECKBOX':
                 return (
                     <CheckboxGroup
                         legend={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string[]) || []}
-                        onChange={(values) => handleCheckboxChange(spørsmål.kode, values)}
+                        onChange={(values) => håndterCheckboxEndring(spørsmål.kode, values)}
                         size="small"
                     >
                         <VStack gap="3">
@@ -244,7 +328,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
                                                 <div key={us.kode} className="mt-2 ml-6">
-                                                    {renderUnderspørsmål(us)}
+                                                    {rendreUnderspørsmål(us)}
                                                 </div>
                                             ))}
                                     </div>
@@ -258,7 +342,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                     <RadioGroup
                         legend={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string) || ''}
-                        onChange={(value) => handleRadioChange(spørsmål.kode, value)}
+                        onChange={(value) => håndterRadioEndring(spørsmål.kode, value)}
                         size="small"
                     >
                         <VStack gap="3">
@@ -272,7 +356,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                                         {isSelected &&
                                             alt.underspørsmål?.map((us) => (
                                                 <div key={us.kode} className="mt-2 ml-6">
-                                                    {renderUnderspørsmål(us)}
+                                                    {rendreUnderspørsmål(us)}
                                                 </div>
                                             ))}
                                     </div>
@@ -286,7 +370,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                     <Select
                         label={spørsmål.navn || ''}
                         value={(selectedValues[spørsmål.kode] as string) || ''}
-                        onChange={(e) => handleSelectChange(spørsmål.kode, e.target.value)}
+                        onChange={(e) => håndterSelectEndring(spørsmål.kode, e.target.value)}
                         size="small"
                         className="max-w-96"
                     >
@@ -304,7 +388,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     return (
         <VStack gap="6">
             {vilkår.underspørsmål.map((spørsmål) => (
-                <Fragment key={spørsmål.kode}>{renderUnderspørsmål(spørsmål)}</Fragment>
+                <Fragment key={spørsmål.kode}>{rendreUnderspørsmål(spørsmål)}</Fragment>
             ))}
 
             <Textarea
@@ -322,7 +406,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                     size="small"
                     type="button"
                     loading={mutation.isPending}
-                    onClick={handleSubmit}
+                    onClick={håndterInnsending}
                 >
                     Lagre vurdering
                 </Button>
