@@ -35,7 +35,7 @@ export function opprettSaksbehandlingsperiode(
         spilleromPersonId: spilleromPersonId,
         opprettet: new Date().toISOString(),
         opprettetAvNavIdent: 'Z123456',
-        opprettetAvNavn: 'Test Testesen',
+        opprettetAvNavn: 'Saks McBehandlersen',
         fom: fom,
         tom: tom,
         status: 'UNDER_BEHANDLING',

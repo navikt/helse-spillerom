@@ -13,7 +13,7 @@ vi.mock('@/mock-api/session', async () => {
         ...actual,
         hentAktivBruker: vi.fn().mockResolvedValue({
             navIdent: 'Z123456',
-            navn: 'Test Testesen',
+            navn: 'Saks McBehandlersen',
             roller: ['saksbehandler'],
         }),
         getSession: vi.fn().mockResolvedValue({
@@ -41,7 +41,7 @@ describe('saksbehandlingsperiode-handlers', () => {
                 spilleromPersonId: 'test-person-id',
                 opprettet: '2024-01-01T00:00:00Z',
                 opprettetAvNavIdent: 'Z123456',
-                opprettetAvNavn: 'Test Testesen',
+                opprettetAvNavn: 'Saks McBehandlersen',
                 fom: '2024-01-01',
                 tom: '2024-01-31',
                 status: 'UNDER_BEHANDLING',
