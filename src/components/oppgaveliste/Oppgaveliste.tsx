@@ -1,7 +1,7 @@
 'use client'
 
 import { BodyShort, Button, Heading, HStack, Table, Tabs, Tag, VStack } from '@navikt/ds-react'
-import { ReactElement, useState } from 'react'
+import { Dispatch, ReactElement, SetStateAction, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { FilterIcon, MinusIcon, PlusIcon } from '@navikt/aksel-icons'
@@ -14,10 +14,12 @@ import { getTestSafeTransition } from '@utils/tsUtils'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { Bruker } from '@schemas/bruker'
+import { Filter, filterList, FilterStatus, filtrer } from '@components/oppgaveliste/filter'
 
 type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
 export function Oppgaveliste(): ReactElement {
+    const [filters, setFilters] = useState<Filter[]>(filterList)
     const [showFilters, setShowFilters] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<SakerTabs>('ALLE')
     const { data: saksbehandlingsperioder = [], isLoading, error } = useAlleSaksbehandlingsperioder()
@@ -68,8 +70,9 @@ export function Oppgaveliste(): ReactElement {
                                 exit={{ width: 0, opacity: 0 }}
                                 className="flex flex-col gap-4 overflow-hidden p-6"
                             >
-                                <Filter label="Under behandling" />
-                                <Filter label="Beslutter" />
+                                {filters.map((filter) => (
+                                    <FilterRow key={filter.key} filter={filter} setFilters={setFilters} />
+                                ))}
                             </motion.div>
                         )}
                     </AnimatePresenceWrapper>
@@ -81,13 +84,13 @@ export function Oppgaveliste(): ReactElement {
                         <TabsTab value="BEHANDLET" label={`Behandlet (${behandlet.length})`} />
                     </TabsList>
                     <TabsPanel value="ALLE">
-                        <OppgaveTabell perioder={alle} />
+                        <OppgaveTabell perioder={filtrer(alle, filters)} />
                     </TabsPanel>
                     <TabsPanel value="MINE">
-                        <OppgaveTabell perioder={mine} />
+                        <OppgaveTabell perioder={filtrer(mine, filters)} />
                     </TabsPanel>
                     <TabsPanel value="BEHANDLET">
-                        <OppgaveTabell perioder={behandlet} />
+                        <OppgaveTabell perioder={filtrer(behandlet, filters)} />
                     </TabsPanel>
                 </Tabs>
             </HStack>
@@ -140,13 +143,36 @@ function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[],
     )
 }
 
-function Filter({ label }: { label: string }): ReactElement {
+function FilterRow({
+    filter,
+    setFilters,
+}: {
+    filter: Filter
+    setFilters: Dispatch<SetStateAction<Filter[]>>
+}): ReactElement {
+    const setStatus = (status: FilterStatus) =>
+        setFilters((prev) =>
+            prev.map((f) =>
+                f.key === filter.key ? { ...f, status: f.status === status ? FilterStatus.OFF : status } : f,
+            ),
+        )
+
     return (
         <HStack className="w-60 border-b border-b-ax-border-neutral-subtle pb-4" justify="space-between" wrap={false}>
-            <BodyShort className="whitespace-nowrap">{label}</BodyShort>
+            <BodyShort className="whitespace-nowrap">{filter.label}</BodyShort>
             <HStack gap="2" wrap={false}>
-                <Button size="xsmall" variant="secondary" icon={<PlusIcon />} />
-                <Button size="xsmall" variant="secondary" icon={<MinusIcon />} />
+                <Button
+                    size="xsmall"
+                    variant={filter.status === FilterStatus.PLUS ? 'primary' : 'secondary'}
+                    icon={<PlusIcon />}
+                    onClick={() => setStatus(FilterStatus.PLUS)}
+                />
+                <Button
+                    size="xsmall"
+                    variant={filter.status === FilterStatus.MINUS ? 'danger' : 'secondary'}
+                    icon={<MinusIcon />}
+                    onClick={() => setStatus(FilterStatus.MINUS)}
+                />
             </HStack>
         </HStack>
     )
