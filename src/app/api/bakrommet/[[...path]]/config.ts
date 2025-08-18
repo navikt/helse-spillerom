@@ -11,9 +11,9 @@ export const allowedAPIs = [
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/arbeidsforhold/hent',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/pensjonsgivendeinntekt/hent',
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar',
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]',
-    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering',
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering/[kode]',
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering/[kode]',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/kategorisering',
@@ -38,7 +38,7 @@ export function cleanPath(value: string): string {
     const parts = cleanedPath.split('/')
     const isVilkaarModification = cleanedPath.startsWith('PUT') || cleanedPath.startsWith('DELETE')
     const hasEnoughParts = parts.length == 7
-    const secondLastIsVilkaar = parts[parts.length - 2] === 'vilkaar'
+    const secondLastIsVilkaar = parts[parts.length - 2] === 'vilkaarsvurdering'
     const thirdLastIsUuid = parts[parts.length - 3] === '[uuid]'
 
     const isVilkaarEndpoint = isVilkaarModification && hasEnoughParts && secondLastIsVilkaar && thirdLastIsUuid

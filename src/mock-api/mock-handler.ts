@@ -97,13 +97,17 @@ const handlers: Record<string, HandlerFunction> = {
 
     'POST /v1/personsok': async ({ request }) => personsøk(request),
 
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar': async ({ person, uuid }) =>
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering': async ({ person, uuid }) =>
         handleGetVilkaar(await person, uuid!),
 
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': async ({ request, person, uuid, kode }) =>
-        handlePutVilkaar(request, await person, uuid!, kode!),
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering/[kode]': async ({
+        request,
+        person,
+        uuid,
+        kode,
+    }) => handlePutVilkaar(request, await person, uuid!, kode!),
 
-    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaar/[kode]': async ({ person, uuid, kode }) =>
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering/[kode]': async ({ person, uuid, kode }) =>
         handleDeleteVilkaar(await person, uuid!, kode!),
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ person, uuid }) =>
@@ -180,7 +184,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
-        if (path.includes('/vilkaar/') && path.split('/').length > 6) {
+        if (path.includes('/vilkaarsvurdering/') && path.split('/').length > 6) {
             context.kode = request.url.split('/').pop()!
         }
 

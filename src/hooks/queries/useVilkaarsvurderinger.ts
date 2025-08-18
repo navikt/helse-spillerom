@@ -13,7 +13,7 @@ export function useVilkaarsvurderinger() {
         queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaar`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaarsvurdering`,
                 z.array(vilkaarsvurderingSchema),
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
