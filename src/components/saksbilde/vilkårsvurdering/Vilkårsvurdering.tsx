@@ -53,7 +53,7 @@ export function Vilkårsvurdering(): ReactElement {
             <Accordion size="small" headingSize="xsmall" indent={false}>
                 {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
                     const vurdertAntall = vilkårListe.filter((v) =>
-                        vilkårsvurderinger?.some((vv) => vv.kode === v.kode),
+                        vilkårsvurderinger?.some((vv) => vv.hovedspørsmål === v.kode),
                     ).length
 
                     return (
@@ -76,7 +76,7 @@ export function Vilkårsvurdering(): ReactElement {
                                     <TableBody>
                                         {vilkårListe.map((vilkår) => {
                                             const vilkårsvurdering = vilkårsvurderinger?.find(
-                                                (v) => v.kode === vilkår.kode,
+                                                (v) => v.hovedspørsmål === vilkår.kode,
                                             )
                                             const isExpanded = expandedRows.has(vilkår.kode)
 

@@ -3,18 +3,18 @@ import { z } from 'zod/v4'
 export const vurderingEnum = z.enum(['OPPFYLT', 'IKKE_OPPFYLT', 'IKKE_RELEVANT', 'SKAL_IKKE_VURDERES'])
 export type Vurdering = z.infer<typeof vurderingEnum>
 
-// Schema with structured årsaker
-export const vilkaarsvurderingV2ArsakSchema = z.object({
-    kode: z.string(),
-    vurdering: z.string(),
+// Schema with structured underspørsmål
+export const vilkaarsvurderingV2UnderspørsmålSchema = z.object({
+    spørsmål: z.string(),
+    svar: z.string(),
 })
 
-export type VilkaarsvurderingArsak = z.infer<typeof vilkaarsvurderingV2ArsakSchema>
+export type VilkaarsvurderingUnderspørsmål = z.infer<typeof vilkaarsvurderingV2UnderspørsmålSchema>
 
 export const vilkaarsvurderingSchema = z.object({
-    kode: z.string(),
+    hovedspørsmål: z.string(),
     vurdering: vurderingEnum,
-    årsaker: z.array(vilkaarsvurderingV2ArsakSchema),
+    underspørsmål: z.array(vilkaarsvurderingV2UnderspørsmålSchema),
     notat: z.string().optional(),
 })
 

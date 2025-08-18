@@ -13,11 +13,11 @@ export function VilkårsvurderingInnsikt(): ReactElement {
     const { data: kodeverk = [] } = useKodeverk()
     const { mutate: slettVurdering } = useSlettVilkaarsvurdering()
 
-    // Samle alle vurderte årsakskoder (bruker årsak.vurdering som koden)
+    // Samle alle vurderte årsakskoder (bruker underspørsmål.svar som koden)
     const alleVurderteÅrsakskoder = new Set<string>()
     vurderinger.forEach((vurdering) => {
-        vurdering.årsaker.forEach((årsak) => {
-            alleVurderteÅrsakskoder.add(årsak.vurdering)
+        vurdering.underspørsmål.forEach((usp) => {
+            alleVurderteÅrsakskoder.add(usp.svar)
         })
     })
 
@@ -31,9 +31,9 @@ export function VilkårsvurderingInnsikt(): ReactElement {
     // Hjelpefunksjon for å finne vurdering basert på vurderingskode
     const finnVurderingForÅrsak = (vurderingskode: string) => {
         for (const vurdering of vurderinger) {
-            const årsak = vurdering.årsaker.find((å) => å.vurdering === vurderingskode)
-            if (årsak) {
-                return { vurdering, årsak }
+            const usp = vurdering.underspørsmål.find((u) => u.svar === vurderingskode)
+            if (usp) {
+                return { vurdering, årsak: usp }
             }
         }
         return null
@@ -66,8 +66,8 @@ export function VilkårsvurderingInnsikt(): ReactElement {
 
                         // Finn relaterte vurderinger for notat og slett-funksjonalitet
                         const relaterteVurderinger = vurderinger.filter((vurdering) =>
-                            vurdering.årsaker.some((årsak) =>
-                                alleVurderteÅrsaker.some((vÅ) => vÅ.kode === årsak.vurdering),
+                            vurdering.underspørsmål.some((usp) =>
+                                alleVurderteÅrsaker.some((vÅ) => vÅ.kode === usp.svar),
                             ),
                         )
 
@@ -126,7 +126,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                                     {vurderingInfo && (
                                                         <div className="text-gray-600 bg-gray-50 rounded p-2 text-sm">
                                                             <div className="font-medium">Vurdering:</div>
-                                                            <div>{vurderingInfo.årsak.vurdering}</div>
+                                                            <div>{vurderingInfo.årsak.svar}</div>
                                                         </div>
                                                     )}
                                                 </div>
@@ -155,7 +155,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                                 icon={
                                                     <TrashIcon className="text-icon-danger" title="Slett vurdering" />
                                                 }
-                                                onClick={() => slettVurdering({ kode: vurdering.kode })}
+                                                onClick={() => slettVurdering({ kode: vurdering.hovedspørsmål })}
                                             />
                                         ))}
                                     </div>

@@ -8,7 +8,7 @@ import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import {
     Vilkaarsvurdering as Vilkaarsvurdering,
     Vurdering,
-    VilkaarsvurderingArsak as VilkaarsvurderingArsak,
+    VilkaarsvurderingUnderspørsmål as VilkaarsvurderingUnderspørsmål,
 } from '@schemas/vilkaarsvurdering'
 import { Hovedspørsmål } from '@/schemas/saksbehandlergrensesnitt'
 
@@ -85,22 +85,22 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         return null
     }
 
-    const reconstructSelectedValuesFromArsaker = (
-        årsaker: VilkaarsvurderingArsak[],
+    const reconstructSelectedValuesFromUnderspørsmål = (
+        underspørsmål: VilkaarsvurderingUnderspørsmål[],
     ): Record<string, string | string[]> => {
         const reconstructedValues: Record<string, string | string[]> = {}
 
-        // For each årsak, find which spørsmål it belongs to and set the value
-        for (const årsak of årsaker) {
-            const spørsmålKode = findSpørsmålForAlternativ(årsak.vurdering)
+        // For each underspørsmål, find which spørsmål it belongs to and set the value
+        for (const usp of underspørsmål) {
+            const spørsmålKode = findSpørsmålForAlternativ(usp.svar)
             if (spørsmålKode) {
                 const spørsmål = findSpørsmålByKode(spørsmålKode)
                 if (spørsmål) {
                     if (spørsmål.variant === 'CHECKBOX') {
                         const existing = (reconstructedValues[spørsmålKode] as string[]) || []
-                        reconstructedValues[spørsmålKode] = [...existing, årsak.vurdering]
+                        reconstructedValues[spørsmålKode] = [...existing, usp.svar]
                     } else {
-                        reconstructedValues[spørsmålKode] = årsak.vurdering
+                        reconstructedValues[spørsmålKode] = usp.svar
                     }
                 }
             }
@@ -114,9 +114,9 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
             // Initialize form with existing values if available
             setNotat(vurdering.notat ?? '')
 
-            // Reconstruct selectedValues based on existing årsaker
-            if (vurdering.årsaker && vurdering.årsaker.length > 0) {
-                const reconstructedValues = reconstructSelectedValuesFromArsaker(vurdering.årsaker)
+            // Reconstruct selectedValues based on existing underspørsmål
+            if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
+                const reconstructedValues = reconstructSelectedValuesFromUnderspørsmål(vurdering.underspørsmål)
                 setSelectedValues(reconstructedValues)
             }
         }
@@ -148,13 +148,13 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         // Determine the overall assessment based on selected values
         const overallAssessment = determineOverallAssessment()
 
-        // Create årsaker array from selected values
-        const årsaker = createArsakerFromSelectedValues()
+        // Create underspørsmål array from selected values
+        const underspørsmål = createUnderspørsmålFromSelectedValues()
 
         await mutation.mutateAsync({
             kode: vilkår.kode,
             vurdering: overallAssessment,
-            årsaker,
+            underspørsmål,
             notat,
         })
 
@@ -196,29 +196,29 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         return 'IKKE_RELEVANT'
     }
 
-    const createArsakerFromSelectedValues = (): VilkaarsvurderingArsak[] => {
-        const årsaker: VilkaarsvurderingArsak[] = []
+    const createUnderspørsmålFromSelectedValues = (): VilkaarsvurderingUnderspørsmål[] => {
+        const underspørsmål: VilkaarsvurderingUnderspørsmål[] = []
 
-        // Convert selectedValues to årsaker format
+        // Convert selectedValues to underspørsmål format
         Object.entries(selectedValues).forEach(([spørsmålKode, value]) => {
             if (typeof value === 'string' && value) {
-                årsaker.push({
-                    kode: spørsmålKode,
-                    vurdering: value,
+                underspørsmål.push({
+                    spørsmål: spørsmålKode,
+                    svar: value,
                 })
             } else if (Array.isArray(value)) {
                 value.forEach((v) => {
                     if (v) {
-                        årsaker.push({
-                            kode: spørsmålKode,
-                            vurdering: v,
+                        underspørsmål.push({
+                            spørsmål: spørsmålKode,
+                            svar: v,
                         })
                     }
                 })
             }
         })
 
-        return årsaker
+        return underspørsmål
     }
 
     const renderUnderspørsmål = (spørsmål: UnderspørsmålSchema): ReactElement => {

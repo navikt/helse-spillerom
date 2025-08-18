@@ -27,9 +27,9 @@ export async function handlePutVilkaar(
 
     // Create V2 vurdering object
     const nyVurdering: Vilkaarsvurdering = {
-        kode,
+        hovedspørsmål: kode,
         vurdering: body.vurdering,
-        årsaker: body.årsaker,
+        underspørsmål: body.underspørsmål,
         notat: body.notat,
     }
 
@@ -40,7 +40,7 @@ export async function handlePutVilkaar(
         person.vilkaarsvurderinger[uuid] = []
     }
 
-    const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
+    const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.hovedspørsmål === kode)
     if (existingIndex >= 0) {
         person.vilkaarsvurderinger[uuid][existingIndex] = nyVurdering
     } else {
@@ -59,7 +59,7 @@ export async function handleDeleteVilkaar(person: Person | undefined, uuid: stri
         return NextResponse.json({ message: 'Vilkaarsvurdering not found' }, { status: 404 })
     }
 
-    const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.kode === kode)
+    const existingIndex = person.vilkaarsvurderinger[uuid].findIndex((v) => v.hovedspørsmål === kode)
     if (existingIndex >= 0) {
         person.vilkaarsvurderinger[uuid].splice(existingIndex, 1)
         return new NextResponse(null, { status: 204 })
