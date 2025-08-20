@@ -5,8 +5,12 @@ import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, VSt
 import { BriefcaseIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
+import { cn } from '@utils/tw'
+import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagForm'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
+import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
+import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -19,22 +23,33 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
         isLoading: inntektsforholdLoading,
         isError: inntektsforholdError,
     } = useInntektsforhold()
+    const {
+        data: sykepengegrunnlag,
+        isLoading: sykepengegrunnlagLoading,
+        isError: sykepengegrunnlagError,
+    } = useSykepengegrunnlag()
 
-    if (inntektsforholdLoading || !inntektsforhold) {
+    if (sykepengegrunnlagLoading || inntektsforholdLoading || !inntektsforhold) {
         return <SaksbildePanel value={value}>Laster inntektsforhold...</SaksbildePanel>
     }
 
-    if (inntektsforholdError) {
+    if (inntektsforholdError || sykepengegrunnlagError) {
         return (
             <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste inntektsforhold</Alert>
+                <Alert variant="error">Kunne ikke laste sykepengegrunnlag</Alert>
             </SaksbildePanel>
         )
     }
 
     return (
-        <SaksbildePanel value={value}>
-            <VStack gap="6" className="max-w-[500px]">
+        <SaksbildePanel value={value} className="p-0">
+            <VStack
+                gap="6"
+                className={cn('max-w-[508px] px-8 pt-8', {
+                    'max-w-[720px] border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pl-[26px]':
+                        erIRedigeringsmodus,
+                })}
+            >
                 <HStack gap="4">
                     <Heading size="small" level="1">
                         Inntekter
@@ -44,47 +59,72 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                         type="button"
                         variant="tertiary"
                         icon={<PersonPencilIcon aria-hidden />}
-                        onClick={() =>
-                            erIRedigeringsmodus ? setErIRedigeringsmodus(false) : setErIRedigeringsmodus(true)
-                        }
+                        onClick={() => setErIRedigeringsmodus(!erIRedigeringsmodus)}
                     >
                         {erIRedigeringsmodus ? 'Avbryt' : 'Rediger'}
                     </Button>
                 </HStack>
-                {inntektsforhold.map((forhold) => {
-                    const orgnummer = forhold.kategorisering['ORGNUMMER'] as string
-                    return (
-                        <HStack key={forhold.id} justify="space-between">
-                            <HStack gap="2">
-                                <BriefcaseIcon aria-hidden fontSize="1.5rem" />
-                                <BodyShort>
-                                    <Organisasjonsnavn orgnummer={orgnummer} />
-                                </BodyShort>
-                            </HStack>
-                            <BodyShort>-</BodyShort>
+                {!erIRedigeringsmodus && (
+                    <>
+                        {inntektsforhold.map((forhold) => {
+                            const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
+                                (inntekt) => inntekt.inntektsforholdId === forhold.id,
+                            )
+                            return (
+                                <HStack key={forhold.id} justify="space-between">
+                                    <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
+                                    <BodyShort>
+                                        {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
+                                    </BodyShort>
+                                </HStack>
+                            )
+                        })}
+                        <span className="border-t border-t-ax-bg-neutral-strong" />
+                        <HStack justify="space-between">
+                            <BodyShort weight="semibold">Totalt</BodyShort>
+                            <BodyShort>{formaterBeløpØre(sykepengegrunnlag?.totalInntektØre)}</BodyShort>
                         </HStack>
-                    )
-                })}
-                <span className="border-t border-t-ax-bg-neutral-strong" />
-                <HStack justify="space-between">
-                    <BodyShort weight="semibold">Totalt</BodyShort>
-                    <BodyShort>-</BodyShort>
-                </HStack>
+                    </>
+                )}
+                {erIRedigeringsmodus && (
+                    <SykepengegrunnlagForm
+                        sykepengegrunnlag={sykepengegrunnlag}
+                        inntektsforhold={inntektsforhold}
+                        avbryt={() => setErIRedigeringsmodus(false)}
+                    />
+                )}
             </VStack>
-            <VStack gap="6" className="mt-6 max-w-[500px]">
+            <VStack gap="6" className={cn('mt-6 max-w-[508px] px-8', { 'max-w-[625px]': erIRedigeringsmodus })}>
                 <Bleed marginInline="4 32" asChild reflectivePadding>
                     <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
-                            <BodyShort>-</BodyShort>
+                            <BodyShort>{formaterBeløpØre(sykepengegrunnlag?.sykepengegrunnlagØre)}</BodyShort>
                         </HStack>
                     </BoxNew>
                 </Bleed>
-                <BodyLong className="text-ax-text-neutral-subtle">
-                    Sykepengegrunnlaget er begrenset til 6G: 780 960 kr §8-10 Grunnbeløp (G) ved skjæringstidspunkt: 130
-                    160 kr (1. mai 2025)
-                </BodyLong>
+                {sykepengegrunnlag && (
+                    <BodyLong size="small" className="text-ax-text-neutral-subtle">
+                        Sykepengegrunnlaget er begrenset til 6G: {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre)}{' '}
+                        kr §8-10 <br />
+                        Grunnbeløp (G) ved skjæringstidspunkt: {formaterBeløpØre(
+                            sykepengegrunnlag.grunnbeløp6GØre / 6,
+                        )}{' '}
+                        kr (1. mai 2025)
+                    </BodyLong>
+                )}
             </VStack>
         </SaksbildePanel>
+    )
+}
+
+export function NavnOgIkon({ orgnummer }: { orgnummer: string }): ReactElement {
+    return (
+        <HStack gap="2">
+            <BriefcaseIcon aria-hidden fontSize="1.5rem" />
+            <BodyShort>
+                <Organisasjonsnavn orgnummer={orgnummer} />
+            </BodyShort>
+        </HStack>
     )
 }

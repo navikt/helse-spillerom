@@ -57,7 +57,8 @@ export const ørerTilKroner = (øre: number): number => øre / 100
 export const kronerTilØrer = (kroner: number): number => Math.round(kroner * 100)
 
 // Formatering for visning
-export const formaterBeløpØre = (øre: number): string => {
+export const formaterBeløpØre = (øre?: number): string => {
+    if (!øre) return '-'
     return new Intl.NumberFormat('nb-NO', {
         style: 'currency',
         currency: 'NOK',
