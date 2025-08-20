@@ -10,7 +10,7 @@ export function useSlettSykepengegrunnlag() {
     return useMutation<void, Error, void>({
         mutationFn: async () => {
             return await deleteNoContent(
-                `/api/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/sykepengegrunnlag`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/sykepengegrunnlag`,
             )
         },
         onSuccess: () => {

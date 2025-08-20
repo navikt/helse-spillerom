@@ -18,7 +18,7 @@ export function useSykepengegrunnlag() {
             }
 
             return await fetchAndParse(
-                `/api/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sykepengegrunnlag`,
+                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema,
             )
         },

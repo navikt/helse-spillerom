@@ -40,6 +40,11 @@ import {
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
+import {
+    handleGetSykepengegrunnlag,
+    handlePutSykepengegrunnlag,
+    handleDeleteSykepengegrunnlag,
+} from '@/mock-api/handlers/sykepengegrunnlag-handlers'
 
 interface HandlerContext {
     request: Request
@@ -152,6 +157,15 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/historikk': async ({ person, uuid }) =>
         handleGetHistorikk(await person, uuid!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
+        handleGetSykepengegrunnlag(await person, uuid!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ request, person, uuid }) =>
+        handlePutSykepengegrunnlag(request, await person, uuid!),
+
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
+        handleDeleteSykepengegrunnlag(await person, uuid!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

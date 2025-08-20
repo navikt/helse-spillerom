@@ -19,8 +19,6 @@ export const inntektSchema = z.object({
     inntektsforholdId: z.string(),
     beløpPerMånedØre: z.number().int().min(0), // Beløp i øre
     kilde: inntektskildeSchema,
-    erSkjønnsfastsatt: z.boolean().default(false),
-    skjønnsfastsettelseBegrunnelse: z.string().optional(),
     refusjon: z.array(refusjonsperiodeSchema).default([]),
 })
 export type Inntekt = z.infer<typeof inntektSchema>

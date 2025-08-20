@@ -2,7 +2,7 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, BriefcaseIcon, SandboxIcon, PersonIcon } from '@navikt/aksel-icons'
+import { ParagraphIcon, BriefcaseIcon, SandboxIcon, PersonIcon, CalculatorIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
@@ -10,11 +10,12 @@ import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useReg
 import { erProd, erLokalEllerDemo } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
 import { InntektsforholdDebug } from '@components/saksbilde/inntektsforhold/InntektsforholdDebug'
+import { SykepengegrunnlagDebug } from '@components/debugging/SykepengegrunnlagDebug'
 import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
 import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
-type ModalType = 'vilkårsvurdering' | 'inntektsforhold' | 'testdata' | 'roller' | null
+type ModalType = 'vilkårsvurdering' | 'inntektsforhold' | 'sykepengegrunnlag' | 'testdata' | 'roller' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
@@ -81,6 +82,15 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                                 variant="tertiary-neutral"
                             />
                         </Tooltip>
+
+                        <Tooltip content="Sykepengegrunnlag">
+                            <Button
+                                type="button"
+                                onClick={() => setActiveModal('sykepengegrunnlag')}
+                                icon={<CalculatorIcon title="Åpne sykepengegrunnlag debugging" aria-hidden />}
+                                variant="tertiary-neutral"
+                            />
+                        </Tooltip>
                     </>
                 )}
             </div>
@@ -108,6 +118,19 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                 >
                     <ModalBody>
                         <InntektsforholdDebug />
+                    </ModalBody>
+                </Modal>
+            )}
+
+            {activeModal === 'sykepengegrunnlag' && (
+                <Modal
+                    open={true}
+                    onClose={closeModal}
+                    header={{ heading: 'Sykepengegrunnlag', closeButton: true }}
+                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                >
+                    <ModalBody>
+                        <SykepengegrunnlagDebug />
                     </ModalBody>
                 </Modal>
             )}

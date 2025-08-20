@@ -25,6 +25,9 @@ export const allowedAPIs = [
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbake',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/godkjenn',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/historikk',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g

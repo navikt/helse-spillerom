@@ -11,6 +11,7 @@ import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
+import { SykepengegrunnlagResponse } from '@/schemas/sykepengegrunnlag'
 import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 import { Bruker } from '@/schemas/bruker'
 
@@ -24,6 +25,7 @@ export interface Person {
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
     historikk: Record<string, SaksbehandlingsperiodeEndring[]>
+    sykepengegrunnlag: Record<string, SykepengegrunnlagResponse>
 }
 
 type Session = {
@@ -47,6 +49,7 @@ function deepCopyPerson(person: Testperson): Person {
         dagoversikt: JSON.parse(JSON.stringify(person.dagoversikt || {})),
         dokumenter: JSON.parse(JSON.stringify(person.dokumenter || {})),
         historikk: {},
+        sykepengegrunnlag: {},
     }
 }
 
@@ -117,6 +120,7 @@ function skapPerson(fnr: string): Person {
         dagoversikt: {},
         dokumenter: {},
         historikk: {},
+        sykepengegrunnlag: {},
     }
 }
 

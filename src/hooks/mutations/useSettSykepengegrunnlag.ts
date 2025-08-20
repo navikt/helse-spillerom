@@ -15,7 +15,7 @@ export function useSettSykepengegrunnlag() {
     return useMutation<SykepengegrunnlagResponse, Error, SykepengegrunnlagRequest>({
         mutationFn: async (request) => {
             return await putAndParse(
-                `/api/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/sykepengegrunnlag`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema,
                 request,
             )
