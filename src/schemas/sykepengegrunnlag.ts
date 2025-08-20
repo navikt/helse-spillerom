@@ -25,7 +25,7 @@ export type Inntekt = z.infer<typeof inntektSchema>
 
 export const sykepengegrunnlagRequestSchema = z.object({
     inntekter: z.array(inntektSchema),
-    begrunnelse: z.string().optional(),
+    begrunnelse: z.string().nullable().optional(),
 })
 export type SykepengegrunnlagRequest = z.infer<typeof sykepengegrunnlagRequestSchema>
 
@@ -37,7 +37,7 @@ export const sykepengegrunnlagResponseSchema = z.object({
     grunnbeløp6GØre: z.number().int().min(0), // 6G i øre
     begrensetTil6G: z.boolean(),
     sykepengegrunnlagØre: z.number().int().min(0), // Endelig grunnlag i øre
-    begrunnelse: z.string().optional(),
+    begrunnelse: z.string().nullable().optional(),
     opprettet: z.string(),
     opprettetAv: z.string(),
     sistOppdatert: z.string(),

@@ -53,7 +53,7 @@ export async function handlePutSykepengegrunnlag(
         }
 
         // Skjønnsfastsettelse er automatisk basert på kilde
-        if (inntekt.kilde === 'SKJONNSFASTSETTELSE' && !body.begrunnelse?.trim()) {
+        if (inntekt.kilde === 'SKJONNSFASTSETTELSE' && (!body.begrunnelse || !body.begrunnelse.trim())) {
             return NextResponse.json({ message: 'Skjønnsfastsettelse krever begrunnelse' }, { status: 400 })
         }
 
@@ -102,7 +102,7 @@ export async function handleDeleteSykepengegrunnlag(person: Person | undefined, 
 function beregnSykepengegrunnlag(
     saksbehandlingsperiodeId: string,
     inntekter: Inntekt[],
-    begrunnelse?: string,
+    begrunnelse?: string | null,
 ): SykepengegrunnlagResponse {
     // Summer opp alle månedlige inntekter og konverter til årsinntekt (i øre)
     const totalInntektØre = inntekter.reduce((sum, inntekt) => sum + inntekt.beløpPerMånedØre, 0) * 12
