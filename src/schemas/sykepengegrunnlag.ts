@@ -1,6 +1,12 @@
 import { z } from 'zod/v4'
 
-export const inntektskildeSchema = z.enum(['AINNTEKT', 'SAKSBEHANDLER', 'SKJONNSFASTSETTELSE'])
+export const inntektskildeSchema = z.enum([
+    'AINNTEKT',
+    'INNTEKTSMELDING',
+    'PENSJONSGIVENDE_INNTEKT',
+    'SAKSBEHANDLER',
+    'SKJONNSFASTSETTELSE',
+])
 export type Inntektskilde = z.infer<typeof inntektskildeSchema>
 
 export const refusjonsperiodeSchema = z

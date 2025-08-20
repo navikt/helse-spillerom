@@ -12,7 +12,7 @@ import { kronerTilØrer, ørerTilKroner, formaterBeløpØre } from '@/schemas/sy
 interface InntektInput {
     inntektsforholdId: string
     beløpPerMånedKroner: string
-    kilde: 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE'
+    kilde: 'AINNTEKT' | 'INNTEKTSMELDING' | 'PENSJONSGIVENDE_INNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE'
     refusjon: RefusjonsperiodeInput[]
 }
 
@@ -40,7 +40,12 @@ export function SykepengegrunnlagDebug(): ReactElement {
             return eksisterendeGrunnlag.inntekter.map((inntekt) => ({
                 inntektsforholdId: inntekt.inntektsforholdId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
-                kilde: inntekt.kilde as 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE',
+                kilde: inntekt.kilde as
+                    | 'AINNTEKT'
+                    | 'INNTEKTSMELDING'
+                    | 'PENSJONSGIVENDE_INNTEKT'
+                    | 'SAKSBEHANDLER'
+                    | 'SKJONNSFASTSETTELSE',
                 refusjon: inntekt.refusjon.map((ref) => ({
                     id: crypto.randomUUID(),
                     fom: ref.fom,
@@ -65,7 +70,12 @@ export function SykepengegrunnlagDebug(): ReactElement {
             const nyeInntekter = eksisterendeGrunnlag.inntekter.map((inntekt) => ({
                 inntektsforholdId: inntekt.inntektsforholdId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
-                kilde: inntekt.kilde as 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE',
+                kilde: inntekt.kilde as
+                    | 'AINNTEKT'
+                    | 'INNTEKTSMELDING'
+                    | 'PENSJONSGIVENDE_INNTEKT'
+                    | 'SAKSBEHANDLER'
+                    | 'SKJONNSFASTSETTELSE',
                 refusjon: inntekt.refusjon.map((ref) => ({
                     id: crypto.randomUUID(),
                     fom: ref.fom,
@@ -229,6 +239,8 @@ export function SykepengegrunnlagDebug(): ReactElement {
                                                     'kilde',
                                                     e.target.value as
                                                         | 'AINNTEKT'
+                                                        | 'INNTEKTSMELDING'
+                                                        | 'PENSJONSGIVENDE_INNTEKT'
                                                         | 'SAKSBEHANDLER'
                                                         | 'SKJONNSFASTSETTELSE',
                                                 )
@@ -236,6 +248,8 @@ export function SykepengegrunnlagDebug(): ReactElement {
                                             size="small"
                                         >
                                             <option value="AINNTEKT">A-Inntekt</option>
+                                            <option value="INNTEKTSMELDING">Inntektsmelding</option>
+                                            <option value="PENSJONSGIVENDE_INNTEKT">Pensjonsgivende inntekt</option>
                                             <option value="SAKSBEHANDLER">Saksbehandler</option>
                                             <option value="SKJONNSFASTSETTELSE">Skjønnsfastsettelse</option>
                                         </Select>
