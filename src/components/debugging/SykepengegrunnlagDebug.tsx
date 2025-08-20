@@ -172,7 +172,6 @@ export function SykepengegrunnlagDebug(): ReactElement {
 
     return (
         <div className="space-y-6">
-
             {isSuccess && <Alert variant="success">Sykepengegrunnlag ble lagret successfully!</Alert>}
 
             {isError && <Alert variant="error">Feil ved lagring av sykepengegrunnlag. Prøv igjen.</Alert>}
