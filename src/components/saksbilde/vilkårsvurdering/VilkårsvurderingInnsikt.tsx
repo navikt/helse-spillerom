@@ -60,12 +60,23 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                             ),
                         )
 
+                        // Bestem samlet status for vilkåret
+                        const harIkkeOppfylt = alleVurderteÅrsaker.some((årsak) => årsak.type === 'ikkeOppfylt')
+                        const samletStatus = harIkkeOppfylt ? 'ikkeOppfylt' : 'oppfylt'
+
                         return (
                             <Table.Row key={vilkår.vilkårskode}>
                                 <Table.DataCell>
                                     <div>
                                         <div className="font-medium">{vilkår.vilkårskode}</div>
                                         <div className="text-gray-600 mb-2 text-sm">{vilkår.beskrivelse}</div>
+                                        <Tag
+                                            variant={samletStatus === 'oppfylt' ? 'success' : 'error'}
+                                            size="small"
+                                            className="mb-2"
+                                        >
+                                            {samletStatus === 'oppfylt' ? 'Oppfylt' : 'Ikke oppfylt'}
+                                        </Tag>
                                         {vilkår.vilkårshjemmel && (
                                             <div className="text-gray-500 text-xs">
                                                 {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.paragraf}
