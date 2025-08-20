@@ -20,7 +20,7 @@ export async function handleGetSykepengegrunnlag(person: Person | undefined, uui
 
     const grunnlag = person.sykepengegrunnlag[uuid]
     if (!grunnlag) {
-        return NextResponse.json({ message: 'Ingen sykepengegrunnlag funnet for periode' }, { status: 404 })
+        return NextResponse.json(null, { status: 200 })
     }
 
     return NextResponse.json(grunnlag)

@@ -42,12 +42,12 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(responseData.message).toBe('Person not found')
         })
 
-        it('skal returnere 404 når sykepengegrunnlag ikke finnes', async () => {
+        it('skal returnere null når sykepengegrunnlag ikke finnes', async () => {
             const response = await handleGetSykepengegrunnlag(testPerson, testUuid)
             const responseData = await response.json()
 
-            expect(response.status).toBe(404)
-            expect(responseData.message).toBe('Ingen sykepengegrunnlag funnet for periode')
+            expect(response.status).toBe(200)
+            expect(responseData).toBeNull()
         })
 
         it('skal returnere sykepengegrunnlag når det finnes', async () => {

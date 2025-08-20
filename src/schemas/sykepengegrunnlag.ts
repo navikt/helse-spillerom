@@ -29,19 +29,21 @@ export const sykepengegrunnlagRequestSchema = z.object({
 })
 export type SykepengegrunnlagRequest = z.infer<typeof sykepengegrunnlagRequestSchema>
 
-export const sykepengegrunnlagResponseSchema = z.object({
-    id: z.string(),
-    saksbehandlingsperiodeId: z.string(),
-    inntekter: z.array(inntektSchema),
-    totalInntektØre: z.number().int().min(0), // Årsinntekt i øre
-    grunnbeløp6GØre: z.number().int().min(0), // 6G i øre
-    begrensetTil6G: z.boolean(),
-    sykepengegrunnlagØre: z.number().int().min(0), // Endelig grunnlag i øre
-    begrunnelse: z.string().nullable().optional(),
-    opprettet: z.string(),
-    opprettetAv: z.string(),
-    sistOppdatert: z.string(),
-})
+export const sykepengegrunnlagResponseSchema = z
+    .object({
+        id: z.string(),
+        saksbehandlingsperiodeId: z.string(),
+        inntekter: z.array(inntektSchema),
+        totalInntektØre: z.number().int().min(0), // Årsinntekt i øre
+        grunnbeløp6GØre: z.number().int().min(0), // 6G i øre
+        begrensetTil6G: z.boolean(),
+        sykepengegrunnlagØre: z.number().int().min(0), // Endelig grunnlag i øre
+        begrunnelse: z.string().nullable().optional(),
+        opprettet: z.string(),
+        opprettetAv: z.string(),
+        sistOppdatert: z.string(),
+    })
+    .nullable()
 export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponseSchema>
 
 // Hjelpefunksjoner for å konvertere mellom øre og kroner
