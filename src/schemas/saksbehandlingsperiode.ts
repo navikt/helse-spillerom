@@ -35,6 +35,7 @@ export const saksbehandlingsperiodeSchema = z.object({
     tom: z.string(), // ISO 8601 date string
     status: saksbehandlingsperiodeStatusSchema,
     beslutter: z.string().nullable().optional(),
+    skjæringstidspunkt: z.string().nullable().optional(), // ISO 8601 date string
 })
 
 export type Saksbehandlingsperiode = z.infer<typeof saksbehandlingsperiodeSchema>
