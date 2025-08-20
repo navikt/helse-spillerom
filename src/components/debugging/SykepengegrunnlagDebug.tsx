@@ -2,7 +2,7 @@
 
 import React, { ReactElement, useState, useEffect } from 'react'
 import { Button, Table, TextField, Select, VStack, HStack, Heading, BodyShort, Tag, Alert } from '@navikt/ds-react'
-import { CalculatorIcon } from '@navikt/aksel-icons'
+import { CalculatorIcon, PlusIcon, TrashIcon } from '@navikt/aksel-icons'
 
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
@@ -13,6 +13,14 @@ interface InntektInput {
     inntektsforholdId: string
     beløpPerMånedKroner: string
     kilde: 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE'
+    refusjon: RefusjonsperiodeInput[]
+}
+
+interface RefusjonsperiodeInput {
+    id: string
+    fom: string
+    tom: string
+    beløpKroner: string
 }
 
 export function SykepengegrunnlagDebug(): ReactElement {
@@ -33,12 +41,19 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 inntektsforholdId: inntekt.inntektsforholdId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
                 kilde: inntekt.kilde as 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE',
+                refusjon: inntekt.refusjon.map((ref) => ({
+                    id: crypto.randomUUID(),
+                    fom: ref.fom,
+                    tom: ref.tom,
+                    beløpKroner: ørerTilKroner(ref.beløpØre).toString(),
+                })),
             }))
         }
         return inntektsforhold.map((forhold) => ({
             inntektsforholdId: forhold.id,
             beløpPerMånedKroner: '',
             kilde: 'AINNTEKT' as const,
+            refusjon: [],
         }))
     })
 
@@ -51,6 +66,12 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 inntektsforholdId: inntekt.inntektsforholdId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
                 kilde: inntekt.kilde as 'AINNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE',
+                refusjon: inntekt.refusjon.map((ref) => ({
+                    id: crypto.randomUUID(),
+                    fom: ref.fom,
+                    tom: ref.tom,
+                    beløpKroner: ørerTilKroner(ref.beløpØre).toString(),
+                })),
             }))
             setInntekter(nyeInntekter)
             setBegrunnelse(eksisterendeGrunnlag.begrunnelse || '')
@@ -60,6 +81,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 inntektsforholdId: forhold.id,
                 beløpPerMånedKroner: '',
                 kilde: 'AINNTEKT' as const,
+                refusjon: [],
             }))
             setInntekter(tommeInntekter)
             setBegrunnelse('')
@@ -68,7 +90,43 @@ export function SykepengegrunnlagDebug(): ReactElement {
 
     const handleInntektChange = (index: number, field: keyof InntektInput, value: string) => {
         const nyeInntekter = [...inntekter]
+        if (field === 'refusjon') {
+            // Dette håndteres av separate funksjoner
+            return
+        }
         nyeInntekter[index] = { ...nyeInntekter[index], [field]: value }
+        setInntekter(nyeInntekter)
+    }
+
+    const handleRefusjonChange = (
+        inntektIndex: number,
+        refusjonIndex: number,
+        field: keyof RefusjonsperiodeInput,
+        value: string,
+    ) => {
+        const nyeInntekter = [...inntekter]
+        nyeInntekter[inntektIndex].refusjon[refusjonIndex] = {
+            ...nyeInntekter[inntektIndex].refusjon[refusjonIndex],
+            [field]: value,
+        }
+        setInntekter(nyeInntekter)
+    }
+
+    const addRefusjon = (inntektIndex: number) => {
+        const nyeInntekter = [...inntekter]
+        const nyRefusjon: RefusjonsperiodeInput = {
+            id: crypto.randomUUID(),
+            fom: '',
+            tom: '',
+            beløpKroner: '',
+        }
+        nyeInntekter[inntektIndex].refusjon.push(nyRefusjon)
+        setInntekter(nyeInntekter)
+    }
+
+    const removeRefusjon = (inntektIndex: number, refusjonIndex: number) => {
+        const nyeInntekter = [...inntekter]
+        nyeInntekter[inntektIndex].refusjon.splice(refusjonIndex, 1)
         setInntekter(nyeInntekter)
     }
 
@@ -79,7 +137,13 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 inntektsforholdId: inntekt.inntektsforholdId,
                 beløpPerMånedØre: kronerTilØrer(parseFloat(inntekt.beløpPerMånedKroner)),
                 kilde: inntekt.kilde,
-                refusjon: [],
+                refusjon: inntekt.refusjon
+                    .filter((ref) => ref.fom && ref.tom && ref.beløpKroner && parseFloat(ref.beløpKroner) > 0)
+                    .map((ref) => ({
+                        fom: ref.fom,
+                        tom: ref.tom,
+                        beløpØre: kronerTilØrer(parseFloat(ref.beløpKroner)),
+                    })),
             }))
 
         settSykepengegrunnlag({
@@ -108,10 +172,6 @@ export function SykepengegrunnlagDebug(): ReactElement {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-2">
-                <CalculatorIcon className="h-5 w-5" />
-                <Heading size="medium">Sykepengegrunnlag Debug</Heading>
-            </div>
 
             {isSuccess && <Alert variant="success">Sykepengegrunnlag ble lagret successfully!</Alert>}
 
@@ -131,6 +191,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
                             <Table.HeaderCell>Inntektsforhold</Table.HeaderCell>
                             <Table.HeaderCell>Månedsinntekt (kr)</Table.HeaderCell>
                             <Table.HeaderCell>Kilde</Table.HeaderCell>
+                            <Table.HeaderCell>Refusjon</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -179,6 +240,78 @@ export function SykepengegrunnlagDebug(): ReactElement {
                                             <option value="SAKSBEHANDLER">Saksbehandler</option>
                                             <option value="SKJONNSFASTSETTELSE">Skjønnsfastsettelse</option>
                                         </Select>
+                                    </Table.DataCell>
+                                    <Table.DataCell>
+                                        <div className="space-y-2">
+                                            {inntekt.refusjon.map((refusjon, refusjonIndex) => (
+                                                <div key={refusjon.id} className="space-y-2 rounded border p-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <TextField
+                                                            label="F.o.m."
+                                                            value={refusjon.fom}
+                                                            onChange={(e) =>
+                                                                handleRefusjonChange(
+                                                                    index,
+                                                                    refusjonIndex,
+                                                                    'fom',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            placeholder="YYYY-MM-DD"
+                                                            size="small"
+                                                            className="flex-1"
+                                                        />
+                                                        <TextField
+                                                            label="T.o.m."
+                                                            value={refusjon.tom}
+                                                            onChange={(e) =>
+                                                                handleRefusjonChange(
+                                                                    index,
+                                                                    refusjonIndex,
+                                                                    'tom',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            placeholder="YYYY-MM-DD"
+                                                            size="small"
+                                                            className="flex-1"
+                                                        />
+                                                        <Button
+                                                            variant="tertiary"
+                                                            size="small"
+                                                            onClick={() => removeRefusjon(index, refusjonIndex)}
+                                                            icon={<TrashIcon />}
+                                                            aria-label="Fjern refusjon"
+                                                        />
+                                                    </div>
+                                                    <TextField
+                                                        label="Beløp (kr)"
+                                                        value={refusjon.beløpKroner}
+                                                        onChange={(e) =>
+                                                            handleRefusjonChange(
+                                                                index,
+                                                                refusjonIndex,
+                                                                'beløpKroner',
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                        placeholder="0"
+                                                        type="number"
+                                                        min="0"
+                                                        step="100"
+                                                        size="small"
+                                                    />
+                                                </div>
+                                            ))}
+                                            <Button
+                                                variant="secondary"
+                                                size="small"
+                                                onClick={() => addRefusjon(index)}
+                                                icon={<PlusIcon />}
+                                            >
+                                                Legg til refusjon
+                                            </Button>
+                                        </div>
                                     </Table.DataCell>
                                 </Table.Row>
                             )
