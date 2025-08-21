@@ -27,6 +27,7 @@ export const BlankeArk: Testperson = {
     ...blankGrunndata,
     saksbehandlingsperioder: generertData.saksbehandlingsperioder,
     inntektsforhold: generertData.inntektsforhold,
+    yrkesaktivitet: generertData.yrkesaktivitet,
     dagoversikt: generertData.dagoversikt,
     dokumenter: generertData.dokumenter,
 }

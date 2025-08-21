@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
 import { Søknad } from '@/schemas/søknad'
 import { Dokument } from '@/schemas/dokument'
 
@@ -11,7 +12,7 @@ import { lagKategorisering } from './kategorisering-generator'
 import { genererDokumenterFraSøknader } from './dokument-generator'
 
 /**
- * Oppretter en saksbehandlingsperiode med tilhørende inntektsforhold, dagoversikt og dokumenter
+ * Oppretter en saksbehandlingsperiode med tilhørende yrkesaktivitet, dagoversikt og dokumenter
  * Matcher bakrommet sin logikk for å opprette perioder fra søknader
  */
 export function opprettSaksbehandlingsperiode(
@@ -24,6 +25,7 @@ export function opprettSaksbehandlingsperiode(
 ): {
     saksbehandlingsperiode: Saksbehandlingsperiode
     inntektsforhold: Inntektsforhold[]
+    yrkesaktivitet: Yrkesaktivitet[]
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Dokument[]
 } {
@@ -42,8 +44,9 @@ export function opprettSaksbehandlingsperiode(
     }
 
     const inntektsforhold: Inntektsforhold[] = []
+    const yrkesaktivitet: Yrkesaktivitet[] = []
 
-    // Automatisk opprettelse av inntektsforhold basert på valgte søknader
+    // Automatisk opprettelse av yrkesaktivitet basert på valgte søknader
     if (søknadIder && søknadIder.length > 0) {
         const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
 
@@ -71,10 +74,19 @@ export function opprettSaksbehandlingsperiode(
                 generertFraDokumenter: søknaderForKategori.map((s) => s.id),
             }
 
+            const nyYrkesaktivitet: Yrkesaktivitet = {
+                id: uuidv4(),
+                kategorisering,
+                dagoversikt: [],
+                generertFraDokumenter: søknaderForKategori.map((s) => s.id),
+            }
+
             inntektsforhold.push(nyttInntektsforhold)
+            yrkesaktivitet.push(nyYrkesaktivitet)
 
             // Opprett dagoversikt fra søknader (matcher bakrommet sin logikk)
             dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(fom, tom, søknaderForKategori)
+            dagoversikt[nyYrkesaktivitet.id] = genererDagoversikt(fom, tom, søknaderForKategori)
         })
     }
 
@@ -84,6 +96,7 @@ export function opprettSaksbehandlingsperiode(
     return {
         saksbehandlingsperiode,
         inntektsforhold,
+        yrkesaktivitet,
         dagoversikt,
         dokumenter,
     }
@@ -100,11 +113,13 @@ export function genererSaksbehandlingsperioder(
 ): {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     inntektsforhold: Record<string, Inntektsforhold[]>
+    yrkesaktivitet: Record<string, Yrkesaktivitet[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
 } {
     const saksbehandlingsperioder: Saksbehandlingsperiode[] = []
     const alleInntektsforhold: Record<string, Inntektsforhold[]> = {}
+    const alleYrkesaktivitet: Record<string, Yrkesaktivitet[]> = {}
     const alleDagoversikt: Record<string, Dagoversikt> = {}
     const alleDokumenter: Record<string, Dokument[]> = {}
 
@@ -127,6 +142,13 @@ export function genererSaksbehandlingsperioder(
         }))
         alleInntektsforhold[resultat.saksbehandlingsperiode.id] = inntektsforholdMedDagoversikt
 
+        // Inkluder dagoversikt i yrkesaktivitet
+        const yrkesaktivitetMedDagoversikt = resultat.yrkesaktivitet.map((aktivitet) => ({
+            ...aktivitet,
+            dagoversikt: resultat.dagoversikt[aktivitet.id] || [],
+        }))
+        alleYrkesaktivitet[resultat.saksbehandlingsperiode.id] = yrkesaktivitetMedDagoversikt
+
         // Kombiner dagoversikt
         Object.assign(alleDagoversikt, resultat.dagoversikt)
 
@@ -139,6 +161,7 @@ export function genererSaksbehandlingsperioder(
     return {
         saksbehandlingsperioder,
         inntektsforhold: alleInntektsforhold,
+        yrkesaktivitet: alleYrkesaktivitet,
         dagoversikt: alleDagoversikt,
         dokumenter: alleDokumenter,
     }

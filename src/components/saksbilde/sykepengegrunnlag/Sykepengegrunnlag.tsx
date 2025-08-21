@@ -10,7 +10,7 @@ import { cn } from '@utils/tw'
 import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagForm'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -18,22 +18,18 @@ interface SykepengegrunnlagProps {
 
 export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
-    const {
-        data: inntektsforhold,
-        isLoading: inntektsforholdLoading,
-        isError: inntektsforholdError,
-    } = useInntektsforhold()
+    const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
     const {
         data: sykepengegrunnlag,
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
     } = useSykepengegrunnlag()
 
-    if (sykepengegrunnlagLoading || inntektsforholdLoading || !inntektsforhold) {
-        return <SaksbildePanel value={value}>Laster inntektsforhold...</SaksbildePanel>
+    if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktivitet) {
+        return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
     }
 
-    if (inntektsforholdError || sykepengegrunnlagError) {
+    if (yrkesaktivitetError || sykepengegrunnlagError) {
         return (
             <SaksbildePanel value={value}>
                 <Alert variant="error">Kunne ikke laste sykepengegrunnlag</Alert>
@@ -66,13 +62,13 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 </HStack>
                 {!erIRedigeringsmodus && (
                     <>
-                        {inntektsforhold.map((forhold) => {
+                        {yrkesaktivitet.map((aktivitet) => {
                             const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                                (inntekt) => inntekt.inntektsforholdId === forhold.id,
+                                (inntekt) => inntekt.yrkesaktivitetId === aktivitet.id,
                             )
                             return (
-                                <HStack key={forhold.id} justify="space-between">
-                                    <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
+                                <HStack key={aktivitet.id} justify="space-between">
+                                    <NavnOgIkon orgnummer={aktivitet.kategorisering['ORGNUMMER'] as string} />
                                     <BodyShort>
                                         {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
                                     </BodyShort>
@@ -89,7 +85,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 {erIRedigeringsmodus && (
                     <SykepengegrunnlagForm
                         sykepengegrunnlag={sykepengegrunnlag}
-                        inntektsforhold={inntektsforhold}
+                        yrkesaktivitet={yrkesaktivitet}
                         avbryt={() => setErIRedigeringsmodus(false)}
                     />
                 )}

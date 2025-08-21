@@ -4,13 +4,13 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { Button, Table, TextField, Select, VStack, HStack, Heading, BodyShort, Tag, Alert } from '@navikt/ds-react'
 import { CalculatorIcon, PlusIcon, TrashIcon } from '@navikt/aksel-icons'
 
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
 import { kronerTilØrer, ørerTilKroner, formaterBeløpØre } from '@/schemas/sykepengegrunnlag'
 
 interface InntektInput {
-    inntektsforholdId: string
+    yrkesaktivitetId: string
     beløpPerMånedKroner: string
     kilde: 'AINNTEKT' | 'INNTEKTSMELDING' | 'PENSJONSGIVENDE_INNTEKT' | 'SAKSBEHANDLER' | 'SKJONNSFASTSETTELSE'
     refusjon: RefusjonsperiodeInput[]
@@ -24,7 +24,7 @@ interface RefusjonsperiodeInput {
 }
 
 export function SykepengegrunnlagDebug(): ReactElement {
-    const { data: inntektsforhold = [] } = useInntektsforhold()
+    const { data: yrkesaktivitet = [] } = useYrkesaktivitet()
     const { data: eksisterendeGrunnlag } = useSykepengegrunnlag()
     const {
         mutate: settSykepengegrunnlag,
@@ -38,7 +38,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
         // Initialiser med eksisterende data eller tomme verdier
         if (eksisterendeGrunnlag) {
             return eksisterendeGrunnlag.inntekter.map((inntekt) => ({
-                inntektsforholdId: inntekt.inntektsforholdId,
+                yrkesaktivitetId: inntekt.yrkesaktivitetId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
                 kilde: inntekt.kilde as
                     | 'AINNTEKT'
@@ -54,8 +54,8 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 })),
             }))
         }
-        return inntektsforhold.map((forhold) => ({
-            inntektsforholdId: forhold.id,
+        return yrkesaktivitet.map((aktivitet) => ({
+            yrkesaktivitetId: aktivitet.id,
             beløpPerMånedKroner: '',
             kilde: 'AINNTEKT' as const,
             refusjon: [],
@@ -68,7 +68,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
     useEffect(() => {
         if (eksisterendeGrunnlag) {
             const nyeInntekter = eksisterendeGrunnlag.inntekter.map((inntekt) => ({
-                inntektsforholdId: inntekt.inntektsforholdId,
+                yrkesaktivitetId: inntekt.yrkesaktivitetId,
                 beløpPerMånedKroner: ørerTilKroner(inntekt.beløpPerMånedØre).toString(),
                 kilde: inntekt.kilde as
                     | 'AINNTEKT'
@@ -85,10 +85,10 @@ export function SykepengegrunnlagDebug(): ReactElement {
             }))
             setInntekter(nyeInntekter)
             setBegrunnelse(eksisterendeGrunnlag.begrunnelse || '')
-        } else if (inntektsforhold.length > 0) {
+        } else if (yrkesaktivitet.length > 0) {
             // Hvis ingen eksisterende data, initialiser med tomme verdier
-            const tommeInntekter = inntektsforhold.map((forhold) => ({
-                inntektsforholdId: forhold.id,
+            const tommeInntekter = yrkesaktivitet.map((aktivitet) => ({
+                yrkesaktivitetId: aktivitet.id,
                 beløpPerMånedKroner: '',
                 kilde: 'AINNTEKT' as const,
                 refusjon: [],
@@ -96,7 +96,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
             setInntekter(tommeInntekter)
             setBegrunnelse('')
         }
-    }, [eksisterendeGrunnlag, inntektsforhold])
+    }, [eksisterendeGrunnlag, yrkesaktivitet])
 
     const handleInntektChange = (index: number, field: keyof InntektInput, value: string) => {
         const nyeInntekter = [...inntekter]
@@ -144,7 +144,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
         const inntekterForAPI = inntekter
             .filter((inntekt) => inntekt.beløpPerMånedKroner && parseFloat(inntekt.beløpPerMånedKroner) > 0)
             .map((inntekt) => ({
-                inntektsforholdId: inntekt.inntektsforholdId,
+                yrkesaktivitetId: inntekt.yrkesaktivitetId,
                 beløpPerMånedØre: kronerTilØrer(parseFloat(inntekt.beløpPerMånedKroner)),
                 kilde: inntekt.kilde,
                 refusjon: inntekt.refusjon
@@ -162,12 +162,12 @@ export function SykepengegrunnlagDebug(): ReactElement {
         })
     }
 
-    const getInntektsforholdInfo = (inntektsforholdId: string) => {
-        const forhold = inntektsforhold.find((f) => f.id === inntektsforholdId)
-        if (!forhold) return { navn: 'Ukjent', orgnummer: 'Ukjent' }
+    const getYrkesaktivitetInfo = (yrkesaktivitetId: string) => {
+        const aktivitet = yrkesaktivitet.find((f) => f.id === yrkesaktivitetId)
+        if (!aktivitet) return { navn: 'Ukjent', orgnummer: 'Ukjent' }
 
-        const orgnummer = forhold.kategorisering['ORGNUMMER'] as string
-        const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
+        const orgnummer = aktivitet.kategorisering['ORGNUMMER'] as string
+        const kategori = aktivitet.kategorisering['INNTEKTSKATEGORI'] as string
 
         return {
             navn: orgnummer || 'Ukjent organisasjon',
@@ -197,7 +197,7 @@ export function SykepengegrunnlagDebug(): ReactElement {
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Inntektsforhold</Table.HeaderCell>
+                            <Table.HeaderCell>Yrkesaktivitet</Table.HeaderCell>
                             <Table.HeaderCell>Månedsinntekt (kr)</Table.HeaderCell>
                             <Table.HeaderCell>Kilde</Table.HeaderCell>
                             <Table.HeaderCell>Refusjon</Table.HeaderCell>
@@ -205,14 +205,14 @@ export function SykepengegrunnlagDebug(): ReactElement {
                     </Table.Header>
                     <Table.Body>
                         {inntekter.map((inntekt, index) => {
-                            const forholdInfo = getInntektsforholdInfo(inntekt.inntektsforholdId)
+                            const aktivitetInfo = getYrkesaktivitetInfo(inntekt.yrkesaktivitetId)
                             return (
-                                <Table.Row key={inntekt.inntektsforholdId}>
+                                <Table.Row key={inntekt.yrkesaktivitetId}>
                                     <Table.DataCell>
                                         <div>
-                                            <div className="font-medium">{forholdInfo.navn}</div>
-                                            <div className="text-gray-600 text-sm">{forholdInfo.kategori}</div>
-                                            <div className="text-gray-500 text-xs">{forholdInfo.orgnummer}</div>
+                                            <div className="font-medium">{aktivitetInfo.navn}</div>
+                                            <div className="text-gray-600 text-sm">{aktivitetInfo.kategori}</div>
+                                            <div className="text-gray-500 text-xs">{aktivitetInfo.orgnummer}</div>
                                         </div>
                                     </Table.DataCell>
                                     <Table.DataCell>

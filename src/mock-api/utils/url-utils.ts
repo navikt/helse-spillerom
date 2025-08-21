@@ -28,6 +28,16 @@ export function hentInntektsforholdUuidFraUrl(url: string): string {
     return parts[inntektsforholdIndex + 1]
 }
 
+export function hentYrkesaktivitetUuidFraUrl(url: string): string {
+    const parts = url.split('/')
+    // Finn indeksen til 'yrkesaktivitet' og ta neste del som er uuid
+    const yrkesaktivitetIndex = parts.findIndex((part) => part === 'yrkesaktivitet')
+    if (yrkesaktivitetIndex === -1 || yrkesaktivitetIndex + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne yrkesaktivitet UUID i URL')
+    }
+    return parts[yrkesaktivitetIndex + 1]
+}
+
 export function hentSoknadUuidFraUrl(url: string): string {
     const parts = url.split('/')
     const soknaderIndex = parts.findIndex((part) => part === 'soknader')

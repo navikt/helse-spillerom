@@ -5,21 +5,21 @@ import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { VilkårsvurderingTabs } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingTabs'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
-import { InntektsforholdTabell } from '@components/saksbilde/inntektsforhold/InntektsforholdTabell'
+import { YrkesaktivitetTabell } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTabell'
 import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
 
 export default async function PersonPage(): Promise<ReactElement> {
     return (
         <section className="flex-auto">
             <SaksbehandlingsperiodeHeading />
-            <Tabs defaultValue="inntektsforhold">
+            <Tabs defaultValue="yrkesaktivitet">
                 <TabsList>
-                    <TabsTab value="inntektsforhold" label="Inntektsforhold" />
+                    <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
-                <InntektsforholdTabell value="inntektsforhold" />
+                <YrkesaktivitetTabell value="yrkesaktivitet" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTabs value="vilkårsvurdering" />
                 <Dagoversikt value="dagoversikt" />
