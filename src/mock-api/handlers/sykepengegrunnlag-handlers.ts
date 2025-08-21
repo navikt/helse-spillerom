@@ -8,7 +8,7 @@ import {
     Inntekt,
     Inntektskilde,
 } from '@/schemas/sykepengegrunnlag'
-import { beregn6GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
+import { beregn6GØre, beregn1GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
 
 export async function handleGetSykepengegrunnlag(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -130,6 +130,7 @@ function beregnSykepengegrunnlag(
 ): SykepengegrunnlagResponse {
     // Hent gjeldende grunnbeløp basert på skjæringstidspunkt
     const seksGØre = beregn6GØre(skjæringstidspunkt)
+    const grunnbeløpØre = beregn1GØre(skjæringstidspunkt)
 
     // Hent virkningstidspunktet for grunnbeløpet som ble brukt
     const grunnbeløpVirkningstidspunkt = finnGrunnbeløpVirkningstidspunkt(skjæringstidspunkt)
@@ -148,6 +149,7 @@ function beregnSykepengegrunnlag(
         saksbehandlingsperiodeId,
         inntekter,
         totalInntektØre,
+        grunnbeløpØre,
         grunnbeløp6GØre: seksGØre,
         begrensetTil6G,
         sykepengegrunnlagØre,

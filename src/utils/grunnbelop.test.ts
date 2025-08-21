@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { beregn6GØre, finnGrunnbeløpVirkningstidspunkt } from './grunnbelop'
+import { beregn6GØre, beregn1GØre, finnGrunnbeløpVirkningstidspunkt } from './grunnbelop'
 
 describe('grunnbelop', () => {
     describe('beregn6GØre', () => {
@@ -17,6 +17,23 @@ describe('grunnbelop', () => {
         it('skal beregne riktig 6G for 2023-06-01', () => {
             const resultat = beregn6GØre('2023-06-01')
             expect(resultat).toBe(71172000) // 6 * 118620 * 100
+        })
+    })
+
+    describe('beregn1GØre', () => {
+        it('skal beregne riktig 1G for 2024-01-01 (bruker 2023 grunnbeløp)', () => {
+            const resultat = beregn1GØre('2024-01-01')
+            expect(resultat).toBe(11862000) // 118620 * 100 (2023 grunnbeløp)
+        })
+
+        it('skal beregne riktig 1G for 2024-06-01 (bruker 2024 grunnbeløp)', () => {
+            const resultat = beregn1GØre('2024-06-01')
+            expect(resultat).toBe(12402800) // 124028 * 100 (2024 grunnbeløp)
+        })
+
+        it('skal beregne riktig 1G for 2023-06-01', () => {
+            const resultat = beregn1GØre('2023-06-01')
+            expect(resultat).toBe(11862000) // 118620 * 100
         })
     })
 

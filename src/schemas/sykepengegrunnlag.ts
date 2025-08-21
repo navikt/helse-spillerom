@@ -40,6 +40,7 @@ export const sykepengegrunnlagResponseSchema = z
         saksbehandlingsperiodeId: z.string(),
         inntekter: z.array(inntektSchema),
         totalInntektØre: z.number().int().min(0), // Årsinntekt i øre
+        grunnbeløpØre: z.number().int().min(0), // 1G i øre
         grunnbeløp6GØre: z.number().int().min(0), // 6G i øre
         begrensetTil6G: z.boolean(),
         sykepengegrunnlagØre: z.number().int().min(0), // Endelig grunnlag i øre

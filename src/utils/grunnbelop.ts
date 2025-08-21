@@ -149,6 +149,13 @@ export function beregn6GØre(dato: string): number {
 }
 
 /**
+ * Beregner 1G i øre for en gitt dato
+ */
+export function beregn1GØre(dato: string): number {
+    return Math.round(beregnGrunnbeløp(dato, 1.0) * 100)
+}
+
+/**
  * Finner virkningstidspunkt for grunnbeløpet som ble brukt for en gitt dato
  * Matcher bakrommet sin logikk for å finne grunnbeløpVirkningstidspunkt
  */
