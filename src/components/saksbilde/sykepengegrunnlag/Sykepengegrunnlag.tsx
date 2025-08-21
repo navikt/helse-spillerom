@@ -42,7 +42,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
     }
 
     return (
-        <SaksbildePanel value={value} className="p-0">
+        <SaksbildePanel value={value} className="mb-8 p-0">
             <VStack
                 gap="6"
                 className={cn('max-w-[508px] px-8 pt-8', {

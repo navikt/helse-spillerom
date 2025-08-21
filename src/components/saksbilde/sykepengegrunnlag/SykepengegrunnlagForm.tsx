@@ -101,7 +101,7 @@ export function SykepengegrunnlagForm({
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
-                                    className="ml-auto"
+                                    className="ml-auto max-w-28 [&_input]:text-right"
                                     error={fieldState.error?.message}
                                     label="Inntekt"
                                     size="small"
@@ -136,7 +136,7 @@ export function SykepengegrunnlagForm({
                                     legend="Refusjon"
                                     error={fieldState.error?.message}
                                     value={field.value ? ['ja'] : []}
-                                    onChange={(values: string[]) => field.onChange(values.includes('ja'))} // map back to boolean
+                                    onChange={(values: string[]) => field.onChange(values.includes('ja'))}
                                 >
                                     <Checkbox value="ja" hideLabel>
                                         Ja
@@ -147,7 +147,7 @@ export function SykepengegrunnlagForm({
                     </HStack>
                 ))}
                 <span className="border-t border-t-ax-bg-neutral-strong" />
-                <HStack justify="space-between">
+                <HStack justify="space-between" className="max-w-[414px]">
                     <BodyShort weight="semibold">Totalt</BodyShort>
                     <BodyShort>{formaterBeløpØre(sykepengegrunnlag?.totalInntektØre)}</BodyShort>
                 </HStack>
