@@ -11,13 +11,12 @@ export type Inntektskilde = z.infer<typeof inntektskildeSchema>
 
 export const refusjonsperiodeSchema = z
     .object({
-        fom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Må være gyldig dato format YYYY-MM-DD'),
-        tom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Må være gyldig dato format YYYY-MM-DD'),
+        fom: z.string(), // ISO 8601 date string
+        tom: z.string(), // ISO 8601 date string
         beløpØre: z.number().int().min(0), // Beløp i øre
     })
     .refine((data) => new Date(data.fom) <= new Date(data.tom), {
-        message: 'Fra-dato må være før eller lik til-dato',
-        path: ['fom'],
+        message: 'Fra-dato kan ikke være etter til-dato',
     })
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>
 
@@ -30,7 +29,7 @@ export const inntektSchema = z.object({
 export type Inntekt = z.infer<typeof inntektSchema>
 
 export const sykepengegrunnlagRequestSchema = z.object({
-    inntekter: z.array(inntektSchema),
+    inntekter: z.array(inntektSchema).min(1, 'Må ha minst én inntekt'),
     begrunnelse: z.string().nullable().optional(),
 })
 export type SykepengegrunnlagRequest = z.infer<typeof sykepengegrunnlagRequestSchema>
@@ -45,6 +44,7 @@ export const sykepengegrunnlagResponseSchema = z
         begrensetTil6G: z.boolean(),
         sykepengegrunnlagØre: z.number().int().min(0), // Endelig grunnlag i øre
         begrunnelse: z.string().nullable().optional(),
+        grunnbeløpVirkningstidspunkt: z.string(), // ISO 8601 date string
         opprettet: z.string(),
         opprettetAv: z.string(),
         sistOppdatert: z.string(),
@@ -52,17 +52,19 @@ export const sykepengegrunnlagResponseSchema = z
     .nullable()
 export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponseSchema>
 
-// Hjelpefunksjoner for å konvertere mellom øre og kroner
-export const ørerTilKroner = (øre: number): number => øre / 100
-export const kronerTilØrer = (kroner: number): number => Math.round(kroner * 100)
+// Utility functions for converting between kroner and øre
+export function kronerTilØrer(kroner: number): number {
+    return Math.round(kroner * 100)
+}
 
-// Formatering for visning
-export const formaterBeløpØre = (øre?: number): string => {
-    if (!øre) return '-'
+export function ørerTilKroner(ører: number): number {
+    return ører / 100
+}
+
+export function formaterBeløpØre(ører: number | undefined): string {
+    if (ører === undefined) return '-'
     return new Intl.NumberFormat('nb-NO', {
         style: 'currency',
         currency: 'NOK',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(ørerTilKroner(øre))
+    }).format(ørerTilKroner(ører))
 }

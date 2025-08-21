@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
-import { SykepengegrunnlagRequest, SykepengegrunnlagResponse, Inntekt } from '@/schemas/sykepengegrunnlag'
-
-// Grunnbeløp for 2024: 124028 kroner = 12402800 øre
-// 6G for 2024: 6 * 12402800 øre = 74416800 øre (744168 kroner)
-const GRUNNBELØP_2024_ØRE = 12402800 // 124028 kr * 100
-const SEKS_G_ØRE = GRUNNBELØP_2024_ØRE * 6 // 74416800 øre
+import {
+    SykepengegrunnlagRequest,
+    SykepengegrunnlagResponse,
+    Inntekt,
+    Inntektskilde,
+} from '@/schemas/sykepengegrunnlag'
+import { beregn6GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
 
 export async function handleGetSykepengegrunnlag(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -42,6 +43,16 @@ export async function handlePutSykepengegrunnlag(
         return NextResponse.json({ message: 'Må ha minst én inntekt' }, { status: 400 })
     }
 
+    // Hent saksbehandlingsperiode for å få skjæringstidspunkt
+    const periode = person.saksbehandlingsperioder?.find((p) => p.id === uuid)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    if (!periode.skjæringstidspunkt) {
+        return NextResponse.json({ message: 'Periode mangler skjæringstidspunkt' }, { status: 400 })
+    }
+
     // Valider inntekter
     for (let i = 0; i < body.inntekter.length; i++) {
         const inntekt = body.inntekter[i]
@@ -50,6 +61,18 @@ export async function handlePutSykepengegrunnlag(
                 { message: `Beløp per måned kan ikke være negativt (inntekt ${i})` },
                 { status: 400 },
             )
+        }
+
+        // Valider at kilde er en gyldig enum verdi
+        const gyldigeKilder: Inntektskilde[] = [
+            'AINNTEKT',
+            'INNTEKTSMELDING',
+            'PENSJONSGIVENDE_INNTEKT',
+            'SAKSBEHANDLER',
+            'SKJONNSFASTSETTELSE',
+        ]
+        if (!gyldigeKilder.includes(inntekt.kilde)) {
+            return NextResponse.json({ message: `Ugyldig kilde: ${inntekt.kilde} (inntekt ${i})` }, { status: 400 })
         }
 
         // Skjønnsfastsettelse er automatisk basert på kilde
@@ -74,8 +97,8 @@ export async function handlePutSykepengegrunnlag(
         }
     }
 
-    // Beregn sykepengegrunnlag
-    const grunnlag = beregnSykepengegrunnlag(uuid, body.inntekter, body.begrunnelse)
+    // Beregn sykepengegrunnlag med avansert logikk
+    const grunnlag = beregnSykepengegrunnlag(uuid, body.inntekter, body.begrunnelse, periode.skjæringstidspunkt)
 
     // Lagre i session
     if (!person.sykepengegrunnlag) {
@@ -102,14 +125,21 @@ export async function handleDeleteSykepengegrunnlag(person: Person | undefined, 
 function beregnSykepengegrunnlag(
     saksbehandlingsperiodeId: string,
     inntekter: Inntekt[],
-    begrunnelse?: string | null,
+    begrunnelse: string | null | undefined,
+    skjæringstidspunkt: string,
 ): SykepengegrunnlagResponse {
+    // Hent gjeldende grunnbeløp basert på skjæringstidspunkt
+    const seksGØre = beregn6GØre(skjæringstidspunkt)
+
+    // Hent virkningstidspunktet for grunnbeløpet som ble brukt
+    const grunnbeløpVirkningstidspunkt = finnGrunnbeløpVirkningstidspunkt(skjæringstidspunkt)
+
     // Summer opp alle månedlige inntekter og konverter til årsinntekt (i øre)
     const totalInntektØre = inntekter.reduce((sum, inntekt) => sum + inntekt.beløpPerMånedØre, 0) * 12
 
     // Begrens til 6G
-    const begrensetTil6G = totalInntektØre > SEKS_G_ØRE
-    const sykepengegrunnlagØre = begrensetTil6G ? SEKS_G_ØRE : totalInntektØre
+    const begrensetTil6G = totalInntektØre > seksGØre
+    const sykepengegrunnlagØre = begrensetTil6G ? seksGØre : totalInntektØre
 
     const now = new Date().toISOString()
 
@@ -118,10 +148,11 @@ function beregnSykepengegrunnlag(
         saksbehandlingsperiodeId,
         inntekter,
         totalInntektØre,
-        grunnbeløp6GØre: SEKS_G_ØRE,
+        grunnbeløp6GØre: seksGØre,
         begrensetTil6G,
         sykepengegrunnlagØre,
         begrunnelse,
+        grunnbeløpVirkningstidspunkt,
         opprettet: now,
         opprettetAv: 'Saks McBehandlersen',
         sistOppdatert: now,

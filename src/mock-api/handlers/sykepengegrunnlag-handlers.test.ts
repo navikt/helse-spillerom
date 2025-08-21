@@ -23,7 +23,19 @@ describe('sykepengegrunnlag-handlers', () => {
                 navn: 'Test Person',
                 alder: 30,
             },
-            saksbehandlingsperioder: [],
+            saksbehandlingsperioder: [
+                {
+                    id: testUuid,
+                    spilleromPersonId: 'test-person-id',
+                    opprettet: '2024-01-01T00:00:00Z',
+                    opprettetAvNavIdent: 'Z123456',
+                    opprettetAvNavn: 'Saks McBehandlersen',
+                    fom: '2024-01-01',
+                    tom: '2024-12-31',
+                    status: 'UNDER_BEHANDLING',
+                    skjæringstidspunkt: '2024-01-01', // Legg til skjæringstidspunkt
+                },
+            ],
             vilkaarsvurderinger: {},
             inntektsforhold: {},
             dagoversikt: {},
@@ -59,6 +71,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 grunnbeløp6GØre: 74416800,
                 begrensetTil6G: false,
                 sykepengegrunnlagØre: 0,
+                grunnbeløpVirkningstidspunkt: '2024-05-01',
                 opprettet: '2024-01-01T00:00:00Z',
                 opprettetAv: 'Z123456',
                 sistOppdatert: '2024-01-01T00:00:00Z',
@@ -97,6 +110,53 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(responseData.message).toBe('Person not found')
         })
 
+        it('skal returnere 404 når saksbehandlingsperiode ikke finnes', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            inntektsforholdId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000,
+                            kilde: 'AINNTEKT',
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, 'ukjent-uuid')
+            const responseData = await response.json()
+
+            expect(response.status).toBe(404)
+            expect(responseData.message).toBe('Saksbehandlingsperiode not found')
+        })
+
+        it('skal returnere 400 når periode mangler skjæringstidspunkt', async () => {
+            // Fjern skjæringstidspunkt fra testperioden
+            testPerson.saksbehandlingsperioder[0].skjæringstidspunkt = undefined
+
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            inntektsforholdId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000,
+                            kilde: 'AINNTEKT',
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Periode mangler skjæringstidspunkt')
+        })
+
         it('skal returnere 400 når inntekter mangler', async () => {
             const request = new NextRequest('http://localhost/test', {
                 method: 'PUT',
@@ -133,6 +193,28 @@ describe('sykepengegrunnlag-handlers', () => {
 
             expect(response.status).toBe(400)
             expect(responseData.message).toBe('Beløp per måned kan ikke være negativt (inntekt 0)')
+        })
+
+        it('skal returnere 400 når kilde er ugyldig', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            inntektsforholdId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000,
+                            kilde: 'UGYLDIG_KILDE',
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Ugyldig kilde: UGYLDIG_KILDE (inntekt 0)')
         })
 
         it('skal returnere 400 når skjønnsfastsettelse mangler begrunnelse', async () => {
@@ -184,6 +266,7 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(responseData.begrensetTil6G).toBe(false)
             expect(responseData.begrunnelse).toBe('Test begrunnelse')
             expect(responseData.opprettetAv).toBe('Saks McBehandlersen')
+            expect(responseData.grunnbeløpVirkningstidspunkt).toBe('2023-05-01') // For 2024-01-01 skjæringstidspunkt bruker 2023 grunnbeløp
 
             // Verifiser at grunnlaget ble lagret i session
             expect(testPerson.sykepengegrunnlag[testUuid]).toBeDefined()
@@ -209,7 +292,7 @@ describe('sykepengegrunnlag-handlers', () => {
 
             expect(response.status).toBe(200)
             expect(responseData.begrensetTil6G).toBe(true)
-            expect(responseData.sykepengegrunnlagØre).toBe(74416800) // 6G
+            expect(responseData.sykepengegrunnlagØre).toBe(71172000) // 6G for 2023 (bruker 2023 grunnbeløp for 2024-01-01)
         })
 
         it('skal akseptere skjønnsfastsettelse kilde med begrunnelse', async () => {
@@ -234,6 +317,33 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(response.status).toBe(200)
             expect(responseData.inntekter[0].kilde).toBe('SKJONNSFASTSETTELSE')
             expect(responseData.begrunnelse).toBe('Skjønnsfastsettelse begrunnelse')
+        })
+
+        it('skal bruke riktig grunnbeløp basert på skjæringstidspunkt', async () => {
+            // Endre skjæringstidspunkt til 2023
+            testPerson.saksbehandlingsperioder[0].skjæringstidspunkt = '2023-06-01'
+
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            inntektsforholdId: 'test-inntekt-id',
+                            beløpPerMånedØre: 10000000, // 100 000 kr
+                            kilde: 'AINNTEKT',
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(200)
+            expect(responseData.begrensetTil6G).toBe(true)
+            expect(responseData.sykepengegrunnlagØre).toBe(71172000) // 6G for 2023 (711720 kr)
+            expect(responseData.grunnbeløpVirkningstidspunkt).toBe('2023-05-01') // For 2023 skjæringstidspunkt
         })
     })
 
@@ -263,6 +373,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 grunnbeløp6GØre: 74416800,
                 begrensetTil6G: false,
                 sykepengegrunnlagØre: 0,
+                grunnbeløpVirkningstidspunkt: '2024-05-01',
                 opprettet: '2024-01-01T00:00:00Z',
                 opprettetAv: 'Z123456',
                 sistOppdatert: '2024-01-01T00:00:00Z',
