@@ -52,7 +52,7 @@ export function Oppgaveliste(): ReactElement {
                             className="m-2 mb-[7px] self-start"
                             size="small"
                             variant="tertiary-neutral"
-                            icon={<FilterIcon />}
+                            icon={<FilterIcon aria-label="Filtrer saker" />}
                             onClick={() => setShowFilters((prev) => !prev)}
                         />
                     </div>
