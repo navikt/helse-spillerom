@@ -22,7 +22,7 @@ export const refusjonsperiodeSchema = z
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>
 
 export const inntektSchema = z.object({
-    yrkesaktivitetId: z.string(),
+    inntektsforholdId: z.string(),
     beløpPerMånedØre: z.number().int().min(0), // Beløp i øre
     kilde: inntektskildeSchema,
     refusjon: z.array(refusjonsperiodeSchema).default([]),

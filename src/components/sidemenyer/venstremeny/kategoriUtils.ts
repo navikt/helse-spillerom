@@ -1,5 +1,5 @@
-import type { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
-import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/yrkesaktivitetKodeverk'
+import type { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
 
 // Sorteringsrekkefølge for inntektskategorier
 export const KATEGORI_SORTERING = [
@@ -13,16 +13,16 @@ export const KATEGORI_SORTERING = [
 
 export type KategoriKode = (typeof KATEGORI_SORTERING)[number]
 
-export function getKategorierFraYrkesaktivitet(yrkesaktivitet: Yrkesaktivitet[]): Set<string> {
+export function getKategorierFraInntektsforhold(inntektsforhold: Inntektsforhold[]): Set<string> {
     return new Set(
-        yrkesaktivitet
-            .map((aktivitet) => aktivitet.kategorisering['INNTEKTSKATEGORI'])
+        inntektsforhold
+            .map((forhold) => forhold.kategorisering['INNTEKTSKATEGORI'])
             .filter((kat): kat is string => Boolean(kat)),
     )
 }
 
 export function getKategoriNavn(kode: string): string {
-    const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === kode)
+    const alternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === kode)
     return alternativ?.navn || kode
 }
 

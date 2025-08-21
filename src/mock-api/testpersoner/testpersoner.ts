@@ -4,7 +4,6 @@ import { Kalle } from '@/mock-api/testpersoner/KalleKranfører'
 import { Søknad } from '@/schemas/søknad'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Inntektsforhold } from '@/schemas/inntektsforhold'
-import { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
 
@@ -17,7 +16,6 @@ export interface Testperson {
     soknader: Søknad[]
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     inntektsforhold?: Record<string, Inntektsforhold[]>
-    yrkesaktivitet?: Record<string, Yrkesaktivitet[]>
     dagoversikt?: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
 }

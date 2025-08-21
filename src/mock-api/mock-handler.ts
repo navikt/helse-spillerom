@@ -8,7 +8,6 @@ import {
     hentPersonIdFraUrl,
     hentUuidFraUrl,
     hentInntektsforholdUuidFraUrl,
-    hentYrkesaktivitetUuidFraUrl,
     hentSoknadUuidFraUrl,
 } from '@/mock-api/utils/url-utils'
 import { addRandomDelay } from '@/mock-api/utils/delay-utils'
@@ -38,13 +37,6 @@ import {
     handlePutInntektsforholdKategorisering,
     handlePutInntektsforholdDagoversikt,
 } from '@/mock-api/handlers/inntektsforhold-handlers'
-import {
-    handleGetYrkesaktivitet,
-    handlePostYrkesaktivitet,
-    handleDeleteYrkesaktivitet,
-    handlePutYrkesaktivitetKategorisering,
-    handlePutYrkesaktivitetDagoversikt,
-} from '@/mock-api/handlers/yrkesaktivitet-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
@@ -60,7 +52,6 @@ interface HandlerContext {
     personId: string
     uuid?: string
     inntektsforholdId?: string
-    yrkesaktivitetId?: string
     kode?: string
 }
 
@@ -150,32 +141,6 @@ const handlers: Record<string, HandlerFunction> = {
         inntektsforholdId,
     }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, inntektsforholdId!),
 
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet': async ({ person, uuid }) =>
-        handleGetYrkesaktivitet(await person, uuid!),
-
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet': async ({ request, person, uuid }) =>
-        handlePostYrkesaktivitet(request, await person, uuid!),
-
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/kategorisering': async ({
-        request,
-        person,
-        uuid,
-        yrkesaktivitetId,
-    }) => handlePutYrkesaktivitetKategorisering(request, await person, uuid!, yrkesaktivitetId!),
-
-    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]': async ({
-        person,
-        uuid,
-        yrkesaktivitetId,
-    }) => handleDeleteYrkesaktivitet(await person, uuid!, yrkesaktivitetId!),
-
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/dagoversikt': async ({
-        request,
-        person,
-        uuid,
-        yrkesaktivitetId,
-    }) => handlePutYrkesaktivitetDagoversikt(request, await person, uuid!, yrkesaktivitetId!),
-
     'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
 
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning': async ({ person, uuid }) =>
@@ -231,14 +196,6 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         if (path.includes('/inntektsforhold/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
-        }
-
-        if (path.includes('/yrkesaktivitet/') && path.includes('/dagoversikt')) {
-            context.yrkesaktivitetId = hentYrkesaktivitetUuidFraUrl(request.url)
-        }
-
-        if (path.includes('/yrkesaktivitet/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
-            context.yrkesaktivitetId = hentYrkesaktivitetUuidFraUrl(request.url)
         }
 
         if (path.includes('/vilkaarsvurdering/') && path.split('/').length > 6) {

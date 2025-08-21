@@ -14,12 +14,12 @@ import {
     SykepengegrunnlagResponse,
     ørerTilKroner,
 } from '@schemas/sykepengegrunnlag'
-import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
+import { Inntektsforhold } from '@schemas/inntektsforhold'
 import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
 
 export type SykepengegrunnlagFormSchema = z.infer<typeof sykepengegrunnlagFormSchema>
 export const sykepengegrunnlagFormSchema = z.object({
-    yrkesaktivitet: z.record(
+    inntektsforhold: z.record(
         z.string(),
         z.object({
             inntekt: z.string(),
@@ -33,26 +33,26 @@ export const sykepengegrunnlagFormSchema = z.object({
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
-    yrkesaktivitet: Yrkesaktivitet[]
+    inntektsforhold: Inntektsforhold[]
     avbryt: () => void
 }
 
 export function SykepengegrunnlagForm({
     sykepengegrunnlag,
-    yrkesaktivitet,
+    inntektsforhold,
     avbryt,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useSettSykepengegrunnlag()
     const form = useForm<SykepengegrunnlagFormSchema>({
         resolver: zodResolver(sykepengegrunnlagFormSchema),
         defaultValues: {
-            yrkesaktivitet: Object.fromEntries(
-                yrkesaktivitet.map((aktivitet) => {
+            inntektsforhold: Object.fromEntries(
+                inntektsforhold.map((forhold) => {
                     const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                        (inntekt) => inntekt.yrkesaktivitetId === aktivitet.id,
+                        (inntekt) => inntekt.inntektsforholdId === forhold.id,
                     )
                     return [
-                        aktivitet.id,
+                        forhold.id,
                         {
                             inntekt: inntektFraSykepengegrunnlag?.beløpPerMånedØre
                                 ? ørerTilKroner(inntektFraSykepengegrunnlag.beløpPerMånedØre).toString()
@@ -71,11 +71,11 @@ export function SykepengegrunnlagForm({
     })
 
     async function onSubmit(values: SykepengegrunnlagFormSchema) {
-        const inntekter: Inntekt[] = Object.entries(values.yrkesaktivitet).map(([yrkesaktivitetId, aktivitet]) => ({
-            yrkesaktivitetId,
-            beløpPerMånedØre: kronerTilØrer(+aktivitet.inntekt),
-            kilde: aktivitet.kilde,
-            refusjon: aktivitet.refusjon ?? [],
+        const inntekter: Inntekt[] = Object.entries(values.inntektsforhold).map(([inntektsforholdId, forhold]) => ({
+            inntektsforholdId,
+            beløpPerMånedØre: kronerTilØrer(+forhold.inntekt),
+            kilde: forhold.kilde,
+            refusjon: forhold.refusjon ?? [],
         }))
 
         await mutation
@@ -92,12 +92,12 @@ export function SykepengegrunnlagForm({
     return (
         <FormProvider {...form}>
             <form role="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-nowrap gap-6 pb-6">
-                {yrkesaktivitet.map((aktivitet) => (
-                    <HStack key={aktivitet.id} align="end" gap="4">
-                        <NavnOgIkon orgnummer={aktivitet.kategorisering['ORGNUMMER'] as string} />
+                {inntektsforhold.map((forhold) => (
+                    <HStack key={forhold.id} align="end" gap="4">
+                        <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
                         <Controller
                             control={form.control}
-                            name={`yrkesaktivitet.${aktivitet.id}.inntekt`}
+                            name={`inntektsforhold.${forhold.id}.inntekt`}
                             render={({ field, fieldState }) => (
                                 <TextField
                                     {...field}
@@ -110,7 +110,7 @@ export function SykepengegrunnlagForm({
                         />
                         <Controller
                             control={form.control}
-                            name={`yrkesaktivitet.${aktivitet.id}.kilde`}
+                            name={`inntektsforhold.${forhold.id}.kilde`}
                             render={({ field, fieldState }) => (
                                 <Select
                                     size="small"
@@ -129,7 +129,7 @@ export function SykepengegrunnlagForm({
                         />
                         <Controller
                             control={form.control}
-                            name={`yrkesaktivitet.${aktivitet.id}.visRefusjonFelter`}
+                            name={`inntektsforhold.${forhold.id}.visRefusjonFelter`}
                             render={({ field, fieldState }) => (
                                 <CheckboxGroup
                                     size="small"
