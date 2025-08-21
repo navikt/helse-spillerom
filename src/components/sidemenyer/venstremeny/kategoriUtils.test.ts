@@ -1,67 +1,67 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
+import type { Inntektsforhold } from '@/schemas/inntektsforhold'
 
 import {
     capitalizeFirstLetter,
-    getKategorierFraYrkesaktivitet,
+    getKategorierFraInntektsforhold,
     getKategoriNavn,
     KATEGORI_SORTERING,
     kategoriSetTilTekstOgWarning,
 } from './kategoriUtils'
 
 describe('kategoriUtils', () => {
-    describe('getKategorierFraYrkesaktivitet', () => {
+    describe('getKategorierFraInntektsforhold', () => {
         it('returnerer tomt sett for tom liste', () => {
-            const resultat = getKategorierFraYrkesaktivitet([])
+            const resultat = getKategorierFraInntektsforhold([])
             expect(resultat).toEqual(new Set())
         })
 
-        it('henter ut unike kategorier fra yrkesaktivitet', () => {
-            const mockYrkesaktivitet: Yrkesaktivitet[] = [
+        it('henter ut unike kategorier fra inntektsforhold', () => {
+            const mockInntektsforhold: Inntektsforhold[] = [
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
                 {
                     id: '2',
                     kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
                 {
                     id: '3',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
             ]
 
-            const resultat = getKategorierFraYrkesaktivitet(mockYrkesaktivitet)
+            const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)
             expect(resultat).toEqual(new Set(['ARBEIDSTAKER', 'FRILANSER']))
         })
 
         it('filtrerer ut manglende kategorier', () => {
-            const mockYrkesaktivitet: Yrkesaktivitet[] = [
+            const mockInntektsforhold: Inntektsforhold[] = [
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
                 {
                     id: '2',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
                 {
                     id: '3',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Yrkesaktivitet,
+                } as Inntektsforhold,
             ]
 
-            const resultat = getKategorierFraYrkesaktivitet(mockYrkesaktivitet)
+            const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)
             expect(resultat).toEqual(new Set(['ARBEIDSTAKER']))
         })
     })

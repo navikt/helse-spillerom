@@ -41,22 +41,22 @@ export function navigerTilPersonOgBehandling(ident: string, forventetNavn?: stri
     }
 }
 
-export function navigerTilYrkesaktivitetFane() {
+export function navigerTilInntektsforholdFane() {
     return async (page: Page) => {
-        await test.step('Naviger til yrkesaktivitet-fanen', async () => {
-            const yrkesaktivitetTab = page.getByRole('tab', { name: /Yrkesaktivitet/i })
-            await yrkesaktivitetTab.click()
+        await test.step('Naviger til inntektsforhold-fanen', async () => {
+            const inntektsforholdTab = page.getByRole('tab', { name: /Inntektsforhold/i })
+            await inntektsforholdTab.click()
         })
     }
 }
 
-export function verifiserIngenYrkesaktivitet() {
+export function verifiserIngenInntektsforhold() {
     return async (page: Page) => {
-        await test.step('Verifiser at ingen yrkesaktivitet er registrert', async () => {
-            const ingenYrkesaktivitet = page.getByText(
-                'Ingen yrkesaktivitet registrert for denne saksbehandlingsperioden.',
+        await test.step('Verifiser at ingen inntektsforhold er registrert', async () => {
+            const ingenInntektsforhold = page.getByText(
+                'Ingen inntektsforhold registrert for denne saksbehandlingsperioden.',
             )
-            await ingenYrkesaktivitet.waitFor({ state: 'visible' })
+            await ingenInntektsforhold.waitFor({ state: 'visible' })
         })
     }
 }
@@ -65,26 +65,26 @@ export function verifiserKategoriTag(forventetTekst: string) {
     return async (page: Page) => {
         await test.step(`Verifiser at kategoritag viser "${forventetTekst}"`, async () => {
             const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
-            const kategoriTag = venstremeny.getByRole('region', { name: 'Yrkesaktivitetskategorier' })
+            const kategoriTag = venstremeny.getByRole('region', { name: 'Inntektskategorier' })
             await kategoriTag.waitFor({ state: 'visible' })
             await expect(kategoriTag).toContainText(forventetTekst)
         })
     }
 }
 
-export function åpneYrkesaktivitetSkjema() {
+export function åpneInntektsforholdSkjema() {
     return async (page: Page) => {
-        await test.step('Åpne skjema for ny yrkesaktivitet', async () => {
-            const leggTilButton = page.getByRole('button', { name: 'Legg til ny yrkesaktivitet' })
+        await test.step('Åpne skjema for nytt inntektsforhold', async () => {
+            const leggTilButton = page.getByRole('button', { name: 'Legg til nytt inntektsforhold' })
             await leggTilButton.click()
         })
     }
 }
 
-export function fyllUtArbeidstakerYrkesaktivitet(orgnummer: string, erSykmeldt: boolean = true) {
+export function fyllUtArbeidstakerInntektsforhold(orgnummer: string, erSykmeldt: boolean = true) {
     return async (page: Page) => {
-        await test.step(`Fyll ut arbeidstaker yrkesaktivitet med orgnummer ${orgnummer}`, async () => {
-            const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
+        await test.step(`Fyll ut arbeidstaker inntektsforhold med orgnummer ${orgnummer}`, async () => {
+            const typeSelect = page.getByRole('combobox', { name: 'Velg type inntektsforhold' })
             await typeSelect.waitFor({ state: 'visible' })
             await typeSelect.selectOption('ARBEIDSTAKER')
 
@@ -103,10 +103,10 @@ export function fyllUtArbeidstakerYrkesaktivitet(orgnummer: string, erSykmeldt: 
     }
 }
 
-export function fyllUtNæringsdrivendeYrkesaktivitet(type: 'Fisker' | 'Andre', erSykmeldt: boolean = false) {
+export function fyllUtNæringsdrivendeInntektsforhold(type: 'Fisker' | 'Andre', erSykmeldt: boolean = false) {
     return async (page: Page) => {
-        await test.step(`Fyll ut næringsdrivende yrkesaktivitet av type ${type}`, async () => {
-            const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
+        await test.step(`Fyll ut næringsdrivende inntektsforhold av type ${type}`, async () => {
+            const typeSelect = page.getByRole('combobox', { name: 'Velg type inntektsforhold' })
             await typeSelect.selectOption('SELVSTENDIG_NÆRINGSDRIVENDE')
 
             const sykmeldtRadio = page.getByRole('group', { name: 'Er sykmeldt fra forholdet' })
@@ -119,10 +119,10 @@ export function fyllUtNæringsdrivendeYrkesaktivitet(type: 'Fisker' | 'Andre', e
     }
 }
 
-export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false) {
+export function fyllUtFrilanserInntektsforhold(erSykmeldt: boolean = false) {
     return async (page: Page) => {
-        await test.step('Fyll ut frilanser yrkesaktivitet', async () => {
-            const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
+        await test.step('Fyll ut frilanser inntektsforhold', async () => {
+            const typeSelect = page.getByRole('combobox', { name: 'Velg type inntektsforhold' })
             await typeSelect.selectOption('FRILANSER')
 
             const sykmeldtRadio = page.getByRole('group', { name: 'Er sykmeldt fra forholdet' })
@@ -135,55 +135,55 @@ export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false) {
     }
 }
 
-export function lagreYrkesaktivitet() {
+export function lagreInntektsforhold() {
     return async (page: Page) => {
-        await test.step('Lagre yrkesaktivitet', async () => {
-            const lagreButton = page.getByRole('button', { name: 'Opprett' })
-            await lagreButton.click()
+        await test.step('Lagre inntektsforhold', async () => {
+            const opprettButton = page.getByRole('button', { name: 'Opprett' })
+            await opprettButton.click()
 
             // Vent på at skjemaet lukkes
-            const leggTilButton = page.getByRole('button', { name: 'Legg til ny yrkesaktivitet' })
+            const leggTilButton = page.getByRole('button', { name: 'Legg til nytt inntektsforhold' })
             await leggTilButton.waitFor({ state: 'visible' })
         })
     }
 }
 
-export function lagreRedigertYrkesaktivitet() {
+export function lagreRedigertInntektsforhold() {
     return async (page: Page) => {
-        await test.step('Lagre redigert yrkesaktivitet', async () => {
+        await test.step('Lagre redigert inntektsforhold', async () => {
             const lagreButton = page.getByRole('button', { name: 'Lagre' })
             await lagreButton.click()
 
             // Vent på at redigeringen lukkes
-            const leggTilButton = page.getByRole('button', { name: 'Legg til ny yrkesaktivitet' })
+            const leggTilButton = page.getByRole('button', { name: 'Legg til nytt inntektsforhold' })
             await leggTilButton.waitFor({ state: 'visible' })
         })
     }
 }
 
-export function verifiserYrkesaktivitetTabell() {
+export function verifiserInntektsforholdTabell() {
     return async (page: Page) => {
-        const yrkesaktivitetTabell = page.getByRole('table', { name: 'Yrkesaktivitet oversikt' })
-        await yrkesaktivitetTabell.waitFor({ state: 'visible' })
-        return yrkesaktivitetTabell
+        const inntektsforholdTabell = page.getByRole('table', { name: 'Inntektsforhold oversikt' })
+        await inntektsforholdTabell.waitFor({ state: 'visible' })
+        return inntektsforholdTabell
     }
 }
 
-export function verifiserAntallYrkesaktivitet(antall: number) {
+export function verifiserAntallInntektsforhold(antall: number) {
     return async (page: Page) => {
-        await test.step(`Verifiser at det er ${antall} yrkesaktivitet`, async () => {
-            const yrkesaktivitetTabell = await verifiserYrkesaktivitetTabell()(page)
-            const tabellRader = yrkesaktivitetTabell.locator('tbody tr')
+        await test.step(`Verifiser at det er ${antall} inntektsforhold`, async () => {
+            const inntektsforholdTabell = await verifiserInntektsforholdTabell()(page)
+            const tabellRader = inntektsforholdTabell.locator('tbody tr')
             await expect(tabellRader).toHaveCount(antall)
         })
     }
 }
 
-export function utvidYrkesaktivitetRad(radIndex: number = 0) {
+export function utvidInntektsforholdRad(radIndex: number = 0) {
     return async (page: Page) => {
-        await test.step(`Utvid yrkesaktivitet-rad ${radIndex + 1}`, async () => {
-            const yrkesaktivitetTabell = await verifiserYrkesaktivitetTabell()(page)
-            const rad = yrkesaktivitetTabell.locator('tbody tr').nth(radIndex)
+        await test.step(`Utvid inntektsforhold-rad ${radIndex + 1}`, async () => {
+            const inntektsforholdTabell = await verifiserInntektsforholdTabell()(page)
+            const rad = inntektsforholdTabell.locator('tbody tr').nth(radIndex)
             const toggle = rad.getByRole('button', { name: /Vis (mer|mindre)/i })
 
             const toggleText = await toggle.textContent()
@@ -194,14 +194,14 @@ export function utvidYrkesaktivitetRad(radIndex: number = 0) {
     }
 }
 
-export function redigerYrkesaktivitet(radIndex: number = 0) {
+export function redigerInntektsforhold(radIndex: number = 0) {
     return async (page: Page) => {
-        await test.step(`Rediger yrkesaktivitet ${radIndex + 1}`, async () => {
-            await utvidYrkesaktivitetRad(radIndex)(page)
+        await test.step(`Rediger inntektsforhold ${radIndex + 1}`, async () => {
+            await utvidInntektsforholdRad(radIndex)(page)
 
-            const yrkesaktivitetTabell = await verifiserYrkesaktivitetTabell()(page)
-            const redigerButton = yrkesaktivitetTabell.getByRole('button', {
-                name: new RegExp(`Rediger yrkesaktivitet ${radIndex + 1}`, 'i'),
+            const inntektsforholdTabell = await verifiserInntektsforholdTabell()(page)
+            const redigerButton = inntektsforholdTabell.getByRole('button', {
+                name: new RegExp(`Rediger inntektsforhold ${radIndex + 1}`, 'i'),
             })
             await redigerButton.waitFor({ state: 'visible' })
             await redigerButton.click()
@@ -209,20 +209,20 @@ export function redigerYrkesaktivitet(radIndex: number = 0) {
     }
 }
 
-export function slettYrkesaktivitet(radIndex: number = 0) {
+export function slettInntektsforhold(radIndex: number = 0) {
     return async (page: Page) => {
-        await test.step(`Slett yrkesaktivitet ${radIndex + 1}`, async () => {
-            await utvidYrkesaktivitetRad(radIndex)(page)
+        await test.step(`Slett inntektsforhold ${radIndex + 1}`, async () => {
+            await utvidInntektsforholdRad(radIndex)(page)
 
-            const yrkesaktivitetTabell = await verifiserYrkesaktivitetTabell()(page)
-            const slettButton = yrkesaktivitetTabell.getByRole('button', {
-                name: new RegExp(`Slett yrkesaktivitet ${radIndex + 1}`, 'i'),
+            const inntektsforholdTabell = await verifiserInntektsforholdTabell()(page)
+            const slettButton = inntektsforholdTabell.getByRole('button', {
+                name: new RegExp(`Slett inntektsforhold ${radIndex + 1}`, 'i'),
             })
             await slettButton.waitFor({ state: 'visible' })
             await slettButton.click()
 
             // Bekreft sletting i modal
-            const slettModal = page.getByRole('dialog', { name: 'Slett yrkesaktivitet' })
+            const slettModal = page.getByRole('dialog', { name: 'Slett inntektsforhold' })
             await slettModal.waitFor({ state: 'visible' })
 
             const bekreftSlettButton = slettModal.getByRole('button', { name: 'Slett' })

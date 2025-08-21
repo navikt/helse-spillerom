@@ -8,7 +8,7 @@ test.describe('Kalle Kranfører', () => {
         await page.goto('/')
     })
 
-    test('Kan navigere til eksisterende behandling og se yrkesaktivitet', async ({ page }) => {
+    test('Kan navigere til eksisterende behandling og se inntektsforhold', async ({ page }) => {
         // Søk opp Kalle Kranfører
         await søkPerson('12345678901')(page)
         await page.waitForURL('**/person/*')
@@ -23,22 +23,35 @@ test.describe('Kalle Kranfører', () => {
         await behandlingLink.click()
         await page.waitForURL('**/person/*/*')
 
-        // Naviger til "Yrkesaktivitet"-fanen
-        const yrkesaktivitetTab = page.getByRole('tab', { name: /Yrkesaktivitet/i })
-        await yrkesaktivitetTab.click()
+        // Naviger til "Inntektsforhold"-fanen
+        const inntektsforholdTab = page.getByRole('tab', { name: /Inntektsforhold/i })
+        await inntektsforholdTab.click()
 
-        // Sjekk at "Legg til yrkesaktivitet"-knappen har riktig tilgjengelighet
-        const leggTilButton = page.getByRole('button', { name: 'Legg til ny yrkesaktivitet' })
+        // Sjekk at "Legg til inntektsforhold"-knappen har riktig tilgjengelighet
+        const leggTilButton = page.getByRole('button', { name: 'Legg til nytt inntektsforhold' })
         await expect(leggTilButton).toBeVisible()
         // Sjekk at ikonet er skjult for skjermlesere
         const plusIcon = leggTilButton.locator('svg')
         await expect(plusIcon).toHaveAttribute('aria-hidden', 'true')
 
-        // Sjekk at det vises en melding om at ingen yrkesaktivitet er registrert
-        const ingenYrkesaktivitetMelding = page.getByText(
-            'Ingen yrkesaktivitet registrert for denne saksbehandlingsperioden.',
-        )
-        await expect(ingenYrkesaktivitetMelding).toBeVisible()
+        // Finn tabellen som inneholder inntektsforhold ved å bruke kolonneoverskriftene
+        const inntektsforholdTable = page
+            .locator('table', {
+                has: page.locator('th', { hasText: 'Inntektsforhold' }),
+            })
+            .filter({
+                has: page.locator('th', { hasText: 'Sykmeldt' }),
+            })
+        await expect(inntektsforholdTable).toBeVisible()
+
+        // Finn første rad i tabellen
+        const firstRow = inntektsforholdTable.locator('tbody tr').first()
+        await expect(firstRow).toBeVisible()
+
+        // Finn første celle i første rad
+        const firstCell = firstRow.locator('td p').first()
+        await expect(firstCell).toBeVisible()
+        await expect(firstCell).toHaveText('Arbeidstaker')
 
         // Naviger til "Dagoversikt"-fanen
         const dagoversiktTab = page.getByRole('tab', { name: /Dagoversikt/i })
