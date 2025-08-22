@@ -11,14 +11,21 @@ interface HistorikkinnslagProps {
 export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): ReactElement {
     return (
         <HistorikkinnslagContainer>
-            <VStack>
-                <BodyShort className="font-bold">
-                    {historikkinnslagVisningstekst[historikkinnslag.endringType]}
-                </BodyShort>
-                <BodyShort className="text-medium text-gray-600">
-                    {getFormattedDatetimeString(historikkinnslag.endretTidspunkt)} av{' '}
-                    {historikkinnslag.endretAvNavIdent}
-                </BodyShort>
+            <VStack gap="2">
+                <VStack>
+                    <BodyShort className="font-bold">
+                        {historikkinnslagVisningstekst[historikkinnslag.endringType]}
+                    </BodyShort>
+                    <BodyShort className="text-medium text-gray-600">
+                        {getFormattedDatetimeString(historikkinnslag.endretTidspunkt)} av{' '}
+                        {historikkinnslag.endretAvNavIdent}
+                    </BodyShort>
+                </VStack>
+                {historikkinnslag.endringKommentar && (
+                    <BodyShort className="text-gray-700 bg-gray-50 border-l-blue-500 rounded border-l-4 p-3">
+                        {historikkinnslag.endringKommentar}
+                    </BodyShort>
+                )}
             </VStack>
         </HistorikkinnslagContainer>
     )

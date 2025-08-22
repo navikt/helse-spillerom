@@ -208,7 +208,11 @@ export async function handleTaTilBeslutning(person: Person | undefined, periodeI
     return NextResponse.json(periode, { status: 200 })
 }
 
-export async function handleSendTilbake(person: Person | undefined, periodeId: string): Promise<Response> {
+export async function handleSendTilbake(
+    request: Request,
+    person: Person | undefined,
+    periodeId: string,
+): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
@@ -223,12 +227,33 @@ export async function handleSendTilbake(person: Person | undefined, periodeId: s
         return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
     }
 
+    // Hent kommentar fra request body
+    let kommentar = ''
+    try {
+        const body = await request.json()
+        kommentar = body.kommentar || ''
+    } catch (error) {
+        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
+    }
+
+    if (!kommentar.trim()) {
+        return NextResponse.json({ message: 'Kommentar er påkrevd' }, { status: 400 })
+    }
+
     periode.status = 'UNDER_BEHANDLING'
     const aktivBruker = await hentAktivBruker()
     periode.beslutter = null // Nullstill beslutter
 
-    // Legg til historikk
-    leggTilHistorikkinnslag(person, periodeId, 'SENDT_I_RETUR', 'UNDER_BEHANDLING', aktivBruker.navIdent)
+    // Legg til historikk med kommentar
+    leggTilHistorikkinnslag(
+        person,
+        periodeId,
+        'SENDT_I_RETUR',
+        'UNDER_BEHANDLING',
+        aktivBruker.navIdent,
+        null,
+        kommentar,
+    )
 
     return NextResponse.json(periode, { status: 200 })
 }

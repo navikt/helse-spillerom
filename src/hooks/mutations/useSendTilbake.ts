@@ -7,6 +7,7 @@ import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
+    kommentar: string
 }
 
 export function useSendTilbake() {
@@ -14,11 +15,11 @@ export function useSendTilbake() {
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId }) =>
+        mutationFn: async ({ saksbehandlingsperiodeId, kommentar }) =>
             postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sendtilbake`,
                 saksbehandlingsperiodeSchema,
-                {},
+                { kommentar },
             ),
         onSuccess: async () => {
             // Invalidate all saksbehandlingsperioder caches

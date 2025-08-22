@@ -149,8 +149,8 @@ const handlers: Record<string, HandlerFunction> = {
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tatilbeslutning': async ({ person, uuid }) =>
         handleTaTilBeslutning(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbake': async ({ person, uuid }) =>
-        handleSendTilbake(await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbake': async ({ request, person, uuid }) =>
+        handleSendTilbake(request, await person, uuid!),
 
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/godkjenn': async ({ person, uuid }) =>
         handleGodkjenn(await person, uuid!),

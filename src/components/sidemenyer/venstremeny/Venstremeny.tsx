@@ -19,6 +19,7 @@ import { useToast } from '@components/ToastProvider'
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
 import { StatusTag } from './StatusTag'
+import { SendTilbakeModal } from './SendTilbakeModal'
 
 export function Venstremeny(): ReactElement {
     const router = useRouter()
@@ -27,6 +28,7 @@ export function Venstremeny(): ReactElement {
     const kanSaksbehandles = useKanSaksbehandles()
     const erBeslutter = useErBeslutter()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
+    const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
 
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
@@ -80,14 +82,20 @@ export function Venstremeny(): ReactElement {
     }
 
     const håndterSendTilbake = () => {
+        setVisSendTilbakeModal(true)
+    }
+
+    const håndterSendTilbakeBekreft = (kommentar: string) => {
         if (aktivSaksbehandlingsperiode) {
             sendTilbake.mutate(
                 {
                     saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                    kommentar,
                 },
                 {
                     onSuccess: () => {
                         visToast('Saken er sendt tilbake til saksbehandler', 'success')
+                        setVisSendTilbakeModal(false)
                     },
                 },
             )
@@ -187,6 +195,12 @@ export function Venstremeny(): ReactElement {
                 åpen={visGodkjenningModal}
                 onLukk={() => setVisGodkjenningModal(false)}
                 onSendTilGodkjenning={håndterSendTilGodkjenning}
+            />
+            <SendTilbakeModal
+                isOpen={visSendTilbakeModal}
+                onClose={() => setVisSendTilbakeModal(false)}
+                onConfirm={håndterSendTilbakeBekreft}
+                isLoading={sendTilbake.isPending}
             />
         </Sidemeny>
     )
