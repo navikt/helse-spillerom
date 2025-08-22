@@ -24,6 +24,9 @@ import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
+import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
+import { BekreftelsesModal } from '@components/BekreftelsesModal'
 
 export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -31,9 +34,17 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
+    const { data: sykepengegrunnlag } = useSykepengegrunnlag()
     const slettMutation = useSlettInntektsforhold()
     const oppdaterMutation = useOppdaterInntektsforholdKategorisering()
     const kanSaksbehandles = useKanSaksbehandles()
+    const {
+        isOpen: bekreftelsesModalOpen,
+        modalProps,
+        visBekreftelsesmodal,
+        handleBekreft,
+        handleAvbryt,
+    } = useBekreftelsesModal()
 
     if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
     if (isError)
@@ -55,7 +66,18 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const showKombinasjonsAdvarsel =
         inntektsforholdSomIkkeKanKombineres.length > 0 && (inntektsforhold?.length || 0) > 1
 
-    const handleSlett = (inntektsforholdId: string) => {
+    const handleSlett = async (inntektsforholdId: string) => {
+        // Sjekk om sykepengegrunnlag eksisterer
+        if (sykepengegrunnlag) {
+            const bekreftet = await visBekreftelsesmodal({
+                tittel: 'Slette yrkesaktivitet',
+                melding:
+                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+            })
+
+            if (!bekreftet) return
+        }
+
         setInntektsforholdTilSlett(inntektsforholdId)
         setSlettModalOpen(true)
     }
@@ -81,8 +103,37 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
         setRedigererId(null)
     }
 
-    const handleLagreRedigering = (inntektsforholdId: string, kategorisering: Record<string, string | string[]>) => {
+    const handleLagreRedigering = async (
+        inntektsforholdId: string,
+        kategorisering: Record<string, string | string[]>,
+    ) => {
+        // Sjekk om sykepengegrunnlag eksisterer
+        if (sykepengegrunnlag) {
+            const bekreftet = await visBekreftelsesmodal({
+                tittel: 'Redigere yrkesaktivitet',
+                melding:
+                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+            })
+
+            if (!bekreftet) return
+        }
+
         oppdaterMutation.mutate({ inntektsforholdId, kategorisering }, { onSuccess: () => setRedigererId(null) })
+    }
+
+    const handleLeggTilYrkesaktivitet = async () => {
+        // Sjekk om sykepengegrunnlag eksisterer
+        if (sykepengegrunnlag) {
+            const bekreftet = await visBekreftelsesmodal({
+                tittel: 'Legg til yrkesaktivitet',
+                melding:
+                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+            })
+
+            if (!bekreftet) return
+        }
+
+        setVisOpprettForm(true)
     }
 
     return (
@@ -213,7 +264,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         variant="tertiary"
                         size="small"
                         icon={<PlusIcon aria-hidden />}
-                        onClick={() => setVisOpprettForm((prev) => !prev)}
+                        onClick={handleLeggTilYrkesaktivitet}
                         aria-label="Legg til ny yrkesaktivitet"
                     >
                         Legg til yrkesaktivitet
@@ -271,6 +322,14 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            <BekreftelsesModal
+                isOpen={bekreftelsesModalOpen}
+                tittel={modalProps?.tittel || ''}
+                melding={modalProps?.melding || ''}
+                onBekreft={handleBekreft}
+                onAvbryt={handleAvbryt}
+            />
         </SaksbildePanel>
     )
 }

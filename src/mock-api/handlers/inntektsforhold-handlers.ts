@@ -57,6 +57,11 @@ export async function handlePostInntektsforhold(
     }
     person.inntektsforhold[uuid].push(nyttInntektsforhold)
 
+    // Slett sykepengegrunnlag når inntektsforhold endres
+    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
+        delete person.sykepengegrunnlag[uuid]
+    }
+
     return NextResponse.json(nyttInntektsforhold, { status: 201 })
 }
 
@@ -87,6 +92,11 @@ export async function handleDeleteInntektsforhold(
     // Also remove associated dagoversikt if it exists
     if (person.dagoversikt && person.dagoversikt[inntektsforholdId]) {
         delete person.dagoversikt[inntektsforholdId]
+    }
+
+    // Slett sykepengegrunnlag når inntektsforhold endres
+    if (person.sykepengegrunnlag && person.sykepengegrunnlag[saksbehandlingsperiodeId]) {
+        delete person.sykepengegrunnlag[saksbehandlingsperiodeId]
     }
 
     return new Response(null, { status: 204 })
@@ -151,6 +161,11 @@ export async function handlePutInntektsforholdKategorisering(
 
     const body = await request.json()
     inntektsforhold.kategorisering = body
+
+    // Slett sykepengegrunnlag når inntektsforhold endres
+    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
+        delete person.sykepengegrunnlag[uuid]
+    }
 
     return new Response(null, { status: 204 })
 }
