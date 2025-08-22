@@ -40,7 +40,7 @@ export function SykepengegrunnlagForm({
     inntektsforhold,
     avbryt,
 }: SykepengegrunnlagFormProps): ReactElement {
-    const [visRefusjonFelter, setVisRefusjonFelter] = useState(
+    const [visRefusjonFelter, setVisRefusjonFelter] = useState<Record<string, boolean>>(
         Object.fromEntries(
             (sykepengegrunnlag?.inntekter ?? []).map((inntekt) => [
                 inntekt.inntektsforholdId,
@@ -60,7 +60,7 @@ export function SykepengegrunnlagForm({
                     inntektsforholdId: forhold.id,
                     beløpPerMånedØre: inntektFraSykepengegrunnlag?.beløpPerMånedØre ?? 0,
                     kilde: inntektFraSykepengegrunnlag?.kilde ?? 'INNTEKTSMELDING',
-                    refusjon: inntektFraSykepengegrunnlag?.refusjon ?? [{ fom: '', tom: '', beløpØre: 0 }],
+                    refusjon: inntektFraSykepengegrunnlag?.refusjon ?? [],
                 }
             }),
             begrunnelse: sykepengegrunnlag?.begrunnelse ?? '',
@@ -120,11 +120,15 @@ export function SykepengegrunnlagForm({
                                 legend="Refusjon"
                                 value={visRefusjonFelter[forhold.id] ? ['ja'] : []}
                                 onChange={(values: string[]) => {
-                                    setVisRefusjonFelter((prev) => ({
-                                        ...prev,
-                                        [forhold.id]: values.includes('ja'),
-                                    }))
-                                    form.resetField(`inntekter.${index}.refusjon`)
+                                    const checked = values.includes('ja')
+                                    setVisRefusjonFelter((prev) => ({ ...prev, [forhold.id]: checked }))
+                                    if (checked) {
+                                        form.setValue(`inntekter.${index}.refusjon`, [
+                                            { fom: '', tom: '', beløpØre: 0 },
+                                        ])
+                                    } else {
+                                        form.setValue(`inntekter.${index}.refusjon`, [])
+                                    }
                                 }}
                             >
                                 <Checkbox value="ja" hideLabel>
@@ -171,7 +175,7 @@ export function SykepengegrunnlagForm({
                             form.reset()
                             avbryt()
                         }}
-                        loading={form.formState.isSubmitting}
+                        disabled={form.formState.isSubmitting}
                     >
                         Avbryt
                     </Button>
@@ -181,7 +185,7 @@ export function SykepengegrunnlagForm({
     )
 }
 
-function RefusjonFields({ forholdIndex }: { forholdIndex: number }) {
+function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElement {
     const { control } = useFormContext()
     const refusjonFieldArray = useFieldArray({
         control,
