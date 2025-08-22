@@ -170,7 +170,7 @@ export function Venstremeny(): ReactElement {
                                             loading={godkjenn.isPending}
                                             disabled={godkjenn.isPending}
                                         >
-                                            Godkjenn
+                                            Godkjenn og fatt vedtak
                                         </Button>
 
                                         <Button
@@ -181,7 +181,7 @@ export function Venstremeny(): ReactElement {
                                             loading={sendTilbake.isPending}
                                             disabled={sendTilbake.isPending}
                                         >
-                                            Send tilbake
+                                            Returner
                                         </Button>
                                     </>
                                 )}

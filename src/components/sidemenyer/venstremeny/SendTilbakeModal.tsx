@@ -28,17 +28,19 @@ export function SendTilbakeModal({ isOpen, onClose, onConfirm, isLoading }: Send
         <Modal
             open={isOpen}
             onClose={handleClose}
-            aria-label="Send tilbake til saksbehandler"
+            aria-label="Returner sak til saksbehandler"
             portal
             closeOnBackdropClick
         >
             <ModalHeader>
-                <Heading size="medium">Send tilbake til saksbehandler</Heading>
+                <Heading size="medium">Returner sak til saksbehandler</Heading>
             </ModalHeader>
             <ModalBody>
                 <VStack gap="4">
                     <BodyShort size="small" className="text-gray-700">
-                        Du må oppgi en kommentar når du sender saken tilbake til saksbehandler.
+                        Forklar hvorfor oppgaven sendes tilbake på en enkel måte, slik at det er lett å forstå hva som
+                        må vurderes og gjøres annerledes. (Blir ikke forevist den sykmeldte, med mindre hen ber om
+                        innsyn)
                     </BodyShort>
                     <Textarea
                         label="Kommentar"
@@ -65,7 +67,7 @@ export function SendTilbakeModal({ isOpen, onClose, onConfirm, isLoading }: Send
                     loading={isLoading}
                     disabled={isLoading || !kommentar.trim()}
                 >
-                    Send tilbake
+                    Lagre notat og returner
                 </Button>
             </ModalFooter>
         </Modal>
