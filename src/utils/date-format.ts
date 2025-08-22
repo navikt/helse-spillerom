@@ -10,3 +10,8 @@ export const getFormattedDatetimeString = (datetime: Maybe<string>): string =>
 
 export const getFormattedDateString = (date: Maybe<string>): string =>
     typeof date === 'string' ? dayjs(date).format(NORSK_DATOFORMAT) : ''
+
+export const getFormattedNorwegianLongDate = (date: Maybe<string>): string =>
+    typeof date === 'string' ? dayjs(date).format('D. MMMM YYYY') : ''
+
+export const gyldigDatoFormat = (date?: Date | string): string => (date ? dayjs(date).format('YYYY-MM-DD') : '')

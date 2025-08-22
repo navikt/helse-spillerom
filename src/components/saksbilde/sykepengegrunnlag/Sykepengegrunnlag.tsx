@@ -11,6 +11,7 @@ import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/S
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
 import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { getFormattedNorwegianLongDate } from '@utils/date-format'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -46,7 +47,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
             <VStack
                 gap="6"
                 className={cn('max-w-[508px] px-8 pt-8', {
-                    'max-w-[720px] border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pl-[26px]':
+                    'max-w-[780px] border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pl-[26px]':
                         erIRedigeringsmodus,
                 })}
             >
@@ -94,7 +95,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                     />
                 )}
             </VStack>
-            <VStack gap="6" className={cn('mt-6 max-w-[508px] px-8', { 'max-w-[625px]': erIRedigeringsmodus })}>
+            <VStack gap="6" className={cn('mt-6 max-w-[508px] px-8', { 'max-w-[686px]': erIRedigeringsmodus })}>
                 <Bleed marginInline="4 32" asChild reflectivePadding>
                     <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                         <HStack justify="space-between">
@@ -105,12 +106,10 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 </Bleed>
                 {sykepengegrunnlag && (
                     <BodyLong size="small" className="text-ax-text-neutral-subtle">
-                        Sykepengegrunnlaget er begrenset til 6G: {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre)}{' '}
-                        kr §8-10 <br />
-                        Grunnbeløp (G) ved skjæringstidspunkt: {formaterBeløpØre(
-                            sykepengegrunnlag.grunnbeløp6GØre / 6,
-                        )}{' '}
-                        kr (1. mai 2025)
+                        Sykepengegrunnlaget er begrenset til 6G:{' '}
+                        {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre, 0)} kr §8-10 <br />
+                        Grunnbeløp (G) ved skjæringstidspunkt: {formaterBeløpØre(sykepengegrunnlag.grunnbeløpØre, 0)} kr
+                        ({getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
                     </BodyLong>
                 )}
             </VStack>
@@ -118,9 +117,9 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
     )
 }
 
-export function NavnOgIkon({ orgnummer }: { orgnummer: string }): ReactElement {
+export function NavnOgIkon({ orgnummer, className }: { orgnummer: string; className?: string }): ReactElement {
     return (
-        <HStack gap="2">
+        <HStack gap="2" className={className}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
             <BodyShort>
                 <Organisasjonsnavn orgnummer={orgnummer} />

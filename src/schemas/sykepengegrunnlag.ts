@@ -24,7 +24,7 @@ export const inntektSchema = z.object({
     inntektsforholdId: z.string(),
     beløpPerMånedØre: z.number().int().min(0), // Beløp i øre
     kilde: inntektskildeSchema,
-    refusjon: z.array(refusjonsperiodeSchema).default([]),
+    refusjon: z.array(refusjonsperiodeSchema),
 })
 export type Inntekt = z.infer<typeof inntektSchema>
 
@@ -54,18 +54,20 @@ export const sykepengegrunnlagResponseSchema = z
 export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponseSchema>
 
 // Utility functions for converting between kroner and øre
-export function kronerTilØrer(kroner: number): number {
-    return Math.round(kroner * 100)
+export function kronerTilØrer(kroner: number | string): number {
+    return Math.round(Number(kroner) * 100)
 }
 
 export function ørerTilKroner(ører: number): number {
     return ører / 100
 }
 
-export function formaterBeløpØre(ører: number | undefined): string {
+export function formaterBeløpØre(ører: number | undefined, desimaler: number = 2): string {
     if (ører === undefined) return '-'
     return new Intl.NumberFormat('nb-NO', {
         style: 'currency',
         currency: 'NOK',
+        minimumFractionDigits: desimaler,
+        maximumFractionDigits: desimaler,
     }).format(ørerTilKroner(ører))
 }
