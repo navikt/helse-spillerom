@@ -104,12 +104,12 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                         </HStack>
                     </BoxNew>
                 </Bleed>
-                {sykepengegrunnlag && (
+                {sykepengegrunnlag && sykepengegrunnlag.begrensetTil6G && (
                     <BodyLong size="small" className="text-ax-text-neutral-subtle">
                         Sykepengegrunnlaget er begrenset til 6G:{' '}
-                        {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre, 0)} kr §8-10 <br />
-                        Grunnbeløp (G) ved skjæringstidspunkt: {formaterBeløpØre(sykepengegrunnlag.grunnbeløpØre, 0)} kr
-                        ({getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
+                        {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre, 0)} §8-10 <br />
+                        Grunnbeløp (G) ved skjæringstidspunkt: {formaterBeløpØre(sykepengegrunnlag.grunnbeløpØre, 0)} (
+                        {getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
                     </BodyLong>
                 )}
             </VStack>
