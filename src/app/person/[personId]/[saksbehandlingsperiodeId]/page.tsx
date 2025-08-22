@@ -12,14 +12,14 @@ export default async function PersonPage(): Promise<ReactElement> {
     return (
         <section className="flex-auto">
             <SaksbehandlingsperiodeHeading />
-            <Tabs defaultValue="inntektsforhold">
+            <Tabs defaultValue="yrkesaktivitet">
                 <TabsList>
-                    <TabsTab value="inntektsforhold" label="Inntektsforhold" />
+                    <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
-                <InntektsforholdTabell value="inntektsforhold" />
+                <InntektsforholdTabell value="yrkesaktivitet" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTabs value="vilkårsvurdering" />
                 <Dagoversikt value="dagoversikt" />

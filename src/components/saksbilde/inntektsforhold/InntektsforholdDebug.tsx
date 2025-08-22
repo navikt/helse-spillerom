@@ -13,7 +13,7 @@ export function InntektsforholdDebug(): ReactElement {
             {inntektsforhold.map((forhold, index) => (
                 <div key={forhold.id} className="rounded-lg border border-ax-border-neutral-subtle p-4">
                     <div className="mb-3 border-b border-ax-border-neutral-subtle pb-2">
-                        <h3 className="text-gray-700 text-sm font-semibold">Inntektsforhold #{index + 1}</h3>
+                        <h3 className="text-gray-700 text-sm font-semibold">Yrkesaktivitet #{index + 1}</h3>
                     </div>
                     <Table>
                         <Table.Body>

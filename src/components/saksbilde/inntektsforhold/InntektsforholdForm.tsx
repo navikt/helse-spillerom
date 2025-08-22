@@ -237,7 +237,7 @@ export default function InntektsforholdForm({
             {title && <Heading size="small">{title}</Heading>}
 
             <Select
-                label="Velg type inntektsforhold"
+                label="Velg type yrkesaktivitet"
                 value={(selectedValues[inntektsforholdKodeverk.kode] as string) || ''}
                 onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
                 size="small"

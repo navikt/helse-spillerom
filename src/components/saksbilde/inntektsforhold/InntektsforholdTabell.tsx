@@ -100,19 +100,19 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                     return alternativ?.navn
                                 })
                                 .join(', ')}{' '}
-                            kan ikke kombineres med andre inntektsforhold. Vurder å fjerne andre inntektsforhold eller
+                            kan ikke kombineres med andre yrkesaktiviteter. Vurder å fjerne andre yrkesaktiviteter eller
                             endre kategoriseringen.
                         </BodyShort>
                     </Alert>
                 )}
 
                 {inntektsforhold && inntektsforhold.length > 0 ? (
-                    <div role="region" aria-label="Inntektsforhold tabell">
-                        <Table size="medium" aria-label="Inntektsforhold oversikt">
+                    <div role="region" aria-label="Yrkesaktivitet tabell">
+                        <Table size="medium" aria-label="Yrkesaktivitet oversikt">
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell className="ignore-axe" />
-                                    <TableHeaderCell scope="col">Inntektsforhold</TableHeaderCell>
+                                    <TableHeaderCell scope="col">Yrkesaktivitet</TableHeaderCell>
                                     <TableHeaderCell scope="col">Organisasjon</TableHeaderCell>
                                     <TableHeaderCell scope="col">Sykmeldt</TableHeaderCell>
                                 </TableRow>
@@ -153,7 +153,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                                 disabled={
                                                                     redigererId !== null && redigererId !== forhold.id
                                                                 }
-                                                                aria-label={`Rediger inntektsforhold ${index + 1}`}
+                                                                aria-label={`Rediger yrkesaktivitet ${index + 1}`}
                                                             >
                                                                 Rediger
                                                             </Button>
@@ -164,7 +164,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                                 icon={<TrashIcon aria-hidden />}
                                                                 onClick={() => handleSlett(forhold.id)}
                                                                 disabled={slettMutation.isPending}
-                                                                aria-label={`Slett inntektsforhold ${index + 1}`}
+                                                                aria-label={`Slett yrkesaktivitet ${index + 1}`}
                                                             >
                                                                 Slett
                                                             </Button>
@@ -204,7 +204,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                     </div>
                 ) : (
                     <Alert variant="info">
-                        <BodyShort>Ingen inntektsforhold registrert for denne saksbehandlingsperioden.</BodyShort>
+                        <BodyShort>Ingen yrkesaktivitet registrert for denne saksbehandlingsperioden.</BodyShort>
                     </Alert>
                 )}
                 {!visOpprettForm && kanSaksbehandles && (
@@ -214,9 +214,9 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                         size="small"
                         icon={<PlusIcon aria-hidden />}
                         onClick={() => setVisOpprettForm((prev) => !prev)}
-                        aria-label="Legg til nytt inntektsforhold"
+                        aria-label="Legg til ny yrkesaktivitet"
                     >
-                        Legg til inntektsforhold
+                        Legg til yrkesaktivitet
                     </Button>
                 )}
                 <AnimatePresenceWrapper initial={false}>
@@ -242,7 +242,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                             >
                                 <InntektsforholdForm
                                     closeForm={() => setVisOpprettForm(false)}
-                                    title="Legg til nytt inntektsforhold"
+                                    title="Legg til ny yrkesaktivitet"
                                 />
                             </Box.New>
                         </motion.div>
@@ -254,12 +254,12 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                 open={slettModalOpen}
                 onClose={cancelSlett}
                 header={{
-                    heading: 'Slett inntektsforhold',
+                    heading: 'Slett yrkesaktivitet',
                 }}
             >
                 <Modal.Body>
                     <BodyShort>
-                        Er du sikker på at du vil slette dette inntektsforholdet? Denne handlingen kan ikke angres.
+                        Er du sikker på at du vil slette denne yrkesaktiviteten? Denne handlingen kan ikke angres.
                     </BodyShort>
                 </Modal.Body>
                 <Modal.Footer>

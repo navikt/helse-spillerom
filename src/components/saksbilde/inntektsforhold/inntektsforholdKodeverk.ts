@@ -39,7 +39,7 @@ export const inntektsforholdKodeverk = {
                 },
                 {
                     kode: 'ER_SYKMELDT',
-                    navn: 'Er sykmeldt fra forholdet',
+                    navn: 'Er sykmeldt fra yrkesaktiviteten',
                     variant: 'RADIO',
                     alternativer: [
                         { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
@@ -86,7 +86,7 @@ export const inntektsforholdKodeverk = {
                 },
                 {
                     kode: 'ER_SYKMELDT',
-                    navn: 'Er sykmeldt fra forholdet',
+                    navn: 'Er sykmeldt fra yrkesaktiviteten',
                     variant: 'RADIO',
                     alternativer: [
                         { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
@@ -116,7 +116,7 @@ export const inntektsforholdKodeverk = {
             underspørsmål: [
                 {
                     kode: 'ER_SYKMELDT',
-                    navn: 'Er sykmeldt fra forholdet',
+                    navn: 'Er sykmeldt fra yrkesaktiviteten',
                     variant: 'RADIO',
                     alternativer: [
                         { kode: 'ER_SYKMELDT_JA', navn: 'Ja' },
