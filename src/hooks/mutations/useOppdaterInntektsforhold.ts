@@ -30,6 +30,9 @@ export function useOppdaterInntektsforholdKategorisering() {
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
+            })
         },
     })
 }
@@ -49,6 +52,9 @@ export function useOppdaterInntektsforholdDagoversikt() {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
             })
         },
     })
