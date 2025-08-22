@@ -39,6 +39,7 @@ export function opprettSaksbehandlingsperiode(
         fom: fom,
         tom: tom,
         status: 'UNDER_BEHANDLING',
+        skjæringstidspunkt: fom,
     }
 
     const inntektsforhold: Inntektsforhold[] = []
