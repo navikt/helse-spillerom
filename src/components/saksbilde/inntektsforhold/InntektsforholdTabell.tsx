@@ -72,7 +72,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
             const bekreftet = await visBekreftelsesmodal({
                 tittel: 'Slette yrkesaktivitet',
                 melding:
-                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+                    'Dette vil føre til at sykepengegrunnlaget slettes og må settes på nytt. Er du sikker på at du vil fortsette?',
             })
 
             if (!bekreftet) return
@@ -112,7 +112,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
             const bekreftet = await visBekreftelsesmodal({
                 tittel: 'Redigere yrkesaktivitet',
                 melding:
-                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+                    'Dette vil føre til at sykepengegrunnlaget slettes og må settes på nytt. Er du sikker på at du vil fortsette?',
             })
 
             if (!bekreftet) return
@@ -127,7 +127,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
             const bekreftet = await visBekreftelsesmodal({
                 tittel: 'Legg til yrkesaktivitet',
                 melding:
-                    'Dette vil føre til at sykepengegrunnlaget må beregnes på nytt. Er du sikker på at du vil fortsette?',
+                    'Dette vil føre til at sykepengegrunnlaget slettes og må settes på nytt. Er du sikker på at du vil fortsette?',
             })
 
             if (!bekreftet) return
