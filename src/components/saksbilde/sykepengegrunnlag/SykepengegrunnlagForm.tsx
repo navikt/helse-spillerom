@@ -79,7 +79,7 @@ export function SykepengegrunnlagForm({
             <form role="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-nowrap gap-6 pb-6">
                 {inntektsforhold.map((forhold, index) => (
                     <VStack key={forhold.id} gap="4">
-                        <HStack align="end" gap="4">
+                        <HStack align="end" gap="4" wrap={false}>
                             <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} className="mb-0.5" />
                             <Controller
                                 control={form.control}
@@ -116,6 +116,9 @@ export function SykepengegrunnlagForm({
                                 )}
                             />
                             <CheckboxGroup
+                                className={cn({
+                                    invisible: forhold.kategorisering['INNTEKTSKATEGORI'] !== 'ARBEIDSTAKER',
+                                })}
                                 size="small"
                                 legend="Refusjon"
                                 value={visRefusjonFelter[forhold.id] ? ['ja'] : []}
@@ -193,9 +196,9 @@ function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElemen
     })
 
     return (
-        <VStack gap="2" className="self-end">
+        <VStack gap="4" className="self-end">
             {refusjonFieldArray.fields.map((field, index) => (
-                <HStack key={field.id} gap="2" align="center">
+                <HStack key={field.id} gap="2" align="center" wrap={false}>
                     <Date name={`inntekter.${forholdIndex}.refusjon.${index}.fom`} label="F.o.m. dato" />
                     <Date name={`inntekter.${forholdIndex}.refusjon.${index}.tom`} label="T.o.m. dato" />
                     <Controller

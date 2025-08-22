@@ -119,7 +119,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
 
 export function NavnOgIkon({ orgnummer, className }: { orgnummer: string; className?: string }): ReactElement {
     return (
-        <HStack gap="2" className={className}>
+        <HStack gap="2" className={className} wrap={false}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
             <BodyShort>
                 <Organisasjonsnavn orgnummer={orgnummer} />
