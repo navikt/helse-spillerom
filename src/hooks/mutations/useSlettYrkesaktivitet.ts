@@ -11,12 +11,12 @@ export function useSlettYrkesaktivitet() {
     return useMutation<void, ProblemDetailsError, { inntektsforholdId: string }>({
         mutationFn: async ({ inntektsforholdId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold/${inntektsforholdId}`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}`,
             )
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
             })
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],

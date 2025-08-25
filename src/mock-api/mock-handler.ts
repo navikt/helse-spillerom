@@ -115,26 +115,26 @@ const handlers: Record<string, HandlerFunction> = {
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/vilkaarsvurdering/[kode]': async ({ person, uuid, kode }) =>
         handleDeleteVilkaar(await person, uuid!, kode!),
 
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ person, uuid }) =>
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet': async ({ person, uuid }) =>
         handleGetInntektsforhold(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold': async ({ request, person, uuid }) =>
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet': async ({ request, person, uuid }) =>
         handlePostInntektsforhold(request, await person, uuid!),
 
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/kategorisering': async ({
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/kategorisering': async ({
         request,
         person,
         uuid,
         inntektsforholdId,
     }) => handlePutInntektsforholdKategorisering(request, await person, uuid!, inntektsforholdId!),
 
-    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]': async ({
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]': async ({
         person,
         uuid,
         inntektsforholdId,
     }) => handleDeleteInntektsforhold(await person, uuid!, inntektsforholdId!),
 
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/inntektsforhold/[uuid]/dagoversikt': async ({
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/dagoversikt': async ({
         request,
         person,
         uuid,
@@ -190,11 +190,11 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
             context.uuid = hentUuidFraUrl(request.url)
         }
 
-        if (path.includes('/inntektsforhold/') && path.includes('/dagoversikt')) {
+        if (path.includes('/yrkesaktivitet/') && path.includes('/dagoversikt')) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
-        if (path.includes('/inntektsforhold/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
+        if (path.includes('/yrkesaktivitet/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
             context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
         }
 

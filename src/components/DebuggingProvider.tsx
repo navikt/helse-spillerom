@@ -14,7 +14,7 @@ import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
 import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
-type ModalType = 'vilkårsvurdering' | 'inntektsforhold' | 'testdata' | 'roller' | null
+type ModalType = 'vilkårsvurdering' | 'yrkesaktivitet' | 'testdata' | 'roller' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
@@ -76,7 +76,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                         <Tooltip content="Inntektsforhold">
                             <Button
                                 type="button"
-                                onClick={() => setActiveModal('inntektsforhold')}
+                                onClick={() => setActiveModal('yrkesaktivitet')}
                                 icon={<BriefcaseIcon title="Åpne inntektsforhold debugging" aria-hidden />}
                                 variant="tertiary-neutral"
                             />
@@ -99,11 +99,11 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                 </Modal>
             )}
 
-            {activeModal === 'inntektsforhold' && (
+            {activeModal === 'yrkesaktivitet' && (
                 <Modal
                     open={true}
                     onClose={closeModal}
-                    header={{ heading: 'Inntektsforhold', closeButton: true }}
+                    header={{ heading: 'yrkesaktivitet', closeButton: true }}
                     className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>

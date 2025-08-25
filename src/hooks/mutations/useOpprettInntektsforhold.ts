@@ -15,7 +15,7 @@ export function useOpprettInntektsforhold() {
     return useMutation<Yrkesaktivitet, Error, MutationProps>({
         mutationFn: async ({ kategorisering }) => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
                 yrkesaktivitetSchema,
                 {
                     kategorisering,
@@ -24,7 +24,7 @@ export function useOpprettInntektsforhold() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
             })
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],

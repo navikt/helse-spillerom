@@ -12,10 +12,10 @@ export function useYrkesaktivitet() {
     const router = useRouter()
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+        queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,

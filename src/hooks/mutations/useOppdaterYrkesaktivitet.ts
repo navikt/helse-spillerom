@@ -22,13 +22,13 @@ export function useOppdaterYrkesaktivitetKategorisering() {
     return useMutation<void, Error, KategoriseringMutationProps>({
         mutationFn: async ({ inntektsforholdId, kategorisering }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold/${inntektsforholdId}/kategorisering`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}/kategorisering`,
                 kategorisering,
             )
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
             })
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
@@ -45,13 +45,13 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
         mutationFn: async ({ inntektsforholdId, dager, notat }) => {
             // Send kun dagene som skal oppdateres
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold/${inntektsforholdId}/dagoversikt`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}/dagoversikt`,
                 { dager, notat },
             )
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
+                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
             })
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
