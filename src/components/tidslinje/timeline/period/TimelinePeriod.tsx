@@ -57,7 +57,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
-                        'aksel-timeline__period--selected': isActive,
+                        'border-2 border-ax-border-accent-strong': isActive,
                     },
                 )}
                 style={{ left: placement, width }}
