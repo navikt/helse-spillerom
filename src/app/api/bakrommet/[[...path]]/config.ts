@@ -7,6 +7,7 @@ export const allowedAPIs = [
     'GET /v1/[personId]/saksbehandlingsperioder',
     'POST /v1/[personId]/saksbehandlingsperioder',
     'GET /v1/[personId]/inntektsmeldinger',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/utbetalingsberegning',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/arbeidsforhold/hent',
