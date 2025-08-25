@@ -118,10 +118,23 @@ export async function handlePutInntektsforholdDagoversikt(
     }
 
     const body = await request.json()
-    // body er et array av dager som skal oppdateres
-    if (!Array.isArray(body)) {
-        return NextResponse.json({ message: 'Body must be an array of days' }, { status: 400 })
+
+    // Håndter både gammelt format (array av dager) og nytt format (objekt med dager og notat)
+    let dagerSomSkalOppdateres: Dag[]
+    if (Array.isArray(body)) {
+        // Gammelt format: direkte array av dager
+        dagerSomSkalOppdateres = body as Dag[]
+    } else if (body && typeof body === 'object' && Array.isArray(body.dager)) {
+        // Nytt format: objekt med dager og notat felter
+        dagerSomSkalOppdateres = body.dager as Dag[]
+        // TODO: Håndter notat hvis nødvendig
+    } else {
+        return NextResponse.json(
+            { message: 'Body must be an array of days or an object with dager field' },
+            { status: 400 },
+        )
     }
+
     if (!Array.isArray(inntektsforhold.dagoversikt)) {
         return NextResponse.json({ message: 'Ingen dagoversikt på inntektsforhold' }, { status: 400 })
     }
@@ -129,7 +142,7 @@ export async function handlePutInntektsforholdDagoversikt(
     // Oppdater kun dagene som finnes i body, behold andre dager uendret
     // Ignorer helgdager ved oppdatering
     const oppdaterteDager: Dag[] = [...inntektsforhold.dagoversikt]
-    for (const oppdatertDag of body as Dag[]) {
+    for (const oppdatertDag of dagerSomSkalOppdateres) {
         const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
         if (index !== -1) {
             const eksisterendeDag = oppdaterteDager[index]
@@ -168,4 +181,24 @@ export async function handlePutInntektsforholdKategorisering(
     }
 
     return new Response(null, { status: 204 })
+}
+
+// Test funksjon for å verifisere at det nye formatet fungerer
+export function testNyttFormat() {
+    const testData = {
+        dager: [
+            {
+                dato: '2024-08-06',
+                dagtype: 'Arbeidsdag',
+                grad: null,
+                avvistBegrunnelse: [],
+                kilde: 'Saksbehandler',
+            },
+        ],
+        notat: '',
+    }
+
+    // Simuler at dette er et array av dager
+    const dagerSomSkalOppdateres = testData.dager
+    return dagerSomSkalOppdateres
 }

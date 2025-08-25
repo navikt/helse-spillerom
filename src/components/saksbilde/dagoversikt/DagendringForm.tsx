@@ -3,8 +3,8 @@ import { z } from 'zod/v4'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
-import { useOppdaterYrkesaktivitetDagoversikt } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 
+import { useOppdaterYrkesaktivitetDagoversikt } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 import { Dag, Dagtype, dagtypeSchema } from '@schemas/dagoversikt'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 

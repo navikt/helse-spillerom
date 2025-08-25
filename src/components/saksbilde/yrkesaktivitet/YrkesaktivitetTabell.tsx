@@ -13,8 +13,8 @@ import {
 } from '@navikt/ds-react/Table'
 import { PlusIcon, PencilIcon, TrashIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
-import { useOppdaterYrkesaktivitetKategorisering } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 
+import { useOppdaterYrkesaktivitetKategorisering } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useSlettYrkesaktivitet } from '@hooks/mutations/useSlettYrkesaktivitet'
