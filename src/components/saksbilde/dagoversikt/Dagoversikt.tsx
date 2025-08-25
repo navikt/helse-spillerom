@@ -8,6 +8,7 @@ import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
+import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { getFormattedDateString } from '@utils/date-format'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { Kilde } from '@/schemas/dagoversikt'
@@ -21,6 +22,7 @@ interface DagoversiktProps {
 
 export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
+    const { data: utbetalingsberegning } = useUtbetalingsberegning()
 
     // Filtrer kun yrkesaktivitet hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
@@ -49,6 +51,32 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const handleAvbrytRedigering = () => {
         setErIRedigeringsmodus(false)
         setValgteDataer(new Set())
+    }
+
+    // Hjelpefunksjon for å finne utbetalingsdata for en spesifikk dag og yrkesaktivitet
+    const finnUtbetalingsdata = (yrkesaktivitetId: string, dato: string) => {
+        if (!utbetalingsberegning?.beregningData?.yrkesaktiviteter) {
+            return null
+        }
+
+        const yrkesaktivitetData = utbetalingsberegning.beregningData.yrkesaktiviteter.find(
+            (ya) => ya.yrkesaktivitetId === yrkesaktivitetId,
+        )
+
+        if (!yrkesaktivitetData) {
+            return null
+        }
+
+        return yrkesaktivitetData.dager.find((dag) => dag.dato === dato) || null
+    }
+
+    // Hjelpefunksjon for å formatere beløp
+    const formaterBeløp = (beløpØre: number) => {
+        return new Intl.NumberFormat('nb-NO', {
+            style: 'currency',
+            currency: 'NOK',
+            minimumFractionDigits: 0,
+        }).format(beløpØre / 100)
     }
 
     if (yrkesaktivitetLoading) {
@@ -136,52 +164,64 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {forhold.dagoversikt.map((dag, i) => (
-                                            <TableRow key={i}>
-                                                {erIRedigeringsmodus && (
+                                        {forhold.dagoversikt.map((dag, i) => {
+                                            const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
+
+                                            return (
+                                                <TableRow key={i}>
+                                                    {erIRedigeringsmodus && (
+                                                        <TableDataCell>
+                                                            <Checkbox
+                                                                value={dag.dato}
+                                                                checked={valgteDataer.has(dag.dato)}
+                                                                onChange={(e) =>
+                                                                    handleDatoToggle(dag.dato, e.target.checked)
+                                                                }
+                                                                hideLabel
+                                                            >
+                                                                Velg dag
+                                                            </Checkbox>
+                                                        </TableDataCell>
+                                                    )}
                                                     <TableDataCell>
-                                                        <Checkbox
-                                                            value={dag.dato}
-                                                            checked={valgteDataer.has(dag.dato)}
-                                                            onChange={(e) =>
-                                                                handleDatoToggle(dag.dato, e.target.checked)
-                                                            }
-                                                            hideLabel
-                                                        >
-                                                            Velg dag
-                                                        </Checkbox>
+                                                        <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
                                                     </TableDataCell>
-                                                )}
-                                                <TableDataCell>
-                                                    <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell>
-                                                    <HStack wrap={false} gap="2" align="center">
-                                                        {getDagtypeIcon(dag.dagtype)}
-                                                        <BodyShort>{getDagtypeText(dag.dagtype)}</BodyShort>
-                                                    </HStack>
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>{dag.grad ? `${dag.grad} %` : '-'}</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell>
-                                                    <KildeTag kilde={dag.kilde} />
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>-</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>-</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>-</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell align="right">
-                                                    <BodyShort>-</BodyShort>
-                                                </TableDataCell>
-                                                <TableDataCell />
-                                            </TableRow>
-                                        ))}
+                                                    <TableDataCell>
+                                                        <HStack wrap={false} gap="2" align="center">
+                                                            {getDagtypeIcon(dag.dagtype)}
+                                                            <BodyShort>{getDagtypeText(dag.dagtype)}</BodyShort>
+                                                        </HStack>
+                                                    </TableDataCell>
+                                                    <TableDataCell align="right">
+                                                        <BodyShort>{dag.grad ? `${dag.grad} %` : '-'}</BodyShort>
+                                                    </TableDataCell>
+                                                    <TableDataCell>
+                                                        <KildeTag kilde={dag.kilde} />
+                                                    </TableDataCell>
+                                                    <TableDataCell align="right">
+                                                        <BodyShort>-</BodyShort>
+                                                    </TableDataCell>
+                                                    <TableDataCell align="right">
+                                                        <BodyShort>
+                                                            {utbetalingsdata
+                                                                ? formaterBeløp(utbetalingsdata.refusjonØre)
+                                                                : '-'}
+                                                        </BodyShort>
+                                                    </TableDataCell>
+                                                    <TableDataCell align="right">
+                                                        <BodyShort>
+                                                            {utbetalingsdata
+                                                                ? formaterBeløp(utbetalingsdata.utbetalingØre)
+                                                                : '-'}
+                                                        </BodyShort>
+                                                    </TableDataCell>
+                                                    <TableDataCell align="right">
+                                                        <BodyShort>-</BodyShort>
+                                                    </TableDataCell>
+                                                    <TableDataCell />
+                                                </TableRow>
+                                            )
+                                        })}
                                     </TableBody>
                                 </Table>
 

@@ -45,6 +45,7 @@ import {
     handlePutSykepengegrunnlag,
     handleDeleteSykepengegrunnlag,
 } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
+import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 
 interface HandlerContext {
     request: Request
@@ -166,6 +167,9 @@ const handlers: Record<string, HandlerFunction> = {
 
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
         handleDeleteSykepengegrunnlag(await person, uuid!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/utbetalingsberegning': async ({ person, uuid }) =>
+        handleGetUtbetalingsberegning(await person, uuid!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
