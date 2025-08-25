@@ -1,7 +1,7 @@
 import { Søknad } from '@/schemas/søknad'
 
 /**
- * Mapper arbeidssituasjon fra søknad til kategorisering som brukes i inntektsforhold
+ * Mapper arbeidssituasjon fra søknad til kategorisering som brukes i yrkesaktivitet
  * Matcher bakrommet sin logikk for kategorisering
  */
 export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<string, string> {

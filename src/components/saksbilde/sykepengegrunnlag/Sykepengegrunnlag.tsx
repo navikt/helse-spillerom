@@ -19,22 +19,18 @@ interface SykepengegrunnlagProps {
 
 export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
-    const {
-        data: inntektsforhold,
-        isLoading: inntektsforholdLoading,
-        isError: inntektsforholdError,
-    } = useYrkesaktivitet()
+    const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
     const {
         data: sykepengegrunnlag,
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
     } = useSykepengegrunnlag()
 
-    if (sykepengegrunnlagLoading || inntektsforholdLoading || !inntektsforhold) {
-        return <SaksbildePanel value={value}>Laster inntektsforhold...</SaksbildePanel>
+    if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktivitet) {
+        return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
     }
 
-    if (inntektsforholdError || sykepengegrunnlagError) {
+    if (yrkesaktivitetError || sykepengegrunnlagError) {
         return (
             <SaksbildePanel value={value}>
                 <Alert variant="error">Kunne ikke laste sykepengegrunnlag</Alert>
@@ -67,9 +63,9 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 </HStack>
                 {!erIRedigeringsmodus && (
                     <>
-                        {inntektsforhold.map((forhold) => {
+                        {yrkesaktivitet.map((forhold) => {
                             const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                                (inntekt) => inntekt.inntektsforholdId === forhold.id,
+                                (inntekt) => inntekt.yrkesaktivitetId === forhold.id,
                             )
                             return (
                                 <HStack key={forhold.id} justify="space-between">
@@ -90,7 +86,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 {erIRedigeringsmodus && (
                     <SykepengegrunnlagForm
                         sykepengegrunnlag={sykepengegrunnlag}
-                        inntektsforhold={inntektsforhold}
+                        yrkesaktivitet={yrkesaktivitet}
                         avbryt={() => setErIRedigeringsmodus(false)}
                     />
                 )}

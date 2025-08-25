@@ -31,19 +31,19 @@ import { cn } from '@utils/tw'
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
-    inntektsforhold: Yrkesaktivitet[]
+    yrkesaktivitet: Yrkesaktivitet[]
     avbryt: () => void
 }
 
 export function SykepengegrunnlagForm({
     sykepengegrunnlag,
-    inntektsforhold,
+    yrkesaktivitet,
     avbryt,
 }: SykepengegrunnlagFormProps): ReactElement {
     const [visRefusjonFelter, setVisRefusjonFelter] = useState<Record<string, boolean>>(
         Object.fromEntries(
             (sykepengegrunnlag?.inntekter ?? []).map((inntekt) => [
-                inntekt.inntektsforholdId,
+                inntekt.yrkesaktivitetId,
                 inntekt.refusjon?.some((r) => r.fom || r.tom || r.beløpØre > 0) ?? false,
             ]),
         ),
@@ -52,12 +52,12 @@ export function SykepengegrunnlagForm({
     const form = useForm<SykepengegrunnlagRequest>({
         resolver: zodResolver(sykepengegrunnlagRequestSchema),
         defaultValues: {
-            inntekter: inntektsforhold.map((forhold) => {
+            inntekter: yrkesaktivitet.map((forhold) => {
                 const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                    (inntekt) => inntekt.inntektsforholdId === forhold.id,
+                    (inntekt) => inntekt.yrkesaktivitetId === forhold.id,
                 )
                 return {
-                    inntektsforholdId: forhold.id,
+                    yrkesaktivitetId: forhold.id,
                     beløpPerMånedØre: inntektFraSykepengegrunnlag?.beløpPerMånedØre ?? 0,
                     kilde: inntektFraSykepengegrunnlag?.kilde ?? 'INNTEKTSMELDING',
                     refusjon: inntektFraSykepengegrunnlag?.refusjon ?? [],
@@ -77,7 +77,7 @@ export function SykepengegrunnlagForm({
     return (
         <FormProvider {...form}>
             <form role="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-nowrap gap-6 pb-6">
-                {inntektsforhold.map((forhold, index) => (
+                {yrkesaktivitet.map((forhold, index) => (
                     <VStack key={forhold.id} gap="4">
                         <HStack align="end" gap="4" wrap={false}>
                             <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} className="mb-0.5" />

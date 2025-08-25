@@ -896,7 +896,7 @@ export const Mattis: Testperson = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...(mattisGrunndata as any),
     saksbehandlingsperioder: [],
-    inntektsforhold: {},
+    yrkesaktivitet: {},
     dagoversikt: {},
     dokumenter: {},
 }

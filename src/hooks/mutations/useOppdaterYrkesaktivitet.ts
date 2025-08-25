@@ -5,12 +5,12 @@ import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 
 type KategoriseringMutationProps = {
-    inntektsforholdId: string
+    yrkesaktivitetId: string
     kategorisering: Record<string, string | string[]>
 }
 
 type OppdaterDagerMutationProps = {
-    inntektsforholdId: string
+    yrkesaktivitetId: string
     dager: Dagoversikt // Kun dagene som skal oppdateres
     notat: string
 }
@@ -20,9 +20,9 @@ export function useOppdaterYrkesaktivitetKategorisering() {
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, KategoriseringMutationProps>({
-        mutationFn: async ({ inntektsforholdId, kategorisering }) => {
+        mutationFn: async ({ yrkesaktivitetId, kategorisering }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}/kategorisering`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
                 kategorisering,
             )
         },
@@ -42,10 +42,10 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, OppdaterDagerMutationProps>({
-        mutationFn: async ({ inntektsforholdId, dager, notat }) => {
+        mutationFn: async ({ yrkesaktivitetId, dager, notat }) => {
             // Send kun dagene som skal oppdateres
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}/dagoversikt`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
                 { dager, notat },
             )
         },

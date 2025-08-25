@@ -651,7 +651,7 @@ export const Bosse: Testperson = {
     ...bosseGrunndata,
     soknader: validatedSoknader,
     saksbehandlingsperioder: [],
-    inntektsforhold: {},
+    yrkesaktivitet: {},
     dagoversikt: {},
     dokumenter: {},
 }

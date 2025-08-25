@@ -120,17 +120,17 @@ export async function handlePostSaksbehandlingsperioder(
         aktivBruker.navIdent,
     )
 
-    // Legg til inntektsforhold hvis det finnes noen
-    if (resultat.inntektsforhold.length > 0) {
-        if (!person.inntektsforhold) {
-            person.inntektsforhold = {}
+    // Legg til yrkesaktivitet hvis det finnes noen
+    if (resultat.yrkesaktivitet.length > 0) {
+        if (!person.yrkesaktivitet) {
+            person.yrkesaktivitet = {}
         }
-        // Inkluder dagoversikt i inntektsforhold
-        const inntektsforholdMedDagoversikt = resultat.inntektsforhold.map((forhold) => ({
+        // Inkluder dagoversikt i yrkesaktivitet
+        const yrkesaktivitetMedDagoversikt = resultat.yrkesaktivitet.map((forhold) => ({
             ...forhold,
             dagoversikt: resultat.dagoversikt[forhold.id] || [],
         }))
-        person.inntektsforhold[resultat.saksbehandlingsperiode.id] = inntektsforholdMedDagoversikt
+        person.yrkesaktivitet[resultat.saksbehandlingsperiode.id] = yrkesaktivitetMedDagoversikt
     }
 
     // Legg til dagoversikt hvis det finnes noen

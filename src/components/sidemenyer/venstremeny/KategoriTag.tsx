@@ -8,9 +8,9 @@ import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { getKategorierFraInntektsforhold, kategoriSetTilTekstOgWarning } from './kategoriUtils'
 
 export function KategoriTag(): ReactElement | null {
-    const { data: inntektsforhold } = useYrkesaktivitet()
-    if (!inntektsforhold) return null
-    const kategorier = getKategorierFraInntektsforhold(inntektsforhold)
+    const { data: yrkesaktivitet } = useYrkesaktivitet()
+    if (!yrkesaktivitet) return null
+    const kategorier = getKategorierFraInntektsforhold(yrkesaktivitet)
     const { tekst: kategoriTekst, warning } = kategoriSetTilTekstOgWarning(kategorier)
     if (!kategoriTekst) return null
     return (

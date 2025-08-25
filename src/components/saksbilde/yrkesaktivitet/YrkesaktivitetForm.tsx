@@ -75,7 +75,7 @@ export default function YrkesaktivitetForm({
         }
     }, [initialValues])
 
-    // Sjekk om det allerede finnes et inntektsforhold med SELVSTENDIG_NÆRINGSDRIVENDE
+    // Sjekk om det allerede finnes et yrkesaktivitet med SELVSTENDIG_NÆRINGSDRIVENDE
     const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some((forhold) => {
         // Skip checking the current relationship being edited
         if (

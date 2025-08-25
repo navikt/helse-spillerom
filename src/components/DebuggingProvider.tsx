@@ -77,7 +77,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                             <Button
                                 type="button"
                                 onClick={() => setActiveModal('yrkesaktivitet')}
-                                icon={<BriefcaseIcon title="Åpne inntektsforhold debugging" aria-hidden />}
+                                icon={<BriefcaseIcon title="Åpne yrkesaktivitet debugging" aria-hidden />}
                                 variant="tertiary-neutral"
                             />
                         </Tooltip>

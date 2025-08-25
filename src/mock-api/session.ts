@@ -21,7 +21,7 @@ export interface Person {
     personinfo: Personinfo
     saksbehandlingsperioder: Saksbehandlingsperiode[]
     vilkaarsvurderinger: Record<string, Vilkaarsvurdering[]>
-    inntektsforhold: Record<string, Yrkesaktivitet[]>
+    yrkesaktivitet: Record<string, Yrkesaktivitet[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
     historikk: Record<string, SaksbehandlingsperiodeEndring[]>
@@ -45,7 +45,7 @@ function deepCopyPerson(person: Testperson): Person {
             opprettet: new Date(periode.opprettet).toISOString(),
         })),
         vilkaarsvurderinger: {},
-        inntektsforhold: JSON.parse(JSON.stringify(person.inntektsforhold || {})),
+        yrkesaktivitet: JSON.parse(JSON.stringify(person.yrkesaktivitet || {})),
         dagoversikt: JSON.parse(JSON.stringify(person.dagoversikt || {})),
         dokumenter: JSON.parse(JSON.stringify(person.dokumenter || {})),
         historikk: {},
@@ -116,7 +116,7 @@ function skapPerson(fnr: string): Person {
         },
         saksbehandlingsperioder: [],
         vilkaarsvurderinger: {},
-        inntektsforhold: {},
+        yrkesaktivitet: {},
         dagoversikt: {},
         dokumenter: {},
         historikk: {},

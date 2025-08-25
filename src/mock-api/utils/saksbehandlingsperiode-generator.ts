@@ -11,7 +11,7 @@ import { lagKategorisering } from './kategorisering-generator'
 import { genererDokumenterFraSøknader } from './dokument-generator'
 
 /**
- * Oppretter en saksbehandlingsperiode med tilhørende inntektsforhold, dagoversikt og dokumenter
+ * Oppretter en saksbehandlingsperiode med tilhørende yrkesaktivitet, dagoversikt og dokumenter
  * Matcher bakrommet sin logikk for å opprette perioder fra søknader
  */
 export function opprettSaksbehandlingsperiode(
@@ -23,7 +23,7 @@ export function opprettSaksbehandlingsperiode(
     uuid?: string,
 ): {
     saksbehandlingsperiode: Saksbehandlingsperiode
-    inntektsforhold: Yrkesaktivitet[]
+    yrkesaktivitet: Yrkesaktivitet[]
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Dokument[]
 } {
@@ -42,9 +42,9 @@ export function opprettSaksbehandlingsperiode(
         skjæringstidspunkt: fom,
     }
 
-    const inntektsforhold: Yrkesaktivitet[] = []
+    const yrkesaktivitet: Yrkesaktivitet[] = []
 
-    // Automatisk opprettelse av inntektsforhold basert på valgte søknader
+    // Automatisk opprettelse av yrkesaktivitet basert på valgte søknader
     if (søknadIder && søknadIder.length > 0) {
         const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
 
@@ -72,7 +72,7 @@ export function opprettSaksbehandlingsperiode(
                 generertFraDokumenter: søknaderForKategori.map((s) => s.id),
             }
 
-            inntektsforhold.push(nyttInntektsforhold)
+            yrkesaktivitet.push(nyttInntektsforhold)
 
             // Opprett dagoversikt fra søknader (matcher bakrommet sin logikk)
             dagoversikt[nyttInntektsforhold.id] = genererDagoversikt(fom, tom, søknaderForKategori)
@@ -84,7 +84,7 @@ export function opprettSaksbehandlingsperiode(
 
     return {
         saksbehandlingsperiode,
-        inntektsforhold,
+        yrkesaktivitet,
         dagoversikt,
         dokumenter,
     }
@@ -100,7 +100,7 @@ export function genererSaksbehandlingsperioder(
     perioder: Array<{ fom: string; tom: string; søknadIder: string[]; uuid?: string }>,
 ): {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
-    inntektsforhold: Record<string, Yrkesaktivitet[]>
+    yrkesaktivitet: Record<string, Yrkesaktivitet[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
 } {
@@ -121,12 +121,12 @@ export function genererSaksbehandlingsperioder(
 
         saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 
-        // Inkluder dagoversikt i inntektsforhold (matcher logikken i saksbehandlingsperiode-handlers.ts)
-        const inntektsforholdMedDagoversikt = resultat.inntektsforhold.map((forhold) => ({
+        // Inkluder dagoversikt i yrkesaktivitet (matcher logikken i saksbehandlingsperiode-handlers.ts)
+        const yrkesaktivitetMedDagoversikt = resultat.yrkesaktivitet.map((forhold) => ({
             ...forhold,
             dagoversikt: resultat.dagoversikt[forhold.id] || [],
         }))
-        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = inntektsforholdMedDagoversikt
+        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = yrkesaktivitetMedDagoversikt
 
         // Kombiner dagoversikt
         Object.assign(alleDagoversikt, resultat.dagoversikt)
@@ -139,7 +139,7 @@ export function genererSaksbehandlingsperioder(
 
     return {
         saksbehandlingsperioder,
-        inntektsforhold: alleInntektsforhold,
+        yrkesaktivitet: alleInntektsforhold,
         dagoversikt: alleDagoversikt,
         dokumenter: alleDokumenter,
     }

@@ -17,7 +17,7 @@ describe('kategoriUtils', () => {
             expect(resultat).toEqual(new Set())
         })
 
-        it('henter ut unike kategorier fra inntektsforhold', () => {
+        it('henter ut unike kategorier fra yrkesaktivitet', () => {
             const mockInntektsforhold: Yrkesaktivitet[] = [
                 {
                     id: '1',

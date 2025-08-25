@@ -224,7 +224,7 @@ const generertData = genererSaksbehandlingsperioder(kalleGrunndata.personId, kal
 export const Kalle: Testperson = {
     ...kalleGrunndata,
     saksbehandlingsperioder: generertData.saksbehandlingsperioder,
-    inntektsforhold: generertData.inntektsforhold,
+    yrkesaktivitet: generertData.yrkesaktivitet,
     dagoversikt: generertData.dagoversikt,
     dokumenter: generertData.dokumenter,
 }

@@ -15,12 +15,12 @@ export async function handleGetInntektsforhold(person: Person | undefined, uuid:
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
-    if (!person.inntektsforhold) {
-        person.inntektsforhold = {}
+    if (!person.yrkesaktivitet) {
+        person.yrkesaktivitet = {}
     }
 
-    const inntektsforhold = person.inntektsforhold[uuid] || []
-    return NextResponse.json(inntektsforhold)
+    const yrkesaktivitet = person.yrkesaktivitet[uuid] || []
+    return NextResponse.json(yrkesaktivitet)
 }
 
 export async function handlePostInntektsforhold(
@@ -49,15 +49,15 @@ export async function handlePostInntektsforhold(
         generertFraDokumenter: [],
     }
 
-    if (!person.inntektsforhold) {
-        person.inntektsforhold = {}
+    if (!person.yrkesaktivitet) {
+        person.yrkesaktivitet = {}
     }
-    if (!person.inntektsforhold[uuid]) {
-        person.inntektsforhold[uuid] = []
+    if (!person.yrkesaktivitet[uuid]) {
+        person.yrkesaktivitet[uuid] = []
     }
-    person.inntektsforhold[uuid].push(nyttInntektsforhold)
+    person.yrkesaktivitet[uuid].push(nyttInntektsforhold)
 
-    // Slett sykepengegrunnlag når inntektsforhold endres
+    // Slett sykepengegrunnlag når yrkesaktivitet endres
     if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
         delete person.sykepengegrunnlag[uuid]
     }
@@ -68,33 +68,33 @@ export async function handlePostInntektsforhold(
 export async function handleDeleteInntektsforhold(
     person: Person | undefined,
     saksbehandlingsperiodeId: string,
-    inntektsforholdId: string,
+    yrkesaktivitetId: string,
 ): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
 
-    if (!person.inntektsforhold || !person.inntektsforhold[saksbehandlingsperiodeId]) {
+    if (!person.yrkesaktivitet || !person.yrkesaktivitet[saksbehandlingsperiodeId]) {
         return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
     }
 
-    const inntektsforholdIndex = person.inntektsforhold[saksbehandlingsperiodeId].findIndex(
-        (forhold) => forhold.id === inntektsforholdId,
+    const yrkesaktivitetIndex = person.yrkesaktivitet[saksbehandlingsperiodeId].findIndex(
+        (forhold) => forhold.id === yrkesaktivitetId,
     )
 
-    if (inntektsforholdIndex === -1) {
+    if (yrkesaktivitetIndex === -1) {
         return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
     }
 
-    // Remove the inntektsforhold
-    person.inntektsforhold[saksbehandlingsperiodeId].splice(inntektsforholdIndex, 1)
+    // Remove the yrkesaktivitet
+    person.yrkesaktivitet[saksbehandlingsperiodeId].splice(yrkesaktivitetIndex, 1)
 
     // Also remove associated dagoversikt if it exists
-    if (person.dagoversikt && person.dagoversikt[inntektsforholdId]) {
-        delete person.dagoversikt[inntektsforholdId]
+    if (person.dagoversikt && person.dagoversikt[yrkesaktivitetId]) {
+        delete person.dagoversikt[yrkesaktivitetId]
     }
 
-    // Slett sykepengegrunnlag når inntektsforhold endres
+    // Slett sykepengegrunnlag når yrkesaktivitet endres
     if (person.sykepengegrunnlag && person.sykepengegrunnlag[saksbehandlingsperiodeId]) {
         delete person.sykepengegrunnlag[saksbehandlingsperiodeId]
     }
@@ -106,14 +106,14 @@ export async function handlePutInntektsforholdDagoversikt(
     request: Request,
     person: Person | undefined,
     uuid: string,
-    inntektsforholdId: string,
+    yrkesaktivitetId: string,
 ): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
 
-    const inntektsforhold = person.inntektsforhold?.[uuid]?.find((forhold) => forhold.id === inntektsforholdId)
-    if (!inntektsforhold) {
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid]?.find((forhold) => forhold.id === yrkesaktivitetId)
+    if (!yrkesaktivitet) {
         return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
     }
 
@@ -135,13 +135,13 @@ export async function handlePutInntektsforholdDagoversikt(
         )
     }
 
-    if (!Array.isArray(inntektsforhold.dagoversikt)) {
-        return NextResponse.json({ message: 'Ingen dagoversikt på inntektsforhold' }, { status: 400 })
+    if (!Array.isArray(yrkesaktivitet.dagoversikt)) {
+        return NextResponse.json({ message: 'Ingen dagoversikt på yrkesaktivitet' }, { status: 400 })
     }
 
     // Oppdater kun dagene som finnes i body, behold andre dager uendret
     // Ignorer helgdager ved oppdatering
-    const oppdaterteDager: Dag[] = [...inntektsforhold.dagoversikt]
+    const oppdaterteDager: Dag[] = [...yrkesaktivitet.dagoversikt]
     for (const oppdatertDag of dagerSomSkalOppdateres) {
         const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
         if (index !== -1) {
@@ -152,7 +152,7 @@ export async function handlePutInntektsforholdDagoversikt(
             }
         }
     }
-    inntektsforhold.dagoversikt = oppdaterteDager
+    yrkesaktivitet.dagoversikt = oppdaterteDager
 
     return new Response(null, { status: 204 })
 }
@@ -161,21 +161,21 @@ export async function handlePutInntektsforholdKategorisering(
     request: Request,
     person: Person | undefined,
     uuid: string,
-    inntektsforholdId: string,
+    yrkesaktivitetId: string,
 ): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
 
-    const inntektsforhold = person.inntektsforhold?.[uuid]?.find((forhold) => forhold.id === inntektsforholdId)
-    if (!inntektsforhold) {
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid]?.find((forhold) => forhold.id === yrkesaktivitetId)
+    if (!yrkesaktivitet) {
         return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
     }
 
     const body = await request.json()
-    inntektsforhold.kategorisering = body
+    yrkesaktivitet.kategorisering = body
 
-    // Slett sykepengegrunnlag når inntektsforhold endres
+    // Slett sykepengegrunnlag når yrkesaktivitet endres
     if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
         delete person.sykepengegrunnlag[uuid]
     }

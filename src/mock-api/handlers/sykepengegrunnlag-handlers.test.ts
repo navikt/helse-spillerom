@@ -37,7 +37,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 },
             ],
             vilkaarsvurderinger: {},
-            inntektsforhold: {},
+            yrkesaktivitet: {},
             dagoversikt: {},
             dokumenter: {},
             historikk: {},
@@ -95,7 +95,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000, // 50 000 kr
                             kilde: 'AINNTEKT',
                         },
@@ -117,7 +117,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000,
                             kilde: 'AINNTEKT',
                         },
@@ -142,7 +142,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000,
                             kilde: 'AINNTEKT',
                         },
@@ -180,7 +180,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: -1000,
                             kilde: 'AINNTEKT',
                         },
@@ -202,7 +202,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000,
                             kilde: 'UGYLDIG_KILDE',
                         },
@@ -224,7 +224,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000,
                             kilde: 'SKJONNSFASTSETTELSE',
                         },
@@ -246,7 +246,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000, // 50 000 kr
                             kilde: 'AINNTEKT',
                         },
@@ -279,7 +279,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 10000000, // 100 000 kr
                             kilde: 'AINNTEKT',
                         },
@@ -302,7 +302,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 5000000, // 50 000 kr
                             kilde: 'SKJONNSFASTSETTELSE',
                         },
@@ -329,7 +329,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 body: JSON.stringify({
                     inntekter: [
                         {
-                            inntektsforholdId: 'test-inntekt-id',
+                            yrkesaktivitetId: 'test-inntekt-id',
                             beløpPerMånedØre: 10000000, // 100 000 kr
                             kilde: 'AINNTEKT',
                         },

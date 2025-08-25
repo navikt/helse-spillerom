@@ -26,7 +26,7 @@ const generertData = genererSaksbehandlingsperioder(blankGrunndata.personId, bla
 export const BlankeArk: Testperson = {
     ...blankGrunndata,
     saksbehandlingsperioder: generertData.saksbehandlingsperioder,
-    inntektsforhold: generertData.inntektsforhold,
+    yrkesaktivitet: generertData.yrkesaktivitet,
     dagoversikt: generertData.dagoversikt,
     dokumenter: generertData.dokumenter,
 }

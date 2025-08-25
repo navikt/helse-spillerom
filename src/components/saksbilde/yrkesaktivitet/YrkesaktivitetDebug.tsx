@@ -6,11 +6,11 @@ import { Table } from '@navikt/ds-react'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 
 export function YrkesaktivitetDebug(): ReactElement {
-    const { data: inntektsforhold = [] } = useYrkesaktivitet()
+    const { data: yrkesaktivitet = [] } = useYrkesaktivitet()
 
     return (
         <div className="space-y-6">
-            {inntektsforhold.map((forhold, index) => (
+            {yrkesaktivitet.map((forhold, index) => (
                 <div key={forhold.id} className="rounded-lg border border-ax-border-neutral-subtle p-4">
                     <div className="mb-3 border-b border-ax-border-neutral-subtle pb-2">
                         <h3 className="text-gray-700 text-sm font-semibold">Yrkesaktivitet #{index + 1}</h3>

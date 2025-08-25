@@ -21,11 +21,11 @@ export function hentUuidFraUrl(url: string): string {
 export function hentInntektsforholdUuidFraUrl(url: string): string {
     const parts = url.split('/')
     // Finn indeksen til 'yrkesaktivitet' og ta neste del som er uuid
-    const inntektsforholdIndex = parts.findIndex((part) => part === 'yrkesaktivitet')
-    if (inntektsforholdIndex === -1 || inntektsforholdIndex + 1 >= parts.length) {
-        throw new Error('Kunne ikke finne inntektsforhold UUID i URL')
+    const yrkesaktivitetIndex = parts.findIndex((part) => part === 'yrkesaktivitet')
+    if (yrkesaktivitetIndex === -1 || yrkesaktivitetIndex + 1 >= parts.length) {
+        throw new Error('Kunne ikke finne yrkesaktivitet UUID i URL')
     }
-    return parts[inntektsforholdIndex + 1]
+    return parts[yrkesaktivitetIndex + 1]
 }
 
 export function hentSoknadUuidFraUrl(url: string): string {

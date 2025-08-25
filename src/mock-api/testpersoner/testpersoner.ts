@@ -15,7 +15,7 @@ export interface Testperson {
     personinfo: Personinfo
     soknader: Søknad[]
     saksbehandlingsperioder: Saksbehandlingsperiode[]
-    inntektsforhold?: Record<string, Yrkesaktivitet[]>
+    yrkesaktivitet?: Record<string, Yrkesaktivitet[]>
     dagoversikt?: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
 }

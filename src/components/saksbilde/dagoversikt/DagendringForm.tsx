@@ -54,7 +54,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
 
         await mutation
             .mutateAsync({
-                inntektsforholdId: aktivtInntektsForhold.id,
+                yrkesaktivitetId: aktivtInntektsForhold.id,
                 dager: oppdaterteDager,
                 notat,
             })

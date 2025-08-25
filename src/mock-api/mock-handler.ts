@@ -51,7 +51,7 @@ interface HandlerContext {
     person?: ReturnType<typeof hentPerson>
     personId: string
     uuid?: string
-    inntektsforholdId?: string
+    yrkesaktivitetId?: string
     kode?: string
 }
 
@@ -125,21 +125,21 @@ const handlers: Record<string, HandlerFunction> = {
         request,
         person,
         uuid,
-        inntektsforholdId,
-    }) => handlePutInntektsforholdKategorisering(request, await person, uuid!, inntektsforholdId!),
+        yrkesaktivitetId,
+    }) => handlePutInntektsforholdKategorisering(request, await person, uuid!, yrkesaktivitetId!),
 
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]': async ({
         person,
         uuid,
-        inntektsforholdId,
-    }) => handleDeleteInntektsforhold(await person, uuid!, inntektsforholdId!),
+        yrkesaktivitetId,
+    }) => handleDeleteInntektsforhold(await person, uuid!, yrkesaktivitetId!),
 
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/dagoversikt': async ({
         request,
         person,
         uuid,
-        inntektsforholdId,
-    }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, inntektsforholdId!),
+        yrkesaktivitetId,
+    }) => handlePutInntektsforholdDagoversikt(request, await person, uuid!, yrkesaktivitetId!),
 
     'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
 
@@ -191,11 +191,11 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
         }
 
         if (path.includes('/yrkesaktivitet/') && path.includes('/dagoversikt')) {
-            context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
+            context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
         if (path.includes('/yrkesaktivitet/') && path.split('/').length > 6 && !path.includes('/dagoversikt')) {
-            context.inntektsforholdId = hentInntektsforholdUuidFraUrl(request.url)
+            context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
         if (path.includes('/vilkaarsvurdering/') && path.split('/').length > 6) {

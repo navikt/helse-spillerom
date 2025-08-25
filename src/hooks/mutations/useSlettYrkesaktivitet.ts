@@ -8,10 +8,10 @@ export function useSlettYrkesaktivitet() {
     const params = useParams()
     const queryClient = useQueryClient()
 
-    return useMutation<void, ProblemDetailsError, { inntektsforholdId: string }>({
-        mutationFn: async ({ inntektsforholdId }) => {
+    return useMutation<void, ProblemDetailsError, { yrkesaktivitetId: string }>({
+        mutationFn: async ({ yrkesaktivitetId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${inntektsforholdId}`,
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}`,
             )
         },
         onSuccess: () => {

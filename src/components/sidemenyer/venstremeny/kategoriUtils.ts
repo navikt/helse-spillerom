@@ -13,9 +13,9 @@ export const KATEGORI_SORTERING = [
 
 export type KategoriKode = (typeof KATEGORI_SORTERING)[number]
 
-export function getKategorierFraInntektsforhold(inntektsforhold: Yrkesaktivitet[]): Set<string> {
+export function getKategorierFraInntektsforhold(yrkesaktivitet: Yrkesaktivitet[]): Set<string> {
     return new Set(
-        inntektsforhold
+        yrkesaktivitet
             .map((forhold) => forhold.kategorisering['INNTEKTSKATEGORI'])
             .filter((kat): kat is string => Boolean(kat)),
     )

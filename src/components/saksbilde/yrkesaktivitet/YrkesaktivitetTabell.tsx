@@ -31,9 +31,9 @@ import { BekreftelsesModal } from '@components/BekreftelsesModal'
 export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
-    const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
+    const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
-    const { data: inntektsforhold, isLoading, isError } = useYrkesaktivitet()
+    const { data: yrkesaktivitet, isLoading, isError } = useYrkesaktivitet()
     const { data: sykepengegrunnlag } = useSykepengegrunnlag()
     const slettMutation = useSlettYrkesaktivitet()
     const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
@@ -50,23 +50,22 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
     if (isError)
         return (
             <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste inntektsforhold</Alert>
+                <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
             </SaksbildePanel>
         )
 
-    // Sjekk om det finnes inntektsforhold som ikke kan kombineres med andre
-    const inntektsforholdSomIkkeKanKombineres =
-        inntektsforhold?.filter((forhold) => {
+    // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
+    const yrkesaktivitetSomIkkeKanKombineres =
+        yrkesaktivitet?.filter((forhold) => {
             const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
             const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === kategori)
             return alternativ?.kanIkkeKombineresMedAndre === true
         }) || []
 
-    // Vis advarsel hvis det finnes inntektsforhold som ikke kan kombineres og det er flere enn ett inntektsforhold totalt
-    const showKombinasjonsAdvarsel =
-        inntektsforholdSomIkkeKanKombineres.length > 0 && (inntektsforhold?.length || 0) > 1
+    // Vis advarsel hvis det finnes yrkesaktivitet som ikke kan kombineres og det er flere enn ett yrkesaktivitet totalt
+    const showKombinasjonsAdvarsel = yrkesaktivitetSomIkkeKanKombineres.length > 0 && (yrkesaktivitet?.length || 0) > 1
 
-    const handleSlett = async (inntektsforholdId: string) => {
+    const handleSlett = async (yrkesaktivitetId: string) => {
         // Sjekk om sykepengegrunnlag eksisterer
         if (sykepengegrunnlag) {
             const bekreftet = await visBekreftelsesmodal({
@@ -78,13 +77,13 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
             if (!bekreftet) return
         }
 
-        setInntektsforholdTilSlett(inntektsforholdId)
+        setInntektsforholdTilSlett(yrkesaktivitetId)
         setSlettModalOpen(true)
     }
 
     const confirmSlett = () => {
-        if (inntektsforholdTilSlett) {
-            slettMutation.mutate({ inntektsforholdId: inntektsforholdTilSlett })
+        if (yrkesaktivitetTilSlett) {
+            slettMutation.mutate({ yrkesaktivitetId: yrkesaktivitetTilSlett })
             setSlettModalOpen(false)
             setInntektsforholdTilSlett(null)
         }
@@ -104,7 +103,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
     }
 
     const handleLagreRedigering = async (
-        inntektsforholdId: string,
+        yrkesaktivitetId: string,
         kategorisering: Record<string, string | string[]>,
     ) => {
         // Sjekk om sykepengegrunnlag eksisterer
@@ -118,7 +117,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
             if (!bekreftet) return
         }
 
-        oppdaterMutation.mutate({ inntektsforholdId, kategorisering }, { onSuccess: () => setRedigererId(null) })
+        oppdaterMutation.mutate({ yrkesaktivitetId, kategorisering }, { onSuccess: () => setRedigererId(null) })
     }
 
     const handleLeggTilYrkesaktivitet = async () => {
@@ -142,7 +141,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
                 {showKombinasjonsAdvarsel && (
                     <Alert variant="warning">
                         <BodyShort>
-                            {inntektsforholdSomIkkeKanKombineres
+                            {yrkesaktivitetSomIkkeKanKombineres
                                 .map((forhold) => {
                                     const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
                                     const alternativ = yrkesaktivitetKodeverk.alternativer.find(
@@ -157,7 +156,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
                     </Alert>
                 )}
 
-                {inntektsforhold && inntektsforhold.length > 0 ? (
+                {yrkesaktivitet && yrkesaktivitet.length > 0 ? (
                     <div role="region" aria-label="Yrkesaktivitet tabell">
                         <Table size="medium" aria-label="Yrkesaktivitet oversikt">
                             <TableHeader>
@@ -169,7 +168,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {inntektsforhold.map((forhold, index) => (
+                                {yrkesaktivitet.map((forhold, index) => (
                                     <TableExpandableRow
                                         key={forhold.id}
                                         expandOnRowClick
@@ -273,7 +272,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
                 <AnimatePresenceWrapper initial={false}>
                     {visOpprettForm && (
                         <motion.div
-                            key="opprett-inntektsforhold"
+                            key="opprett-yrkesaktivitet"
                             transition={getTestSafeTransition({
                                 type: 'tween',
                                 duration: 0.2,

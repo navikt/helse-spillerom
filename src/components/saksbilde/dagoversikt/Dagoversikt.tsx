@@ -20,15 +20,11 @@ interface DagoversiktProps {
 }
 
 export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
-    const {
-        data: inntektsforhold,
-        isLoading: inntektsforholdLoading,
-        isError: inntektsforholdError,
-    } = useYrkesaktivitet()
+    const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
 
-    // Filtrer kun inntektsforhold hvor personen har dagoversikt med innhold
+    // Filtrer kun yrkesaktivitet hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
-        inntektsforhold?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
+        yrkesaktivitet?.filter((forhold) => forhold.dagoversikt && forhold.dagoversikt.length > 0) || []
 
     const kanSaksbehandles = useKanSaksbehandles()
     const [aktivtInntektsforholdId, setAktivtInntektsforholdId] = useState<string>()
@@ -55,14 +51,14 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         setValgteDataer(new Set())
     }
 
-    if (inntektsforholdLoading) {
-        return <SaksbildePanel value={value}>Laster inntektsforhold...</SaksbildePanel>
+    if (yrkesaktivitetLoading) {
+        return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
     }
 
-    if (inntektsforholdError) {
+    if (yrkesaktivitetError) {
         return (
             <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste inntektsforhold</Alert>
+                <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
             </SaksbildePanel>
         )
     }
@@ -73,7 +69,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 <Alert variant="info">
                     <Heading size="small">Ingen dagoversikt funnet</Heading>
                     <BodyShort>
-                        Det finnes ingen inntektsforhold for denne saksbehandlingsperioden med dagoversikt.
+                        Det finnes ingen yrkesaktivitet for denne saksbehandlingsperioden med dagoversikt.
                     </BodyShort>
                 </Alert>
             </SaksbildePanel>
@@ -200,7 +196,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         )}
 
                         {(!forhold.dagoversikt || forhold.dagoversikt.length === 0) && (
-                            <Alert variant="info">Ingen dagoversikt funnet for dette inntektsforholdet.</Alert>
+                            <Alert variant="info">Ingen dagoversikt funnet for dette yrkesaktivitetet.</Alert>
                         )}
                     </TabsPanel>
                 ))}
