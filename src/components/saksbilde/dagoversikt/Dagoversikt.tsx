@@ -7,7 +7,7 @@ import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { getFormattedDateString } from '@utils/date-format'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { Kilde } from '@/schemas/dagoversikt'
@@ -24,7 +24,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         data: inntektsforhold,
         isLoading: inntektsforholdLoading,
         isError: inntektsforholdError,
-    } = useInntektsforhold()
+    } = useYrkesaktivitet()
 
     // Filtrer kun inntektsforhold hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =

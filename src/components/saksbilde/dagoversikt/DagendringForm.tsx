@@ -3,10 +3,10 @@ import { z } from 'zod/v4'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
+import { useOppdaterYrkesaktivitetDagoversikt } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 
-import { useOppdaterInntektsforholdDagoversikt } from '@hooks/mutations/useOppdaterInntektsforhold'
 import { Dag, Dagtype, dagtypeSchema } from '@schemas/dagoversikt'
-import { Inntektsforhold } from '@schemas/inntektsforhold'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 
 export type DagendringSchema = z.infer<typeof dagendringSchema>
 export const dagendringSchema = z.object({
@@ -16,13 +16,13 @@ export const dagendringSchema = z.object({
 })
 
 type DagendringFormProps = {
-    aktivtInntektsForhold?: Inntektsforhold
+    aktivtInntektsForhold?: Yrkesaktivitet
     valgteDataer: Set<string>
     avbryt: () => void
 }
 
 export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: DagendringFormProps): ReactElement {
-    const mutation = useOppdaterInntektsforholdDagoversikt()
+    const mutation = useOppdaterYrkesaktivitetDagoversikt()
     const form = useForm<DagendringSchema>({
         resolver: zodResolver(dagendringSchema),
         defaultValues: {

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
-import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Søknad } from '@/schemas/søknad'
 import { Dokument } from '@/schemas/dokument'
 
@@ -23,7 +23,7 @@ export function opprettSaksbehandlingsperiode(
     uuid?: string,
 ): {
     saksbehandlingsperiode: Saksbehandlingsperiode
-    inntektsforhold: Inntektsforhold[]
+    inntektsforhold: Yrkesaktivitet[]
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Dokument[]
 } {
@@ -42,7 +42,7 @@ export function opprettSaksbehandlingsperiode(
         skjæringstidspunkt: fom,
     }
 
-    const inntektsforhold: Inntektsforhold[] = []
+    const inntektsforhold: Yrkesaktivitet[] = []
 
     // Automatisk opprettelse av inntektsforhold basert på valgte søknader
     if (søknadIder && søknadIder.length > 0) {
@@ -65,7 +65,7 @@ export function opprettSaksbehandlingsperiode(
         })
 
         kategorierOgSøknader.forEach(({ kategorisering, søknader: søknaderForKategori }) => {
-            const nyttInntektsforhold: Inntektsforhold = {
+            const nyttInntektsforhold: Yrkesaktivitet = {
                 id: uuidv4(),
                 kategorisering,
                 dagoversikt: [],
@@ -100,12 +100,12 @@ export function genererSaksbehandlingsperioder(
     perioder: Array<{ fom: string; tom: string; søknadIder: string[]; uuid?: string }>,
 ): {
     saksbehandlingsperioder: Saksbehandlingsperiode[]
-    inntektsforhold: Record<string, Inntektsforhold[]>
+    inntektsforhold: Record<string, Yrkesaktivitet[]>
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
 } {
     const saksbehandlingsperioder: Saksbehandlingsperiode[] = []
-    const alleInntektsforhold: Record<string, Inntektsforhold[]> = {}
+    const alleInntektsforhold: Record<string, Yrkesaktivitet[]> = {}
     const alleDagoversikt: Record<string, Dagoversikt> = {}
     const alleDokumenter: Record<string, Dokument[]> = {}
 

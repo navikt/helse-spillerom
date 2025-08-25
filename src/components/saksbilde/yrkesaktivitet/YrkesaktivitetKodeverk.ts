@@ -23,7 +23,7 @@ const ordnaerForsikring = [
         ],
     },
 ]
-export const inntektsforholdKodeverk = {
+export const yrkesaktivitetKodeverk = {
     kode: 'INNTEKTSKATEGORI',
     navn: 'Type inntektsforhold',
     variant: 'SELECT',

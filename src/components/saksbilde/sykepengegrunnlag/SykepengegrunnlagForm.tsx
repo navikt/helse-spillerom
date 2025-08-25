@@ -24,14 +24,14 @@ import {
     SykepengegrunnlagResponse,
     ørerTilKroner,
 } from '@schemas/sykepengegrunnlag'
-import { Inntektsforhold } from '@schemas/inntektsforhold'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
 import { gyldigDatoFormat } from '@utils/date-format'
 import { cn } from '@utils/tw'
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
-    inntektsforhold: Inntektsforhold[]
+    inntektsforhold: Yrkesaktivitet[]
     avbryt: () => void
 }
 

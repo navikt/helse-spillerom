@@ -10,7 +10,7 @@ import { cn } from '@utils/tw'
 import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagForm'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 
 interface SykepengegrunnlagProps {
@@ -23,7 +23,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
         data: inntektsforhold,
         isLoading: inntektsforholdLoading,
         isError: inntektsforholdError,
-    } = useInntektsforhold()
+    } = useYrkesaktivitet()
     const {
         data: sykepengegrunnlag,
         isLoading: sykepengegrunnlagLoading,

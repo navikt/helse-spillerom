@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
-import { Inntektsforhold } from '@/schemas/inntektsforhold'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Dag } from '@/schemas/dagoversikt'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 
@@ -40,7 +40,7 @@ export async function handlePostInntektsforhold(
     const body = await request.json()
     const kategorisering = body.kategorisering
 
-    const nyttInntektsforhold: Inntektsforhold = {
+    const nyttInntektsforhold: Yrkesaktivitet = {
         id: uuidv4(),
         kategorisering,
         dagoversikt: skalHaDagoversikt(kategorisering)

@@ -12,9 +12,9 @@ import {
     VStack,
 } from '@navikt/ds-react'
 
-import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
+import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetKodeverk'
 import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
 interface KodeverkAlternativ {
@@ -54,7 +54,7 @@ interface InntektsforholdFormProps {
     lagreLabel?: string
 }
 
-export default function InntektsforholdForm({
+export default function YrkesaktivitetForm({
     closeForm,
     disabled = false,
     initialValues = {},
@@ -66,7 +66,7 @@ export default function InntektsforholdForm({
 }: InntektsforholdFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
     const mutation = useOpprettInntektsforhold()
-    const { data: existingInntektsforhold = [] } = useInntektsforhold()
+    const { data: existingInntektsforhold = [] } = useYrkesaktivitet()
     const kansaksbehandles = useKanSaksbehandles()
 
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function InntektsforholdForm({
     })
 
     // Filtrer bort SELVSTENDIG_NÆRINGSDRIVENDE hvis det allerede finnes
-    const availableAlternatives = inntektsforholdKodeverk.alternativer.filter(
+    const availableAlternatives = yrkesaktivitetKodeverk.alternativer.filter(
         (alt) => !(alt.kode === 'SELVSTENDIG_NÆRINGSDRIVENDE' && hasExistingSelvstendigNæringsdrivende),
     )
 
@@ -214,8 +214,8 @@ export default function InntektsforholdForm({
         }
     }
 
-    const selectedAlternativ = inntektsforholdKodeverk.alternativer.find(
-        (alt) => alt.kode === (selectedValues[inntektsforholdKodeverk.kode] as string),
+    const selectedAlternativ = yrkesaktivitetKodeverk.alternativer.find(
+        (alt) => alt.kode === (selectedValues[yrkesaktivitetKodeverk.kode] as string),
     )
 
     // Helper to ensure variant is typed correctly
@@ -238,8 +238,8 @@ export default function InntektsforholdForm({
 
             <Select
                 label="Velg type yrkesaktivitet"
-                value={(selectedValues[inntektsforholdKodeverk.kode] as string) || ''}
-                onChange={(e) => handleSelectChange(inntektsforholdKodeverk.kode, e.target.value)}
+                value={(selectedValues[yrkesaktivitetKodeverk.kode] as string) || ''}
+                onChange={(e) => handleSelectChange(yrkesaktivitetKodeverk.kode, e.target.value)}
                 size="small"
                 className="max-w-96"
                 disabled={disabled}
@@ -262,8 +262,8 @@ export default function InntektsforholdForm({
                         type="button"
                         loading={isLoading || mutation.isPending}
                         disabled={
-                            selectedValues[inntektsforholdKodeverk.kode] === undefined ||
-                            selectedValues[inntektsforholdKodeverk.kode] === ''
+                            selectedValues[yrkesaktivitetKodeverk.kode] === undefined ||
+                            selectedValues[yrkesaktivitetKodeverk.kode] === ''
                         }
                         onClick={handleSubmit}
                     >

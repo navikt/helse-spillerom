@@ -5,18 +5,18 @@ import { z } from 'zod/v4'
 
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import { Inntektsforhold, inntektsforholdSchema } from '@/schemas/inntektsforhold'
+import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
 
-export function useInntektsforhold() {
+export function useYrkesaktivitet() {
     const params = useParams()
     const router = useRouter()
 
-    const query = useQuery<Inntektsforhold[], ProblemDetailsError>({
+    const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
         queryKey: [params.personId, 'inntektsforhold', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold`,
-                z.array(inntektsforholdSchema),
+                z.array(yrkesaktivitetSchema),
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
     })

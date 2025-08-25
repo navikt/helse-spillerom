@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Inntektsforhold } from '@/schemas/inntektsforhold'
+import type { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 
 import {
     capitalizeFirstLetter,
@@ -18,25 +18,25 @@ describe('kategoriUtils', () => {
         })
 
         it('henter ut unike kategorier fra inntektsforhold', () => {
-            const mockInntektsforhold: Inntektsforhold[] = [
+            const mockInntektsforhold: Yrkesaktivitet[] = [
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
                 {
                     id: '2',
                     kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
                 {
                     id: '3',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
             ]
 
             const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)
@@ -44,21 +44,21 @@ describe('kategoriUtils', () => {
         })
 
         it('filtrerer ut manglende kategorier', () => {
-            const mockInntektsforhold: Inntektsforhold[] = [
+            const mockInntektsforhold: Yrkesaktivitet[] = [
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
                     generertFraDokumenter: [],
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
                 {
                     id: '2',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
                 {
                     id: '3',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Inntektsforhold,
+                } as Yrkesaktivitet,
             ]
 
             const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)

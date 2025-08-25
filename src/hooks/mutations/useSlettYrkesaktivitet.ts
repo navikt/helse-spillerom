@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 
-export function useSlettInntektsforhold() {
+export function useSlettYrkesaktivitet() {
     const params = useParams()
     const queryClient = useQueryClient()
 

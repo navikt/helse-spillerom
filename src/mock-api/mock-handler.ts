@@ -36,7 +36,7 @@ import {
     handleDeleteInntektsforhold,
     handlePutInntektsforholdKategorisering,
     handlePutInntektsforholdDagoversikt,
-} from '@/mock-api/handlers/inntektsforhold-handlers'
+} from '@/mock-api/handlers/yrkesaktivitet-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'

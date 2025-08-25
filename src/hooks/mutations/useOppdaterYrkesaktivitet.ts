@@ -15,7 +15,7 @@ type OppdaterDagerMutationProps = {
     notat: string
 }
 
-export function useOppdaterInntektsforholdKategorisering() {
+export function useOppdaterYrkesaktivitetKategorisering() {
     const params = useParams()
     const queryClient = useQueryClient()
 
@@ -37,16 +37,16 @@ export function useOppdaterInntektsforholdKategorisering() {
     })
 }
 
-export function useOppdaterInntektsforholdDagoversikt() {
+export function useOppdaterYrkesaktivitetDagoversikt() {
     const params = useParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, OppdaterDagerMutationProps>({
-        mutationFn: async ({ inntektsforholdId, dager }) => {
+        mutationFn: async ({ inntektsforholdId, dager, notat }) => {
             // Send kun dagene som skal oppdateres
             return await putNoContent(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/inntektsforhold/${inntektsforholdId}/dagoversikt`,
-                dager,
+                { dager, notat },
             )
         },
         onSuccess: () => {

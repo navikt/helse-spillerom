@@ -13,13 +13,13 @@ import {
 } from '@navikt/ds-react/Table'
 import { PlusIcon, PencilIcon, TrashIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
+import { useOppdaterYrkesaktivitetKategorisering } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
-import { useSlettInntektsforhold } from '@hooks/mutations/useSlettInntektsforhold'
-import InntektsforholdForm from '@components/saksbilde/inntektsforhold/InntektsforholdForm'
-import { useOppdaterInntektsforholdKategorisering } from '@hooks/mutations/useOppdaterInntektsforhold'
-import { inntektsforholdKodeverk } from '@components/saksbilde/inntektsforhold/inntektsforholdKodeverk'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
+import { useSlettYrkesaktivitet } from '@hooks/mutations/useSlettYrkesaktivitet'
+import YrkesaktivitetForm from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetForm'
+import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetKodeverk'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
@@ -28,15 +28,15 @@ import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 
-export function InntektsforholdTabell({ value }: { value: string }): ReactElement {
+export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [inntektsforholdTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
-    const { data: inntektsforhold, isLoading, isError } = useInntektsforhold()
+    const { data: inntektsforhold, isLoading, isError } = useYrkesaktivitet()
     const { data: sykepengegrunnlag } = useSykepengegrunnlag()
-    const slettMutation = useSlettInntektsforhold()
-    const oppdaterMutation = useOppdaterInntektsforholdKategorisering()
+    const slettMutation = useSlettYrkesaktivitet()
+    const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
     const kanSaksbehandles = useKanSaksbehandles()
     const {
         isOpen: bekreftelsesModalOpen,
@@ -58,7 +58,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
     const inntektsforholdSomIkkeKanKombineres =
         inntektsforhold?.filter((forhold) => {
             const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
-            const alternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === kategori)
+            const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === kategori)
             return alternativ?.kanIkkeKombineresMedAndre === true
         }) || []
 
@@ -145,7 +145,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                             {inntektsforholdSomIkkeKanKombineres
                                 .map((forhold) => {
                                     const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
-                                    const alternativ = inntektsforholdKodeverk.alternativer.find(
+                                    const alternativ = yrkesaktivitetKodeverk.alternativer.find(
                                         (alt) => alt.kode === kategori,
                                     )
                                     return alternativ?.navn
@@ -175,7 +175,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                         expandOnRowClick
                                         content={
                                             redigererId === forhold.id ? (
-                                                <InntektsforholdForm
+                                                <YrkesaktivitetForm
                                                     closeForm={handleAvbrytRedigering}
                                                     disabled={false}
                                                     initialValues={forhold.kategorisering}
@@ -188,7 +188,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                                 />
                                             ) : (
                                                 <VStack gap="4" className="ignore-axe">
-                                                    <InntektsforholdForm
+                                                    <YrkesaktivitetForm
                                                         closeForm={() => {}}
                                                         disabled={true}
                                                         title={undefined}
@@ -291,7 +291,7 @@ export function InntektsforholdTabell({ value }: { value: string }): ReactElemen
                                 borderRadius="medium"
                                 className="rounded-md p-8"
                             >
-                                <InntektsforholdForm
+                                <YrkesaktivitetForm
                                     closeForm={() => setVisOpprettForm(false)}
                                     title="Legg til ny yrkesaktivitet"
                                 />
@@ -341,6 +341,6 @@ function getInntektsforholdDisplayText(kategorisering: Record<string, string | s
         return 'Ukjent'
     }
 
-    const alternativ = inntektsforholdKodeverk.alternativer.find((alt) => alt.kode === inntektskategori)
+    const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === inntektskategori)
     return alternativ?.navn || inntektskategori
 }

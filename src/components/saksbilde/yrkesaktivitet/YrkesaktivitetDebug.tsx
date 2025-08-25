@@ -3,10 +3,10 @@
 import React, { ReactElement } from 'react'
 import { Table } from '@navikt/ds-react'
 
-import { useInntektsforhold } from '@hooks/queries/useInntektsforhold'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 
-export function InntektsforholdDebug(): ReactElement {
-    const { data: inntektsforhold = [] } = useInntektsforhold()
+export function YrkesaktivitetDebug(): ReactElement {
+    const { data: inntektsforhold = [] } = useYrkesaktivitet()
 
     return (
         <div className="space-y-6">
