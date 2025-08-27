@@ -26,7 +26,20 @@ export async function kallBakrommetUtbetalingsberegning(
         })
 
         if (!response.ok) {
-            logger.error('Bakrommet API kallet feilet', { status: response.status, statusText: response.statusText })
+            logger.error('Bakrommet API kallet feilet ' + response.status + ' ' + response.statusText)
+            try {
+                const data = await response.json()
+                logger.error(
+                    'Bakrommet API kallet feilet ' +
+                        response.status +
+                        ' ' +
+                        response.statusText +
+                        ' ' +
+                        JSON.stringify(data),
+                )
+            } catch (error) {
+                logger.error('Feil ved kall til bakrommet API ' + JSON.stringify(error))
+            }
             // Bakrommet API kallet feilet
             return null
         }
