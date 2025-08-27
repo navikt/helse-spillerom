@@ -22,11 +22,6 @@ export const refusjonsperiodeSchema = z
                 path: ['fom'],
                 message: 'Fra-dato kan ikke være etter til-dato',
             })
-            ctx.addIssue({
-                code: 'custom',
-                path: ['tom'],
-                message: 'dont-show',
-            })
         }
     })
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>

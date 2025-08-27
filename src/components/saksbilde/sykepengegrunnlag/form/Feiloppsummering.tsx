@@ -37,7 +37,7 @@ export function Feiloppsummering({ errors }: { errors: FieldErrors<Sykepengegrun
                                         {refusjonError.fom.message}
                                     </ErrorSummary.Item>
                                 )}
-                                {refusjonError.tom?.message && refusjonError.tom?.message !== 'dont-show' && (
+                                {refusjonError.tom?.message && (
                                     <ErrorSummary.Item href={`#inntekter-${i}-refusjon-${j}-tom`}>
                                         {refusjonError.tom.message}
                                     </ErrorSummary.Item>
