@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { BeregningResponse } from '@/schemas/utbetalingsberegning'
 import { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
 
-import { beregnUtbetalingssum, formaterUtbetalingssum } from '../utbetalingsberegning'
+import { beregnUtbetalingssum, formaterUtbetalingssum } from './utbetalingsberegning'
 
 describe('utbetalingsberegning', () => {
     describe('beregnUtbetalingssum', () => {
