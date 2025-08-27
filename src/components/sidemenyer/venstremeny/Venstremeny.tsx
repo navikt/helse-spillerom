@@ -2,19 +2,22 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
+import { Button, VStack, BodyShort, HStack, Box } from '@navikt/ds-react'
 import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useErBeslutter } from '@hooks/queries/useErBeslutter'
+import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
 import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
+import { beregnUtbetalingssum, formaterUtbetalingssum } from '@utils/utbetalingsberegning'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
@@ -27,8 +30,14 @@ export function Venstremeny(): ReactElement {
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const kanSaksbehandles = useKanSaksbehandles()
     const erBeslutter = useErBeslutter()
+    const { data: utbetalingsberegning } = useUtbetalingsberegning()
+    const { data: yrkesaktivitet } = useYrkesaktivitet()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
+
+    // Beregn utbetalinger
+    const utbetalingssum = beregnUtbetalingssum(utbetalingsberegning, yrkesaktivitet)
+    const formatertUtbetalingssum = formaterUtbetalingssum(utbetalingssum)
 
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
@@ -117,6 +126,29 @@ export function Venstremeny(): ReactElement {
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.tom)}
                             </BodyShort>
                         </HStack>
+
+                        {/* Utbetalingsinformasjon */}
+                        {utbetalingssum.totalBeløpØre > 0 && (
+                            <Box background="surface-neutral" className="rounded-lg p-4">
+                                <VStack gap="3">
+                                    <BodyShort weight="semibold">Beløp for perioden</BodyShort>
+
+                                    {/* Vis arbeidsgivere med refusjonsutbetaling først */}
+                                    {formatertUtbetalingssum.arbeidsgivere.map((arbeidsgiver) => (
+                                        <HStack key={arbeidsgiver.orgnummer} justify="space-between">
+                                            <BodyShort size="small">{arbeidsgiver.navn}</BodyShort>
+                                            <BodyShort size="small">{arbeidsgiver.totalBeløp}</BodyShort>
+                                        </HStack>
+                                    ))}
+
+                                    {/* Total sum */}
+                                    <HStack justify="space-between" className="border-t pt-2">
+                                        <BodyShort weight="semibold">Totalt</BodyShort>
+                                        <BodyShort weight="semibold">{formatertUtbetalingssum.totalBeløp}</BodyShort>
+                                    </HStack>
+                                </VStack>
+                            </Box>
+                        )}
 
                         {kanSaksbehandles && (
                             <>

@@ -1,6 +1,10 @@
 import { ReactElement } from 'react'
-import { Modal, VStack, HStack, BodyShort, Button, Heading } from '@navikt/ds-react'
+import { Modal, VStack, HStack, BodyShort, Button, Heading, Box } from '@navikt/ds-react'
 import { ModalBody, ModalHeader, ModalFooter } from '@navikt/ds-react/Modal'
+
+import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
+import { beregnUtbetalingssum, formaterUtbetalingssum } from '@utils/utbetalingsberegning'
 
 interface SendTilGodkjenningModalProps {
     åpen: boolean
@@ -13,6 +17,13 @@ export function SendTilGodkjenningModal({
     onLukk,
     onSendTilGodkjenning,
 }: SendTilGodkjenningModalProps): ReactElement {
+    const { data: utbetalingsberegning } = useUtbetalingsberegning()
+    const { data: yrkesaktivitet } = useYrkesaktivitet()
+
+    // Beregn utbetalinger
+    const utbetalingssum = beregnUtbetalingssum(utbetalingsberegning, yrkesaktivitet)
+    const formatertUtbetalingssum = formaterUtbetalingssum(utbetalingssum)
+
     const håndterJa = () => {
         onSendTilGodkjenning()
         onLukk()
@@ -25,12 +36,34 @@ export function SendTilGodkjenningModal({
             </ModalHeader>
             <ModalBody>
                 <VStack gap="4">
-                    <div>
-                        <BodyShort size="small" className="text-gray-600">
-                            Beløp til utbetaling
-                        </BodyShort>
-                        <BodyShort weight="semibold">0,00 kr</BodyShort>
-                    </div>
+                    {utbetalingssum.totalBeløpØre > 0 ? (
+                        <Box background="surface-neutral" className="rounded-lg p-4">
+                            <VStack gap="3">
+                                <BodyShort weight="semibold">Beløp til utbetaling</BodyShort>
+
+                                {/* Vis arbeidsgivere med refusjonsutbetaling først */}
+                                {formatertUtbetalingssum.arbeidsgivere.map((arbeidsgiver) => (
+                                    <HStack key={arbeidsgiver.orgnummer} justify="space-between">
+                                        <BodyShort size="small">{arbeidsgiver.navn}</BodyShort>
+                                        <BodyShort size="small">{arbeidsgiver.totalBeløp}</BodyShort>
+                                    </HStack>
+                                ))}
+
+                                {/* Total sum */}
+                                <HStack justify="space-between" className="border-t pt-2">
+                                    <BodyShort weight="semibold">Totalt</BodyShort>
+                                    <BodyShort weight="semibold">{formatertUtbetalingssum.totalBeløp}</BodyShort>
+                                </HStack>
+                            </VStack>
+                        </Box>
+                    ) : (
+                        <div>
+                            <BodyShort size="small" className="text-gray-600">
+                                Beløp til utbetaling
+                            </BodyShort>
+                            <BodyShort weight="semibold">0,00 kr</BodyShort>
+                        </div>
+                    )}
 
                     <BodyShort size="small" className="text-gray-700">
                         Når du trykker ja sendes saken til beslutter for godkjenning.
