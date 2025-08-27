@@ -24,6 +24,8 @@ spec:
       port: 3000
   accessPolicy:
     outbound:
+      rules:
+        - application: bakrommet
       external:
         - host: sp-kodeverk.ekstern.dev.nav.no
   resources:
