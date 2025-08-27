@@ -1,28 +1,39 @@
 import { z } from 'zod/v4'
 
-export const inntektskildeSchema = z.enum([
-    'AINNTEKT',
-    'INNTEKTSMELDING',
-    'PENSJONSGIVENDE_INNTEKT',
-    'SAKSBEHANDLER',
-    'SKJONNSFASTSETTELSE',
-])
+export const inntektskildeSchema = z.enum(
+    ['AINNTEKT', 'INNTEKTSMELDING', 'PENSJONSGIVENDE_INNTEKT', 'SAKSBEHANDLER', 'SKJONNSFASTSETTELSE'],
+    { error: 'Dette valget er ikke en del av schema. Kontakt en utvikler' },
+)
 export type Inntektskilde = z.infer<typeof inntektskildeSchema>
 
 export const refusjonsperiodeSchema = z
     .object({
         fom: z.string(), // ISO 8601 date string
         tom: z.string(), // ISO 8601 date string
-        beløpØre: z.number().int().min(0), // Beløp i øre
+        beløpØre: z.number({ error: 'Refusjonsbeløp må være et tall' }).int().min(0), // Beløp i øre
     })
-    .refine((data) => new Date(data.fom) <= new Date(data.tom), {
-        message: 'Fra-dato kan ikke være etter til-dato',
+    .superRefine((data, ctx) => {
+        const fomDate = new Date(data.fom)
+        const tomDate = new Date(data.tom)
+
+        if (!isNaN(fomDate.getTime()) && !isNaN(tomDate.getTime()) && fomDate > tomDate) {
+            ctx.addIssue({
+                code: 'custom',
+                path: ['fom'],
+                message: 'Fra-dato kan ikke være etter til-dato',
+            })
+            ctx.addIssue({
+                code: 'custom',
+                path: ['tom'],
+                message: 'dont-show',
+            })
+        }
     })
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>
 
 export const inntektSchema = z.object({
     yrkesaktivitetId: z.string(),
-    beløpPerMånedØre: z.number().int().min(0), // Beløp i øre
+    beløpPerMånedØre: z.number({ error: 'Inntekt må være et tall' }).int().min(0), // Beløp i øre
     kilde: inntektskildeSchema,
     refusjon: z.array(refusjonsperiodeSchema).optional(),
 })
@@ -30,7 +41,7 @@ export type Inntekt = z.infer<typeof inntektSchema>
 
 export const sykepengegrunnlagRequestSchema = z.object({
     inntekter: z.array(inntektSchema).min(1, 'Må ha minst én inntekt'),
-    begrunnelse: z.string().nullable().optional(),
+    begrunnelse: z.string().max(1000, { error: 'Maks 1000 tegn i begrunnelsen' }).nullable().optional(),
 })
 export type SykepengegrunnlagRequest = z.infer<typeof sykepengegrunnlagRequestSchema>
 

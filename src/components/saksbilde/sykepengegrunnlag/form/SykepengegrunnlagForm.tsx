@@ -1,33 +1,21 @@
 import React, { ReactElement, useState } from 'react'
-import { Controller, FormProvider, useController, useFieldArray, useForm, useFormContext } from 'react-hook-form'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-    BodyShort,
-    Button,
-    Checkbox,
-    CheckboxGroup,
-    DatePicker,
-    HStack,
-    Select,
-    Textarea,
-    TextField,
-    useDatepicker,
-    VStack,
-} from '@navikt/ds-react'
+import { BodyShort, Button, Checkbox, CheckboxGroup, HStack, Select, Textarea, VStack } from '@navikt/ds-react'
 
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import {
     formaterBeløpØre,
-    kronerTilØrer,
     SykepengegrunnlagRequest,
     sykepengegrunnlagRequestSchema,
     SykepengegrunnlagResponse,
-    øreTilDisplay,
 } from '@schemas/sykepengegrunnlag'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
-import { gyldigDatoFormat } from '@utils/date-format'
 import { cn } from '@utils/tw'
+import { Feiloppsummering } from '@components/saksbilde/sykepengegrunnlag/form/Feiloppsummering'
+import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
+import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
@@ -91,10 +79,11 @@ export function SykepengegrunnlagForm({
                                 name={`inntekter.${index}.kilde`}
                                 render={({ field, fieldState }) => (
                                     <Select
+                                        id={`inntekter-${index}-kilde`}
                                         size="small"
                                         label="Kilde"
                                         value={field.value}
-                                        error={fieldState.error?.message}
+                                        error={fieldState.error?.message != undefined}
                                         onChange={(val) => field.onChange(val.target.value)}
                                     >
                                         <option value="INNTEKTSMELDING">Inntektsmelding</option>
@@ -143,6 +132,7 @@ export function SykepengegrunnlagForm({
                     render={({ field, fieldState }) => (
                         <Textarea
                             {...field}
+                            id="begrunnelse"
                             value={field.value ?? ''}
                             className="mt-2 w-[640px]"
                             size="small"
@@ -152,10 +142,11 @@ export function SykepengegrunnlagForm({
                             }
                             maxLength={1000}
                             minRows={6}
-                            error={fieldState.error?.message}
+                            error={fieldState.error?.message != undefined}
                         />
                     )}
                 />
+                {Object.values(form.formState.errors).length > 0 && <Feiloppsummering errors={form.formState.errors} />}
                 <HStack gap="2" className="mt-4">
                     <Button size="small" type="submit" loading={form.formState.isSubmitting}>
                         Lagre
@@ -175,96 +166,5 @@ export function SykepengegrunnlagForm({
                 </HStack>
             </form>
         </FormProvider>
-    )
-}
-
-function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElement {
-    const { control } = useFormContext()
-    const refusjonFieldArray = useFieldArray({
-        control,
-        name: `inntekter.${forholdIndex}.refusjon`,
-    })
-
-    return (
-        <VStack gap="4" className="self-end">
-            {refusjonFieldArray.fields.map((field, index) => (
-                <HStack key={field.id} gap="2" align="center" wrap={false}>
-                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.fom`} label="F.o.m. dato" />
-                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.tom`} label="T.o.m. dato" />
-                    <PengerField
-                        className="max-w-28"
-                        name={`inntekter.${forholdIndex}.refusjon.${index}.beløpØre`}
-                        label="Refusjonsbeløp"
-                    />
-                    <Button
-                        className={cn('mt-7 mr-5', { invisible: index === 0 })}
-                        size="xsmall"
-                        variant="tertiary"
-                        type="button"
-                        onClick={() => refusjonFieldArray.remove(index)}
-                    >
-                        Slett
-                    </Button>
-                </HStack>
-            ))}
-            <Button
-                size="xsmall"
-                variant="tertiary"
-                type="button"
-                onClick={() => refusjonFieldArray.append({ fom: '', tom: '', beløpØre: 0 })}
-                className="self-start"
-            >
-                + Legg til
-            </Button>
-        </VStack>
-    )
-}
-
-function DateField({ name, label }: { name: string; label: string }): ReactElement {
-    const { field, fieldState } = useController({ name })
-
-    const { datepickerProps, inputProps } = useDatepicker({
-        defaultSelected: field.value,
-        onDateChange: (date) => {
-            if (!date) {
-                field.onChange('')
-            } else {
-                field.onChange(gyldigDatoFormat(date))
-            }
-        },
-    })
-
-    return (
-        <DatePicker {...datepickerProps}>
-            <DatePicker.Input
-                {...inputProps}
-                size="small"
-                label={label}
-                onBlur={field.onBlur}
-                error={fieldState.error?.message}
-            />
-        </DatePicker>
-    )
-}
-
-function PengerField({ name, label, className }: { name: string; label: string; className: string }): ReactElement {
-    const { field, fieldState } = useController({ name })
-    const [display, setDisplay] = useState(() => øreTilDisplay(field.value))
-    const commit = () => field.onChange(kronerTilØrer(display))
-
-    return (
-        <TextField
-            value={display}
-            onChange={(e) => setDisplay(e.target.value)}
-            onBlur={() => {
-                commit()
-                field.onBlur()
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && commit()}
-            className={cn('[&_input]:text-right', className)}
-            error={fieldState.error?.message}
-            label={label}
-            size="small"
-        />
     )
 }
