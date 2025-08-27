@@ -68,7 +68,11 @@ export function opprettSaksbehandlingsperiode(
             const nyttInntektsforhold: Yrkesaktivitet = {
                 id: uuidv4(),
                 kategorisering,
+                kategoriseringGenerert: null,
                 dagoversikt: [],
+                dagoversiktGenerert: null,
+                saksbehandlingsperiodeId: saksbehandlingsperiode.id,
+                opprettet: new Date().toISOString(),
                 generertFraDokumenter: søknaderForKategori.map((s) => s.id),
             }
 

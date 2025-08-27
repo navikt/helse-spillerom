@@ -45,9 +45,13 @@ export async function handlePostInntektsforhold(
     const nyttInntektsforhold: Yrkesaktivitet = {
         id: uuidv4(),
         kategorisering,
+        kategoriseringGenerert: null,
         dagoversikt: skalHaDagoversikt(kategorisering)
             ? genererDagoversikt(saksbehandlingsperiode.fom, saksbehandlingsperiode.tom)
             : [],
+        dagoversiktGenerert: null,
+        saksbehandlingsperiodeId: uuid,
+        opprettet: new Date().toISOString(),
         generertFraDokumenter: [],
     }
 
@@ -206,9 +210,19 @@ async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiod
         return
     }
 
+    // Legg til manglende felter som bakrommet forventer
+    const yrkesaktivitetMedManglendeFelter = yrkesaktivitet.map((ya) => ({
+        ...ya,
+        kategoriseringGenerert: null,
+        dagoversiktGenerert: null,
+        saksbehandlingsperiodeId,
+        opprettet: new Date().toISOString(),
+        generertFraDokumenter: [],
+    }))
+
     const input: UtbetalingsberegningInput = {
         sykepengegrunnlag,
-        yrkesaktivitet,
+        yrkesaktivitet: yrkesaktivitetMedManglendeFelter,
     }
 
     const beregningData = await kallBakrommetUtbetalingsberegning(input)
