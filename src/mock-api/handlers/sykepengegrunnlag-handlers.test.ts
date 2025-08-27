@@ -1,7 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { NextRequest } from 'next/server'
 
 import { Person } from '@/mock-api/session'
+
+// Mock env modulen for tester
+vi.mock('@/env', () => ({
+    erLokal: true,
+    erDev: false,
+    erDemo: false,
+    erProd: false,
+}))
 
 import {
     handleGetSykepengegrunnlag,
@@ -42,6 +50,7 @@ describe('sykepengegrunnlag-handlers', () => {
             dokumenter: {},
             historikk: {},
             sykepengegrunnlag: {},
+            utbetalingsberegning: {},
         }
     })
 
