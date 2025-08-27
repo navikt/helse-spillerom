@@ -7,24 +7,25 @@ import {
     YrkesaktivitetUtbetalingsberegning,
     DagUtbetalingsberegning,
 } from '@/schemas/utbetalingsberegning'
+import { Dag } from '@/schemas/dagoversikt'
 
 /**
  * Genererer mock utbetalingsberegning for lokalt miljø
  * Legger inn 100kr på de første 10 dagene (5 som refusjon)
  * Deretter 1kr mindre per dag frem til slutten av perioden
+ * Fyller ut manglende dager med arbeidsdager basert på saksbehandlingsperioden
  */
 function genererMockUtbetalingsberegning(input: UtbetalingsberegningInput): UtbetalingsberegningData {
     const yrkesaktiviteter: YrkesaktivitetUtbetalingsberegning[] = []
 
     for (const yrkesaktivitet of input.yrkesaktivitet) {
-        if (!yrkesaktivitet.dagoversikt) {
-            continue
-        }
-
         const dager: DagUtbetalingsberegning[] = []
         let dagTeller = 0
 
-        for (const dag of yrkesaktivitet.dagoversikt) {
+        // Opprett komplett dagoversikt for hele saksbehandlingsperioden
+        const komplettDagoversikt = fyllUtManglendeDager(yrkesaktivitet.dagoversikt || [], input.saksbehandlingsperiode)
+
+        for (const dag of komplettDagoversikt) {
             // Kun beregn for syke dager
             if (dag.dagtype === 'Syk' || dag.dagtype === 'SykNav') {
                 dagTeller++
@@ -66,6 +67,39 @@ function genererMockUtbetalingsberegning(input: UtbetalingsberegningInput): Utbe
     return {
         yrkesaktiviteter,
     }
+}
+
+/**
+ * Fyller ut manglende dager i saksbehandlingsperioden med arbeidsdager
+ * Dager som ikke er definert i dagoversikten fylles ut som arbeidsdager
+ */
+function fyllUtManglendeDager(eksisterendeDager: Dag[], saksbehandlingsperiode: { fom: string; tom: string }): Dag[] {
+    const eksisterendeDatoer = new Set(eksisterendeDager.map((dag) => dag.dato))
+    const komplettDagoversikt = [...eksisterendeDager]
+
+    // Fyll ut manglende dager som arbeidsdager
+    const aktuellDato = new Date(saksbehandlingsperiode.fom)
+    const tomDato = new Date(saksbehandlingsperiode.tom)
+
+    while (aktuellDato <= tomDato) {
+        const datoString = aktuellDato.toISOString().split('T')[0] // YYYY-MM-DD format
+
+        if (!eksisterendeDatoer.has(datoString)) {
+            const arbeidsdag: Dag = {
+                dato: datoString,
+                dagtype: 'Arbeidsdag',
+                grad: null,
+                avvistBegrunnelse: [],
+                kilde: null,
+            }
+            komplettDagoversikt.push(arbeidsdag)
+        }
+
+        aktuellDato.setDate(aktuellDato.getDate() + 1)
+    }
+
+    // Sorter dager etter dato
+    return komplettDagoversikt.sort((a, b) => a.dato.localeCompare(b.dato))
 }
 
 /**

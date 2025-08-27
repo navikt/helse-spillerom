@@ -3,6 +3,11 @@ import { z } from 'zod/v4'
 import { sykepengegrunnlagResponseSchema } from './sykepengegrunnlag'
 import { yrkesaktivitetSchema } from './yrkesaktivitet'
 
+export const saksbehandlingsperiodeSchema = z.object({
+    fom: z.string(), // LocalDate som string
+    tom: z.string(), // LocalDate som string
+})
+
 export const dagUtbetalingsberegningSchema = z.object({
     dato: z.string(), // LocalDate som string
     utbetalingØre: z.number(),
@@ -22,6 +27,7 @@ export const utbetalingsberegningDataSchema = z.object({
 export const utbetalingsberegningInputSchema = z.object({
     sykepengegrunnlag: sykepengegrunnlagResponseSchema,
     yrkesaktivitet: z.array(yrkesaktivitetSchema),
+    saksbehandlingsperiode: saksbehandlingsperiodeSchema,
 })
 
 export const beregningResponseSchema = z.object({
@@ -33,6 +39,7 @@ export const beregningResponseSchema = z.object({
     sistOppdatert: z.string(),
 })
 
+export type Saksbehandlingsperiode = z.infer<typeof saksbehandlingsperiodeSchema>
 export type DagUtbetalingsberegning = z.infer<typeof dagUtbetalingsberegningSchema>
 export type YrkesaktivitetUtbetalingsberegning = z.infer<typeof yrkesaktivitetUtbetalingsberegningSchema>
 export type UtbetalingsberegningData = z.infer<typeof utbetalingsberegningDataSchema>

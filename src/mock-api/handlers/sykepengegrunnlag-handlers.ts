@@ -175,8 +175,9 @@ function beregnSykepengegrunnlag(
 async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
     const sykepengegrunnlag = person.sykepengegrunnlag?.[saksbehandlingsperiodeId]
     const yrkesaktivitet = person.yrkesaktivitet?.[saksbehandlingsperiodeId]
+    const saksbehandlingsperiode = person.saksbehandlingsperioder?.find((p) => p.id === saksbehandlingsperiodeId)
 
-    if (!sykepengegrunnlag || !yrkesaktivitet || yrkesaktivitet.length === 0) {
+    if (!sykepengegrunnlag || !yrkesaktivitet || yrkesaktivitet.length === 0 || !saksbehandlingsperiode) {
         return
     }
 
@@ -193,6 +194,10 @@ async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiod
     const input: UtbetalingsberegningInput = {
         sykepengegrunnlag,
         yrkesaktivitet: yrkesaktivitetMedManglendeFelter,
+        saksbehandlingsperiode: {
+            fom: saksbehandlingsperiode.fom,
+            tom: saksbehandlingsperiode.tom,
+        },
     }
 
     const beregningData = await kallBakrommetUtbetalingsberegning(input)
