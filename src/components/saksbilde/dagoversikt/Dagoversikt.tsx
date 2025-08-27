@@ -48,10 +48,33 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         setValgteDataer(nyeValgteDataer)
     }
 
+    const handleVelgAlle = (valgt: boolean) => {
+        if (!aktivtForhold?.dagoversikt) return
+
+        if (valgt) {
+            // Velg alle dager
+            const alleDataer = new Set(aktivtForhold.dagoversikt.map((dag) => dag.dato))
+            setValgteDataer(alleDataer)
+        } else {
+            // Fjern alle dager
+            setValgteDataer(new Set())
+        }
+    }
+
     const handleAvbrytRedigering = () => {
         setErIRedigeringsmodus(false)
         setValgteDataer(new Set())
     }
+
+    // Sjekk om alle dager er valgt for aktivt forhold
+    const erAlleValgt = aktivtForhold?.dagoversikt
+        ? aktivtForhold.dagoversikt.every((dag) => valgteDataer.has(dag.dato))
+        : false
+
+    // Sjekk om noen dager er valgt (for indeterminate state)
+    const erNoenValgt = aktivtForhold?.dagoversikt
+        ? aktivtForhold.dagoversikt.some((dag) => valgteDataer.has(dag.dato))
+        : false
 
     // Hjelpefunksjon for å finne utbetalingsdata for en spesifikk dag og yrkesaktivitet
     const finnUtbetalingsdata = (yrkesaktivitetId: string, dato: string) => {
@@ -157,7 +180,18 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                 <Table size="small">
                                     <TableHeader>
                                         <TableRow>
-                                            {erIRedigeringsmodus && <TableHeaderCell>Velg</TableHeaderCell>}
+                                            {erIRedigeringsmodus && (
+                                                <TableHeaderCell>
+                                                    <Checkbox
+                                                        checked={erAlleValgt}
+                                                        indeterminate={erNoenValgt && !erAlleValgt}
+                                                        onChange={(e) => handleVelgAlle(e.target.checked)}
+                                                        hideLabel
+                                                    >
+                                                        Velg alle dager
+                                                    </Checkbox>
+                                                </TableHeaderCell>
+                                            )}
                                             <TableHeaderCell>Dato</TableHeaderCell>
                                             <TableHeaderCell className="min-w-24">Dagtype</TableHeaderCell>
                                             <TableHeaderCell align="right">Grad</TableHeaderCell>
