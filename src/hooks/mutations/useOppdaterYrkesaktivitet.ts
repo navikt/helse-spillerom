@@ -33,6 +33,9 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+            })
         },
     })
 }
@@ -55,6 +58,9 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
             })
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
             })
         },
     })

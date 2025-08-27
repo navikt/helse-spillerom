@@ -24,6 +24,9 @@ export function useSettSykepengegrunnlag() {
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+            })
         },
     })
 }
