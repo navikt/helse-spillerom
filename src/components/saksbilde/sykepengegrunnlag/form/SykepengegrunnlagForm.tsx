@@ -16,6 +16,7 @@ import { cn } from '@utils/tw'
 import { Feiloppsummering } from '@components/saksbilde/sykepengegrunnlag/form/Feiloppsummering'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
+import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
@@ -28,6 +29,7 @@ export function SykepengegrunnlagForm({
     yrkesaktivitet,
     avbryt,
 }: SykepengegrunnlagFormProps): ReactElement {
+    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const [visRefusjonFelter, setVisRefusjonFelter] = useState<Record<string, boolean>>(
         Object.fromEntries(
             (sykepengegrunnlag?.inntekter ?? []).map((inntekt) => [
@@ -106,7 +108,11 @@ export function SykepengegrunnlagForm({
                                     setVisRefusjonFelter((prev) => ({ ...prev, [forhold.id]: checked }))
                                     if (checked) {
                                         form.setValue(`inntekter.${index}.refusjon`, [
-                                            { fom: '', tom: '', beløpØre: 0 },
+                                            {
+                                                fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '',
+                                                tom: '',
+                                                beløpØre: 0,
+                                            },
                                         ])
                                     } else {
                                         form.setValue(`inntekter.${index}.refusjon`, [])
