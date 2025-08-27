@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { Modal, VStack, HStack, BodyShort, Button, Heading, Box } from '@navikt/ds-react'
+import { Modal, VStack, HStack, BodyShort, Button, Heading } from '@navikt/ds-react'
 import { ModalBody, ModalHeader, ModalFooter } from '@navikt/ds-react/Modal'
 
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
@@ -37,7 +37,7 @@ export function SendTilGodkjenningModal({
             <ModalBody>
                 <VStack gap="4">
                     {utbetalingssum.totalBeløpØre > 0 ? (
-                        <Box background="surface-neutral" className="rounded-lg p-4">
+                        <div>
                             <VStack gap="3">
                                 <BodyShort weight="semibold">Beløp til utbetaling</BodyShort>
 
@@ -55,7 +55,7 @@ export function SendTilGodkjenningModal({
                                     <BodyShort weight="semibold">{formatertUtbetalingssum.totalBeløp}</BodyShort>
                                 </HStack>
                             </VStack>
-                        </Box>
+                        </div>
                     ) : (
                         <div>
                             <BodyShort size="small" className="text-gray-600">

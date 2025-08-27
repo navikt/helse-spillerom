@@ -2,7 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, VStack, BodyShort, HStack, Box } from '@navikt/ds-react'
+import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
 import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
@@ -129,7 +129,7 @@ export function Venstremeny(): ReactElement {
 
                         {/* Utbetalingsinformasjon */}
                         {utbetalingssum.totalBeløpØre > 0 && (
-                            <Box background="surface-neutral" className="rounded-lg p-4">
+                            <div>
                                 <VStack gap="3">
                                     <BodyShort weight="semibold">Beløp for perioden</BodyShort>
 
@@ -147,7 +147,7 @@ export function Venstremeny(): ReactElement {
                                         <BodyShort weight="semibold">{formatertUtbetalingssum.totalBeløp}</BodyShort>
                                     </HStack>
                                 </VStack>
-                            </Box>
+                            </div>
                         )}
 
                         {kanSaksbehandles && (
