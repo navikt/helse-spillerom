@@ -1,3 +1,5 @@
+import { logger } from '@navikt/next-logger'
+
 import { erLokal } from '@/env'
 import { UtbetalingsberegningInput, UtbetalingsberegningData } from '@/schemas/utbetalingsberegning'
 
@@ -10,6 +12,7 @@ export async function kallBakrommetUtbetalingsberegning(
 ): Promise<UtbetalingsberegningData | null> {
     // Returner null hvis vi kjører lokalt
     if (erLokal) {
+        logger.info('Kaller bakrommet utbetalingsberegning, men er lokal og returnerer null')
         return null
     }
 
@@ -23,13 +26,17 @@ export async function kallBakrommetUtbetalingsberegning(
         })
 
         if (!response.ok) {
+            logger.error('Bakrommet API kallet feilet', { status: response.status, statusText: response.statusText })
             // Bakrommet API kallet feilet
             return null
         }
 
+        logger.info('Bakrommet API kallet var OK', { status: response.status, statusText: response.statusText })
+
         const data = await response.json()
         return data
     } catch (error) {
+        logger.error('Feil ved kall til bakrommet API', { error })
         // Feil ved kall til bakrommet API
         return null
     }
