@@ -79,6 +79,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         }).format(beløpØre / 100)
     }
 
+    // Hjelpefunksjon for å formatere total grad med farger
+    const formaterTotalGrad = (totalGrad: number) => {
+        const colorClass = totalGrad >= 20 ? 'text-green-600' : totalGrad > 0 ? 'text-orange-600' : 'text-gray-500'
+        return <span className={colorClass}>{totalGrad} %</span>
+    }
+
     if (yrkesaktivitetLoading) {
         return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
     }
@@ -156,7 +162,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             <TableHeaderCell className="min-w-24">Dagtype</TableHeaderCell>
                                             <TableHeaderCell align="right">Grad</TableHeaderCell>
                                             <TableHeaderCell>Kilde</TableHeaderCell>
-                                            <TableHeaderCell align="right">Total grad</TableHeaderCell>
+                                            <TableHeaderCell
+                                                align="right"
+                                                title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
+                                            >
+                                                Total grad
+                                            </TableHeaderCell>
                                             <TableHeaderCell align="right">Refusjon</TableHeaderCell>
                                             <TableHeaderCell align="right">Utbetaling</TableHeaderCell>
                                             <TableHeaderCell align="right">Dager igjen</TableHeaderCell>
@@ -199,7 +210,11 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         <KildeTag kilde={dag.kilde} />
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
-                                                        <BodyShort>-</BodyShort>
+                                                        <BodyShort>
+                                                            {utbetalingsdata?.totalGrad
+                                                                ? formaterTotalGrad(utbetalingsdata.totalGrad)
+                                                                : '-'}
+                                                        </BodyShort>
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
                                                         <BodyShort>

@@ -22,16 +22,19 @@ export async function handleGetUtbetalingsberegning(person: Person | undefined, 
                             dato: '2024-01-15',
                             utbetalingØre: 150000, // 1500 kr
                             refusjonØre: 50000, // 500 kr
+                            totalGrad: 100,
                         },
                         {
                             dato: '2024-01-16',
                             utbetalingØre: 120000, // 1200 kr
                             refusjonØre: 30000, // 300 kr
+                            totalGrad: 70,
                         },
                         {
                             dato: '2024-01-17',
                             utbetalingØre: 180000, // 1800 kr
                             refusjonØre: 80000, // 800 kr
+                            totalGrad: 100,
                         },
                     ],
                 },

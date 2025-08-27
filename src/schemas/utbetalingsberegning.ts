@@ -4,6 +4,7 @@ export const dagUtbetalingsberegningSchema = z.object({
     dato: z.string(), // LocalDate som string
     utbetalingØre: z.number(),
     refusjonØre: z.number(),
+    totalGrad: z.number(),
 })
 
 export const yrkesaktivitetUtbetalingsberegningSchema = z.object({
