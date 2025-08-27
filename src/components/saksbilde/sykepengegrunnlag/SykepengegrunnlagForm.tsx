@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from 'react';
-import { Controller, FormProvider, useController, useFieldArray, useForm, useFormContext } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { ReactElement, useState } from 'react'
+import { Controller, FormProvider, useController, useFieldArray, useForm, useFormContext } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
     BodyShort,
     Button,
@@ -13,9 +13,9 @@ import {
     TextField,
     useDatepicker,
     VStack,
-} from '@navikt/ds-react';
+} from '@navikt/ds-react'
 
-import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag';
+import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import {
     formaterBeløpØre,
     kronerTilØrer,
@@ -23,11 +23,11 @@ import {
     sykepengegrunnlagRequestSchema,
     SykepengegrunnlagResponse,
     øreTilDisplay,
-} from '@schemas/sykepengegrunnlag';
-import { Yrkesaktivitet } from '@schemas/yrkesaktivitet';
-import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag';
-import { gyldigDatoFormat } from '@utils/date-format';
-import { cn } from '@utils/tw';
+} from '@schemas/sykepengegrunnlag'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
+import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
+import { gyldigDatoFormat } from '@utils/date-format'
+import { cn } from '@utils/tw'
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse

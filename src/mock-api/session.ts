@@ -14,6 +14,7 @@ import { Dokument } from '@/schemas/dokument'
 import { SykepengegrunnlagResponse } from '@/schemas/sykepengegrunnlag'
 import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 import { Bruker } from '@/schemas/bruker'
+import { UtbetalingsberegningData } from '@/schemas/utbetalingsberegning'
 
 export interface Person {
     fnr: string
@@ -26,6 +27,7 @@ export interface Person {
     dokumenter: Record<string, Dokument[]>
     historikk: Record<string, SaksbehandlingsperiodeEndring[]>
     sykepengegrunnlag: Record<string, SykepengegrunnlagResponse>
+    utbetalingsberegning: Record<string, UtbetalingsberegningData>
 }
 
 type Session = {
@@ -50,6 +52,7 @@ function deepCopyPerson(person: Testperson): Person {
         dokumenter: JSON.parse(JSON.stringify(person.dokumenter || {})),
         historikk: {},
         sykepengegrunnlag: {},
+        utbetalingsberegning: {},
     }
 }
 
@@ -121,6 +124,7 @@ function skapPerson(fnr: string): Person {
         dokumenter: {},
         historikk: {},
         sykepengegrunnlag: {},
+        utbetalingsberegning: {},
     }
 }
 

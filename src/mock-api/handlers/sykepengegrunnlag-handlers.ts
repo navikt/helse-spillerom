@@ -9,6 +9,8 @@ import {
     Inntektskilde,
 } from '@/schemas/sykepengegrunnlag'
 import { beregn6GØre, beregn1GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
+import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
+import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 
 export async function handleGetSykepengegrunnlag(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -106,6 +108,9 @@ export async function handlePutSykepengegrunnlag(
     }
     person.sykepengegrunnlag[uuid] = grunnlag
 
+    // Kall bakrommet for å beregne utbetalinger
+    await triggerUtbetalingsberegning(person, uuid)
+
     return NextResponse.json(grunnlag)
 }
 
@@ -119,6 +124,12 @@ export async function handleDeleteSykepengegrunnlag(person: Person | undefined, 
     }
 
     delete person.sykepengegrunnlag[uuid]
+
+    // Slett utbetalingsberegning når sykepengegrunnlag slettes
+    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+        delete person.utbetalingsberegning[uuid]
+    }
+
     return new NextResponse(null, { status: 204 })
 }
 
@@ -158,5 +169,27 @@ function beregnSykepengegrunnlag(
         opprettet: now,
         opprettetAv: 'Saks McBehandlersen',
         sistOppdatert: now,
+    }
+}
+
+async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
+    const sykepengegrunnlag = person.sykepengegrunnlag?.[saksbehandlingsperiodeId]
+    const yrkesaktivitet = person.yrkesaktivitet?.[saksbehandlingsperiodeId]
+
+    if (!sykepengegrunnlag || !yrkesaktivitet || yrkesaktivitet.length === 0) {
+        return
+    }
+
+    const input: UtbetalingsberegningInput = {
+        sykepengegrunnlag,
+        yrkesaktivitet,
+    }
+
+    const beregningData = await kallBakrommetUtbetalingsberegning(input)
+    if (beregningData) {
+        if (!person.utbetalingsberegning) {
+            person.utbetalingsberegning = {}
+        }
+        person.utbetalingsberegning[saksbehandlingsperiodeId] = beregningData
     }
 }

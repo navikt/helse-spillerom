@@ -8,42 +8,20 @@ export async function handleGetUtbetalingsberegning(person: Person | undefined, 
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
 
-    // Returner testdata for å demonstrere funksjonaliteten
-    // I produksjon ville dette returnert null hvis ingen beregning finnes
-    const testData = {
-        id: uuidv4(),
-        saksbehandlingsperiodeId: uuid,
-        beregningData: {
-            yrkesaktiviteter: [
-                {
-                    yrkesaktivitetId: person.yrkesaktivitet?.[uuid]?.[0]?.id || uuidv4(),
-                    dager: [
-                        {
-                            dato: '2024-01-15',
-                            utbetalingØre: 150000, // 1500 kr
-                            refusjonØre: 50000, // 500 kr
-                            totalGrad: 100,
-                        },
-                        {
-                            dato: '2024-01-16',
-                            utbetalingØre: 120000, // 1200 kr
-                            refusjonØre: 30000, // 300 kr
-                            totalGrad: 70,
-                        },
-                        {
-                            dato: '2024-01-17',
-                            utbetalingØre: 180000, // 1800 kr
-                            refusjonØre: 80000, // 800 kr
-                            totalGrad: 100,
-                        },
-                    ],
-                },
-            ],
-        },
-        opprettet: '2024-01-15T10:00:00Z',
-        opprettetAv: 'test-bruker',
-        sistOppdatert: '2024-01-15T10:00:00Z',
+    // Sjekk om vi har en lagret beregning i sesjonen
+    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+        const beregningData = person.utbetalingsberegning[uuid]
+        const response = {
+            id: uuidv4(),
+            saksbehandlingsperiodeId: uuid,
+            beregningData,
+            opprettet: new Date().toISOString(),
+            opprettetAv: 'bakrommet-demo-api',
+            sistOppdatert: new Date().toISOString(),
+        }
+        return NextResponse.json(response)
     }
 
-    return NextResponse.json(testData)
+    // Returner null hvis ingen beregning finnes
+    return NextResponse.json(null, { status: 200 })
 }

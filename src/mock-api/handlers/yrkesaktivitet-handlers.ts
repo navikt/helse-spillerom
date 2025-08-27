@@ -5,6 +5,8 @@ import { Person } from '@/mock-api/session'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Dag } from '@/schemas/dagoversikt'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
+import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
+import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']
@@ -99,6 +101,11 @@ export async function handleDeleteInntektsforhold(
         delete person.sykepengegrunnlag[saksbehandlingsperiodeId]
     }
 
+    // Slett utbetalingsberegning når yrkesaktivitet endres
+    if (person.utbetalingsberegning && person.utbetalingsberegning[saksbehandlingsperiodeId]) {
+        delete person.utbetalingsberegning[saksbehandlingsperiodeId]
+    }
+
     return new Response(null, { status: 204 })
 }
 
@@ -154,6 +161,9 @@ export async function handlePutInntektsforholdDagoversikt(
     }
     yrkesaktivitet.dagoversikt = oppdaterteDager
 
+    // Kall bakrommet for å beregne utbetalinger
+    await triggerUtbetalingsberegning(person, uuid)
+
     return new Response(null, { status: 204 })
 }
 
@@ -180,7 +190,34 @@ export async function handlePutInntektsforholdKategorisering(
         delete person.sykepengegrunnlag[uuid]
     }
 
+    // Slett utbetalingsberegning når yrkesaktivitet endres
+    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+        delete person.utbetalingsberegning[uuid]
+    }
+
     return new Response(null, { status: 204 })
+}
+
+async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
+    const sykepengegrunnlag = person.sykepengegrunnlag?.[saksbehandlingsperiodeId]
+    const yrkesaktivitet = person.yrkesaktivitet?.[saksbehandlingsperiodeId]
+
+    if (!sykepengegrunnlag || !yrkesaktivitet || yrkesaktivitet.length === 0) {
+        return
+    }
+
+    const input: UtbetalingsberegningInput = {
+        sykepengegrunnlag,
+        yrkesaktivitet,
+    }
+
+    const beregningData = await kallBakrommetUtbetalingsberegning(input)
+    if (beregningData) {
+        if (!person.utbetalingsberegning) {
+            person.utbetalingsberegning = {}
+        }
+        person.utbetalingsberegning[saksbehandlingsperiodeId] = beregningData
+    }
 }
 
 // Test funksjon for å verifisere at det nye formatet fungerer
