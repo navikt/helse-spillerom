@@ -55,11 +55,15 @@ export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponse
 
 // Utility functions for converting between kroner and øre
 export function kronerTilØrer(kroner: number | string): number {
-    return Math.round(Number(kroner) * 100)
+    return Math.round(Number(String(kroner).replace(',', '.')) * 100)
 }
 
 export function ørerTilKroner(ører: number): number {
     return ører / 100
+}
+
+export function øreTilDisplay(øre?: number): string {
+    return øre == null ? '' : String(øre / 100).replace('.', ',')
 }
 
 export function formaterBeløpØre(ører: number | undefined, desimaler: number = 2): string {

@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from 'react'
-import { Controller, FormProvider, useController, useFieldArray, useForm, useFormContext } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import React, { ReactElement, useState } from 'react';
+import { Controller, FormProvider, useController, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
     BodyShort,
     Button,
@@ -13,21 +13,21 @@ import {
     TextField,
     useDatepicker,
     VStack,
-} from '@navikt/ds-react'
+} from '@navikt/ds-react';
 
-import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
+import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag';
 import {
     formaterBeløpØre,
     kronerTilØrer,
     SykepengegrunnlagRequest,
     sykepengegrunnlagRequestSchema,
     SykepengegrunnlagResponse,
-    ørerTilKroner,
-} from '@schemas/sykepengegrunnlag'
-import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
-import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag'
-import { gyldigDatoFormat } from '@utils/date-format'
-import { cn } from '@utils/tw'
+    øreTilDisplay,
+} from '@schemas/sykepengegrunnlag';
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet';
+import { useSettSykepengegrunnlag } from '@hooks/mutations/useSettSykepengegrunnlag';
+import { gyldigDatoFormat } from '@utils/date-format';
+import { cn } from '@utils/tw';
 
 type SykepengegrunnlagFormProps = {
     sykepengegrunnlag?: SykepengegrunnlagResponse
@@ -81,20 +81,10 @@ export function SykepengegrunnlagForm({
                     <VStack key={forhold.id} gap="4">
                         <HStack align="end" gap="4" wrap={false}>
                             <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} className="mb-0.5" />
-                            <Controller
-                                control={form.control}
+                            <PengerField
+                                className="ml-auto w-[212px]"
                                 name={`inntekter.${index}.beløpPerMånedØre`}
-                                render={({ field, fieldState }) => (
-                                    <TextField
-                                        {...field}
-                                        value={ørerTilKroner(field.value)}
-                                        onChange={(e) => field.onChange(kronerTilØrer(e.target.value))}
-                                        className="ml-auto w-[212px] [&_input]:text-right"
-                                        error={fieldState.error?.message}
-                                        label="Inntekt"
-                                        size="small"
-                                    />
-                                )}
+                                label="Inntekt"
                             />
                             <Controller
                                 control={form.control}
@@ -199,24 +189,13 @@ function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElemen
         <VStack gap="4" className="self-end">
             {refusjonFieldArray.fields.map((field, index) => (
                 <HStack key={field.id} gap="2" align="center" wrap={false}>
-                    <Date name={`inntekter.${forholdIndex}.refusjon.${index}.fom`} label="F.o.m. dato" />
-                    <Date name={`inntekter.${forholdIndex}.refusjon.${index}.tom`} label="T.o.m. dato" />
-                    <Controller
-                        control={control}
+                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.fom`} label="F.o.m. dato" />
+                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.tom`} label="T.o.m. dato" />
+                    <PengerField
+                        className="max-w-28"
                         name={`inntekter.${forholdIndex}.refusjon.${index}.beløpØre`}
-                        render={({ field, fieldState }) => (
-                            <TextField
-                                {...field}
-                                value={ørerTilKroner(field.value)}
-                                onChange={(e) => field.onChange(kronerTilØrer(e.target.value))}
-                                className="max-w-28 [&_input]:text-right"
-                                label="Refusjonsbeløp"
-                                size="small"
-                                error={fieldState.error?.message}
-                            />
-                        )}
+                        label="Refusjonsbeløp"
                     />
-
                     <Button
                         className={cn('mt-7 mr-5', { invisible: index === 0 })}
                         size="xsmall"
@@ -241,9 +220,8 @@ function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElemen
     )
 }
 
-function Date({ name, label }: { name: string; label: string }): ReactElement {
-    const { control } = useFormContext()
-    const { field, fieldState } = useController({ name, control })
+function DateField({ name, label }: { name: string; label: string }): ReactElement {
+    const { field, fieldState } = useController({ name })
 
     const { datepickerProps, inputProps } = useDatepicker({
         defaultSelected: field.value,
@@ -266,5 +244,27 @@ function Date({ name, label }: { name: string; label: string }): ReactElement {
                 error={fieldState.error?.message}
             />
         </DatePicker>
+    )
+}
+
+function PengerField({ name, label, className }: { name: string; label: string; className: string }): ReactElement {
+    const { field, fieldState } = useController({ name })
+    const [display, setDisplay] = useState(() => øreTilDisplay(field.value))
+    const commit = () => field.onChange(kronerTilØrer(display))
+
+    return (
+        <TextField
+            value={display}
+            onChange={(e) => setDisplay(e.target.value)}
+            onBlur={() => {
+                commit()
+                field.onBlur()
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && commit()}
+            className={cn('[&_input]:text-right', className)}
+            error={fieldState.error?.message}
+            label={label}
+            size="small"
+        />
     )
 }
