@@ -28,7 +28,7 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
     )
 }
 
-export function Utbetalingsinformasjon(): ReactElement {
+export function BeløpForPerioden(): ReactElement {
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
     const { data: yrkesaktivitet } = useYrkesaktivitet()
     const { data: personinfo } = usePersoninfo()

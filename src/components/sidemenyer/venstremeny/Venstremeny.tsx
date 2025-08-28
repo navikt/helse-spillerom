@@ -20,7 +20,7 @@ import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
 import { StatusTag } from './StatusTag'
 import { SendTilbakeModal } from './SendTilbakeModal'
-import { Utbetalingsinformasjon } from './Utbetalingsinformasjon'
+import { BeløpForPerioden } from './BeløpForPerioden'
 
 export function Venstremeny(): ReactElement {
     const router = useRouter()
@@ -119,8 +119,7 @@ export function Venstremeny(): ReactElement {
                             </BodyShort>
                         </HStack>
 
-                        {/* Utbetalingsinformasjon */}
-                        <Utbetalingsinformasjon />
+                        <BeløpForPerioden />
 
                         {kanSaksbehandles && (
                             <>

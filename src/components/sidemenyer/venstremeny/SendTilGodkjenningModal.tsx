@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import { Modal, VStack, HStack, BodyShort, Button, Heading } from '@navikt/ds-react'
 import { ModalBody, ModalHeader, ModalFooter } from '@navikt/ds-react/Modal'
 
-import { Utbetalingsinformasjon } from './Utbetalingsinformasjon'
+import { BeløpForPerioden } from './BeløpForPerioden'
 
 interface SendTilGodkjenningModalProps {
     åpen: boolean
@@ -27,7 +27,7 @@ export function SendTilGodkjenningModal({
             </ModalHeader>
             <ModalBody>
                 <VStack gap="4">
-                    <Utbetalingsinformasjon />
+                    <BeløpForPerioden />
 
                     <BodyShort size="small" className="text-gray-700">
                         Når du trykker ja sendes saken til beslutter for godkjenning.
