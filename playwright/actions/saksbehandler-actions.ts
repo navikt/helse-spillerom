@@ -65,9 +65,9 @@ export function verifiserKategoriTag(forventetTekst: string) {
     return async (page: Page) => {
         await test.step(`Verifiser at kategoritag viser "${forventetTekst}"`, async () => {
             const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
-            const kategoriTag = venstremeny.getByRole('region', { name: 'Inntektskategorier' })
-            await kategoriTag.waitFor({ state: 'visible' })
-            await expect(kategoriTag).toContainText(forventetTekst)
+            const saksinformasjon = venstremeny.getByRole('region', { name: 'Saksinformasjon' })
+            await saksinformasjon.waitFor({ state: 'visible' })
+            await expect(saksinformasjon).toContainText(forventetTekst)
         })
     }
 }

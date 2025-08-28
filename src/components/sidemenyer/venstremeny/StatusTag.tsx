@@ -32,10 +32,8 @@ export function StatusTag(): ReactElement | null {
     const { tekst, variant } = getStatusTekstOgVariant(aktivSaksbehandlingsperiode.status)
 
     return (
-        <div role="region" aria-label="Status på saksbehandlingsperiode">
-            <Tag variant={variant} size="medium" aria-label={`Status: ${tekst}`}>
-                {tekst}
-            </Tag>
-        </div>
+        <Tag variant={variant} size="small" aria-label={`Status: ${tekst}`}>
+            {tekst}
+        </Tag>
     )
 }

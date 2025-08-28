@@ -14,14 +14,12 @@ export function KategoriTag(): ReactElement | null {
     const { tekst: kategoriTekst, warning } = kategoriSetTilTekstOgWarning(kategorier)
     if (!kategoriTekst) return null
     return (
-        <div role="region" aria-label="Inntektskategorier">
-            <Tag
-                variant={warning ? 'warning' : 'neutral'}
-                size="medium"
-                aria-label={warning ? `Advarsel: ${kategoriTekst}` : kategoriTekst}
-            >
-                {kategoriTekst}
-            </Tag>
-        </div>
+        <Tag
+            variant={warning ? 'warning' : 'neutral'}
+            size="small"
+            aria-label={warning ? `Advarsel: ${kategoriTekst}` : kategoriTekst}
+        >
+            {kategoriTekst}
+        </Tag>
     )
 }

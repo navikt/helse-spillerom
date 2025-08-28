@@ -108,8 +108,10 @@ export function Venstremeny(): ReactElement {
     return (
         <Sidemeny side="left">
             <VStack gap="4">
-                <KategoriTag />
-                <StatusTag />
+                <HStack gap="2" wrap role="region" aria-label="Saksinformasjon">
+                    <KategoriTag />
+                    <StatusTag />
+                </HStack>
 
                 {aktivSaksbehandlingsperiode && (
                     <>
