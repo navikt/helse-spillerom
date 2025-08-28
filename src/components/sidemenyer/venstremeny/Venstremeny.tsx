@@ -115,13 +115,22 @@ export function Venstremeny(): ReactElement {
 
                 {aktivSaksbehandlingsperiode && (
                     <>
-                        <HStack gap="2" align="center" className="mb-4">
+                        <HStack gap="2" align="center">
                             <CalendarIcon aria-hidden fontSize="1.25rem" />
                             <BodyShort size="small">
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.fom)} -{' '}
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.tom)}
                             </BodyShort>
                         </HStack>
+
+                        {aktivSaksbehandlingsperiode.skjæringstidspunkt && (
+                            <HStack gap="2" align="center" className="mb-4">
+                                <CalendarIcon aria-hidden fontSize="1.25rem" aria-label="Skjæringstidspunkt" />
+                                <BodyShort size="small">
+                                    {getFormattedDateString(aktivSaksbehandlingsperiode.skjæringstidspunkt)}
+                                </BodyShort>
+                            </HStack>
+                        )}
 
                         <SykepengegrunnlagVisning />
                         <Utbetalingsdager />
