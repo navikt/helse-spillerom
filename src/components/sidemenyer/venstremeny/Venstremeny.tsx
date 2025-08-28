@@ -21,6 +21,8 @@ import { KategoriTag } from './KategoriTag'
 import { StatusTag } from './StatusTag'
 import { SendTilbakeModal } from './SendTilbakeModal'
 import { BeløpForPerioden } from './BeløpForPerioden'
+import { SykepengegrunnlagVisning } from './SykepengegrunnlagVisning'
+import { Utbetalingsdager } from './Utbetalingsdager'
 
 export function Venstremeny(): ReactElement {
     const router = useRouter()
@@ -111,7 +113,7 @@ export function Venstremeny(): ReactElement {
 
                 {aktivSaksbehandlingsperiode && (
                     <>
-                        <HStack gap="2" align="center">
+                        <HStack gap="2" align="center" className="mb-4">
                             <CalendarIcon aria-hidden fontSize="1.25rem" />
                             <BodyShort size="small">
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.fom)} -{' '}
@@ -119,6 +121,8 @@ export function Venstremeny(): ReactElement {
                             </BodyShort>
                         </HStack>
 
+                        <SykepengegrunnlagVisning />
+                        <Utbetalingsdager />
                         <BeløpForPerioden />
 
                         {kanSaksbehandles && (
