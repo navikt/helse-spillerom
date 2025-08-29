@@ -75,7 +75,7 @@ export async function getSession(): Promise<Session> {
         cookieStore.set(cookieName, sessionId, {
             httpOnly: false,
             path: '/',
-            expires: new Date(Date.now() + 60 * 60 * 1000),
+            expires: new Date(Date.now() + 4 * 60 * 60 * 1000),
             sameSite: 'none',
             secure: true,
         })
@@ -88,7 +88,7 @@ export async function getSession(): Promise<Session> {
         const personer = testpersoner.map(deepCopyPerson)
 
         sessionStore[sessionId] = {
-            expires: dayjs().add(120, 'minute'),
+            expires: dayjs().add(240, 'minute'),
             testpersoner: [
                 ...personer,
                 skapPerson('12345678902'),
