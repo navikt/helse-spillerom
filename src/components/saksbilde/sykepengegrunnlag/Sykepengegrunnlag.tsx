@@ -87,7 +87,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                                                             <HStack
                                                                 key={i}
                                                                 justify="space-between"
-                                                                className="max-w-[300px]"
+                                                                className="max-w-70"
                                                             >
                                                                 <BodyShort size="small">{`${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}: `}</BodyShort>
                                                                 <BodyShort size="small">
