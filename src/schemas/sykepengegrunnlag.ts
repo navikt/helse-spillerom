@@ -1,7 +1,7 @@
 import { z } from 'zod/v4'
 
 export const inntektskildeSchema = z.enum(
-    ['AINNTEKT', 'INNTEKTSMELDING', 'PENSJONSGIVENDE_INNTEKT', 'SAKSBEHANDLER', 'SKJONNSFASTSETTELSE'],
+    ['AINNTEKT', 'INNTEKTSMELDING', 'PENSJONSGIVENDE_INNTEKT', 'SKJONNSFASTSETTELSE'],
     { error: 'Dette valget er ikke en del av schema. Kontakt en utvikler' },
 )
 export type Inntektskilde = z.infer<typeof inntektskildeSchema>

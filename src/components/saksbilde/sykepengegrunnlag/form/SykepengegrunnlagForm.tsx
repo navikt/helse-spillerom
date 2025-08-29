@@ -89,7 +89,6 @@ export function SykepengegrunnlagForm({
                                         onChange={(val) => field.onChange(val.target.value)}
                                     >
                                         <option value="INNTEKTSMELDING">Inntektsmelding</option>
-                                        <option value="SAKSBEHANDLER">Saksbehandler</option>
                                         <option value="AINNTEKT">A-inntekt</option>
                                         <option value="PENSJONSGIVENDE_INNTEKT">Sigrun</option>
                                         <option value="SKJONNSFASTSETTELSE">Skjønnsfastsatt</option>

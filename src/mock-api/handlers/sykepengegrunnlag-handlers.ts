@@ -70,7 +70,6 @@ export async function handlePutSykepengegrunnlag(
             'AINNTEKT',
             'INNTEKTSMELDING',
             'PENSJONSGIVENDE_INNTEKT',
-            'SAKSBEHANDLER',
             'SKJONNSFASTSETTELSE',
         ]
         if (!gyldigeKilder.includes(inntekt.kilde)) {
