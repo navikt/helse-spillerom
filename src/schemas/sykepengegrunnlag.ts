@@ -8,8 +8,8 @@ export type Inntektskilde = z.infer<typeof inntektskildeSchema>
 
 export const refusjonsperiodeSchema = z
     .object({
-        fom: z.iso.date({ error: 'Må være fylt ut og være en gyldig dato' }), // ISO 8601 date string
-        tom: z.string(), // ISO 8601 date string
+        fom: z.iso.date({ error: 'Fra og med dato må være fylt ut og være en gyldig dato' }), // ISO 8601 date string
+        tom: z.iso.date({ error: 'Til og med dato må være fylt ut og være en gyldig dato' }), // ISO 8601 date string
         beløpØre: z.number({ error: 'Refusjonsbeløp må være et tall' }).int().min(0), // Beløp i øre
     })
     .superRefine((data, ctx) => {
