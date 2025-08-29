@@ -11,7 +11,7 @@ import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/f
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
-import { getFormattedNorwegianLongDate } from '@utils/date-format'
+import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -63,19 +63,49 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                 </HStack>
                 {!erIRedigeringsmodus && (
                     <>
-                        {yrkesaktivitet.map((forhold) => {
-                            const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                                (inntekt) => inntekt.yrkesaktivitetId === forhold.id,
-                            )
-                            return (
-                                <HStack key={forhold.id} justify="space-between">
-                                    <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
-                                    <BodyShort>
-                                        {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
-                                    </BodyShort>
-                                </HStack>
-                            )
-                        })}
+                        <VStack gap="3">
+                            {yrkesaktivitet.map((forhold, i) => {
+                                const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
+                                    (inntekt) => inntekt.yrkesaktivitetId === forhold.id,
+                                )
+                                return (
+                                    <React.Fragment key={forhold.id}>
+                                        <VStack gap="3">
+                                            <HStack justify="space-between">
+                                                <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
+                                                <BodyShort>
+                                                    {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
+                                                </BodyShort>
+                                            </HStack>
+                                            {(inntektFraSykepengegrunnlag?.refusjon ?? []).length > 0 && (
+                                                <VStack className="ml-8" gap="1">
+                                                    <BodyShort weight="semibold" size="small">
+                                                        Refusjon
+                                                    </BodyShort>
+                                                    <VStack gap="1">
+                                                        {inntektFraSykepengegrunnlag?.refusjon?.map((refusjon, i) => (
+                                                            <HStack
+                                                                key={i}
+                                                                justify="space-between"
+                                                                className="max-w-[300px]"
+                                                            >
+                                                                <BodyShort size="small">{`${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}: `}</BodyShort>
+                                                                <BodyShort size="small">
+                                                                    {formaterBeløpØre(refusjon.beløpØre)}
+                                                                </BodyShort>
+                                                            </HStack>
+                                                        ))}
+                                                    </VStack>
+                                                </VStack>
+                                            )}
+                                        </VStack>
+                                        {i < yrkesaktivitet.length - 1 && (
+                                            <span className="h-px bg-ax-border-neutral-subtle" />
+                                        )}
+                                    </React.Fragment>
+                                )
+                            })}
+                        </VStack>
                         <span className="border-t border-t-ax-bg-neutral-strong" />
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Totalt</BodyShort>
