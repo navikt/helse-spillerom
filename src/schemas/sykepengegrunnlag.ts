@@ -1,5 +1,7 @@
 import { z } from 'zod/v4'
 
+import { getFormattedDateString } from '@utils/date-format'
+
 export const inntektskildeSchema = z.enum(
     ['AINNTEKT', 'INNTEKTSMELDING', 'PENSJONSGIVENDE_INNTEKT', 'SKJONNSFASTSETTELSE'],
     { error: 'Dette valget er ikke en del av schema. Kontakt en utvikler' },
@@ -26,12 +28,44 @@ export const refusjonsperiodeSchema = z
     })
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>
 
-export const inntektSchema = z.object({
-    yrkesaktivitetId: z.string(),
-    beløpPerMånedØre: z.number({ error: 'Inntekt må være et tall' }).int().min(0), // Beløp i øre
-    kilde: inntektskildeSchema,
-    refusjon: z.array(refusjonsperiodeSchema).optional(),
-})
+export const inntektSchema = z
+    .object({
+        yrkesaktivitetId: z.string(),
+        beløpPerMånedØre: z.number({ error: 'Inntekt må være et tall' }).int().min(0), // Beløp i øre
+        kilde: inntektskildeSchema,
+        refusjon: z.array(refusjonsperiodeSchema).optional(),
+    })
+    .superRefine((data, ctx) => {
+        if (!data.refusjon) return
+
+        const sorted = [...data.refusjon].sort((a, b) => +new Date(a.fom) - +new Date(b.fom))
+
+        sorted.slice(0, -1).forEach((current, i) => {
+            const next = sorted[i + 1]
+            const currentTom = new Date(current.tom)
+            const nextFom = new Date(next.fom)
+
+            if (+nextFom <= +currentTom) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['refusjon', i + 1, 'fom'],
+                    message: `Perioden starter før eller på sluttdato (${getFormattedDateString(current.tom)}) til forrige periode`,
+                })
+                return
+            }
+
+            const expectedNextFom = new Date(+currentTom)
+            expectedNextFom.setDate(expectedNextFom.getDate() + 1)
+
+            if (+nextFom !== +expectedNextFom) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['refusjon', i + 1, 'fom'],
+                    message: `Perioden må starte dagen etter forrige periodes t.o.m dato (${getFormattedDateString(current.tom)})`,
+                })
+            }
+        })
+    })
 export type Inntekt = z.infer<typeof inntektSchema>
 
 export const sykepengegrunnlagRequestSchema = z.object({
