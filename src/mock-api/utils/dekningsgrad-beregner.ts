@@ -8,6 +8,13 @@ export function beregnDekningsgrad(kategorisering: Record<string, string | strin
 
     switch (inntektskategori) {
         case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
+            // Sjekk først om det er en fisker - disse skal ha 100% dekning uansett
+            const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE'] as string
+
+            if (typeSelvstendig === 'FISKER') {
+                return 100
+            }
+
             const forsikring = kategorisering['SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING'] as string
 
             switch (forsikring) {

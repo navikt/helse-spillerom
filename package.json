@@ -17,7 +17,7 @@
         "play": "npx playwright test --ui",
         "play-headless": "npx playwright test",
         "lint": "eslint --ext=ts,tsx src",
-        "test": "vitest --config vitest.config.mts",
+        "test": "vitest --config vitest.config.mts --watch=false",
         "lint:fix": "eslint --ext=ts,tsx src --fix",
         "format": "npm run prettier:write && npm run lint:fix"
     },
