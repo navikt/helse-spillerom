@@ -9,6 +9,7 @@ import { Dokument } from '@/schemas/dokument'
 import { genererDagoversikt } from './dagoversikt-generator'
 import { lagKategorisering } from './kategorisering-generator'
 import { genererDokumenterFraSøknader } from './dokument-generator'
+import { beregnDekningsgrad } from './dekningsgrad-beregner'
 
 /**
  * Oppretter en saksbehandlingsperiode med tilhørende yrkesaktivitet, dagoversikt og dokumenter
@@ -65,6 +66,9 @@ export function opprettSaksbehandlingsperiode(
         })
 
         kategorierOgSøknader.forEach(({ kategorisering, søknader: søknaderForKategori }) => {
+            // Beregn dekningsgrad basert på kategorisering
+            const dekningsgrad = beregnDekningsgrad(kategorisering)
+
             const nyttInntektsforhold: Yrkesaktivitet = {
                 id: uuidv4(),
                 kategorisering,
@@ -74,6 +78,7 @@ export function opprettSaksbehandlingsperiode(
                 saksbehandlingsperiodeId: saksbehandlingsperiode.id,
                 opprettet: new Date().toISOString(),
                 generertFraDokumenter: søknaderForKategori.map((s) => s.id),
+                dekningsgrad,
             }
 
             yrkesaktivitet.push(nyttInntektsforhold)

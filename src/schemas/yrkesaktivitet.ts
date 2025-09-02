@@ -11,6 +11,7 @@ export const yrkesaktivitetSchema = z.object({
     saksbehandlingsperiodeId: z.string(),
     opprettet: z.string(),
     generertFraDokumenter: z.array(z.string()),
+    dekningsgrad: z.number(),
 })
 
 export type Yrkesaktivitet = z.infer<typeof yrkesaktivitetSchema>

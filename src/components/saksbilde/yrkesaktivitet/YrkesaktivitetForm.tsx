@@ -276,6 +276,7 @@ export default function YrkesaktivitetForm({
             {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
                 <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
             ))}
+
             {!disabled && kansaksbehandles && (
                 <HStack gap="4">
                     <Button
