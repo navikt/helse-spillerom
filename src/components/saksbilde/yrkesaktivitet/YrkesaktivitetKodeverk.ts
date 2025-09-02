@@ -192,6 +192,17 @@ export const yrkesaktivitetKodeverk = {
             kode: 'INAKTIV',
             navn: 'Inaktiv',
             kanIkkeKombineresMedAndre: true,
+            underspørsmål: [
+                {
+                    kode: 'VARIANT_AV_INAKTIV',
+                    navn: 'En fornuftig spørsmålstekst',
+                    variant: 'RADIO',
+                    alternativer: [
+                        { kode: 'INAKTIV_VARIANT_A', navn: 'Bokstav A, 65% dekningsgrad' },
+                        { kode: 'INAKTIV_VARIANT_B', navn: 'Bokstav B, 100% dekningsgrad' },
+                    ],
+                },
+            ],
         },
         {
             kode: 'ARBEIDSLEDIG',
