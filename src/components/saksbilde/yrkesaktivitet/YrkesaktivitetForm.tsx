@@ -43,6 +43,7 @@ interface RåKodeverkSpørsmål {
     navn: string
     variant: string
     alternativer?: RåKodeverkAlternativ[]
+    underspørsmål?: RåKodeverkSpørsmål[]
 }
 
 interface InntektsforholdFormProps {
@@ -120,6 +121,48 @@ export default function YrkesaktivitetForm({
         setSelectedValues(newValues)
     }
 
+    // Rydder opp i kategorisering ved å følge kodeverket og fjerne felter som ikke eksisterer
+    const ryddOppKategorisering = (values: Record<string, string | string[]>): Record<string, string | string[]> => {
+        const oppryddetValues: Record<string, string | string[]> = {}
+
+        // Start med INNTEKTSKATEGORI
+        if (values['INNTEKTSKATEGORI']) {
+            oppryddetValues['INNTEKTSKATEGORI'] = values['INNTEKTSKATEGORI']
+        }
+
+        // Finn den valgte kategorien i kodeverket
+        const inntektskategori = values['INNTEKTSKATEGORI'] as string
+        const kategoriAlternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === inntektskategori)
+
+        if (!kategoriAlternativ?.underspørsmål) {
+            return oppryddetValues
+        }
+
+        // Gå gjennom alle underspørsmål og sjekk hvilke felter som faktisk eksisterer
+        const gyldigeFelter = new Set<string>()
+        gyldigeFelter.add('INNTEKTSKATEGORI')
+
+        const samleGyldigeFelter = (spørsmål: RåKodeverkSpørsmål[]) => {
+            spørsmål.forEach((spm) => {
+                gyldigeFelter.add(spm.kode)
+                if (spm.underspørsmål) {
+                    samleGyldigeFelter(spm.underspørsmål)
+                }
+            })
+        }
+
+        samleGyldigeFelter(kategoriAlternativ.underspørsmål as KodeverkSpørsmål[])
+
+        // Behold kun felter som eksisterer i kodeverket
+        Object.entries(values).forEach(([key, value]) => {
+            if (gyldigeFelter.has(key) && value !== undefined && value !== '') {
+                oppryddetValues[key] = value
+            }
+        })
+
+        return oppryddetValues
+    }
+
     const handleRadioChange = (kode: string, value: string) => {
         if (disabled) return
         setSelectedValues((prev) => ({
@@ -138,12 +181,16 @@ export default function YrkesaktivitetForm({
 
     function handleSubmit() {
         if (disabled) return
+
+        // Rydd opp i kategorisering før sending
+        const oppryddetKategorisering = ryddOppKategorisering(selectedValues)
+
         if (onSubmit) {
-            onSubmit(selectedValues)
+            onSubmit(oppryddetKategorisering)
         } else {
             mutation.mutate(
                 {
-                    kategorisering: selectedValues,
+                    kategorisering: oppryddetKategorisering,
                 },
                 {
                     onSuccess: () => {
