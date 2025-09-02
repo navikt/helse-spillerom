@@ -11,6 +11,7 @@ import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/f
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
+import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 
 interface SykepengegrunnlagProps {
@@ -25,6 +26,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
     } = useSykepengegrunnlag()
+    const kanSaksbehandles = useKanSaksbehandles()
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktivitet) {
         return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
@@ -51,15 +53,17 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                     <Heading size="small" level="1">
                         Inntekter
                     </Heading>
-                    <Button
-                        size="small"
-                        type="button"
-                        variant="tertiary"
-                        icon={<PersonPencilIcon aria-hidden />}
-                        onClick={() => setErIRedigeringsmodus(!erIRedigeringsmodus)}
-                    >
-                        {erIRedigeringsmodus ? 'Avbryt' : 'Rediger'}
-                    </Button>
+                    {kanSaksbehandles && (
+                        <Button
+                            size="small"
+                            type="button"
+                            variant="tertiary"
+                            icon={<PersonPencilIcon aria-hidden />}
+                            onClick={() => setErIRedigeringsmodus(!erIRedigeringsmodus)}
+                        >
+                            {erIRedigeringsmodus ? 'Avbryt' : 'Rediger'}
+                        </Button>
+                    )}
                 </HStack>
                 {!erIRedigeringsmodus && (
                     <>
