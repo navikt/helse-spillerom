@@ -11,19 +11,22 @@ export type Inntektskilde = z.infer<typeof inntektskildeSchema>
 export const refusjonsperiodeSchema = z
     .object({
         fom: z.iso.date({ error: 'Fra og med dato må være fylt ut og være en gyldig dato' }), // ISO 8601 date string
-        tom: z.string(), // ISO 8601 date string
+        tom: z.string().nullable(), // ISO 8601 date string eller null
         beløpØre: z.number({ error: 'Refusjonsbeløp må være et tall' }).int().min(0), // Beløp i øre
     })
     .superRefine((data, ctx) => {
         const fomDate = new Date(data.fom)
-        const tomDate = new Date(data.tom)
 
-        if (!isNaN(fomDate.getTime()) && !isNaN(tomDate.getTime()) && fomDate > tomDate) {
-            ctx.addIssue({
-                code: 'custom',
-                path: ['fom'],
-                message: 'Fra-dato kan ikke være etter til-dato',
-            })
+        // Kun valider tom-dato hvis den er satt
+        if (data.tom) {
+            const tomDate = new Date(data.tom)
+            if (!isNaN(fomDate.getTime()) && !isNaN(tomDate.getTime()) && fomDate > tomDate) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['fom'],
+                    message: 'Fra-dato kan ikke være etter til-dato',
+                })
+            }
         }
     })
 export type Refusjonsperiode = z.infer<typeof refusjonsperiodeSchema>
@@ -42,6 +45,10 @@ export const inntektSchema = z
 
         sorted.slice(0, -1).forEach((current, i) => {
             const next = sorted[i + 1]
+
+            // Hopp over validering hvis current.tom er null (åpen periode)
+            if (!current.tom) return
+
             const currentTom = new Date(current.tom)
             const nextFom = new Date(next.fom)
 

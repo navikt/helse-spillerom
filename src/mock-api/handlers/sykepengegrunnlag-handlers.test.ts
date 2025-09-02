@@ -355,6 +355,174 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(responseData.sykepengegrunnlagØre).toBe(71172000) // 6G for 2023 (711720 kr)
             expect(responseData.grunnbeløpVirkningstidspunkt).toBe('2023-05-01') // For 2023 skjæringstidspunkt
         })
+
+        it('skal akseptere refusjon med tomme datoer når alle felter er tomme', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: '',
+                                    tom: null,
+                                    beløpØre: 0,
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+
+            expect(response.status).toBe(200)
+        })
+
+        it('skal akseptere refusjon med kun fom-dato satt', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: '2024-01-01',
+                                    tom: null, // Tom tom-dato
+                                    beløpØre: 1000000, // 10 000 kr
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+
+            expect(response.status).toBe(200)
+        })
+
+        it('skal avvise refusjon uten fom-dato', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: '', // Tom fom-dato
+                                    tom: '2024-12-31',
+                                    beløpØre: 1000000, // 10 000 kr
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Fra-dato må være fylt ut (inntekt 0, refusjon 0)')
+        })
+
+        it('skal avvise refusjon med ugyldig fom-dato format', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: 'ugyldig-dato', // Ugyldig fom-dato format
+                                    tom: '2024-12-31',
+                                    beløpØre: 1000000, // 10 000 kr
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Ugyldig fra-dato format (inntekt 0, refusjon 0)')
+        })
+
+        it('skal avvise refusjon med ugyldig tom-dato format når tom er satt', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: '2024-01-01',
+                                    tom: 'ugyldig-dato', // Ugyldig tom-dato format
+                                    beløpØre: 1000000, // 10 000 kr
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Ugyldig til-dato format (inntekt 0, refusjon 0)')
+        })
+
+        it('skal akseptere refusjon med null som tom-dato', async () => {
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000, // 50 000 kr
+                            kilde: 'AINNTEKT',
+                            refusjon: [
+                                {
+                                    fom: '2024-01-01',
+                                    tom: null, // Null tom-dato
+                                    beløpØre: 1000000, // 10 000 kr
+                                },
+                            ],
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+
+            expect(response.status).toBe(200)
+        })
     })
 
     describe('handleDeleteSykepengegrunnlag', () => {

@@ -89,7 +89,11 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                                                                 justify="space-between"
                                                                 className="max-w-70"
                                                             >
-                                                                <BodyShort size="small">{`${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}: `}</BodyShort>
+                                                                <BodyShort size="small">
+                                                                    {refusjon.tom
+                                                                        ? `${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}: `
+                                                                        : `${getFormattedDateString(refusjon.fom)} - til nå: `}
+                                                                </BodyShort>
                                                                 <BodyShort size="small">
                                                                     {formaterBeløpØre(refusjon.beløpØre)}
                                                                 </BodyShort>

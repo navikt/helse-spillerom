@@ -16,7 +16,7 @@ export function DateField({ name, label }: DateFieldProps): ReactElement {
         defaultSelected: field.value,
         onDateChange: (date) => {
             if (!date) {
-                field.onChange('')
+                field.onChange(null)
             } else {
                 field.onChange(gyldigDatoFormat(date))
             }

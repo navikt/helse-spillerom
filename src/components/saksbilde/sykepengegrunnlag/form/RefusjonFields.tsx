@@ -39,7 +39,7 @@ export function RefusjonFields({ forholdIndex }: { forholdIndex: number }): Reac
                 size="xsmall"
                 variant="tertiary"
                 type="button"
-                onClick={() => refusjonFieldArray.append({ fom: '', tom: '', beløpØre: 0 })}
+                onClick={() => refusjonFieldArray.append({ fom: '', tom: null, beløpØre: 0 })}
                 className="self-start"
             >
                 + Legg til

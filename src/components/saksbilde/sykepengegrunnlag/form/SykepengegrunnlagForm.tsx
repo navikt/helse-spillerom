@@ -109,7 +109,7 @@ export function SykepengegrunnlagForm({
                                         form.setValue(`inntekter.${index}.refusjon`, [
                                             {
                                                 fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '',
-                                                tom: '',
+                                                tom: null,
                                                 beløpØre: 0,
                                             },
                                         ])

@@ -83,17 +83,52 @@ export async function handlePutSykepengegrunnlag(
 
         for (let j = 0; j < (inntekt.refusjon || []).length; j++) {
             const refusjon = inntekt.refusjon![j]
+
+            // Hopp over refusjon som ikke har noen data (tomme felter)
+            if (!refusjon.fom && (!refusjon.tom || refusjon.tom === '') && refusjon.beløpØre === 0) {
+                continue
+            }
+
+            // fom må alltid være satt
+            if (!refusjon.fom) {
+                return NextResponse.json(
+                    { message: `Fra-dato må være fylt ut (inntekt ${i}, refusjon ${j})` },
+                    { status: 400 },
+                )
+            }
+
             if (refusjon.beløpØre < 0) {
                 return NextResponse.json(
                     { message: `Refusjonsbeløp kan ikke være negativt (inntekt ${i}, refusjon ${j})` },
                     { status: 400 },
                 )
             }
-            if (new Date(refusjon.fom) > new Date(refusjon.tom)) {
+
+            // Valider at fom-dato er gyldig
+            const fomDate = new Date(refusjon.fom)
+            if (isNaN(fomDate.getTime())) {
                 return NextResponse.json(
-                    { message: `Fra-dato kan ikke være etter til-dato (inntekt ${i}, refusjon ${j})` },
+                    { message: `Ugyldig fra-dato format (inntekt ${i}, refusjon ${j})` },
                     { status: 400 },
                 )
+            }
+
+            // Valider tom-dato kun hvis den er satt og ikke tom streng
+            if (refusjon.tom && refusjon.tom !== '') {
+                const tomDate = new Date(refusjon.tom)
+                if (isNaN(tomDate.getTime())) {
+                    return NextResponse.json(
+                        { message: `Ugyldig til-dato format (inntekt ${i}, refusjon ${j})` },
+                        { status: 400 },
+                    )
+                }
+
+                if (fomDate > tomDate) {
+                    return NextResponse.json(
+                        { message: `Fra-dato kan ikke være etter til-dato (inntekt ${i}, refusjon ${j})` },
+                        { status: 400 },
+                    )
+                }
             }
         }
     }
