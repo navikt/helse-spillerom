@@ -96,10 +96,28 @@ export default function YrkesaktivitetForm({
 
     const handleSelectChange = (kode: string, value: string) => {
         if (disabled) return
-        setSelectedValues((prev) => ({
-            ...prev,
+
+        let newValues = {
+            ...selectedValues,
             [kode]: value,
-        }))
+        }
+
+        // Hvis INNTEKTSKATEGORI endres til INAKTIV, sett ER_SYKMELDT automatisk til JA
+        if (kode === 'INNTEKTSKATEGORI') {
+            if (value === 'INAKTIV') {
+                newValues = {
+                    ...newValues,
+                    ER_SYKMELDT: 'ER_SYKMELDT_JA',
+                }
+            } else {
+                // Fjern ER_SYKMELDT hvis det ikke er INAKTIV
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { ER_SYKMELDT, ...valuesWithoutSykmeldt } = newValues
+                newValues = valuesWithoutSykmeldt
+            }
+        }
+
+        setSelectedValues(newValues)
     }
 
     const handleRadioChange = (kode: string, value: string) => {

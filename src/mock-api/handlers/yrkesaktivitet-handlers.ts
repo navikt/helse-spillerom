@@ -198,7 +198,6 @@ export async function handlePutInntektsforholdKategorisering(
     try {
         yrkesaktivitet.dekningsgrad = beregnDekningsgrad(body)
     } catch (error) {
-        console.error('Feil ved beregning av dekningsgrad:', error)
         // Bruk standard dekningsgrad hvis beregning feiler
         yrkesaktivitet.dekningsgrad = 100
     }

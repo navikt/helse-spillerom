@@ -23,6 +23,7 @@ import { SendTilbakeModal } from './SendTilbakeModal'
 import { BeløpForPerioden } from './BeløpForPerioden'
 import { SykepengegrunnlagVisning } from './SykepengegrunnlagVisning'
 import { Utbetalingsdager } from './Utbetalingsdager'
+import { DekningsgradVisning } from './DekningsgradVisning'
 
 export function Venstremeny(): ReactElement {
     const router = useRouter()
@@ -133,6 +134,7 @@ export function Venstremeny(): ReactElement {
                         )}
 
                         <SykepengegrunnlagVisning />
+                        <DekningsgradVisning />
                         <Utbetalingsdager />
                         <BeløpForPerioden />
 

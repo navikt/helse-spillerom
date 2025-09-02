@@ -61,3 +61,43 @@ export function kategoriSetTilTekstOgWarning(kategorier: Set<string>): { tekst: 
 
     return { tekst, warning: false }
 }
+
+export function beregnDekningsgradTiVenstremeny(
+    yrkesaktivitet: Yrkesaktivitet[],
+): { tekst: string; tall: number } | null {
+    if (!yrkesaktivitet || yrkesaktivitet.length === 0) return null
+
+    // Filtrer kun yrkesaktiviteter hvor personen er sykmeldt fra
+    const sykmeldteYrkesaktiviteter = yrkesaktivitet.filter(
+        (ya) => ya.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA',
+    )
+
+    if (sykmeldteYrkesaktiviteter.length === 0) return null
+
+    const kategorier = getKategorierFraInntektsforhold(sykmeldteYrkesaktiviteter)
+
+    // Vis bare dekningsgrad for næringsdrivende eller inaktive
+    const harNæringsdrivende = kategorier.has('SELVSTENDIG_NÆRINGSDRIVENDE')
+    const harInaktiv = kategorier.has('INAKTIV')
+
+    if (!harNæringsdrivende && !harInaktiv) return null
+
+    // Finn yrkesaktivitet med næringsdrivende eller inaktiv kategorisering
+    const næringsdrivende = sykmeldteYrkesaktiviteter.find(
+        (ya) => ya.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE',
+    )
+    const inaktiv = sykmeldteYrkesaktiviteter.find((ya) => ya.kategorisering['INNTEKTSKATEGORI'] === 'INAKTIV')
+
+    // Prioriter næringsdrivende hvis den finnes
+    if (næringsdrivende) {
+        const tekst = kategorier.size > 1 ? 'Dekningsgrad (næringsdrivende)' : 'Dekningsgrad'
+        return { tekst, tall: næringsdrivende.dekningsgrad }
+    }
+
+    // Ellers bruk inaktiv hvis den finnes
+    if (inaktiv) {
+        return { tekst: 'Dekningsgrad', tall: inaktiv.dekningsgrad }
+    }
+
+    return null
+}
