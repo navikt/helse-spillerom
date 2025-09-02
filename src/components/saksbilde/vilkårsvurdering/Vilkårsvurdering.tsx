@@ -1,12 +1,17 @@
 'use client'
 
-import React, { ReactElement, useState } from 'react'
-import { Accordion, BodyShort, Button, HStack, Table } from '@navikt/ds-react'
+import React, { ReactElement } from 'react'
+import { Accordion, BodyShort, HStack, Table } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
-import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import {
-    ChevronDownIcon,
-    ChevronUpIcon,
+    TableBody,
+    TableDataCell,
+    TableExpandableRow,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+} from '@navikt/ds-react/Table'
+import {
     CheckmarkCircleFillIcon,
     CircleSlashFillIcon,
     InformationSquareFillIcon,
@@ -24,7 +29,6 @@ import { kategoriLabels } from './kategorier'
 
 export function Vilkårsvurdering(): ReactElement {
     const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
-    const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
     const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useSaksbehandlerui()
 
     if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
@@ -38,16 +42,6 @@ export function Vilkårsvurdering(): ReactElement {
         },
         {} as Record<string, Hovedspørsmål[]>,
     )
-
-    const toggleRowExpansion = (uniqueKey: string) => {
-        const newExpanded = new Set(expandedRows)
-        if (newExpanded.has(uniqueKey)) {
-            newExpanded.delete(uniqueKey)
-        } else {
-            newExpanded.add(uniqueKey)
-        }
-        setExpandedRows(newExpanded)
-    }
 
     return (
         <div>
@@ -67,11 +61,11 @@ export function Vilkårsvurdering(): ReactElement {
                                 <Table size="medium">
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHeaderCell className="w-full">Vilkår</TableHeaderCell>
+                                            <TableHeaderCell>Vilkår</TableHeaderCell>
                                             <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
                                                 Status
                                             </TableHeaderCell>
-                                            <TableHeaderCell className="w-12"></TableHeaderCell>
+                                            <TableHeaderCell />
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -79,63 +73,32 @@ export function Vilkårsvurdering(): ReactElement {
                                             const vilkårsvurdering = vilkårsvurderinger?.find(
                                                 (v) => v.hovedspørsmål === vilkår.kode,
                                             )
-                                            const isExpanded = expandedRows.has(vilkår.kode)
 
                                             return (
-                                                <React.Fragment key={vilkår.kode}>
-                                                    <TableRow
-                                                        className="hover:bg-surface-subtle cursor-pointer"
-                                                        onClick={() => toggleRowExpansion(vilkår.kode)}
-                                                    >
-                                                        <TableDataCell align="center" className="pl-[13px]">
-                                                            <HStack wrap={false} gap="4" align="center">
-                                                                <span className="h-6 w-6">
-                                                                    {getVurderingIcon(vilkårsvurdering?.vurdering)}
-                                                                </span>
+                                                <TableExpandableRow
+                                                    key={vilkår.kode}
+                                                    togglePlacement="right"
+                                                    expandOnRowClick
+                                                    content={
+                                                        <VilkårsvurderingForm
+                                                            vilkår={vilkår}
+                                                            vurdering={vilkårsvurdering}
+                                                        />
+                                                    }
+                                                >
+                                                    <TableDataCell align="center" className="pl-[13px]">
+                                                        <HStack wrap={false} gap="4" align="center">
+                                                            <span className="h-6 w-6">
+                                                                {getVurderingIcon(vilkårsvurdering?.vurdering)}
+                                                            </span>
 
-                                                                <BodyShort align="start">
-                                                                    {vilkår.beskrivelse}
-                                                                </BodyShort>
-                                                            </HStack>
-                                                        </TableDataCell>
-                                                        <TableDataCell className="whitespace-nowrap">
-                                                            {getVurderingText(vilkårsvurdering?.vurdering)}
-                                                        </TableDataCell>
-                                                        <TableDataCell>
-                                                            <Button
-                                                                variant="tertiary"
-                                                                size="xsmall"
-                                                                icon={
-                                                                    isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />
-                                                                }
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation()
-                                                                    toggleRowExpansion(vilkår.kode)
-                                                                }}
-                                                            />
-                                                        </TableDataCell>
-                                                    </TableRow>
-                                                    {isExpanded && (
-                                                        <TableRow>
-                                                            <TableDataCell colSpan={3} className="bg-surface-subtle">
-                                                                <div className="p-4">
-                                                                    <VilkårsvurderingForm
-                                                                        vilkår={vilkår}
-                                                                        vurdering={vilkårsvurdering}
-                                                                        onSuccess={() => {
-                                                                            // Optionally close the expanded row after successful submission
-                                                                            // setExpandedRows(prev => {
-                                                                            //   const newSet = new Set(prev)
-                                                                            //   newSet.delete(vilkår.vilkårskode)
-                                                                            //   return newSet
-                                                                            // })
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                            </TableDataCell>
-                                                        </TableRow>
-                                                    )}
-                                                </React.Fragment>
+                                                            <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
+                                                        </HStack>
+                                                    </TableDataCell>
+                                                    <TableDataCell className="whitespace-nowrap">
+                                                        {getVurderingText(vilkårsvurdering?.vurdering)}
+                                                    </TableDataCell>
+                                                </TableExpandableRow>
                                             )
                                         })}
                                     </TableBody>

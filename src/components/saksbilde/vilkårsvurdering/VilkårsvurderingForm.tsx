@@ -1,14 +1,14 @@
 'use client'
 
-import { ReactElement, useState, useEffect, Fragment } from 'react'
+import { Fragment, ReactElement, useEffect, useState } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import {
     Vilkaarsvurdering as Vilkaarsvurdering,
-    Vurdering,
     VilkaarsvurderingUnderspørsmål as VilkaarsvurderingUnderspørsmål,
+    Vurdering,
 } from '@schemas/vilkaarsvurdering'
 import { Hovedspørsmål } from '@/schemas/saksbehandlergrensesnitt'
 
@@ -386,7 +386,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     }
 
     return (
-        <VStack gap="6">
+        <VStack className="max-w-[800px] pb-4 pl-[46px]" gap="6">
             {vilkår.underspørsmål.map((spørsmål) => (
                 <Fragment key={spørsmål.kode}>{rendreUnderspørsmål(spørsmål)}</Fragment>
             ))}
