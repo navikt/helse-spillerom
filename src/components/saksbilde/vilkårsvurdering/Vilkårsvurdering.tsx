@@ -24,15 +24,22 @@ import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
+import { VilkårsvurderingError } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingError'
 
 import { kategoriLabels } from './kategorier'
 
 export function Vilkårsvurdering(): ReactElement {
-    const { data: vilkårsvurderinger, isLoading, isError } = useVilkaarsvurderinger()
-    const { data: kodeverk, isLoading: kodeverkLoading, isError: kodeverkError } = useSaksbehandlerui()
+    const { data: vilkårsvurderinger, isLoading, isError, refetch } = useVilkaarsvurderinger()
+    const {
+        data: kodeverk,
+        isLoading: kodeverkLoading,
+        isError: kodeverkError,
+        refetch: refetchKodeverk,
+    } = useSaksbehandlerui()
 
     if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
-    if (isError || kodeverkError) return <></>
+    if (isError || kodeverkError)
+        return <VilkårsvurderingError refetch={() => void Promise.all([refetch(), refetchKodeverk()])} />
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {
