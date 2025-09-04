@@ -44,71 +44,69 @@ export function Vilkårsvurdering(): ReactElement {
     )
 
     return (
-        <div>
-            <Accordion size="small" headingSize="xsmall" indent={false}>
-                {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
-                    const vurdertAntall = vilkårListe.filter((v) =>
-                        vilkårsvurderinger?.some((vv) => vv.hovedspørsmål === v.kode),
-                    ).length
+        <Accordion size="small" headingSize="xsmall" indent={false}>
+            {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
+                const vurdertAntall = vilkårListe.filter((v) =>
+                    vilkårsvurderinger?.some((vv) => vv.hovedspørsmål === v.kode),
+                ).length
 
-                    return (
-                        <AccordionItem key={kategori} defaultOpen={kategori === 'generelle_bestemmelser'}>
-                            <AccordionHeader>
-                                {kategoriLabels[kategori as keyof typeof kategoriLabels] ?? 'Ukjent kategori'}{' '}
-                                {vurdertAntall}/{vilkårListe.length}
-                            </AccordionHeader>
-                            <AccordionContent className="p-0">
-                                <Table size="medium">
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHeaderCell>Vilkår</TableHeaderCell>
-                                            <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
-                                                Status
-                                            </TableHeaderCell>
-                                            <TableHeaderCell />
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {vilkårListe.map((vilkår) => {
-                                            const vilkårsvurdering = vilkårsvurderinger?.find(
-                                                (v) => v.hovedspørsmål === vilkår.kode,
-                                            )
+                return (
+                    <AccordionItem key={kategori} defaultOpen={kategori === 'generelle_bestemmelser'}>
+                        <AccordionHeader>
+                            {kategoriLabels[kategori as keyof typeof kategoriLabels] ?? 'Ukjent kategori'}{' '}
+                            {vurdertAntall}/{vilkårListe.length}
+                        </AccordionHeader>
+                        <AccordionContent className="p-0">
+                            <Table size="medium">
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHeaderCell>Vilkår</TableHeaderCell>
+                                        <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
+                                            Status
+                                        </TableHeaderCell>
+                                        <TableHeaderCell />
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {vilkårListe.map((vilkår) => {
+                                        const vilkårsvurdering = vilkårsvurderinger?.find(
+                                            (v) => v.hovedspørsmål === vilkår.kode,
+                                        )
 
-                                            return (
-                                                <TableExpandableRow
-                                                    key={vilkår.kode}
-                                                    togglePlacement="right"
-                                                    expandOnRowClick
-                                                    content={
-                                                        <VilkårsvurderingForm
-                                                            vilkår={vilkår}
-                                                            vurdering={vilkårsvurdering}
-                                                        />
-                                                    }
-                                                >
-                                                    <TableDataCell align="center" className="pl-[13px]">
-                                                        <HStack wrap={false} gap="4" align="center">
-                                                            <span className="h-6 w-6">
-                                                                {getVurderingIcon(vilkårsvurdering?.vurdering)}
-                                                            </span>
+                                        return (
+                                            <TableExpandableRow
+                                                key={vilkår.kode}
+                                                togglePlacement="right"
+                                                expandOnRowClick
+                                                content={
+                                                    <VilkårsvurderingForm
+                                                        vilkår={vilkår}
+                                                        vurdering={vilkårsvurdering}
+                                                    />
+                                                }
+                                            >
+                                                <TableDataCell align="center" className="pl-[13px]">
+                                                    <HStack wrap={false} gap="4" align="center">
+                                                        <span className="h-6 w-6">
+                                                            {getVurderingIcon(vilkårsvurdering?.vurdering)}
+                                                        </span>
 
-                                                            <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
-                                                        </HStack>
-                                                    </TableDataCell>
-                                                    <TableDataCell className="whitespace-nowrap">
-                                                        {getVurderingText(vilkårsvurdering?.vurdering)}
-                                                    </TableDataCell>
-                                                </TableExpandableRow>
-                                            )
-                                        })}
-                                    </TableBody>
-                                </Table>
-                            </AccordionContent>
-                        </AccordionItem>
-                    )
-                })}
-            </Accordion>
-        </div>
+                                                        <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
+                                                    </HStack>
+                                                </TableDataCell>
+                                                <TableDataCell className="whitespace-nowrap">
+                                                    {getVurderingText(vilkårsvurdering?.vurdering)}
+                                                </TableDataCell>
+                                            </TableExpandableRow>
+                                        )
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </AccordionContent>
+                    </AccordionItem>
+                )
+            })}
+        </Accordion>
     )
 }
 
