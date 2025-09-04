@@ -20,6 +20,10 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
         <TextField
             id={name.replaceAll('.', '-')}
             value={display}
+            onMouseDown={(e) => {
+                e.preventDefault()
+                ;(e.target as HTMLInputElement).select()
+            }}
             onChange={(e) => setDisplay(e.target.value)}
             onBlur={() => {
                 commit()
