@@ -21,8 +21,10 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
             id={name.replaceAll('.', '-')}
             value={display}
             onMouseDown={(e) => {
-                e.preventDefault()
-                ;(e.target as HTMLInputElement).select()
+                if (document.activeElement !== e.target) {
+                    e.preventDefault()
+                    ;(e.target as HTMLInputElement).select()
+                }
             }}
             onChange={(e) => setDisplay(e.target.value)}
             onBlur={() => {
