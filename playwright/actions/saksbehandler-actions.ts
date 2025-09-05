@@ -1,5 +1,13 @@
 import { Page, expect, test } from '@playwright/test'
 
+export function hentVenstremeny() {
+    return async (page: Page) => {
+        const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
+        await venstremeny.waitFor({ state: 'visible' })
+        return venstremeny
+    }
+}
+
 export function tilFørstesiden({ clearCookies }: { clearCookies: boolean } = { clearCookies: true }) {
     return async (page: Page) => {
         await test.step('Naviger til førstesiden', async () => {
@@ -72,7 +80,7 @@ export function verifiserIngenYrkesaktiviteter() {
 export function verifiserKategoriTag(forventetTekst: string) {
     return async (page: Page) => {
         await test.step(`Verifiser at kategoritag viser "${forventetTekst}"`, async () => {
-            const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
+            const venstremeny = await hentVenstremeny()(page)
             const saksinformasjon = venstremeny.getByRole('region', { name: 'Saksinformasjon' })
             await saksinformasjon.waitFor({ state: 'visible' })
             await expect(saksinformasjon).toContainText(forventetTekst)
@@ -149,6 +157,19 @@ export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false) {
             const forsikringGroup = page.getByRole('group', { name: 'Nav-kjøpt forsikring' })
             await forsikringGroup.waitFor({ state: 'visible' })
             await forsikringGroup.getByRole('radio', { name: '100 prosent fra første sykedag' }).check()
+        })
+    }
+}
+
+export function fyllUtInaktivYrkesaktivitet(dekningsgrad: string) {
+    return async (page: Page) => {
+        await test.step(`Fyll ut inaktiv yrkesaktivitet med ${dekningsgrad}`, async () => {
+            const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
+            await typeSelect.selectOption('INAKTIV')
+
+            const dekningsgradRadio = page.getByRole('group', { name: 'En fornuftig spørsmålstekst' })
+            await dekningsgradRadio.waitFor({ state: 'visible' })
+            await dekningsgradRadio.getByRole('radio', { name: dekningsgrad }).check()
         })
     }
 }
@@ -416,6 +437,24 @@ export function opprettManuellBehandling(fom: string, tom: string) {
             // Start behandling
             const startButton = page.getByRole('button', { name: 'Start behandling' })
             await startButton.click()
+        })
+    }
+}
+
+export function opprettManuellBehandlingMedYrkesaktivitet(
+    personIdent: string,
+    fyllUtYrkesaktivitet: (page: Page) => Promise<void>,
+    fom: string = '01.01.2025',
+    tom: string = '28.09.2025',
+) {
+    return async (page: Page) => {
+        await test.step(`Opprett manuell behandling med yrkesaktivitet for person ${personIdent}`, async () => {
+            await navigerTilPerson(personIdent)(page)
+            await opprettManuellBehandling(fom, tom)(page)
+            await navigerTilYrkesaktivitetFane()(page)
+            await åpneYrkesaktivitetSkjema()(page)
+            await fyllUtYrkesaktivitet(page)
+            await lagreYrkesaktivitet()(page)
         })
     }
 }

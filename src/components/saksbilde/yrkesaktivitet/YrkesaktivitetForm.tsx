@@ -193,6 +193,11 @@ export default function YrkesaktivitetForm({
         // Rydd opp i kategorisering før sending
         const oppryddetKategorisering = ryddOppKategorisering(selectedValues)
 
+        // Legg til ER_SYKMELDT_JA for inaktiv yrkesaktivitet hvis det mangler
+        if (oppryddetKategorisering['INNTEKTSKATEGORI'] === 'INAKTIV' && !oppryddetKategorisering['ER_SYKMELDT']) {
+            oppryddetKategorisering['ER_SYKMELDT'] = 'ER_SYKMELDT_JA'
+        }
+
         if (onSubmit) {
             onSubmit(oppryddetKategorisering)
         } else {

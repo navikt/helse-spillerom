@@ -1,20 +1,13 @@
-import { expect } from '@playwright/test'
-import { test } from './fixtures'
+import { expect, Page } from '@playwright/test'
 import {
-    navigerTilPersonOgBehandling,
-    navigerTilYrkesaktivitetFane,
-    verifiserIngenYrkesaktiviteter,
-    verifiserKategoriTag,
-    åpneYrkesaktivitetSkjema,
     fyllUtArbeidstakerYrkesaktivitet,
+    fyllUtInaktivYrkesaktivitet,
     fyllUtNæringsdrivendeYrkesaktivitet,
-    fyllUtFrilanserYrkesaktivitet,
-    lagreYrkesaktivitet,
-    verifiserAntallYrkesaktiviteter,
-    slettYrkesaktivitet,
-    navigerTilPerson,
-    opprettManuellBehandling,
+    hentVenstremeny,
+    opprettManuellBehandlingMedYrkesaktivitet,
+    verifiserKategoriTag,
 } from './actions/saksbehandler-actions'
+import { test } from './fixtures'
 
 test.describe('Dekningsgrad og Yrkesaktivitet', () => {
     test.beforeEach(async ({ page }) => {
@@ -23,47 +16,77 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
     })
 
     test('Ingen synlig dekningsgrad for arbeidstaker', async ({ page }) => {
-        // Naviger til person og behandling
-        await navigerTilPerson('12345214260', 'Silje Tangen Larsen')(page)
-        await opprettManuellBehandling('01.01.2025', '28.09.2025')(page)
-        await navigerTilYrkesaktivitetFane()(page)
-        await åpneYrkesaktivitetSkjema()(page)
-        await fyllUtArbeidstakerYrkesaktivitet('123456789', true)(page)
-        await lagreYrkesaktivitet()(page)
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214260', () =>
+            fyllUtArbeidstakerYrkesaktivitet('123456789', true)(page),
+        )(page)
 
         await verifiserKategoriTag('Arbeidstaker')(page)
-
-        // Sjekk at dekningsgrad IKKE vises for arbeidstaker (kun for næringsdrivende/inaktiv)
-        const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
-        await venstremeny.waitFor({ state: 'visible' })
-
-        // Dekningsgrad skal ikke være synlig for arbeidstaker
-        const dekningsgradTekst = venstremeny.getByText('Dekningsgrad:')
-        await expect(dekningsgradTekst).not.toBeVisible()
+        await verifiserDekningsgradIkkeSynlig(page)
     })
 
     test('80% dekningsgrad vanlig selvstendig næringsdrivende', async ({ page }) => {
-        // Naviger til person og behandling
-        await navigerTilPerson('12345214261', 'Natalie Ruud')(page)
-        await opprettManuellBehandling('01.01.2025', '28.09.2025')(page)
-        await navigerTilYrkesaktivitetFane()(page)
-        await åpneYrkesaktivitetSkjema()(page)
-        await fyllUtNæringsdrivendeYrkesaktivitet('Ordinær selvstendig næringsdrivende', 'Ingen forsikring', true)(page)
-        await lagreYrkesaktivitet()(page)
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214261', () =>
+            fyllUtNæringsdrivendeYrkesaktivitet('Ordinær selvstendig næringsdrivende', 'Ingen forsikring', true)(page),
+        )(page)
 
         await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
+        await verifiserDekningsgradSynlig(page, '80%')
+    })
 
-        // Sjekk at dekningsgrad vises for selvstendig næringsdrivende
-        const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
-        await venstremeny.waitFor({ state: 'visible' })
+    test('100% dekningsgrad fisker blad B næringsdrivende', async ({ page }) => {
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214262', () =>
+            fyllUtNæringsdrivendeYrkesaktivitet('Fisker', null, true)(page),
+        )(page)
 
-        // Dekningsgrad skal være synlig for selvstendig næringsdrivende
-        const dekningsgradTekst = venstremeny.getByText('Dekningsgrad:')
-        await dekningsgradTekst.waitFor({ state: 'visible' })
-        await expect(dekningsgradTekst).toBeVisible()
+        await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
+        await verifiserDekningsgradSynlig(page, '100%')
+    })
 
-        // Sjekk at det vises 80% dekningsgrad
-        const dekningsgrad80 = venstremeny.getByText('80%')
-        await expect(dekningsgrad80).toBeVisible()
+    test('100% dekningsgrad vanlig næringsdrivende med valgt forsikring', async ({ page }) => {
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214263', () =>
+            fyllUtNæringsdrivendeYrkesaktivitet(
+                'Ordinær selvstendig næringsdrivende',
+                '100 prosent fra første sykedag',
+                true,
+            )(page),
+        )(page)
+
+        await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
+        await verifiserDekningsgradSynlig(page, '100%')
+    })
+
+    test('65% dekningsgrad inaktiv yrkeskategori', async ({ page }) => {
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214264', () =>
+            fyllUtInaktivYrkesaktivitet('Bokstav A, 65% dekningsgrad')(page),
+        )(page)
+
+        await verifiserKategoriTag('Inaktiv')(page)
+        await verifiserDekningsgradSynlig(page, '65%')
+    })
+
+    test('100% dekningsgrad inaktiv yrkeskategori', async ({ page }) => {
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214265', () =>
+            fyllUtInaktivYrkesaktivitet('Bokstav B, 100% dekningsgrad')(page),
+        )(page)
+
+        await verifiserKategoriTag('Inaktiv')(page)
+        await verifiserDekningsgradSynlig(page, '100%')
     })
 })
+
+// Hjelpefunksjoner for dekningsgrad-verifisering
+async function verifiserDekningsgradIkkeSynlig(page: Page) {
+    const venstremeny = await hentVenstremeny()(page)
+    const dekningsgradTekst = venstremeny.getByText('Dekningsgrad:')
+    await expect(dekningsgradTekst).not.toBeVisible()
+}
+
+async function verifiserDekningsgradSynlig(page: Page, forventetProsent: string) {
+    const venstremeny = await hentVenstremeny()(page)
+    const dekningsgradTekst = venstremeny.getByText('Dekningsgrad:')
+    await dekningsgradTekst.waitFor({ state: 'visible' })
+    await expect(dekningsgradTekst).toBeVisible()
+
+    const dekningsgradProsent = venstremeny.getByText(forventetProsent)
+    await expect(dekningsgradProsent).toBeVisible()
+}
