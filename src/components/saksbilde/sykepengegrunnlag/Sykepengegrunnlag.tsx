@@ -14,6 +14,7 @@ import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 import { FetchError } from '@components/saksbilde/FetchError'
+import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -36,7 +37,11 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
     const kanSaksbehandles = useKanSaksbehandles()
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktivitet) {
-        return <SaksbildePanel value={value}>Laster sykepengegrunnlag...</SaksbildePanel>
+        return (
+            <SaksbildePanel value={value}>
+                <SykepengegrunnlagSkeleton />
+            </SaksbildePanel>
+        )
     }
 
     if (yrkesaktivitetError || sykepengegrunnlagError) {
