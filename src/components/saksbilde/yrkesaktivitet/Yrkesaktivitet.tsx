@@ -1,8 +1,7 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Box, Button, Table, VStack, HStack } from '@navikt/ds-react'
-import { Modal } from '@navikt/ds-react'
+import { Alert, BodyShort, Box, Button, HStack, Modal, Table, VStack } from '@navikt/ds-react'
 import {
     TableBody,
     TableDataCell,
@@ -11,11 +10,10 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@navikt/ds-react/Table'
-import { PlusIcon, PencilIcon, TrashIcon } from '@navikt/aksel-icons'
+import { PencilIcon, PlusIcon, TrashIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
 
 import { useOppdaterYrkesaktivitetKategorisering } from '@hooks/mutations/useOppdaterYrkesaktivitet'
-import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useSlettYrkesaktivitet } from '@hooks/mutations/useSlettYrkesaktivitet'
 import YrkesaktivitetForm from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetForm'
@@ -27,8 +25,9 @@ import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
+import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 
-export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement {
+export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
@@ -46,13 +45,8 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
         handleAvbryt,
     } = useBekreftelsesModal()
 
-    if (isLoading) return <SaksbildePanel value={value}>Laster...</SaksbildePanel>
-    if (isError)
-        return (
-            <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
-            </SaksbildePanel>
-        )
+    if (isLoading) return <YrkesaktivitetSkeleton />
+    if (isError) return <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
 
     // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
     const yrkesaktivitetSomIkkeKanKombineres =
@@ -136,7 +130,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
     }
 
     return (
-        <SaksbildePanel value={value}>
+        <>
             <VStack gap="6">
                 {showKombinasjonsAdvarsel && (
                     <Alert variant="warning">
@@ -329,7 +323,7 @@ export function YrkesaktivitetTabell({ value }: { value: string }): ReactElement
                 onBekreft={handleBekreft}
                 onAvbryt={handleAvbryt}
             />
-        </SaksbildePanel>
+        </>
     )
 }
 

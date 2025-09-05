@@ -3,10 +3,10 @@ import { Tabs } from '@navikt/ds-react'
 import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
-import { VilkårsvurderingTabs } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingTabs'
+import { VilkårsvurderingTab } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingTab'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
-import { YrkesaktivitetTabell } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTabell'
 import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
+import { YrkesaktivitetTab } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTab'
 
 export default async function PersonPage(): Promise<ReactElement> {
     return (
@@ -19,9 +19,9 @@ export default async function PersonPage(): Promise<ReactElement> {
                     <TabsTab value="vilkårsvurdering" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
-                <YrkesaktivitetTabell value="yrkesaktivitet" />
+                <YrkesaktivitetTab value="yrkesaktivitet" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
-                <VilkårsvurderingTabs value="vilkårsvurdering" />
+                <VilkårsvurderingTab value="vilkårsvurdering" />
                 <Dagoversikt value="dagoversikt" />
             </Tabs>
         </section>
