@@ -38,13 +38,14 @@ export function Vilkårsvurdering(): ReactElement {
     } = useSaksbehandlerui()
 
     if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
-    if (isError || kodeverkError)
+    if (isError || kodeverkError) {
         return (
             <FetchError
                 refetch={() => void Promise.all([refetch(), refetchKodeverk()])}
                 message="Kunne ikke laste vilkårsvurdering."
             />
         )
+    }
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {

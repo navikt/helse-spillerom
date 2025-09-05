@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, VStack } from '@navikt/ds-react'
+import { Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { BriefcaseIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
@@ -13,6 +13,7 @@ import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 interface SykepengegrunnlagProps {
     value: string
@@ -20,22 +21,31 @@ interface SykepengegrunnlagProps {
 
 export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
-    const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
+    const {
+        data: yrkesaktivitet,
+        isLoading: yrkesaktivitetLoading,
+        isError: yrkesaktivitetError,
+        refetch: yrkesaktivitetRefetch,
+    } = useYrkesaktivitet()
     const {
         data: sykepengegrunnlag,
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
+        refetch,
     } = useSykepengegrunnlag()
     const kanSaksbehandles = useKanSaksbehandles()
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktivitet) {
-        return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
+        return <SaksbildePanel value={value}>Laster sykepengegrunnlag...</SaksbildePanel>
     }
 
     if (yrkesaktivitetError || sykepengegrunnlagError) {
         return (
             <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste sykepengegrunnlag</Alert>
+                <FetchError
+                    refetch={() => void Promise.all([refetch(), yrkesaktivitetRefetch()])}
+                    message="Kunne ikke laste sykepengegrunnlag."
+                />
             </SaksbildePanel>
         )
     }
