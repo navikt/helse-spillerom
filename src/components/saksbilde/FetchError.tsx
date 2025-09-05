@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import { Alert, BodyShort, Button, HStack } from '@navikt/ds-react'
 
-type ErrorWithRefetchProps = {
+interface ErrorWithRefetchProps {
     refetch: () => void
     message: string
 }
