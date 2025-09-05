@@ -24,7 +24,7 @@ import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
 import { Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
-import { VilkårsvurderingError } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingError'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 import { kategoriLabels } from './kategorier'
 
@@ -39,7 +39,12 @@ export function Vilkårsvurdering(): ReactElement {
 
     if (isLoading || kodeverkLoading || !kodeverk) return <VilkårsvurderingSkeleton />
     if (isError || kodeverkError)
-        return <VilkårsvurderingError refetch={() => void Promise.all([refetch(), refetchKodeverk()])} />
+        return (
+            <FetchError
+                refetch={() => void Promise.all([refetch(), refetchKodeverk()])}
+                message="Kunne ikke laste vilkårsvurdering."
+            />
+        )
 
     const gruppert = kodeverk.reduce(
         (acc, item) => {

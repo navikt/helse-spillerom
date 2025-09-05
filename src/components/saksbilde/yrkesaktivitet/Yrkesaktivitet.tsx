@@ -26,13 +26,14 @@ import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
-    const { data: yrkesaktivitet, isLoading, isError } = useYrkesaktivitet()
+    const { data: yrkesaktivitet, isLoading, isError, refetch } = useYrkesaktivitet()
     const { data: sykepengegrunnlag } = useSykepengegrunnlag()
     const slettMutation = useSlettYrkesaktivitet()
     const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
@@ -46,7 +47,7 @@ export function Yrkesaktivitet(): ReactElement {
     } = useBekreftelsesModal()
 
     if (isLoading) return <YrkesaktivitetSkeleton />
-    if (isError) return <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
+    if (isError) return <FetchError refetch={() => refetch()} message="Kunne ikke laste yrkesaktivitet." />
 
     // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
     const yrkesaktivitetSomIkkeKanKombineres =
