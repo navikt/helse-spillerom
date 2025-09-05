@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, ReactElement, useState } from 'react'
+import React, { Fragment, ReactElement, useState } from 'react'
 import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, Tag } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
@@ -15,13 +15,19 @@ import { Kilde } from '@/schemas/dagoversikt'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { cn } from '@utils/tw'
 import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 interface DagoversiktProps {
     value: string
 }
 
 export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
-    const { data: yrkesaktivitet, isLoading: yrkesaktivitetLoading, isError: yrkesaktivitetError } = useYrkesaktivitet()
+    const {
+        data: yrkesaktivitet,
+        isLoading: yrkesaktivitetLoading,
+        isError: yrkesaktivitetError,
+        refetch,
+    } = useYrkesaktivitet()
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
 
     // Filtrer kun yrkesaktivitet hvor personen har dagoversikt med innhold
@@ -109,13 +115,13 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     }
 
     if (yrkesaktivitetLoading) {
-        return <SaksbildePanel value={value}>Laster yrkesaktivitet...</SaksbildePanel>
+        return <SaksbildePanel value={value}>Laster dagoversikt...</SaksbildePanel>
     }
 
     if (yrkesaktivitetError) {
         return (
             <SaksbildePanel value={value}>
-                <Alert variant="error">Kunne ikke laste yrkesaktivitet</Alert>
+                <FetchError refetch={() => refetch()} message="Kunne ikke laste dagoversikt." />
             </SaksbildePanel>
         )
     }
