@@ -21,9 +21,9 @@ export function søkPerson(ident: string) {
     }
 }
 
-export function navigerTilPersonOgBehandling(ident: string, forventetNavn?: string) {
+export function navigerTilPerson(ident: string, forventetNavn?: string) {
     return async (page: Page) => {
-        await test.step(`Naviger til person ${forventetNavn || ident} og velg behandling`, async () => {
+        await test.step(`Naviger til person ${forventetNavn || ident}`, async () => {
             await søkPerson(ident)(page)
             await page.waitForURL('**/person/*')
 
@@ -32,6 +32,14 @@ export function navigerTilPersonOgBehandling(ident: string, forventetNavn?: stri
                 const navn = header.getByText(forventetNavn)
                 await navn.waitFor({ state: 'visible' })
             }
+        })
+    }
+}
+
+export function navigerTilPersonOgBehandling(ident: string, forventetNavn?: string) {
+    return async (page: Page) => {
+        await test.step(`Naviger til person ${forventetNavn || ident} og velg behandling`, async () => {
+            await navigerTilPerson(ident, forventetNavn)(page)
 
             // Finn og klikk på lenken til eksisterende behandling
             const behandlingLink = page.getByRole('link', { name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/ })
@@ -103,7 +111,11 @@ export function fyllUtArbeidstakerYrkesaktivitet(orgnummer: string, erSykmeldt: 
     }
 }
 
-export function fyllUtNæringsdrivendeYrkesaktivitet(type: 'Fisker' | 'Andre', erSykmeldt: boolean = false) {
+export function fyllUtNæringsdrivendeYrkesaktivitet(
+    type: string,
+    navKjopt: string | null = null,
+    erSykmeldt: boolean = false,
+) {
     return async (page: Page) => {
         await test.step(`Fyll ut næringsdrivende yrkesaktivitet av type ${type}`, async () => {
             const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
@@ -115,6 +127,12 @@ export function fyllUtNæringsdrivendeYrkesaktivitet(type: 'Fisker' | 'Andre', e
             const typeNæringsdrivendeRadio = page.getByRole('group', { name: 'Type selvstendig næringsdrivende' })
             await typeNæringsdrivendeRadio.waitFor({ state: 'visible' })
             await typeNæringsdrivendeRadio.getByRole('radio', { name: type }).check()
+
+            if (navKjopt) {
+                const navKjoptRadio = page.getByRole('group', { name: 'Nav-kjøpt forsikring' })
+                await navKjoptRadio.waitFor({ state: 'visible' })
+                await navKjoptRadio.getByRole('radio', { name: navKjopt }).check()
+            }
         })
     }
 }
@@ -139,11 +157,11 @@ export function lagreYrkesaktivitet() {
     return async (page: Page) => {
         await test.step('Lagre yrkesaktivitet', async () => {
             const opprettButton = page.getByRole('button', { name: 'Opprett' })
+            opprettButton.waitFor({ state: 'visible' })
             await opprettButton.click()
 
             // Vent på at skjemaet lukkes
-            const leggTilButton = page.getByRole('button', { name: 'Legg til ny yrkesaktivitet' })
-            await leggTilButton.waitFor({ state: 'visible' })
+            opprettButton.waitFor({ state: 'hidden' })
         })
     }
 }
@@ -366,6 +384,38 @@ export function verifiserSøknaderTilgjengelige() {
                 name: /\d{2}\.\d{2}\.\d{4} - \d{2}\.\d{2}\.\d{4}/,
             })
             await expect(søknadCheckboxes.first()).toBeVisible()
+        })
+    }
+}
+
+export function navigerTilOpprettSaksbehandlingsperiode() {
+    return async (page: Page) => {
+        await test.step('Naviger til opprett saksbehandlingsperiode', async () => {
+            const startBehandlingButton = page.getByRole('button', { name: 'Start ny behandling' })
+            await startBehandlingButton.click()
+            await page.waitForURL('**/opprett-saksbehandlingsperiode')
+        })
+    }
+}
+
+export function opprettManuellBehandling(fom: string, tom: string) {
+    return async (page: Page) => {
+        await test.step(`Opprett manuell behandling fra ${fom} til ${tom}`, async () => {
+            await navigerTilOpprettSaksbehandlingsperiode()(page)
+
+            const manuellPeriodeCheckbox = page.getByRole('checkbox', { name: 'Manuell periode' })
+            await manuellPeriodeCheckbox.check()
+
+            // Fyll ut periode-datoer
+            const fomInput = page.getByRole('textbox', { name: 'Fra og med' })
+            const tomInput = page.getByRole('textbox', { name: 'Til og med' })
+
+            await fomInput.fill(fom)
+            await tomInput.fill(tom)
+
+            // Start behandling
+            const startButton = page.getByRole('button', { name: 'Start behandling' })
+            await startButton.click()
         })
     }
 }

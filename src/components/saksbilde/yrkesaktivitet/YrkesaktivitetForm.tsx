@@ -148,6 +148,14 @@ export default function YrkesaktivitetForm({
                 if (spm.underspørsmål) {
                     samleGyldigeFelter(spm.underspørsmål)
                 }
+                // Sjekk også alternativer for underspørsmål
+                if (spm.alternativer) {
+                    spm.alternativer.forEach((alt) => {
+                        if (alt.underspørsmål) {
+                            samleGyldigeFelter(alt.underspørsmål)
+                        }
+                    })
+                }
             })
         }
 

@@ -13,6 +13,7 @@ import { ThemeProvider } from '@components/ThemeProvider'
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
 import { DebuggingProvider } from '@components/DebuggingProvider'
 import { ToastProvider } from '@components/ToastProvider'
+import { MockSessionProvider } from '@components/providers/MockSessionProvider'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -41,7 +42,9 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
             <QueryClientProvider client={queryClient}>
                 <ShortcutProvider>
                     <DebuggingProvider>
-                        <ToastProvider>{children}</ToastProvider>
+                        <ToastProvider>
+                            <MockSessionProvider>{children}</MockSessionProvider>
+                        </ToastProvider>
                     </DebuggingProvider>
                 </ShortcutProvider>
             </QueryClientProvider>

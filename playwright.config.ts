@@ -60,17 +60,17 @@ export default defineConfig({
     projects: [
         {
             name: 'chromium light',
-            use: { ...devices['Desktop Chrome'], colorScheme: 'light' },
-        },
-        {
-            name: 'chromium dark',
-            use: { ...devices['Desktop Chrome'], colorScheme: 'dark' },
+            use: { ...devices['Desktop Chrome'], colorScheme: 'light' as const },
         },
         ...(process.env.CI
             ? [
                   {
                       name: 'firefox',
                       use: { ...devices['Desktop Firefox'] },
+                  },
+                  {
+                      name: 'chromium dark',
+                      use: { ...devices['Desktop Chrome'], colorScheme: 'dark' as const },
                   },
               ]
             : []),
