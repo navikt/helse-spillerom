@@ -240,7 +240,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     <TableDataCell>
                                                         <HStack wrap={false} gap="2" align="center">
                                                             {getDagtypeIcon(dag.dagtype)}
-                                                            <BodyShort>{getDagtypeText(dag.dagtype)}</BodyShort>
+                                                            <BodyShort>
+                                                                {getDagtypeText(
+                                                                    dag.dagtype,
+                                                                    dag.andreYtelserBegrunnelse,
+                                                                )}
+                                                            </BodyShort>
                                                         </HStack>
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
@@ -330,7 +335,7 @@ function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     return <Fragment />
 }
 
-function getDagtypeText(type: string): string {
+function getDagtypeText(type: string, andreYtelserType?: string[]): string {
     switch (type) {
         case 'Syk':
             return 'Syk'
@@ -348,9 +353,21 @@ function getDagtypeText(type: string): string {
             return 'Foreldet'
         case 'Avvist':
             return 'Avvist'
+        case 'AndreYtelser':
+            return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Krøll'
         default:
             return type
     }
+}
+
+export const andreYtelserTypeText: Record<string, string> = {
+    AndreYtelserAap: 'AAP',
+    AndreYtelserDagpenger: 'Dagpenger',
+    AndreYtelserForeldrepenger: 'Foreldrepenger',
+    AndreYtelserOmsorgspenger: 'Omsorgspenger',
+    AndreYtelserOpplaringspenger: 'Opplæringspenger',
+    AndreYtelserPleiepenger: 'Pleiepenger',
+    AndreYtelserSvangerskapspenger: 'Svangerskapspenger',
 }
 
 function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): ReactElement {

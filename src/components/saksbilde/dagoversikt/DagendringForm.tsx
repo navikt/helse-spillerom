@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
 
 import { useOppdaterYrkesaktivitetDagoversikt } from '@hooks/mutations/useOppdaterYrkesaktivitet'
-import { Dag, Dagtype, dagtypeSchema } from '@schemas/dagoversikt'
+import { andreYtelserBegrunnelseSchema, Dag, Dagtype, dagtypeSchema } from '@schemas/dagoversikt'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 
 export type DagendringSchema = z.infer<typeof dagendringSchema>
@@ -13,6 +13,7 @@ export const dagendringSchema = z.object({
     dagtype: dagtypeSchema,
     grad: z.string(),
     notat: z.string(),
+    andreYtelserType: andreYtelserBegrunnelseSchema,
 })
 
 type DagendringFormProps = {
@@ -29,13 +30,14 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
             dagtype: 'Syk',
             grad: '100',
             notat: '',
+            andreYtelserType: 'AndreYtelserAap',
         },
     })
 
     async function onSubmit(values: DagendringSchema) {
         if (!aktivtInntektsForhold || valgteDataer.size === 0) return
 
-        const { dagtype, grad, notat } = values
+        const { dagtype, grad, notat, andreYtelserType } = values
 
         const oppdaterteDager: Dag[] = []
 
@@ -47,6 +49,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                     ...eksisterendeDag,
                     dagtype: dagtype,
                     grad: dagtype === 'Syk' || dagtype === 'SykNav' ? parseInt(grad) : null,
+                    andreYtelserBegrunnelse: dagtype === 'AndreYtelser' ? [andreYtelserType] : undefined,
                     kilde: 'Saksbehandler',
                 })
             }
@@ -112,6 +115,29 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                             </Select>
                         )}
                     />
+                    {nyDagtype === 'AndreYtelser' && (
+                        <Controller
+                            control={form.control}
+                            name="andreYtelserType"
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    {...field}
+                                    size="small"
+                                    disabled={valgteDataer.size === 0}
+                                    label="Type"
+                                    error={fieldState.error?.message}
+                                >
+                                    <option value="AndreYtelserAap">AAP</option>
+                                    <option value="AndreYtelserDagpenger">Dagpenger</option>
+                                    <option value="AndreYtelserForeldrepenger">Foreldrepenger</option>
+                                    <option value="AndreYtelserOmsorgspenger">Omsorgspenger</option>
+                                    <option value="AndreYtelserOpplaringspenger">Opplæringspenger</option>
+                                    <option value="AndreYtelserPleiepenger">Pleiepenger</option>
+                                    <option value="AndreYtelserSvangerskapspenger">Svangerskapspenger</option>
+                                </Select>
+                            )}
+                        />
+                    )}
                     <Controller
                         control={form.control}
                         name="grad"
