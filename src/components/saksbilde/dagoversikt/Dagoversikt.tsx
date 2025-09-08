@@ -244,7 +244,9 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         </HStack>
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
-                                                        <BodyShort>{dag.grad ? `${dag.grad} %` : '-'}</BodyShort>
+                                                        <BodyShort className="whitespace-nowrap">
+                                                            {dag.grad ? `${dag.grad} %` : '-'}
+                                                        </BodyShort>
                                                     </TableDataCell>
                                                     <TableDataCell>
                                                         <KildeTag kilde={dag.kilde} />
