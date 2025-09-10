@@ -2,11 +2,12 @@ import { ReactElement } from 'react'
 import { z } from 'zod/v4'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
+import { Button, Checkbox, CheckboxGroup, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
 
 import { useOppdaterYrkesaktivitetDagoversikt } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 import { andreYtelserBegrunnelseSchema, Dag, Dagtype, dagtypeSchema } from '@schemas/dagoversikt'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
+import { useTilgjengeligeAvslagsdager } from '@components/saksbilde/vilkårsvurdering/useTilgjengeligeAvslagsdager'
 
 export type DagendringSchema = z.infer<typeof dagendringSchema>
 export const dagendringSchema = z.object({
@@ -14,6 +15,8 @@ export const dagendringSchema = z.object({
     grad: z.string(),
     notat: z.string(),
     andreYtelserType: andreYtelserBegrunnelseSchema,
+    avvistBegrunnelse: z.string().optional(),
+    avvistBegrunnelser: z.array(z.string()).optional(),
 })
 
 type DagendringFormProps = {
@@ -24,6 +27,7 @@ type DagendringFormProps = {
 
 export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: DagendringFormProps): ReactElement {
     const mutation = useOppdaterYrkesaktivitetDagoversikt()
+    const tilgjengeligeAvslagsdager = useTilgjengeligeAvslagsdager()
     const form = useForm<DagendringSchema>({
         resolver: zodResolver(dagendringSchema),
         defaultValues: {
@@ -31,13 +35,15 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
             grad: '100',
             notat: '',
             andreYtelserType: 'AndreYtelserAap',
+            avvistBegrunnelse: tilgjengeligeAvslagsdager.length === 1 ? tilgjengeligeAvslagsdager[0]?.kode || '' : '',
+            avvistBegrunnelser: [],
         },
     })
 
     async function onSubmit(values: DagendringSchema) {
         if (!aktivtInntektsForhold || valgteDataer.size === 0) return
 
-        const { dagtype, grad, notat, andreYtelserType } = values
+        const { dagtype, grad, notat, andreYtelserType, avvistBegrunnelse, avvistBegrunnelser } = values
 
         const oppdaterteDager: Dag[] = []
 
@@ -50,6 +56,12 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                     dagtype: dagtype,
                     grad: dagtype === 'Syk' || dagtype === 'SykNav' ? parseInt(grad) : null,
                     andreYtelserBegrunnelse: dagtype === 'AndreYtelser' ? [andreYtelserType] : undefined,
+                    avvistBegrunnelse:
+                        dagtype === 'AvvistDag'
+                            ? avvistBegrunnelse
+                                ? [avvistBegrunnelse]
+                                : avvistBegrunnelser || []
+                            : undefined,
                     kilde: 'Saksbehandler',
                 })
             }
@@ -110,7 +122,13 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                 <option value="Helg">Helg</option>
                                 <option value="Ferie">Ferie</option>
                                 <option value="Permisjon">Permisjon</option>
-                                <option value="AvvistDag">Avvist</option>
+                                {tilgjengeligeAvslagsdager.length > 0 && (
+                                    <option value="AvvistDag">
+                                        {tilgjengeligeAvslagsdager.length === 1
+                                            ? `Avvist (${tilgjengeligeAvslagsdager[0].beskrivelse})`
+                                            : 'Avvist'}
+                                    </option>
+                                )}
                                 <option value="AndreYtelser">Andre ytelser</option>
                             </Select>
                         )}
@@ -138,21 +156,54 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                             )}
                         />
                     )}
+
+                    {(nyDagtype == 'Syk' || nyDagtype == 'SykNav') && (
+                        <Controller
+                            control={form.control}
+                            name="grad"
+                            render={({ field, fieldState }) => (
+                                <TextField
+                                    {...field}
+                                    className="max-w-12"
+                                    error={fieldState.error?.message}
+                                    label="Grad"
+                                    size="small"
+                                />
+                            )}
+                        />
+                    )}
+                </HStack>
+                {nyDagtype === 'AvvistDag' && tilgjengeligeAvslagsdager.length > 1 && (
                     <Controller
                         control={form.control}
-                        name="grad"
+                        name="avvistBegrunnelser"
+                        rules={{
+                            required: 'Du må velge minst én avslagsbegrunnelse',
+                            validate: (value) =>
+                                (value && value.length > 0) || 'Du må velge minst én avslagsbegrunnelse',
+                        }}
                         render={({ field, fieldState }) => (
-                            <TextField
-                                {...field}
-                                className="max-w-12"
-                                error={fieldState.error?.message}
-                                label="Grad"
+                            <CheckboxGroup
+                                className="mt-2"
+                                legend="Velg avslagsbegrunnelser"
+                                value={field.value || []}
                                 size="small"
-                                disabled={valgteDataer.size === 0 || (nyDagtype !== 'Syk' && nyDagtype !== 'SykNav')}
-                            />
+                                onChange={field.onChange}
+                                error={fieldState.error?.message}
+                            >
+                                {tilgjengeligeAvslagsdager.map((avslagsdag) => (
+                                    <Checkbox
+                                        key={avslagsdag.kode}
+                                        value={avslagsdag.kode}
+                                        disabled={valgteDataer.size === 0}
+                                    >
+                                        {avslagsdag.beskrivelse}
+                                    </Checkbox>
+                                ))}
+                            </CheckboxGroup>
                         )}
                     />
-                </HStack>
+                )}
                 <Controller
                     control={form.control}
                     name="notat"
