@@ -49,6 +49,7 @@ describe('utbetalingsberegning', () => {
                     saksbehandlingsperiodeId: 'test-periode',
                     opprettet: '2023-01-01T00:00:00Z',
                     generertFraDokumenter: [],
+                    dekningsgrad: 100,
                 },
             ]
 
@@ -96,6 +97,7 @@ describe('utbetalingsberegning', () => {
                     saksbehandlingsperiodeId: 'test-periode',
                     opprettet: '2023-01-01T00:00:00Z',
                     generertFraDokumenter: [],
+                    dekningsgrad: 100,
                 },
                 {
                     id: 'ya-2',
@@ -109,6 +111,7 @@ describe('utbetalingsberegning', () => {
                     saksbehandlingsperiodeId: 'test-periode',
                     opprettet: '2023-01-01T00:00:00Z',
                     generertFraDokumenter: [],
+                    dekningsgrad: 100,
                 },
             ]
 
@@ -157,6 +160,7 @@ describe('utbetalingsberegning', () => {
                     saksbehandlingsperiodeId: 'test-periode',
                     opprettet: '2023-01-01T00:00:00Z',
                     generertFraDokumenter: [],
+                    dekningsgrad: 100,
                 },
                 {
                     id: 'ya-2',
@@ -170,6 +174,7 @@ describe('utbetalingsberegning', () => {
                     saksbehandlingsperiodeId: 'test-periode',
                     opprettet: '2023-01-01T00:00:00Z',
                     generertFraDokumenter: [],
+                    dekningsgrad: 100,
                 },
             ]
 

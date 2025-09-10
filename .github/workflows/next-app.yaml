@@ -40,6 +40,7 @@ jobs:
       - uses: navikt/helse-spillerom/actions/npm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm run tsc
       - run: npm run prettier:check
       - run: npm run lint
       - run: npm run test

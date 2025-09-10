@@ -22,21 +22,37 @@ describe('kategoriUtils', () => {
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    kategoriseringGenerert: null,
+
                     dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-1',
+                    opprettet: '2024-01-01',
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                    dekningsgrad: 100,
+                },
                 {
                     id: '2',
                     kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
+                    kategoriseringGenerert: null,
                     dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-2',
+                    opprettet: '2024-01-01',
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                    dekningsgrad: 100,
+                },
                 {
                     id: '3',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
+                    kategoriseringGenerert: null,
                     dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-3',
+                    opprettet: '2024-01-01',
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                    dekningsgrad: 100,
+                },
             ]
 
             const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)
@@ -48,17 +64,36 @@ describe('kategoriUtils', () => {
                 {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    kategoriseringGenerert: null,
                     dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-1',
+                    opprettet: '2024-01-01',
                     generertFraDokumenter: [],
-                } as Yrkesaktivitet,
+                    dekningsgrad: 100,
+                },
                 {
                     id: '2',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Yrkesaktivitet,
+                    kategoriseringGenerert: null,
+                    dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-2',
+                    opprettet: '2024-01-01',
+                    generertFraDokumenter: [],
+                    dekningsgrad: 100,
+                },
                 {
                     id: '3',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
-                } as Yrkesaktivitet,
+                    kategoriseringGenerert: null,
+                    dagoversikt: null,
+                    dagoversiktGenerert: null,
+                    saksbehandlingsperiodeId: 'periode-3',
+                    opprettet: '2024-01-01',
+                    generertFraDokumenter: [],
+                    dekningsgrad: 100,
+                },
             ]
 
             const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)

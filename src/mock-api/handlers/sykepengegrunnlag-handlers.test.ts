@@ -548,6 +548,7 @@ describe('sykepengegrunnlag-handlers', () => {
                 saksbehandlingsperiodeId: testUuid,
                 inntekter: [],
                 totalInntektØre: 0,
+                grunnbeløpØre: 12402800,
                 grunnbeløp6GØre: 74416800,
                 begrensetTil6G: false,
                 sykepengegrunnlagØre: 0,

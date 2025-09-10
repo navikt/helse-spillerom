@@ -50,10 +50,20 @@ describe('saksbehandlingsperiode-handlers', () => {
             testPerson = {
                 personId: 'test-person-id',
                 fnr: '12345678901',
-                navn: 'Test Person',
+                personinfo: {
+                    fødselsnummer: '12345678901',
+                    aktørId: '1234567890100',
+                    navn: 'Test Person',
+                    alder: 30,
+                },
                 saksbehandlingsperioder: [eksisterendePeriode],
+                vilkaarsvurderinger: {},
+                yrkesaktivitet: {},
+                dagoversikt: {},
+                dokumenter: {},
                 historikk: {},
-                soknader: [],
+                sykepengegrunnlag: {},
+                utbetalingsberegning: {},
             }
         })
 
