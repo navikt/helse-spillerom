@@ -101,15 +101,30 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
 
             // Verifiser at 01.09.2025 nå vises som "Avslått"
             const avslåttRow = page.getByRole('row', {
-                name: '01.09.2025 Avslått - SB - - - - Den sykmeldte er ikke medlem i folketrygden',
+                name: /01\.09\.2025.*Avslått.*SB/,
             })
             await expect(avslåttRow).toBeVisible()
 
             // Verifiser at kilde er "SB" (Saksbehandler)
             await expect(avslåttRow.getByText('SB')).toBeVisible()
 
-            // Verifiser at merknaden vises
-            await expect(avslåttRow.getByText('Den sykmeldte er ikke medlem i folketrygden')).toBeVisible()
+            // Verifiser at paragraf-referansen vises (i stedet for direkte beskrivelse)
+            // Dette kan være "§2" (kun kapittel) eller "§ 2-1" (kapittel-paragraf)
+            const paragrafElement = avslåttRow.locator('text=/§\\d+(?:-\\d+)?/')
+            await expect(paragrafElement).toBeVisible()
+
+            // Verifiser at tooltip fungerer ved å hover over paragraf-referansen
+            await paragrafElement.hover()
+
+            // Vent på at tooltip vises med beskrivelsen
+            await expect(page.locator('[role="tooltip"]')).toBeVisible()
+            await expect(page.locator('[role="tooltip"]')).toContainText('Den sykmeldte er ikke medlem i folketrygden')
+
+            //unhover paragraf-referansen
+            await page.mouse.move(0, 0)
+
+            // Verifiser at tooltip ikke vises
+            await expect(page.locator('[role="tooltip"]')).not.toBeVisible()
         })
 
         // Valider tilgjengelighet på slutten

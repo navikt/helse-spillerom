@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Fragment, ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, Tag } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, Tag, Tooltip } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
@@ -18,7 +18,7 @@ import { cn } from '@utils/tw'
 import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
-import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
+import { Vilkårshjemmel, type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
 
 interface DagoversiktProps {
     value: string
@@ -293,12 +293,10 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         {dag.dagtype === 'Avslått' &&
                                                         dag.avslåttBegrunnelse &&
                                                         dag.avslåttBegrunnelse.length > 0 ? (
-                                                            <BodyShort size="small">
-                                                                {getAvslåttBegrunnelser(
-                                                                    dag.avslåttBegrunnelse,
-                                                                    kodeverk,
-                                                                )}
-                                                            </BodyShort>
+                                                            <AvslåttBegrunnelser
+                                                                avslåttBegrunnelse={dag.avslåttBegrunnelse}
+                                                                kodeverk={kodeverk}
+                                                            />
                                                         ) : null}
                                                     </TableDataCell>
                                                 </TableRow>
@@ -355,25 +353,58 @@ function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     return <Fragment />
 }
 
-function getAvslåttBegrunnelser(avslåttBegrunnelse: string[], kodeverk: Kodeverk): string {
+interface AvslåttBegrunnelserProps {
+    avslåttBegrunnelse: string[]
+    kodeverk: Kodeverk
+}
+
+function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunnelserProps): ReactElement {
     if (!avslåttBegrunnelse || avslåttBegrunnelse.length === 0 || !kodeverk) {
-        return ''
+        return <Fragment />
     }
 
-    // Finn beskrivelsene for alle avslagsbegrunnelser
-    const begrunnelser: string[] = []
+    // Finn paragraf-referanser og beskrivelser for alle avslagsbegrunnelser
+    const begrunnelser: Array<{ paragraf: string; beskrivelse: string }> = []
 
     for (const kode of avslåttBegrunnelse) {
         for (const vilkår of kodeverk) {
             const årsak = vilkår.ikkeOppfylt.find((årsak: Årsak) => årsak.kode === kode)
             if (årsak) {
-                begrunnelser.push(årsak.beskrivelse)
+                const paragraf = årsak.vilkårshjemmel ? formatParagraf(årsak.vilkårshjemmel) : kode
+                begrunnelser.push({ paragraf, beskrivelse: årsak.beskrivelse })
                 break
             }
         }
     }
 
-    return begrunnelser.join(', ')
+    if (begrunnelser.length === 0) {
+        return <Fragment />
+    }
+
+    return (
+        <HStack gap="1" wrap={false}>
+            {begrunnelser.map((begrunnelse, index) => (
+                <Fragment key={index}>
+                    <Tooltip content={begrunnelse.beskrivelse}>
+                        <BodyShort size="small">{begrunnelse.paragraf}</BodyShort>
+                    </Tooltip>
+                    {index < begrunnelser.length - 1 && <span>, </span>}
+                </Fragment>
+            ))}
+        </HStack>
+    )
+}
+
+function formatParagraf(hjemmel: Vilkårshjemmel): string {
+    const { kapittel, paragraf, ledd, setning, bokstav } = hjemmel
+    if (!kapittel) return ''
+
+    let result = `§${kapittel}`
+    if (paragraf) result += `-${paragraf}`
+    if (ledd) result += ` ${ledd}. ledd`
+    if (setning) result += ` ${setning}. setning`
+    if (bokstav) result += ` bokstav ${bokstav}`
+    return result
 }
 
 function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
