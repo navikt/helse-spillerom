@@ -6,6 +6,7 @@ import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
+import { Dagtype } from '@schemas/dagoversikt'
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
@@ -16,6 +17,8 @@ import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { cn } from '@utils/tw'
 import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
 import { FetchError } from '@components/saksbilde/FetchError'
+import { useKodeverk } from '@/hooks/queries/useKodeverk'
+import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
 
 interface DagoversiktProps {
     value: string
@@ -29,6 +32,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         refetch,
     } = useYrkesaktivitet()
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
+    const { data: kodeverk = [] } = useKodeverk()
 
     // Filtrer kun yrkesaktivitet hvor personen har dagoversikt med innhold
     const sykmeldingsforhold =
@@ -219,7 +223,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
 
                                             return (
-                                                <TableRow key={i}>
+                                                <TableRow
+                                                    key={i}
+                                                    className={
+                                                        dag.dagtype === 'AvvistDag' ? 'bg-ax-bg-danger-moderate' : ''
+                                                    }
+                                                >
                                                     {erIRedigeringsmodus && (
                                                         <TableDataCell>
                                                             <Checkbox
@@ -280,7 +289,15 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     <TableDataCell align="right">
                                                         <BodyShort>-</BodyShort>
                                                     </TableDataCell>
-                                                    <TableDataCell />
+                                                    <TableDataCell>
+                                                        {dag.dagtype === 'AvvistDag' &&
+                                                        dag.avvistBegrunnelse &&
+                                                        dag.avvistBegrunnelse.length > 0 ? (
+                                                            <BodyShort size="small">
+                                                                {getAvvistBegrunnelser(dag.avvistBegrunnelse, kodeverk)}
+                                                            </BodyShort>
+                                                        ) : null}
+                                                    </TableDataCell>
                                                 </TableRow>
                                             )
                                         })}
@@ -307,7 +324,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     )
 }
 
-function getDagtypeIcon(dagtype: string): ReactElement {
+function getDagtypeIcon(dagtype: Dagtype): ReactElement {
     switch (dagtype) {
         case 'Syk':
         case 'SykNav':
@@ -335,7 +352,28 @@ function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     return <Fragment />
 }
 
-function getDagtypeText(type: string, andreYtelserType?: string[]): string {
+function getAvvistBegrunnelser(avvistBegrunnelse: string[], kodeverk: Kodeverk): string {
+    if (!avvistBegrunnelse || avvistBegrunnelse.length === 0 || !kodeverk) {
+        return ''
+    }
+
+    // Finn beskrivelsene for alle avslagsbegrunnelser
+    const begrunnelser: string[] = []
+
+    for (const kode of avvistBegrunnelse) {
+        for (const vilkår of kodeverk) {
+            const årsak = vilkår.ikkeOppfylt.find((årsak: Årsak) => årsak.kode === kode)
+            if (årsak) {
+                begrunnelser.push(årsak.beskrivelse)
+                break
+            }
+        }
+    }
+
+    return begrunnelser.join(', ')
+}
+
+function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
     switch (type) {
         case 'Syk':
             return 'Syk'
@@ -349,12 +387,10 @@ function getDagtypeText(type: string, andreYtelserType?: string[]): string {
             return 'Arbeid'
         case 'Permisjon':
             return 'Permisjon'
-        case 'Foreldet':
-            return 'Foreldet'
-        case 'Avvist':
+        case 'AvvistDag':
             return 'Avvist'
         case 'AndreYtelser':
-            return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Krøll'
+            return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Andre ytelser'
         default:
             return type
     }
