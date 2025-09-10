@@ -38,7 +38,7 @@ type Session = {
 
 // Deep copy funksjon for å unngå delte referanser mellom sesjoner
 function deepCopyPerson(person: Testperson): Person {
-    return {
+    const generertPerson = {
         fnr: person.personinfo.fødselsnummer,
         personId: person.personId,
         personinfo: { ...person.personinfo },
@@ -54,6 +54,12 @@ function deepCopyPerson(person: Testperson): Person {
         sykepengegrunnlag: {},
         utbetalingsberegning: {},
     }
+
+    if (person.postCreateCallback) {
+        person.postCreateCallback(generertPerson)
+    }
+
+    return generertPerson
 }
 
 export const sessionStore = nextleton('sessionStore', () => {

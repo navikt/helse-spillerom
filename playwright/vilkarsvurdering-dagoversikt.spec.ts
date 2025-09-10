@@ -1,6 +1,8 @@
 import { expect } from '@playwright/test'
 import { validerAxe } from './uuvalidering'
 import { test } from './fixtures'
+import { settOppKalleMedFerdigVilkaar, ryddOppTestdata } from './actions/testdata-actions'
+import { hentPerson } from '@/mock-api/session'
 
 test.describe('Vilkårsvurdering og Dagoversikt', () => {
     test.beforeEach(async ({ page }) => {

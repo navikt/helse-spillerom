@@ -1,6 +1,8 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
 import { genererSaksbehandlingsperioder } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
+import { settOppVilkaarsvurderingPåPerson } from '../handlers/vilkaar-handlers'
+
 // Grunndata for Kalle
 const kalleGrunndata = {
     personId: '8j4ns',
@@ -260,4 +262,12 @@ export const Kalle: Testperson = {
     yrkesaktivitet: generertData.yrkesaktivitet,
     dagoversikt: generertData.dagoversikt,
     dokumenter: generertData.dokumenter,
+    postCreateCallback: (person) => {
+        settOppVilkaarsvurderingPåPerson(person, '607f8e85-b0ba-4240-9950-383f6d7eac9e', 'MEDLEMSKAP', 'IKKE_OPPFYLT', [
+            {
+                spørsmål: 'MEDLEMSKAP_ALTERNATIVER',
+                svar: 'MEDLEMSKAP_NEI',
+            },
+        ])
+    },
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { Person } from '@/mock-api/session'
-import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
+import { Vilkaarsvurdering, Vurdering, VilkaarsvurderingUnderspørsmål } from '@/schemas/vilkaarsvurdering'
 
 export async function handleGetVilkaar(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -13,24 +13,24 @@ export async function handleGetVilkaar(person: Person | undefined, uuid: string)
     return NextResponse.json(person.vilkaarsvurderinger[uuid] || [])
 }
 
-export async function handlePutVilkaar(
-    request: Request,
-    person: Person | undefined,
+/**
+ * Ren funksjon som setter opp vilkårsvurdering på en person og returnerer den nye vurderingen
+ * Kan gjenbrukes i testdata-oppsett og andre steder
+ */
+export function settOppVilkaarsvurderingPåPerson(
+    person: Person,
     uuid: string,
     kode: string,
-): Promise<Response> {
-    if (!person) {
-        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-    }
-
-    const body = await request.json()
-
+    vurdering: Vurdering,
+    underspørsmål: VilkaarsvurderingUnderspørsmål[] = [],
+    notat?: string,
+): Vilkaarsvurdering {
     // Create V2 vurdering object
     const nyVurdering: Vilkaarsvurdering = {
         hovedspørsmål: kode,
-        vurdering: body.vurdering,
-        underspørsmål: body.underspørsmål,
-        notat: body.notat,
+        vurdering,
+        underspørsmål,
+        notat,
     }
 
     if (!person.vilkaarsvurderinger) {
@@ -46,6 +46,43 @@ export async function handlePutVilkaar(
     } else {
         person.vilkaarsvurderinger[uuid].push(nyVurdering)
     }
+
+    return nyVurdering
+}
+
+export async function handlePutVilkaar(
+    request: Request,
+    person: Person | undefined,
+    uuid: string,
+    kode: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const body = await request.json()
+
+    // Konverter gammelt format til nytt format hvis nødvendig
+    let underspørsmål: VilkaarsvurderingUnderspørsmål[] = []
+    if (Array.isArray(body.underspørsmål)) {
+        underspørsmål = body.underspørsmål
+    } else if (typeof body.underspørsmål === 'object' && body.underspørsmål !== null) {
+        // Konverter Record<string, string> til VilkaarsvurderingUnderspørsmål[]
+        underspørsmål = Object.entries(body.underspørsmål).map(([spørsmål, svar]) => ({
+            spørsmål,
+            svar: svar as string,
+        }))
+    }
+
+    // Bruk den rene funksjonen
+    const nyVurdering = settOppVilkaarsvurderingPåPerson(
+        person,
+        uuid,
+        kode,
+        body.vurdering as Vurdering,
+        underspørsmål,
+        body.notat,
+    )
 
     return NextResponse.json(nyVurdering, { status: 201 })
 }
