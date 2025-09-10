@@ -270,6 +270,16 @@ export const Kalle: Testperson = {
                 svar: 'MEDLEMSKAP_NEI',
             },
         ])
+        settOppVilkaarsvurderingPåPerson(person, '607f8e85-b0ba-4240-9950-383f6d7eac9e', 'OPPTJENING', 'IKKE_OPPFYLT', [
+            {
+                spørsmål: 'OPPTJENING_OPPFYLT',
+                svar: 'f227f4f9-bfd4-41be-b314-17cefb4f8d0d',
+            },
+            {
+                spørsmål: 'OPPTJENING_OPPFYLT_NEI_ALTERNATIVER',
+                svar: 'OPPTJENING_AAP_FOR_FORELDREPENGER',
+            },
+        ])
         oppdaterDagoversiktPåYrkesaktivitet(
             person,
             '607f8e85-b0ba-4240-9950-383f6d7eac9e',
@@ -281,6 +291,20 @@ export const Kalle: Testperson = {
                     grad: null,
                     kilde: 'Saksbehandler',
                     avslåttBegrunnelse: ['MEDLEMSKAP_NEI'],
+                },
+            ],
+        )
+        oppdaterDagoversiktPåYrkesaktivitet(
+            person,
+            '607f8e85-b0ba-4240-9950-383f6d7eac9e',
+            person.yrkesaktivitet?.['607f8e85-b0ba-4240-9950-383f6d7eac9e'][0].id,
+            [
+                {
+                    dato: '2025-01-02',
+                    dagtype: 'Avslått',
+                    grad: null,
+                    kilde: 'Saksbehandler',
+                    avslåttBegrunnelse: ['OPPTJENING_AAP_FOR_FORELDREPENGER'],
                 },
             ],
         )
