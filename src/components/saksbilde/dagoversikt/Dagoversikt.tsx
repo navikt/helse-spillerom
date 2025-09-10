@@ -226,7 +226,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 <TableRow
                                                     key={i}
                                                     className={
-                                                        dag.dagtype === 'AvslåttDag' ? 'bg-ax-bg-danger-moderate' : ''
+                                                        dag.dagtype === 'Avslått' ? 'bg-ax-bg-danger-moderate' : ''
                                                     }
                                                 >
                                                     {erIRedigeringsmodus && (
@@ -290,7 +290,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         <BodyShort>-</BodyShort>
                                                     </TableDataCell>
                                                     <TableDataCell>
-                                                        {dag.dagtype === 'AvslåttDag' &&
+                                                        {dag.dagtype === 'Avslått' &&
                                                         dag.avslåttBegrunnelse &&
                                                         dag.avslåttBegrunnelse.length > 0 ? (
                                                             <BodyShort size="small">
@@ -390,7 +390,7 @@ function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
             return 'Arbeid'
         case 'Permisjon':
             return 'Permisjon'
-        case 'AvslåttDag':
+        case 'Avslått':
             return 'Avslått'
         case 'AndreYtelser':
             return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Andre ytelser'

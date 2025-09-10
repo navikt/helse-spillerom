@@ -7,7 +7,7 @@ export const dagtypeSchema = z.enum([
     'Helg',
     'Ferie',
     'Permisjon',
-    'AvslåttDag',
+    'Avslått',
     'AndreYtelser',
 ])
 

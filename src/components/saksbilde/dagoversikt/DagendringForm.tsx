@@ -57,7 +57,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                     grad: dagtype === 'Syk' || dagtype === 'SykNav' ? parseInt(grad) : null,
                     andreYtelserBegrunnelse: dagtype === 'AndreYtelser' ? [andreYtelserType] : undefined,
                     avslåttBegrunnelse:
-                        dagtype === 'AvslåttDag'
+                        dagtype === 'Avslått'
                             ? avslåttBegrunnelse
                                 ? [avslåttBegrunnelse]
                                 : avslåttBegrunnelser || []
@@ -123,7 +123,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                 <option value="Ferie">Ferie</option>
                                 <option value="Permisjon">Permisjon</option>
                                 {tilgjengeligeAvslagsdager.length > 0 && (
-                                    <option value="AvslåttDag">
+                                    <option value="Avslått">
                                         {tilgjengeligeAvslagsdager.length === 1
                                             ? `Avslått (${tilgjengeligeAvslagsdager[0].beskrivelse})`
                                             : 'Avslått'}
@@ -173,7 +173,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                         />
                     )}
                 </HStack>
-                {nyDagtype === 'AvslåttDag' && tilgjengeligeAvslagsdager.length > 1 && (
+                {nyDagtype === 'Avslått' && tilgjengeligeAvslagsdager.length > 1 && (
                     <Controller
                         control={form.control}
                         name="avslåttBegrunnelser"
