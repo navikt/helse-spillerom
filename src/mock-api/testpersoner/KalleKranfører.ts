@@ -200,10 +200,43 @@ const kalleGrunndata = {
                 },
             ],
         },
+        {
+            id: '8',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
+            fom: '2025-09-01',
+            tom: '2025-09-20',
+            korrigerer: null,
+            korrigertAv: null,
+            sykmeldingSkrevet: '2025-09-01',
+            startSyketilfelle: '2025-09-01',
+            opprettet: '2025-09-01',
+            sendtNav: '2025-09-21',
+            sendtArbeidsgiver: '2025-09-21',
+            arbeidsgiver: {
+                navn: 'Krankompisen',
+                orgnummer: '123456789',
+            },
+            soknadsperioder: [
+                {
+                    fom: '2025-09-01',
+                    tom: '2025-09-20',
+                    grad: 100,
+                    sykmeldingstype: 'Sykemldingstype',
+                },
+            ],
+        },
     ],
 }
 
 const periodeDefinisjon = [
+    {
+        fom: '2025-09-01',
+        tom: '2025-09-20',
+        søknadIder: ['8'], // Søknad 3 og 5 har samme periode, men ulik arbeidsgiver
+        uuid: '607f8e85-aaaa-4240-9950-383f6d7eac22',
+    },
     {
         fom: '2025-01-01',
         tom: '2025-02-28',

@@ -77,7 +77,7 @@ export function Vilkårsvurdering(): ReactElement {
                                         <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
                                             Status
                                         </TableHeaderCell>
-                                        <TableHeaderCell />
+                                        <TableHeaderCell aria-hidden="true" />
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -100,7 +100,7 @@ export function Vilkårsvurdering(): ReactElement {
                                             >
                                                 <TableDataCell align="center" className="pl-[13px]">
                                                     <HStack wrap={false} gap="4" align="center">
-                                                        <span className="h-6 w-6">
+                                                        <span className="h-6 w-6" aria-hidden="true">
                                                             {getVurderingIcon(vilkårsvurdering?.vurdering)}
                                                         </span>
 
