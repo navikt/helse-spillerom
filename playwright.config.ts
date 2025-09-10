@@ -60,27 +60,27 @@ export default defineConfig({
     projects: [
         {
             name: 'chromium light',
-            use: { 
-                ...devices['Desktop Chrome'], 
+            use: {
+                ...devices['Desktop Chrome'],
                 colorScheme: 'light' as const,
-                viewport: { width: 1920, height: 1080 }
+                viewport: { width: 1920, height: 1080 },
             },
         },
         ...(process.env.CI
             ? [
                   {
                       name: 'firefox',
-                      use: { 
+                      use: {
                           ...devices['Desktop Firefox'],
-                          viewport: { width: 1920, height: 1080 }
+                          viewport: { width: 1920, height: 1080 },
                       },
                   },
                   {
                       name: 'chromium dark',
-                      use: { 
-                          ...devices['Desktop Chrome'], 
+                      use: {
+                          ...devices['Desktop Chrome'],
                           colorScheme: 'dark' as const,
-                          viewport: { width: 1920, height: 1080 }
+                          viewport: { width: 1920, height: 1080 },
                       },
                   },
               ]
