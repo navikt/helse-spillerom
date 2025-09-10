@@ -18,7 +18,8 @@ import { cn } from '@utils/tw'
 import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
-import { Vilkårshjemmel, type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
+import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
+import { formatParagraf, getLovdataUrl } from '@utils/paragraf-formatering'
 
 interface DagoversiktProps {
     value: string
@@ -400,30 +401,6 @@ function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunn
             ))}
         </HStack>
     )
-}
-
-function getLovdataUrl(hjemmel: Vilkårshjemmel): string | undefined {
-    const { lovverk, kapittel, paragraf } = hjemmel
-
-    // Kun for folketrygdloven
-    if (lovverk?.toLowerCase().includes('folketrygdloven') && kapittel) {
-        const paragrafNummer = paragraf || '1' // Bruk paragraf 1 hvis ingen paragraf er spesifisert
-        return `https://lovdata.no/lov/1997-02-28-19/§${kapittel}-${paragrafNummer}`
-    }
-
-    return undefined
-}
-
-function formatParagraf(hjemmel: Vilkårshjemmel): string {
-    const { kapittel, paragraf, ledd, setning, bokstav } = hjemmel
-    if (!kapittel) return ''
-
-    let result = `§${kapittel}`
-    if (paragraf) result += `-${paragraf}`
-    if (ledd) result += ` ${ledd}. ledd`
-    if (setning) result += ` ${setning}. setning`
-    if (bokstav) result += ` bokstav ${bokstav}`
-    return result
 }
 
 function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {

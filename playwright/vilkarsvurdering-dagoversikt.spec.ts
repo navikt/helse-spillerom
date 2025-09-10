@@ -109,7 +109,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
             await expect(avslåttRow.getByText('SB')).toBeVisible()
 
             // Verifiser at paragraf-referansen vises som en lenke (i stedet for direkte beskrivelse)
-            // Dette kan være "§2" (kun kapittel) eller "§ 2-1" (kapittel-paragraf)
+            // Dette kan være "Kapittel 2" (kun kapittel) eller "§2-1" (kapittel-paragraf)
             const paragrafLink = avslåttRow.locator('a[href*="lovdata.no"]')
             await expect(paragrafLink).toBeVisible()
 
