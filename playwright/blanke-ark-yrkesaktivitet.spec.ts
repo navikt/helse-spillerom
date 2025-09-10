@@ -52,7 +52,7 @@ test.describe('Blanke Ark - Yrkesaktivitet', () => {
 
         // 2. Legg til næringsdrivende fisker på blad B
         await åpneYrkesaktivitetSkjema()(page)
-        await fyllUtNæringsdrivendeYrkesaktivitet('Fisker', false)(page)
+        await fyllUtNæringsdrivendeYrkesaktivitet('Fisker', null, false)(page)
         await lagreYrkesaktivitet()(page)
 
         // Sjekk at begge yrkesaktiviteter er synlige

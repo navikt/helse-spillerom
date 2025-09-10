@@ -180,7 +180,7 @@ function generateHtmlReport(violations: any[], url: string): string {
                 <div class="element-list">
                     ${violation.nodes
                         .map(
-                            (node) => `
+                            (node: any) => `
                         <div class="element">${node.target.join(' ')}</div>
                     `,
                         )
