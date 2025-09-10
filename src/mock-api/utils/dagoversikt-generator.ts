@@ -17,7 +17,7 @@ function initialiserDager(fom: string, tom: string): Dagoversikt {
             dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
             dagtype: erHelgdag ? 'Helg' : 'Arbeidsdag',
             grad: null,
-            avvistBegrunnelse: [],
+            avslåttBegrunnelse: [],
             kilde: erHelgdag ? null : 'Saksbehandler',
         })
 

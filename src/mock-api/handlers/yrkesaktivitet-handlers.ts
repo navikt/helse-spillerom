@@ -261,7 +261,7 @@ export function testNyttFormat() {
                 dato: '2024-08-06',
                 dagtype: 'Arbeidsdag',
                 grad: null,
-                avvistBegrunnelse: [],
+                avslåttBegrunnelse: [],
                 kilde: 'Saksbehandler',
             },
         ],

@@ -42,7 +42,7 @@ describe('dagoversikt-generator', () => {
                 expect(dag).toHaveProperty('dato')
                 expect(dag).toHaveProperty('dagtype')
                 expect(dag).toHaveProperty('grad')
-                expect(dag).toHaveProperty('avvistBegrunnelse')
+                expect(dag).toHaveProperty('avslåttBegrunnelse')
                 expect(dag).toHaveProperty('kilde')
             })
         })

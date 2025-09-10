@@ -15,8 +15,8 @@ export const dagendringSchema = z.object({
     grad: z.string(),
     notat: z.string(),
     andreYtelserType: andreYtelserBegrunnelseSchema,
-    avvistBegrunnelse: z.string().optional(),
-    avvistBegrunnelser: z.array(z.string()).optional(),
+    avslåttBegrunnelse: z.string().optional(),
+    avslåttBegrunnelser: z.array(z.string()).optional(),
 })
 
 type DagendringFormProps = {
@@ -35,15 +35,15 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
             grad: '100',
             notat: '',
             andreYtelserType: 'AndreYtelserAap',
-            avvistBegrunnelse: tilgjengeligeAvslagsdager.length === 1 ? tilgjengeligeAvslagsdager[0]?.kode || '' : '',
-            avvistBegrunnelser: [],
+            avslåttBegrunnelse: tilgjengeligeAvslagsdager.length === 1 ? tilgjengeligeAvslagsdager[0]?.kode || '' : '',
+            avslåttBegrunnelser: [],
         },
     })
 
     async function onSubmit(values: DagendringSchema) {
         if (!aktivtInntektsForhold || valgteDataer.size === 0) return
 
-        const { dagtype, grad, notat, andreYtelserType, avvistBegrunnelse, avvistBegrunnelser } = values
+        const { dagtype, grad, notat, andreYtelserType, avslåttBegrunnelse, avslåttBegrunnelser } = values
 
         const oppdaterteDager: Dag[] = []
 
@@ -56,11 +56,11 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                     dagtype: dagtype,
                     grad: dagtype === 'Syk' || dagtype === 'SykNav' ? parseInt(grad) : null,
                     andreYtelserBegrunnelse: dagtype === 'AndreYtelser' ? [andreYtelserType] : undefined,
-                    avvistBegrunnelse:
-                        dagtype === 'AvvistDag'
-                            ? avvistBegrunnelse
-                                ? [avvistBegrunnelse]
-                                : avvistBegrunnelser || []
+                    avslåttBegrunnelse:
+                        dagtype === 'AvslåttDag'
+                            ? avslåttBegrunnelse
+                                ? [avslåttBegrunnelse]
+                                : avslåttBegrunnelser || []
                             : undefined,
                     kilde: 'Saksbehandler',
                 })
@@ -123,10 +123,10 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                 <option value="Ferie">Ferie</option>
                                 <option value="Permisjon">Permisjon</option>
                                 {tilgjengeligeAvslagsdager.length > 0 && (
-                                    <option value="AvvistDag">
+                                    <option value="AvslåttDag">
                                         {tilgjengeligeAvslagsdager.length === 1
-                                            ? `Avvist (${tilgjengeligeAvslagsdager[0].beskrivelse})`
-                                            : 'Avvist'}
+                                            ? `Avslått (${tilgjengeligeAvslagsdager[0].beskrivelse})`
+                                            : 'Avslått'}
                                     </option>
                                 )}
                                 <option value="AndreYtelser">Andre ytelser</option>
@@ -173,10 +173,10 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                         />
                     )}
                 </HStack>
-                {nyDagtype === 'AvvistDag' && tilgjengeligeAvslagsdager.length > 1 && (
+                {nyDagtype === 'AvslåttDag' && tilgjengeligeAvslagsdager.length > 1 && (
                     <Controller
                         control={form.control}
-                        name="avvistBegrunnelser"
+                        name="avslåttBegrunnelser"
                         rules={{
                             required: 'Du må velge minst én avslagsbegrunnelse',
                             validate: (value) =>

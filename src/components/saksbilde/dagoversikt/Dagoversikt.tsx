@@ -226,7 +226,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 <TableRow
                                                     key={i}
                                                     className={
-                                                        dag.dagtype === 'AvvistDag' ? 'bg-ax-bg-danger-moderate' : ''
+                                                        dag.dagtype === 'AvslåttDag' ? 'bg-ax-bg-danger-moderate' : ''
                                                     }
                                                 >
                                                     {erIRedigeringsmodus && (
@@ -290,11 +290,14 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         <BodyShort>-</BodyShort>
                                                     </TableDataCell>
                                                     <TableDataCell>
-                                                        {dag.dagtype === 'AvvistDag' &&
-                                                        dag.avvistBegrunnelse &&
-                                                        dag.avvistBegrunnelse.length > 0 ? (
+                                                        {dag.dagtype === 'AvslåttDag' &&
+                                                        dag.avslåttBegrunnelse &&
+                                                        dag.avslåttBegrunnelse.length > 0 ? (
                                                             <BodyShort size="small">
-                                                                {getAvvistBegrunnelser(dag.avvistBegrunnelse, kodeverk)}
+                                                                {getAvslåttBegrunnelser(
+                                                                    dag.avslåttBegrunnelse,
+                                                                    kodeverk,
+                                                                )}
                                                             </BodyShort>
                                                         ) : null}
                                                     </TableDataCell>
@@ -352,15 +355,15 @@ function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     return <Fragment />
 }
 
-function getAvvistBegrunnelser(avvistBegrunnelse: string[], kodeverk: Kodeverk): string {
-    if (!avvistBegrunnelse || avvistBegrunnelse.length === 0 || !kodeverk) {
+function getAvslåttBegrunnelser(avslåttBegrunnelse: string[], kodeverk: Kodeverk): string {
+    if (!avslåttBegrunnelse || avslåttBegrunnelse.length === 0 || !kodeverk) {
         return ''
     }
 
     // Finn beskrivelsene for alle avslagsbegrunnelser
     const begrunnelser: string[] = []
 
-    for (const kode of avvistBegrunnelse) {
+    for (const kode of avslåttBegrunnelse) {
         for (const vilkår of kodeverk) {
             const årsak = vilkår.ikkeOppfylt.find((årsak: Årsak) => årsak.kode === kode)
             if (årsak) {
@@ -387,8 +390,8 @@ function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
             return 'Arbeid'
         case 'Permisjon':
             return 'Permisjon'
-        case 'AvvistDag':
-            return 'Avvist'
+        case 'AvslåttDag':
+            return 'Avslått'
         case 'AndreYtelser':
             return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Andre ytelser'
         default:

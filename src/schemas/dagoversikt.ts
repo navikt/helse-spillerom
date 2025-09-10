@@ -7,7 +7,7 @@ export const dagtypeSchema = z.enum([
     'Helg',
     'Ferie',
     'Permisjon',
-    'AvvistDag',
+    'AvslåttDag',
     'AndreYtelser',
 ])
 
@@ -27,7 +27,7 @@ export const dagSchema = z.object({
     dato: z.string(), // ISO date string
     dagtype: dagtypeSchema,
     grad: z.number().nullable(),
-    avvistBegrunnelse: z.array(z.string()).optional(),
+    avslåttBegrunnelse: z.array(z.string()).optional(),
     andreYtelserBegrunnelse: z.array(z.string()).optional(),
     kilde: kildeSchema.nullable(),
 })

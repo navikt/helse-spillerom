@@ -8,7 +8,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
         await page.goto('/')
     })
 
-    test('Kan vurdere vilkår og endre dager til avvist', async ({ page }, testInfo) => {
+    test('Kan vurdere vilkår og endre dager til avslått', async ({ page }, testInfo) => {
         // Søk opp Kalle Kranfører
         await page.goto('/person/8j4ns/607f8e85-aaaa-4240-9950-383f6d7eac22')
 
@@ -81,14 +81,14 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
             ).toBeVisible()
         })
 
-        // Endre dagtype til avvist
-        await test.step('Endre dagtype til avvist', async () => {
-            // Velg "Avvist (Den sykmeldte er ikke medlem i folketrygden)" fra dropdown
-            await page.getByLabel('Dagtype').selectOption('Avvist (Den sykmeldte er ikke medlem i folketrygden)')
+        // Endre dagtype til avslått
+        await test.step('Endre dagtype til avslått', async () => {
+            // Velg "Avslått (Den sykmeldte er ikke medlem i folketrygden)" fra dropdown
+            await page.getByLabel('Dagtype').selectOption('Avslått (Den sykmeldte er ikke medlem i folketrygden)')
 
             // Legg til notat til beslutter
             const notatField = page.getByRole('textbox', { name: 'Notat til beslutter' })
-            await notatField.fill('Dagen endres til avvist fordi personen ikke er medlem i folketrygden')
+            await notatField.fill('Dagen endres til avslått fordi personen ikke er medlem i folketrygden')
 
             // Lagre endringen
             await page.getByRole('button', { name: 'Endre (1)' }).click()
@@ -99,17 +99,17 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
             // Vent på at dagoversikten oppdateres
             await expect(page.getByRole('table')).toBeVisible()
 
-            // Verifiser at 01.09.2025 nå vises som "Avvist"
-            const avvistRow = page.getByRole('row', {
-                name: '01.09.2025 Avvist - SB - - - - Den sykmeldte er ikke medlem i folketrygden',
+            // Verifiser at 01.09.2025 nå vises som "Avslått"
+            const avslåttRow = page.getByRole('row', {
+                name: '01.09.2025 Avslått - SB - - - - Den sykmeldte er ikke medlem i folketrygden',
             })
-            await expect(avvistRow).toBeVisible()
+            await expect(avslåttRow).toBeVisible()
 
             // Verifiser at kilde er "SB" (Saksbehandler)
-            await expect(avvistRow.getByText('SB')).toBeVisible()
+            await expect(avslåttRow.getByText('SB')).toBeVisible()
 
             // Verifiser at merknaden vises
-            await expect(avvistRow.getByText('Den sykmeldte er ikke medlem i folketrygden')).toBeVisible()
+            await expect(avslåttRow.getByText('Den sykmeldte er ikke medlem i folketrygden')).toBeVisible()
         })
 
         // Valider tilgjengelighet på slutten
