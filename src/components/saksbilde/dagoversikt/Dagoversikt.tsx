@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Fragment, ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, Tag, Tooltip } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Link, Table, Tabs, Tag, Tooltip } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
@@ -364,14 +364,15 @@ function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunn
     }
 
     // Finn paragraf-referanser og beskrivelser for alle avslagsbegrunnelser
-    const begrunnelser: Array<{ paragraf: string; beskrivelse: string }> = []
+    const begrunnelser: Array<{ paragraf: string; beskrivelse: string; lovdataUrl?: string }> = []
 
     for (const kode of avslåttBegrunnelse) {
         for (const vilkår of kodeverk) {
             const årsak = vilkår.ikkeOppfylt.find((årsak: Årsak) => årsak.kode === kode)
             if (årsak) {
                 const paragraf = årsak.vilkårshjemmel ? formatParagraf(årsak.vilkårshjemmel) : kode
-                begrunnelser.push({ paragraf, beskrivelse: årsak.beskrivelse })
+                const lovdataUrl = årsak.vilkårshjemmel ? getLovdataUrl(årsak.vilkårshjemmel) : undefined
+                begrunnelser.push({ paragraf, beskrivelse: årsak.beskrivelse, lovdataUrl })
                 break
             }
         }
@@ -386,13 +387,31 @@ function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunn
             {begrunnelser.map((begrunnelse, index) => (
                 <Fragment key={index}>
                     <Tooltip content={begrunnelse.beskrivelse}>
-                        <BodyShort size="small">{begrunnelse.paragraf}</BodyShort>
+                        {begrunnelse.lovdataUrl ? (
+                            <Link href={begrunnelse.lovdataUrl} target="_blank" rel="noopener noreferrer">
+                                <BodyShort size="small">{begrunnelse.paragraf}</BodyShort>
+                            </Link>
+                        ) : (
+                            <BodyShort size="small">{begrunnelse.paragraf}</BodyShort>
+                        )}
                     </Tooltip>
                     {index < begrunnelser.length - 1 && <span>, </span>}
                 </Fragment>
             ))}
         </HStack>
     )
+}
+
+function getLovdataUrl(hjemmel: Vilkårshjemmel): string | undefined {
+    const { lovverk, kapittel, paragraf } = hjemmel
+
+    // Kun for folketrygdloven
+    if (lovverk?.toLowerCase().includes('folketrygdloven') && kapittel) {
+        const paragrafNummer = paragraf || '1' // Bruk paragraf 1 hvis ingen paragraf er spesifisert
+        return `https://lovdata.no/lov/1997-02-28-19/§${kapittel}-${paragrafNummer}`
+    }
+
+    return undefined
 }
 
 function formatParagraf(hjemmel: Vilkårshjemmel): string {

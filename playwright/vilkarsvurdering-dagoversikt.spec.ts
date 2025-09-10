@@ -108,19 +108,27 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
             // Verifiser at kilde er "SB" (Saksbehandler)
             await expect(avslåttRow.getByText('SB')).toBeVisible()
 
-            // Verifiser at paragraf-referansen vises (i stedet for direkte beskrivelse)
+            // Verifiser at paragraf-referansen vises som en lenke (i stedet for direkte beskrivelse)
             // Dette kan være "§2" (kun kapittel) eller "§ 2-1" (kapittel-paragraf)
-            const paragrafElement = avslåttRow.locator('text=/§\\d+(?:-\\d+)?/')
-            await expect(paragrafElement).toBeVisible()
+            const paragrafLink = avslåttRow.locator('a[href*="lovdata.no"]')
+            await expect(paragrafLink).toBeVisible()
 
-            // Verifiser at tooltip fungerer ved å hover over paragraf-referansen
-            await paragrafElement.hover()
+            // Verifiser at lenken har riktig href
+            await expect(paragrafLink).toHaveAttribute(
+                'href',
+                /https:\/\/lovdata\.no\/lov\/1997-02-28-19\/§\d+(?:-\d+)?/,
+            )
+            await expect(paragrafLink).toHaveAttribute('target', '_blank')
+            await expect(paragrafLink).toHaveAttribute('rel', 'noopener noreferrer')
+
+            // Verifiser at tooltip fungerer ved å hover over paragraf-lenken
+            await paragrafLink.hover()
 
             // Vent på at tooltip vises med beskrivelsen
             await expect(page.locator('[role="tooltip"]')).toBeVisible()
             await expect(page.locator('[role="tooltip"]')).toContainText('Den sykmeldte er ikke medlem i folketrygden')
 
-            //unhover paragraf-referansen
+            //unhover paragraf-lenken
             await page.mouse.move(0, 0)
 
             // Verifiser at tooltip ikke vises
