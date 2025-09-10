@@ -118,7 +118,42 @@ export async function handleDeleteInntektsforhold(
     return new Response(null, { status: 204 })
 }
 
-export async function handlePutInntektsforholdDagoversikt(
+/**
+ * Ren funksjon som oppdaterer dagoversikt på en yrkesaktivitet
+ * Kan gjenbrukes i testdata-oppsett og andre steder
+ */
+export function oppdaterDagoversiktPåYrkesaktivitet(
+    person: Person,
+    uuid: string,
+    yrkesaktivitetId: string,
+    dagerSomSkalOppdateres: Dag[],
+): void {
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid]?.find((forhold) => forhold.id === yrkesaktivitetId)
+    if (!yrkesaktivitet) {
+        throw new Error(`Yrkesaktivitet med ID ${yrkesaktivitetId} ikke funnet`)
+    }
+
+    if (!Array.isArray(yrkesaktivitet.dagoversikt)) {
+        throw new Error('Ingen dagoversikt på yrkesaktivitet')
+    }
+
+    // Oppdater kun dagene som finnes i body, behold andre dager uendret
+    // Ignorer helgdager ved oppdatering
+    const oppdaterteDager: Dag[] = [...yrkesaktivitet.dagoversikt]
+    for (const oppdatertDag of dagerSomSkalOppdateres) {
+        const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
+        if (index !== -1) {
+            const eksisterendeDag = oppdaterteDager[index]
+            // Ignorer oppdatering hvis den eksisterende dagen er en helg
+            if (eksisterendeDag.dagtype !== 'Helg') {
+                oppdaterteDager[index] = { ...eksisterendeDag, ...oppdatertDag, kilde: 'Saksbehandler' }
+            }
+        }
+    }
+    yrkesaktivitet.dagoversikt = oppdaterteDager
+}
+
+export async function handlePutDagoversikt(
     request: Request,
     person: Person | undefined,
     uuid: string,
@@ -151,28 +186,10 @@ export async function handlePutInntektsforholdDagoversikt(
         )
     }
 
-    if (!Array.isArray(yrkesaktivitet.dagoversikt)) {
-        return NextResponse.json({ message: 'Ingen dagoversikt på yrkesaktivitet' }, { status: 400 })
-    }
-
-    // Oppdater kun dagene som finnes i body, behold andre dager uendret
-    // Ignorer helgdager ved oppdatering
-    const oppdaterteDager: Dag[] = [...yrkesaktivitet.dagoversikt]
-    for (const oppdatertDag of dagerSomSkalOppdateres) {
-        const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
-        if (index !== -1) {
-            const eksisterendeDag = oppdaterteDager[index]
-            // Ignorer oppdatering hvis den eksisterende dagen er en helg
-            if (eksisterendeDag.dagtype !== 'Helg') {
-                oppdaterteDager[index] = { ...eksisterendeDag, ...oppdatertDag, kilde: 'Saksbehandler' }
-            }
-        }
-    }
-    yrkesaktivitet.dagoversikt = oppdaterteDager
+    oppdaterDagoversiktPåYrkesaktivitet(person, uuid, yrkesaktivitetId, dagerSomSkalOppdateres)
 
     // Kall bakrommet for å beregne utbetalinger
     await triggerUtbetalingsberegning(person, uuid)
-
     return new Response(null, { status: 204 })
 }
 

@@ -2,6 +2,7 @@ import { Testperson } from '@/mock-api/testpersoner/testpersoner'
 import { genererSaksbehandlingsperioder } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 
 import { settOppVilkaarsvurderingPåPerson } from '../handlers/vilkaar-handlers'
+import { oppdaterDagoversiktPåYrkesaktivitet } from '../handlers/yrkesaktivitet-handlers'
 
 // Grunndata for Kalle
 const kalleGrunndata = {
@@ -269,5 +270,19 @@ export const Kalle: Testperson = {
                 svar: 'MEDLEMSKAP_NEI',
             },
         ])
+        oppdaterDagoversiktPåYrkesaktivitet(
+            person,
+            '607f8e85-b0ba-4240-9950-383f6d7eac9e',
+            person.yrkesaktivitet?.['607f8e85-b0ba-4240-9950-383f6d7eac9e'][0].id,
+            [
+                {
+                    dato: '2025-01-01',
+                    dagtype: 'Avslått',
+                    grad: null,
+                    kilde: 'Saksbehandler',
+                    avslåttBegrunnelse: ['MEDLEMSKAP_NEI'],
+                },
+            ],
+        )
     },
 }
