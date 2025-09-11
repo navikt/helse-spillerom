@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
     return (
         <html lang="nb" suppressHydrationWarning>
             <Preload />
-            <body>
+            <body className="min-w-2xl">
                 <Providers>
                     <Page contentBlockPadding="none">
                         <Header />
