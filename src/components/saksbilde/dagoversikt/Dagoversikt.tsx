@@ -191,7 +191,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                 <div className="overflow-x-auto">
                                     <Table
                                         size="small"
-                                        className="min-w-[800px] table-fixed lg:min-w-[1000px] xl:min-w-[1200px]"
+                                        className="min-w-[800px] table-fixed xl:min-w-[1200px] lg:min-w-[1000px]"
                                     >
                                         <TableHeader>
                                             <TableRow>
