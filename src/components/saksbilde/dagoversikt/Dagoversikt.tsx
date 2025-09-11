@@ -188,123 +188,140 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         {erIRedigeringsmodus ? 'Avbryt' : 'Endre dager'}
                                     </Button>
                                 )}
-                                <Table size="small">
-                                    <TableHeader>
-                                        <TableRow>
-                                            {erIRedigeringsmodus && (
-                                                <TableHeaderCell>
-                                                    <Checkbox
-                                                        checked={erAlleValgt}
-                                                        indeterminate={erNoenValgt && !erAlleValgt}
-                                                        onChange={(e) => handleVelgAlle(e.target.checked)}
-                                                        hideLabel
-                                                    >
-                                                        Velg alle dager
-                                                    </Checkbox>
+                                <div className="overflow-x-auto">
+                                    <Table
+                                        size="small"
+                                        className="min-w-[800px] table-fixed lg:min-w-[1000px] xl:min-w-[1200px]"
+                                    >
+                                        <TableHeader>
+                                            <TableRow>
+                                                {erIRedigeringsmodus && (
+                                                    <TableHeaderCell>
+                                                        <Checkbox
+                                                            checked={erAlleValgt}
+                                                            indeterminate={erNoenValgt && !erAlleValgt}
+                                                            onChange={(e) => handleVelgAlle(e.target.checked)}
+                                                            hideLabel
+                                                        >
+                                                            Velg alle dager
+                                                        </Checkbox>
+                                                    </TableHeaderCell>
+                                                )}
+                                                <TableHeaderCell className="w-20 min-w-20">Dato</TableHeaderCell>
+                                                <TableHeaderCell className="w-32 min-w-32">Dagtype</TableHeaderCell>
+                                                <TableHeaderCell align="right" className="w-16 min-w-16">
+                                                    Grad
                                                 </TableHeaderCell>
-                                            )}
-                                            <TableHeaderCell>Dato</TableHeaderCell>
-                                            <TableHeaderCell className="min-w-24">Dagtype</TableHeaderCell>
-                                            <TableHeaderCell align="right">Grad</TableHeaderCell>
-                                            <TableHeaderCell>Kilde</TableHeaderCell>
-                                            <TableHeaderCell
-                                                align="right"
-                                                title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
-                                            >
-                                                Total grad
-                                            </TableHeaderCell>
-                                            <TableHeaderCell align="right">Refusjon</TableHeaderCell>
-                                            <TableHeaderCell align="right">Utbetaling</TableHeaderCell>
-                                            <TableHeaderCell align="right">Dager igjen</TableHeaderCell>
-                                            <TableHeaderCell>Merknader</TableHeaderCell>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {forhold.dagoversikt.map((dag, i) => {
-                                            const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
-
-                                            return (
-                                                <TableRow
-                                                    key={i}
-                                                    className={
-                                                        dag.dagtype === 'Avslått' ? 'bg-ax-bg-danger-moderate' : ''
-                                                    }
+                                                <TableHeaderCell className="w-16 min-w-16">Kilde</TableHeaderCell>
+                                                <TableHeaderCell
+                                                    align="right"
+                                                    className="w-20 min-w-20"
+                                                    title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
                                                 >
-                                                    {erIRedigeringsmodus && (
+                                                    Total grad
+                                                </TableHeaderCell>
+                                                <TableHeaderCell align="right" className="w-24 min-w-24">
+                                                    Refusjon
+                                                </TableHeaderCell>
+                                                <TableHeaderCell align="right" className="w-24 min-w-24">
+                                                    Utbetaling
+                                                </TableHeaderCell>
+                                                <TableHeaderCell
+                                                    align="right"
+                                                    className="hidden w-20 min-w-20 md:table-cell"
+                                                >
+                                                    Dager igjen
+                                                </TableHeaderCell>
+                                                <TableHeaderCell className="min-w-32">Merknader</TableHeaderCell>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {forhold.dagoversikt.map((dag, i) => {
+                                                const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
+
+                                                return (
+                                                    <TableRow
+                                                        key={i}
+                                                        className={
+                                                            dag.dagtype === 'Avslått' ? 'bg-ax-bg-danger-moderate' : ''
+                                                        }
+                                                    >
+                                                        {erIRedigeringsmodus && (
+                                                            <TableDataCell>
+                                                                <Checkbox
+                                                                    value={dag.dato}
+                                                                    checked={valgteDataer.has(dag.dato)}
+                                                                    onChange={(e) =>
+                                                                        handleDatoToggle(dag.dato, e.target.checked)
+                                                                    }
+                                                                    hideLabel
+                                                                >
+                                                                    Velg dag
+                                                                </Checkbox>
+                                                            </TableDataCell>
+                                                        )}
                                                         <TableDataCell>
-                                                            <Checkbox
-                                                                value={dag.dato}
-                                                                checked={valgteDataer.has(dag.dato)}
-                                                                onChange={(e) =>
-                                                                    handleDatoToggle(dag.dato, e.target.checked)
-                                                                }
-                                                                hideLabel
-                                                            >
-                                                                Velg dag
-                                                            </Checkbox>
+                                                            <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
                                                         </TableDataCell>
-                                                    )}
-                                                    <TableDataCell>
-                                                        <BodyShort>{getFormattedDateString(dag.dato)}</BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell>
-                                                        <HStack wrap={false} gap="2" align="center">
-                                                            {getDagtypeIcon(dag.dagtype)}
-                                                            <BodyShort>
-                                                                {getDagtypeText(
-                                                                    dag.dagtype,
-                                                                    dag.andreYtelserBegrunnelse,
-                                                                )}
+                                                        <TableDataCell>
+                                                            <HStack wrap={false} gap="2" align="center">
+                                                                {getDagtypeIcon(dag.dagtype)}
+                                                                <BodyShort>
+                                                                    {getDagtypeText(
+                                                                        dag.dagtype,
+                                                                        dag.andreYtelserBegrunnelse,
+                                                                    )}
+                                                                </BodyShort>
+                                                            </HStack>
+                                                        </TableDataCell>
+                                                        <TableDataCell align="right">
+                                                            <BodyShort className="whitespace-nowrap">
+                                                                {dag.grad ? `${dag.grad} %` : '-'}
                                                             </BodyShort>
-                                                        </HStack>
-                                                    </TableDataCell>
-                                                    <TableDataCell align="right">
-                                                        <BodyShort className="whitespace-nowrap">
-                                                            {dag.grad ? `${dag.grad} %` : '-'}
-                                                        </BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell>
-                                                        <KildeTag kilde={dag.kilde} />
-                                                    </TableDataCell>
-                                                    <TableDataCell align="right">
-                                                        <BodyShort>
-                                                            {utbetalingsdata?.totalGrad
-                                                                ? formaterTotalGrad(utbetalingsdata.totalGrad)
-                                                                : '-'}
-                                                        </BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell align="right">
-                                                        <BodyShort>
-                                                            {utbetalingsdata
-                                                                ? formaterBeløp(utbetalingsdata.refusjonØre)
-                                                                : '-'}
-                                                        </BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell align="right">
-                                                        <BodyShort>
-                                                            {utbetalingsdata
-                                                                ? formaterBeløp(utbetalingsdata.utbetalingØre)
-                                                                : '-'}
-                                                        </BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell align="right">
-                                                        <BodyShort>-</BodyShort>
-                                                    </TableDataCell>
-                                                    <TableDataCell>
-                                                        {dag.dagtype === 'Avslått' &&
-                                                        dag.avslåttBegrunnelse &&
-                                                        dag.avslåttBegrunnelse.length > 0 ? (
-                                                            <AvslåttBegrunnelser
-                                                                avslåttBegrunnelse={dag.avslåttBegrunnelse}
-                                                                kodeverk={kodeverk}
-                                                            />
-                                                        ) : null}
-                                                    </TableDataCell>
-                                                </TableRow>
-                                            )
-                                        })}
-                                    </TableBody>
-                                </Table>
+                                                        </TableDataCell>
+                                                        <TableDataCell>
+                                                            <KildeTag kilde={dag.kilde} />
+                                                        </TableDataCell>
+                                                        <TableDataCell align="right">
+                                                            <BodyShort>
+                                                                {utbetalingsdata?.totalGrad
+                                                                    ? formaterTotalGrad(utbetalingsdata.totalGrad)
+                                                                    : '-'}
+                                                            </BodyShort>
+                                                        </TableDataCell>
+                                                        <TableDataCell align="right">
+                                                            <BodyShort>
+                                                                {utbetalingsdata
+                                                                    ? formaterBeløp(utbetalingsdata.refusjonØre)
+                                                                    : '-'}
+                                                            </BodyShort>
+                                                        </TableDataCell>
+                                                        <TableDataCell align="right">
+                                                            <BodyShort>
+                                                                {utbetalingsdata
+                                                                    ? formaterBeløp(utbetalingsdata.utbetalingØre)
+                                                                    : '-'}
+                                                            </BodyShort>
+                                                        </TableDataCell>
+                                                        <TableDataCell align="right" className="hidden md:table-cell">
+                                                            <BodyShort>-</BodyShort>
+                                                        </TableDataCell>
+                                                        <TableDataCell>
+                                                            {dag.dagtype === 'Avslått' &&
+                                                            dag.avslåttBegrunnelse &&
+                                                            dag.avslåttBegrunnelse.length > 0 ? (
+                                                                <AvslåttBegrunnelser
+                                                                    avslåttBegrunnelse={dag.avslåttBegrunnelse}
+                                                                    kodeverk={kodeverk}
+                                                                />
+                                                            ) : null}
+                                                        </TableDataCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
 
                                 {erIRedigeringsmodus && (
                                     <DagendringForm

@@ -1,6 +1,5 @@
 import { PropsWithChildren, ReactElement } from 'react'
 import { PageBlock } from '@navikt/ds-react/Page'
-import { HStack } from '@navikt/ds-react'
 
 import { PersonHeader } from '@components/personheader/PersonHeader'
 import { Tidslinje } from '@components/tidslinje/Tidslinje'
@@ -12,11 +11,11 @@ export default async function PersonLayout({ children }: PropsWithChildren): Pro
         <PageBlock as="main">
             <PersonHeader />
             <Tidslinje />
-            <HStack justify="space-between" wrap={false} className="min-h-[calc(100vh-18rem)]">
+            <div className="flex min-h-[calc(100vh-18rem)] max-w-full overflow-hidden">
                 <Venstremeny />
-                {children}
+                <div className="min-w-0 flex-1 overflow-x-auto">{children}</div>
                 <Høyremeny />
-            </HStack>
+            </div>
         </PageBlock>
     )
 }

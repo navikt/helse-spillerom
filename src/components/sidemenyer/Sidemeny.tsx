@@ -14,7 +14,7 @@ export function Sidemeny({ side, className, children }: MenyProps): ReactElement
         <aside
             aria-label={`${sideLabel} sidemeny`}
             className={cn(
-                'w-sm min-w-sm border-ax-border-neutral-subtle p-4',
+                'w-64 min-w-64 border-ax-border-neutral-subtle p-4 lg:w-72 lg:min-w-72 xl:w-sm xl:min-w-sm',
                 className,
                 side === 'left' ? 'border-r-1' : 'border-l-1',
             )}

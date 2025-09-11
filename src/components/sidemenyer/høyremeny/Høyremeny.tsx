@@ -32,6 +32,22 @@ export function Høyremeny(): ReactElement {
         }
     }, [erISaksbehandlingsperiode, filter])
 
+    // Lukk høyremeny automatisk ved resize under 1280px bredde
+    useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth < 1280 && showSidemeny) {
+                setShowSidemeny(false)
+            }
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        // Sjekk også ved initial load
+        handleResize()
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [showSidemeny])
+
     function handleClick(clickedFilter: HøyremenyFilter) {
         if (filter === clickedFilter && showSidemeny) {
             setShowSidemeny(false)
