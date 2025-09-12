@@ -49,13 +49,9 @@ export async function handlePostInntektsforhold(
     const nyttInntektsforhold: Yrkesaktivitet = {
         id: uuidv4(),
         kategorisering,
-        kategoriseringGenerert: null,
         dagoversikt: skalHaDagoversikt(kategorisering)
             ? genererDagoversikt(saksbehandlingsperiode.fom, saksbehandlingsperiode.tom)
             : [],
-        dagoversiktGenerert: null,
-        saksbehandlingsperiodeId: uuid,
-        opprettet: new Date().toISOString(),
         generertFraDokumenter: [],
         dekningsgrad,
     }
