@@ -14,7 +14,7 @@ export function DokumentTag({ type }: DokumentTagProps): ReactElement {
 }
 
 const dokumentTag: Record<Dokumenttype, ComponentType> = {
-    SØKNAD: SøknadTag,
+    søknad: SøknadTag,
     INNTEKTSMELDING: InntektsmeldingTag,
     SYKMELDING: SykmeldingTag,
     AAREG: AaregTag,
