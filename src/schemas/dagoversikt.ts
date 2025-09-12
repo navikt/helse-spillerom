@@ -9,6 +9,7 @@ export const dagtypeSchema = z.enum([
     'Permisjon',
     'Avslått',
     'AndreYtelser',
+    'Ventetid',
 ])
 
 export const andreYtelserBegrunnelseSchema = z.enum([

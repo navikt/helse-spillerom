@@ -119,7 +119,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                 <option value="Syk">Syk</option>
                                 <option value="SykNav">Syk (NAV)</option>
                                 <option value="Arbeidsdag">Arbeidsdag</option>
-                                <option value="Helg">Helg</option>
+                                <option value="Ventetid">Ventetid</option>
                                 <option value="Ferie">Ferie</option>
                                 <option value="Permisjon">Permisjon</option>
                                 {tilgjengeligeAvslagsdager.length > 0 && (
