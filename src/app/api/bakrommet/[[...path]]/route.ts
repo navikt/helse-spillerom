@@ -8,7 +8,7 @@ import { mocketBakrommetData } from '@/mock-api/mock-handler'
 import { allowedAPIs, cleanPath } from './config'
 
 type RouteParams = {
-    params: Promise<{ path: string[] }>
+    params: Promise<{ path?: string[] }>
 }
 
 export const GET = bakrommetProxy
@@ -17,7 +17,7 @@ export const PUT = bakrommetProxy
 export const DELETE = bakrommetProxy
 
 async function bakrommetProxy(request: Request, { params }: RouteParams): Promise<Response> {
-    const proxyPath = `/${(await params).path.join('/')}`
+    const proxyPath = `/${((await params).path ?? []).join('/')}`
     const api = `${request.method} ${proxyPath}`
 
     if (!allowedAPIs.includes(cleanPath(api))) {
