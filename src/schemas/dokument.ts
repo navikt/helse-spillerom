@@ -11,7 +11,7 @@ export const kildesporSchema = z.looseObject({
 export type Dokument = z.infer<typeof dokumentSchema>
 export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
 export const dokumenttypeSchema = z.enum([
-    'SØKNAD',
+    'søknad',
     'INNTEKTSMELDING',
     'SYKMELDING',
     'AAREG',

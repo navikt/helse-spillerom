@@ -57,7 +57,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         transition={getTestSafeTransition({ duration: 0.2, ease: 'easeInOut' })}
                         style={{ overflow: 'hidden' }}
                     >
-                        {dokument.dokumentType === 'SØKNAD' ? (
+                        {dokument.dokumentType === 'søknad' ? (
                             <Søknadsinnhold søknad={dokument.innhold as Søknad} />
                         ) : dokument.dokumentType === 'ainntekt828' ? (
                             <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />

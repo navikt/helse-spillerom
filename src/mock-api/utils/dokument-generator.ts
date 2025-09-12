@@ -13,7 +13,7 @@ export function genererDokumenterFraSøknader(søknader: Søknad[], søknadIder:
     return valgteSøknader.map(
         (søknad): Dokument => ({
             id: uuidv4(),
-            dokumentType: 'SØKNAD',
+            dokumentType: 'søknad',
             eksternId: søknad.id,
             innhold: søknad,
             opprettet: new Date().toISOString(),
