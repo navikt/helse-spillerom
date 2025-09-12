@@ -27,7 +27,7 @@ const søknadstatusSchema = z.enum([
 
 export type Arbeidssituasjon = z.infer<typeof arbeidssituasjonSchema>
 const arbeidssituasjonSchema = z.enum([
-    'NAERINGSDRIVENDE',
+    'SELVSTENDIG_NARINGSDRIVENDE',
     'FRILANSER',
     'ARBEIDSTAKER',
     'ARBEIDSLEDIG',
