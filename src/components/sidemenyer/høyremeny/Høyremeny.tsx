@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { ClockIcon, FolderIcon, XMarkIcon } from '@navikt/aksel-icons'
@@ -24,6 +24,12 @@ export function Høyremeny(): ReactElement {
 
     const [filter, setFilter] = useState<HøyremenyFilter>(erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk')
     const [showSidemeny, setShowSidemeny] = useState<boolean>(true)
+    const showSidemenyRef = useRef(showSidemeny)
+
+    // Hold ref oppdatert med gjeldende verdi
+    useEffect(() => {
+        showSidemenyRef.current = showSidemeny
+    }, [showSidemeny])
 
     // Oppdater filter når vi navigerer til/fra saksbehandlingsperiode
     useEffect(() => {
@@ -35,7 +41,7 @@ export function Høyremeny(): ReactElement {
     // Lukk høyremeny automatisk ved resize under 1280px bredde
     useEffect(() => {
         function handleResize() {
-            if (window.innerWidth < 1280 && showSidemeny) {
+            if (window.innerWidth < 1280 && showSidemenyRef.current) {
                 setShowSidemeny(false)
             }
         }
@@ -46,7 +52,7 @@ export function Høyremeny(): ReactElement {
         handleResize()
 
         return () => window.removeEventListener('resize', handleResize)
-    }, [showSidemeny])
+    }, [])
 
     function handleClick(clickedFilter: HøyremenyFilter) {
         if (filter === clickedFilter && showSidemeny) {
