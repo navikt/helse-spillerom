@@ -55,7 +55,6 @@ export function Venstremeny(): ReactElement {
         }
     }
 
-
     const håndterTaTilBeslutning = () => {
         if (aktivSaksbehandlingsperiode) {
             taTilBeslutning.mutate(
