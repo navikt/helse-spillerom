@@ -41,6 +41,7 @@ export function opprettSaksbehandlingsperiode(
         tom: tom,
         status: 'UNDER_BEHANDLING',
         skjæringstidspunkt: fom,
+        individuellBegrunnelse: undefined,
     }
 
     const yrkesaktivitet: Yrkesaktivitet[] = []

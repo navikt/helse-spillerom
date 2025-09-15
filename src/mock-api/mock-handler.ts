@@ -27,6 +27,8 @@ import {
     handleSendTilbake,
     handleGodkjenn,
     handleGetHistorikk,
+    handleOppdaterBegrunnelse,
+    handleOppdaterSkjæringstidspunkt,
 } from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
 import { handleGetSoknader, handleGetSoknad } from '@/mock-api/handlers/soknad-handlers'
 import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
@@ -170,6 +172,12 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/utbetalingsberegning': async ({ person, uuid }) =>
         handleGetUtbetalingsberegning(await person, uuid!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/individuell-begrunnelse': async ({ request, person, uuid }) =>
+        handleOppdaterBegrunnelse(request, await person, uuid!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt': async ({ request, person, uuid }) =>
+        handleOppdaterSkjæringstidspunkt(request, await person, uuid!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

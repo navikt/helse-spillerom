@@ -242,7 +242,7 @@ export async function handleSendTilbake(
 
     periode.status = 'UNDER_BEHANDLING'
     const aktivBruker = await hentAktivBruker()
-    periode.beslutter = null // Nullstill beslutter
+    periode.beslutter = undefined // Nullstill beslutter
 
     // Legg til historikk med kommentar
     leggTilHistorikkinnslag(
@@ -251,7 +251,7 @@ export async function handleSendTilbake(
         'SENDT_I_RETUR',
         'UNDER_BEHANDLING',
         aktivBruker.navIdent,
-        null,
+        undefined,
         kommentar,
     )
 
@@ -297,4 +297,67 @@ export async function handleGetHistorikk(person: Person | undefined, periodeId: 
     const historikk: SaksbehandlingsperiodeEndring[] = person.historikk[periodeId] || []
 
     return NextResponse.json(historikk, { status: 200 })
+}
+
+export async function handleOppdaterBegrunnelse(
+    request: Request,
+    person: Person | undefined,
+    periodeId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Hent begrunnelse fra request body
+    let individuellBegrunnelse: string | undefined = undefined
+    try {
+        const body = await request.json()
+        individuellBegrunnelse = body.individuellBegrunnelse || undefined
+    } catch (error) {
+        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
+    }
+
+    // Oppdater begrunnelse
+    periode.individuellBegrunnelse = individuellBegrunnelse
+
+    return NextResponse.json(periode, { status: 200 })
+}
+
+export async function handleOppdaterSkjæringstidspunkt(
+    request: Request,
+    person: Person | undefined,
+    periodeId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
+    if (!periode) {
+        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
+    }
+
+    // Hent skjæringstidspunkt fra request body
+    let skjæringstidspunkt: string | undefined = undefined
+    try {
+        const body = await request.json()
+        skjæringstidspunkt = body.skjaeringstidspunkt || undefined
+    } catch (error) {
+        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
+    }
+
+    // Valider datoformat hvis skjæringstidspunkt er satt
+    if (skjæringstidspunkt && isNaN(Date.parse(skjæringstidspunkt))) {
+        return NextResponse.json({ message: 'Ugyldig datoformat for skjæringstidspunkt' }, { status: 400 })
+    }
+
+    // Oppdater skjæringstidspunkt
+    periode.skjæringstidspunkt = skjæringstidspunkt
+
+    return NextResponse.json(periode, { status: 200 })
 }
