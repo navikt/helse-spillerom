@@ -1,9 +1,9 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
+import { ReactElement, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
-import { CalendarIcon, DocPencilIcon } from '@navikt/aksel-icons'
+import { Button, VStack, BodyShort, HStack, ReadMore, Textarea } from '@navikt/ds-react'
+import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
@@ -13,6 +13,7 @@ import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
 import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
+import { useOppdaterBegrunnelse } from '@hooks/mutations/useOppdaterBegrunnelse'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
 
@@ -33,6 +34,12 @@ export function Venstremeny(): ReactElement {
     const erBeslutter = useErBeslutter()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
+    const [begrunnelse, setBegrunnelse] = useState(aktivSaksbehandlingsperiode?.individuellBegrunnelse || '')
+
+    // Oppdater begrunnelse state når aktivSaksbehandlingsperiode endres
+    useEffect(() => {
+        setBegrunnelse(aktivSaksbehandlingsperiode?.individuellBegrunnelse || '')
+    }, [aktivSaksbehandlingsperiode?.individuellBegrunnelse])
 
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
@@ -45,11 +52,26 @@ export function Venstremeny(): ReactElement {
     const taTilBeslutning = useTaTilBeslutning()
     const godkjenn = useGodkjenn()
     const sendTilbake = useSendTilbake()
+    const oppdaterBegrunnelse = useOppdaterBegrunnelse({
+        onSuccess: () => {
+            visToast('Begrunnelse er oppdatert', 'success')
+        },
+    })
 
     const håndterSendTilGodkjenning = () => {
         if (aktivSaksbehandlingsperiode) {
             sendTilBeslutning.mutate({
                 saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            })
+        }
+    }
+
+    const håndterLagreBegrunnelse = () => {
+        if (aktivSaksbehandlingsperiode) {
+            const begrunnelseVerdi = begrunnelse.trim() === '' ? undefined : begrunnelse.trim()
+            oppdaterBegrunnelse.mutate({
+                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                individuellBegrunnelse: begrunnelseVerdi,
             })
         }
     }
@@ -140,17 +162,27 @@ export function Venstremeny(): ReactElement {
 
                         {kanSaksbehandles && (
                             <>
-                                <Button
-                                    variant="tertiary"
-                                    size="small"
-                                    icon={<DocPencilIcon aria-hidden fontSize="1.25rem" />}
-                                    className="w-fit"
-                                    onClick={() => {
-                                        // TODO: Implementer individuell begrunnelse funksjonalitet
-                                    }}
-                                >
-                                    Skriv individuell begrunnelse
-                                </Button>
+                                <ReadMore header="Individuell begrunnelse" size="small">
+                                    <VStack gap="3">
+                                        <Textarea
+                                            label="Begrunnelse"
+                                            value={begrunnelse}
+                                            onChange={(e) => setBegrunnelse(e.target.value)}
+                                            rows={4}
+                                            maxLength={1000}
+                                            description={`${begrunnelse.length}/1000 tegn`}
+                                        />
+                                        <Button
+                                            variant="primary"
+                                            size="small"
+                                            onClick={håndterLagreBegrunnelse}
+                                            loading={oppdaterBegrunnelse.isPending}
+                                            className="w-fit"
+                                        >
+                                            Lagre begrunnelse
+                                        </Button>
+                                    </VStack>
+                                </ReadMore>
 
                                 <Button
                                     variant="primary"
