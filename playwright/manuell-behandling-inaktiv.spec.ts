@@ -74,7 +74,9 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             await sykepengegrunnlagTab.click()
 
             // Klikk på "Rediger" knapp
-            const redigerButton = page.getByRole('button', { name: 'Rediger' })
+            const redigerButton = page
+                .getByRole('tabpanel', { name: 'Sykepengedsagrunnlag' })
+                .getByRole('button', { name: 'Rediger' })
             await redigerButton.click()
 
             // Fyll ut inntekt til 60000
