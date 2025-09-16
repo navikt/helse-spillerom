@@ -1,9 +1,9 @@
 import { ReactElement, useState } from 'react'
-import { CalendarIcon } from '@navikt/aksel-icons'
-import { BodyShort, Button, HStack } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, Tooltip } from '@navikt/ds-react'
 
 import { getFormattedDateString } from '@utils/date-format'
 import { SkjæringstidspunktForm } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/SkjæringstidspunktForm'
+import { SkjæringstidspunktIcon } from '@components/ikoner/SkjæringstidspunktIcon'
 import { cn } from '@utils/tw'
 
 interface SkjæringstidspunktProps {
@@ -16,12 +16,9 @@ export function Skjæringstidspunkt({ dato, saksbehandlingsperiodeId }: Skjærin
 
     return (
         <HStack gap="2" align={isEditing ? 'start' : 'center'} className="mb-4" wrap={false}>
-            <CalendarIcon
-                aria-hidden
-                fontSize="1.25rem"
-                aria-label="Skjæringstidspunkt"
-                className={cn({ 'mt-1.5': isEditing })}
-            />
+            <Tooltip content="Skjæringstidspunkt">
+                <SkjæringstidspunktIcon aria-hidden fontSize="1.25rem" className={cn({ 'mt-1.5': isEditing })} />
+            </Tooltip>
             {isEditing ? (
                 <SkjæringstidspunktForm
                     dato={dato}

@@ -2,7 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BodyShort, Button, HStack, VStack } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
@@ -119,7 +119,9 @@ export function Venstremeny(): ReactElement {
                 {aktivSaksbehandlingsperiode && (
                     <>
                         <HStack gap="2" align="center">
-                            <CalendarIcon aria-hidden fontSize="1.25rem" />
+                            <Tooltip content="Sykmeldingsperiode">
+                                <CalendarIcon aria-hidden fontSize="1.25rem" />
+                            </Tooltip>
                             <BodyShort size="small">
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.fom)} -{' '}
                                 {getFormattedDateString(aktivSaksbehandlingsperiode.tom)}
