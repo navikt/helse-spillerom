@@ -2,7 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, VStack, BodyShort, HStack } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
@@ -15,6 +15,7 @@ import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
 import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
+import { Skjæringstidspunkt } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/Skjæringstidspunkt'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
@@ -126,12 +127,10 @@ export function Venstremeny(): ReactElement {
                         </HStack>
 
                         {aktivSaksbehandlingsperiode.skjæringstidspunkt && (
-                            <HStack gap="2" align="center" className="mb-4">
-                                <CalendarIcon aria-hidden fontSize="1.25rem" aria-label="Skjæringstidspunkt" />
-                                <BodyShort size="small">
-                                    {getFormattedDateString(aktivSaksbehandlingsperiode.skjæringstidspunkt)}
-                                </BodyShort>
-                            </HStack>
+                            <Skjæringstidspunkt
+                                dato={aktivSaksbehandlingsperiode.skjæringstidspunkt}
+                                saksbehandlingsperiodeId={aktivSaksbehandlingsperiode.id}
+                            />
                         )}
 
                         <SykepengegrunnlagVisning />

@@ -7,9 +7,11 @@ import { gyldigDatoFormat } from '@utils/date-format'
 interface DateFieldProps {
     name: string
     label: string
+    hideLabel?: boolean
+    showErrorMessage?: boolean
 }
 
-export function DateField({ name, label }: DateFieldProps): ReactElement {
+export function DateField({ name, label, hideLabel = false, showErrorMessage = false }: DateFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
 
     const { datepickerProps, inputProps } = useDatepicker({
@@ -30,8 +32,9 @@ export function DateField({ name, label }: DateFieldProps): ReactElement {
                 id={name.replaceAll('.', '-')}
                 size="small"
                 label={label}
+                hideLabel={hideLabel}
                 onBlur={field.onBlur}
-                error={fieldState.error?.message != undefined}
+                error={showErrorMessage ? fieldState.error?.message : fieldState.error?.message != undefined}
             />
         </DatePicker>
     )
