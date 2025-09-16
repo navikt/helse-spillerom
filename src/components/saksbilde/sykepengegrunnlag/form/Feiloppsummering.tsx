@@ -1,5 +1,5 @@
 import { FieldErrors } from 'react-hook-form'
-import React, { ReactElement } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { ErrorSummary } from '@navikt/ds-react'
 import { ErrorSummaryItem } from '@navikt/ds-react/ErrorSummary'
 
@@ -22,30 +22,32 @@ export function Feiloppsummering({ errors }: { errors: FieldErrors<Sykepengegrun
             {inntekterErrors?.map((error, i) => (
                 <React.Fragment key={i}>
                     {error.beløpPerMånedØre?.message && (
-                        <ErrorSummary.Item href={`#inntekter-${i}-beløpPerMånedØre`}>
+                        <CustomErrorSummaryItem id={`inntekter-${i}-beløpPerMånedØre`}>
                             {error.beløpPerMånedØre.message}
-                        </ErrorSummary.Item>
+                        </CustomErrorSummaryItem>
                     )}
                     {error.kilde?.message && (
-                        <ErrorSummary.Item href={`#inntekter-${i}-kilde`}>{error.kilde.message}</ErrorSummary.Item>
+                        <CustomErrorSummaryItem id={`inntekter-${i}-kilde`}>
+                            {error.kilde.message}
+                        </CustomErrorSummaryItem>
                     )}
                     {error.refusjon?.map((refusjonError, j) =>
                         refusjonError ? (
                             <React.Fragment key={j}>
                                 {refusjonError.fom?.message && (
-                                    <ErrorSummary.Item href={`#inntekter-${i}-refusjon-${j}-fom`}>
+                                    <CustomErrorSummaryItem id={`inntekter-${i}-refusjon-${j}-fom`}>
                                         {refusjonError.fom.message}
-                                    </ErrorSummary.Item>
+                                    </CustomErrorSummaryItem>
                                 )}
                                 {refusjonError.tom?.message && (
-                                    <ErrorSummary.Item href={`#inntekter-${i}-refusjon-${j}-tom`}>
+                                    <CustomErrorSummaryItem id={`inntekter-${i}-refusjon-${j}-tom`}>
                                         {refusjonError.tom.message}
-                                    </ErrorSummary.Item>
+                                    </CustomErrorSummaryItem>
                                 )}
                                 {refusjonError.beløpØre?.message && (
-                                    <ErrorSummary.Item href={`#inntekter-${i}-refusjon-${j}-beløpØre`}>
+                                    <CustomErrorSummaryItem id={`inntekter-${i}-refusjon-${j}-beløpØre`}>
                                         {refusjonError.beløpØre.message}
-                                    </ErrorSummary.Item>
+                                    </CustomErrorSummaryItem>
                                 )}
                             </React.Fragment>
                         ) : null,
@@ -53,8 +55,25 @@ export function Feiloppsummering({ errors }: { errors: FieldErrors<Sykepengegrun
                 </React.Fragment>
             ))}
             {errors.begrunnelse && (
-                <ErrorSummaryItem href="#begrunnelse">{errors.begrunnelse.message}</ErrorSummaryItem>
+                <CustomErrorSummaryItem id="begrunnelse">{errors.begrunnelse.message}</CustomErrorSummaryItem>
             )}
         </ErrorSummary>
+    )
+}
+
+// Siden denne feiloppsummeringen er brukt inne i Tabs-komponenten til Aksel fungerte det dårlig å
+// bare bruke ErrorSummary.Item sin href da det endret tabben.
+function CustomErrorSummaryItem({ id, children }: PropsWithChildren<{ id: string }>): ReactElement {
+    return (
+        <ErrorSummaryItem
+            className="cursor-pointer"
+            as="button"
+            onClick={(e) => {
+                e.preventDefault()
+                document.getElementById(id)?.focus()
+            }}
+        >
+            {children}
+        </ErrorSummaryItem>
     )
 }
