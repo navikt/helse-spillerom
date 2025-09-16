@@ -1,14 +1,13 @@
 import { expect } from '@playwright/test'
+
 import { test } from './fixtures'
 import {
-    navigerTilPerson,
-    opprettManuellBehandling,
-    navigerTilYrkesaktivitetFane,
-    åpneYrkesaktivitetSkjema,
     lagreYrkesaktivitet,
-    verifiserKategoriTag,
+    navigerTilPerson,
+    navigerTilYrkesaktivitetFane,
+    opprettManuellBehandling,
+    åpneYrkesaktivitetSkjema,
 } from './actions/saksbehandler-actions'
-import { validerAxe } from './uuvalidering'
 
 test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
     test.beforeEach(async ({ page }) => {
