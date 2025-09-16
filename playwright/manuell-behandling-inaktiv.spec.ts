@@ -75,7 +75,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
 
             // Klikk på "Rediger" knapp
             const redigerButton = page
-                .getByRole('tabpanel', { name: 'Sykepengedsagrunnlag' })
+                .getByRole('tabpanel', { name: 'Sykepengegrunnlag' })
                 .getByRole('button', { name: 'Rediger' })
             await redigerButton.click()
 
