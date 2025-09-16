@@ -41,13 +41,13 @@ export function SkjæringstidspunktForm({
         <FormProvider {...form}>
             <HStack as="form" gap="2" role="form" onSubmit={form.handleSubmit(onSubmit)}>
                 <DateField name="skjæringstidspunkt" label="Skjæringstidspunkt" hideLabel showErrorMessage />
-                <HStack gap="2" align="center" className="h-8">
-                    <Button type="submit" size="xsmall" loading={form.formState.isSubmitting}>
+                <HStack gap="2" align="center" className="h-8" wrap={false}>
+                    <Button type="submit" size="small" variant="secondary" loading={form.formState.isSubmitting}>
                         Lagre
                     </Button>
                     <Button
                         type="button"
-                        size="xsmall"
+                        size="small"
                         variant="tertiary"
                         icon={<XMarkIcon />}
                         onClick={lukkForm}

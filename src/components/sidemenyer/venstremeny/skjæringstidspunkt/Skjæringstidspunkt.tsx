@@ -15,7 +15,7 @@ export function Skjæringstidspunkt({ dato, saksbehandlingsperiodeId }: Skjærin
     const [isEditing, setIsEditing] = useState(false)
 
     return (
-        <HStack gap="2" align={isEditing ? 'start' : 'center'} className="mb-4">
+        <HStack gap="2" align={isEditing ? 'start' : 'center'} className="mb-4" wrap={false}>
             <CalendarIcon
                 aria-hidden
                 fontSize="1.25rem"
