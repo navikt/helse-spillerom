@@ -142,7 +142,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                     {...field}
                                     size="small"
                                     disabled={valgteDataer.size === 0}
-                                    label="Type"
+                                    label="Ytelser"
                                     error={fieldState.error?.message}
                                 >
                                     <option value="AndreYtelserAap">AAP</option>
