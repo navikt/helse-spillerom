@@ -11,6 +11,7 @@ import { Person } from '../session'
 import { Bosse } from './BosseBunntrål'
 import { BlankeArk } from './BlankeArk'
 import { Kalle } from './KalleKranfører'
+import { Mugge } from './MuggeMcMurstein'
 
 export interface Testperson {
     personId: string
@@ -23,7 +24,7 @@ export interface Testperson {
     postCreateCallback?: (person: Person) => void
 }
 
-export const testpersoner: Testperson[] = [Kalle, Mattis, Bosse, BlankeArk]
+export const testpersoner: Testperson[] = [Kalle, Mattis, Bosse, BlankeArk, Mugge]
 
 export function finnPerson(personId: string) {
     return testpersoner.find((p) => p.personId === personId)
