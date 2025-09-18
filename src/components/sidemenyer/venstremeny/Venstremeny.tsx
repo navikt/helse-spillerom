@@ -2,7 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BodyShort, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
@@ -39,6 +39,7 @@ export function Venstremeny(): ReactElement {
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
             // Vis success toast og naviger etter at cache invalidation er ferdig
+            sessionStorage.removeItem(`${aktivSaksbehandlingsperiode!.id}-individuell-begrunnelse`)
             visToast('Saken er sendt til beslutter', 'success')
             router.push('/')
         },
@@ -50,8 +51,10 @@ export function Venstremeny(): ReactElement {
 
     const håndterSendTilGodkjenning = () => {
         if (aktivSaksbehandlingsperiode) {
+            const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
             sendTilBeslutning.mutate({
                 saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
             })
         }
     }
@@ -140,9 +143,9 @@ export function Venstremeny(): ReactElement {
                         <Utbetalingsdager />
                         <BeløpForPerioden />
 
-                        {kanSaksbehandles && (
+                        {kanSaksbehandles ? (
                             <>
-                                <IndividuellBegrunnelse />
+                                <IndividuellBegrunnelse aktivSaksbehandlingsperiode={aktivSaksbehandlingsperiode} />
 
                                 <Button
                                     variant="primary"
@@ -155,6 +158,19 @@ export function Venstremeny(): ReactElement {
                                     Send til godkjenning
                                 </Button>
                             </>
+                        ) : (
+                            aktivSaksbehandlingsperiode.individuellBegrunnelse && (
+                                <Bleed asChild marginInline="4 4" reflectivePadding>
+                                    <VStack as={BoxNew} gap="4" background="neutral-soft" className="py-4">
+                                        <BodyShort size="small" weight="semibold">
+                                            Individuell begrunnelse
+                                        </BodyShort>
+                                        <BodyShort size="small" className="whitespace-pre-wrap">
+                                            {aktivSaksbehandlingsperiode.individuellBegrunnelse}
+                                        </BodyShort>
+                                    </VStack>
+                                </Bleed>
+                            )
                         )}
 
                         {erBeslutter && (

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { Person, getSession, hentAktivBruker } from '@/mock-api/session'
+import { getSession, hentAktivBruker, Person } from '@/mock-api/session'
 import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
@@ -152,7 +152,11 @@ export async function handlePostSaksbehandlingsperioder(
     return NextResponse.json(resultat.saksbehandlingsperiode, { status: 201 })
 }
 
-export async function handleSendTilBeslutning(person: Person | undefined, periodeId: string): Promise<Response> {
+export async function handleSendTilBeslutning(
+    request: Request,
+    person: Person | undefined,
+    periodeId: string,
+): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
@@ -167,7 +171,17 @@ export async function handleSendTilBeslutning(person: Person | undefined, period
         return NextResponse.json({ message: 'Invalid status transition' }, { status: 400 })
     }
 
+    // Hent begrunnelse fra request body
+    let individuellBegrunnelse: string | undefined = undefined
+    try {
+        const body = await request.json()
+        individuellBegrunnelse = body.individuellBegrunnelse || undefined
+    } catch (error) {
+        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
+    }
+
     periode.status = 'TIL_BESLUTNING'
+    periode.individuellBegrunnelse = individuellBegrunnelse
 
     // Legg til historikk
     const aktivBruker = await hentAktivBruker()
@@ -297,35 +311,6 @@ export async function handleGetHistorikk(person: Person | undefined, periodeId: 
     const historikk: SaksbehandlingsperiodeEndring[] = person.historikk[periodeId] || []
 
     return NextResponse.json(historikk, { status: 200 })
-}
-
-export async function handleOppdaterBegrunnelse(
-    request: Request,
-    person: Person | undefined,
-    periodeId: string,
-): Promise<Response> {
-    if (!person) {
-        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
-    }
-
-    const periode = person.saksbehandlingsperioder.find((p) => p.id === periodeId)
-    if (!periode) {
-        return NextResponse.json({ message: 'Saksbehandlingsperiode not found' }, { status: 404 })
-    }
-
-    // Hent begrunnelse fra request body
-    let individuellBegrunnelse: string | undefined = undefined
-    try {
-        const body = await request.json()
-        individuellBegrunnelse = body.individuellBegrunnelse || undefined
-    } catch (error) {
-        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
-    }
-
-    // Oppdater begrunnelse
-    periode.individuellBegrunnelse = individuellBegrunnelse
-
-    return NextResponse.json(periode, { status: 200 })
 }
 
 export async function handleOppdaterSkjæringstidspunkt(

@@ -3,49 +3,48 @@ import { NextResponse } from 'next/server'
 
 import { raise } from '@utils/tsUtils'
 import { personsøk } from '@/mock-api/personsøk'
-import { hentPerson, hentAktivBruker } from '@/mock-api/session'
+import { hentAktivBruker, hentPerson } from '@/mock-api/session'
 import {
-    hentPersonIdFraUrl,
-    hentUuidFraUrl,
     hentInntektsforholdUuidFraUrl,
+    hentPersonIdFraUrl,
     hentSoknadUuidFraUrl,
+    hentUuidFraUrl,
 } from '@/mock-api/utils/url-utils'
 import { addRandomDelay } from '@/mock-api/utils/delay-utils'
 import { handlePersoninfo } from '@/mock-api/handlers/person-handlers'
 import {
-    handleDokumenter,
     handleAinntektHent,
     handleArbeidsforholdHent,
+    handleDokumenter,
     handlePensjonsgivendeInntektHent,
 } from '@/mock-api/handlers/dokument-handlers'
 import {
-    handleGetSaksbehandlingsperioder,
-    handlePostSaksbehandlingsperioder,
     handleGetAlleSaksbehandlingsperioder,
+    handleGetHistorikk,
+    handleGetSaksbehandlingsperioder,
+    handleGodkjenn,
+    handleOppdaterSkjæringstidspunkt,
+    handlePostSaksbehandlingsperioder,
+    handleSendTilbake,
     handleSendTilBeslutning,
     handleTaTilBeslutning,
-    handleSendTilbake,
-    handleGodkjenn,
-    handleGetHistorikk,
-    handleOppdaterBegrunnelse,
-    handleOppdaterSkjæringstidspunkt,
 } from '@/mock-api/handlers/saksbehandlingsperiode-handlers'
-import { handleGetSoknader, handleGetSoknad } from '@/mock-api/handlers/soknad-handlers'
-import { handleGetVilkaar, handlePutVilkaar, handleDeleteVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
+import { handleGetSoknad, handleGetSoknader } from '@/mock-api/handlers/soknad-handlers'
+import { handleDeleteVilkaar, handleGetVilkaar, handlePutVilkaar } from '@/mock-api/handlers/vilkaar-handlers'
 import {
+    handleDeleteInntektsforhold,
     handleGetInntektsforhold,
     handlePostInntektsforhold,
-    handleDeleteInntektsforhold,
-    handlePutInntektsforholdKategorisering,
     handlePutDagoversikt,
+    handlePutInntektsforholdKategorisering,
 } from '@/mock-api/handlers/yrkesaktivitet-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
 import {
+    handleDeleteSykepengegrunnlag,
     handleGetSykepengegrunnlag,
     handlePutSykepengegrunnlag,
-    handleDeleteSykepengegrunnlag,
 } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 
@@ -146,8 +145,8 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning': async ({ person, uuid }) =>
-        handleSendTilBeslutning(await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning': async ({ request, person, uuid }) =>
+        handleSendTilBeslutning(request, await person, uuid!),
 
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tatilbeslutning': async ({ person, uuid }) =>
         handleTaTilBeslutning(await person, uuid!),
@@ -172,9 +171,6 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/utbetalingsberegning': async ({ person, uuid }) =>
         handleGetUtbetalingsberegning(await person, uuid!),
-
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/individuell-begrunnelse': async ({ request, person, uuid }) =>
-        handleOppdaterBegrunnelse(request, await person, uuid!),
 
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt': async ({ request, person, uuid }) =>
         handleOppdaterSkjæringstidspunkt(request, await person, uuid!),

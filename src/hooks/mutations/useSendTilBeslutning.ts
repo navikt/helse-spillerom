@@ -7,6 +7,7 @@ import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
+    individuellBegrunnelse: string | undefined
 }
 
 interface UseSendTilBeslutningProps {
@@ -18,11 +19,11 @@ export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = 
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId }) =>
+        mutationFn: async ({ saksbehandlingsperiodeId, individuellBegrunnelse }) =>
             postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sendtilbeslutning`,
                 saksbehandlingsperiodeSchema,
-                {},
+                { individuellBegrunnelse },
             ),
         onSuccess: async () => {
             // Lagre personId før navigering kan endre den

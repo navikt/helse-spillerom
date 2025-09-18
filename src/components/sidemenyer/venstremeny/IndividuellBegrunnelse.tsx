@@ -1,59 +1,50 @@
 'use client'
 
-import { ReactElement, useState, useEffect } from 'react'
-import { Button, VStack, ReadMore, Textarea } from '@navikt/ds-react'
+import { ReactElement, useEffect, useState } from 'react'
+import { ReadMore, Textarea } from '@navikt/ds-react'
 
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
-import { useOppdaterBegrunnelse } from '@hooks/mutations/useOppdaterBegrunnelse'
-import { useToast } from '@components/ToastProvider'
+import { Maybe } from '@utils/tsUtils'
+import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
 
-export function IndividuellBegrunnelse(): ReactElement {
-    const { visToast } = useToast()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
-    const [begrunnelse, setBegrunnelse] = useState(aktivSaksbehandlingsperiode?.individuellBegrunnelse || '')
+interface IndividuellBegrunnelseProps {
+    aktivSaksbehandlingsperiode: Saksbehandlingsperiode
+}
 
-    // Oppdater begrunnelse state når aktivSaksbehandlingsperiode endres
+export function IndividuellBegrunnelse({
+    aktivSaksbehandlingsperiode,
+}: IndividuellBegrunnelseProps): Maybe<ReactElement> {
+    const [begrunnelse, setBegrunnelse] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+
     useEffect(() => {
-        setBegrunnelse(aktivSaksbehandlingsperiode?.individuellBegrunnelse || '')
-    }, [aktivSaksbehandlingsperiode?.individuellBegrunnelse])
+        const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
+        const value =
+            aktivSaksbehandlingsperiode.individuellBegrunnelse ?? (storageValue ? JSON.parse(storageValue) : '')
+        setBegrunnelse(value)
+        setIsOpen(value !== '')
+    }, [aktivSaksbehandlingsperiode])
 
-    const oppdaterBegrunnelse = useOppdaterBegrunnelse({
-        onSuccess: () => {
-            visToast('Begrunnelse er oppdatert', 'success')
-        },
-    })
-
-    const håndterLagreBegrunnelse = () => {
-        if (aktivSaksbehandlingsperiode) {
-            const begrunnelseVerdi = begrunnelse.trim() === '' ? undefined : begrunnelse.trim()
-            oppdaterBegrunnelse.mutate({
-                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
-                individuellBegrunnelse: begrunnelseVerdi,
-            })
-        }
+    function handleChange(value: string) {
+        setBegrunnelse(value)
+        sessionStorage.setItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`, JSON.stringify(value))
     }
 
     return (
-        <ReadMore header="Individuell begrunnelse" size="small">
-            <VStack gap="3">
-                <Textarea
-                    label="Begrunnelse"
-                    value={begrunnelse}
-                    onChange={(e) => setBegrunnelse(e.target.value)}
-                    rows={4}
-                    maxLength={1000}
-                    description={`${begrunnelse.length}/1000 tegn`}
-                />
-                <Button
-                    variant="primary"
-                    size="small"
-                    onClick={håndterLagreBegrunnelse}
-                    loading={oppdaterBegrunnelse.isPending}
-                    className="w-fit"
-                >
-                    Lagre begrunnelse
-                </Button>
-            </VStack>
+        <ReadMore
+            header="Individuell begrunnelse"
+            size="small"
+            className="[&>div]:m-0 [&>div]:border-none [&>div]:p-0"
+            open={isOpen}
+            onOpenChange={setIsOpen}
+        >
+            <Textarea
+                size="small"
+                label=""
+                description="Teksten vises til den sykmeldte i «Svar på søknad om sykepenger»."
+                value={begrunnelse}
+                onChange={(e) => handleChange(e.target.value)}
+                minRows={6}
+            />
         </ReadMore>
     )
 }
