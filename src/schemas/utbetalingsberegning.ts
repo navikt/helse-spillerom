@@ -22,6 +22,7 @@ export const yrkesaktivitetUtbetalingsberegningSchema = z.object({
 
 export const utbetalingsberegningDataSchema = z.object({
     yrkesaktiviteter: z.array(yrkesaktivitetUtbetalingsberegningSchema),
+    sporing: z.array(z.string()),
 })
 
 export const utbetalingsberegningInputSchema = z.object({

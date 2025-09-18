@@ -14,6 +14,8 @@ import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
 import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
+import { BergingssporingInnsikt } from './saksbilde/vilkårsvurdering/BergingssporingInnsikt'
+
 type ModalType = 'vilkårsvurdering' | 'yrkesaktivitet' | 'testdata' | 'roller' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
@@ -93,8 +95,9 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                     header={{ heading: 'Vurderte vilkår', closeButton: true }}
                     className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
-                    <ModalBody>
+                    <ModalBody className="space-y-6">
                         <VilkårsvurderingInnsikt />
+                        <BergingssporingInnsikt />
                     </ModalBody>
                 </Modal>
             )}
