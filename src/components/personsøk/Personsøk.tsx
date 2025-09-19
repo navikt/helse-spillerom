@@ -53,6 +53,7 @@ export function Personsøk(): ReactElement {
                             variant="secondary"
                             placeholder="Søk"
                             hideLabel
+                            className="flex-row items-center"
                         />
                     )}
                 />
