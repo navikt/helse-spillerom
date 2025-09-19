@@ -134,8 +134,8 @@ export const yrkesaktivitetKodeverk = {
                             underspørsmål: ordnaerForsikring,
                         },
                         {
-                            kode: 'DAGMAMMA_EGET_HJEM',
-                            navn: 'Dagmamma/dagpappa i eget hjem',
+                            kode: 'BARNEPASSER_EGET_HJEM',
+                            navn: 'Barnepasser i eget hjem',
                             underspørsmål: ordnaerForsikring,
                         },
                         {
@@ -207,10 +207,6 @@ export const yrkesaktivitetKodeverk = {
         {
             kode: 'ARBEIDSLEDIG',
             navn: 'Arbeidsledig',
-        },
-        {
-            kode: 'ANNET',
-            navn: 'Annet',
         },
     ],
 }
