@@ -113,7 +113,7 @@ export function Venstremeny(): ReactElement {
 
     return (
         <Sidemeny side="left">
-            <VStack gap="4">
+            <VStack gap="4" className="pb-24">
                 <HStack gap="2" wrap role="region" aria-label="Saksinformasjon">
                     <KategoriTag />
                     <StatusTag />
