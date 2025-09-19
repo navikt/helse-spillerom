@@ -15,14 +15,22 @@ export const dagUtbetalingsberegningSchema = z.object({
     totalGrad: z.number(),
 })
 
+export const prosentDtoSchema = z.object({
+    prosentDesimal: z.number(),
+})
+export const dekningsgradMedSporingSchema = z.object({
+    sporing: z.string(),
+    verdi: prosentDtoSchema,
+})
+
 export const yrkesaktivitetUtbetalingsberegningSchema = z.object({
     yrkesaktivitetId: z.string(), // UUID som string
     dager: z.array(dagUtbetalingsberegningSchema),
+    dekningsgrad: dekningsgradMedSporingSchema.optional(),
 })
 
 export const utbetalingsberegningDataSchema = z.object({
     yrkesaktiviteter: z.array(yrkesaktivitetUtbetalingsberegningSchema),
-    sporing: z.array(z.string()),
 })
 
 export const utbetalingsberegningInputSchema = z.object({

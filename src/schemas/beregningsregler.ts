@@ -1,9 +1,9 @@
 import { z } from 'zod/v4'
 
 export const beregningsregelSchema = z.object({
-    regelkode: z.string(),
+    kode: z.string(),
     beskrivelse: z.string(),
-    lovreferanse: z
+    vilkårshjemmel: z
         .object({
             lovverk: z.string(),
             paragraf: z.string(),
@@ -14,9 +14,5 @@ export const beregningsregelSchema = z.object({
         .optional(),
 })
 
-export const beregningsregelverkSchema = z.object({
-    beregningsregler: z.array(beregningsregelSchema),
-})
-
-export type Beregningsregel = z.infer<typeof beregningsregelSchema>
-export type Beregningsregelverk = z.infer<typeof beregningsregelverkSchema>
+export const beregningsreglerArraySchema = z.array(beregningsregelSchema)
+export type BeregningsreglerArray = z.infer<typeof beregningsreglerArraySchema>

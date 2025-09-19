@@ -11,15 +11,15 @@ export function BergingssporingInnsikt(): ReactElement {
     const { data: beregningsregler } = useBeregningsregler()
 
     // Hent sporing fra beregning
-    const sporing = beregning?.beregningData?.sporing || []
+    const sporing = beregning?.beregningData?.yrkesaktiviteter?.map((ya) => ya.dekningsgrad?.sporing) || []
 
     // Finn beskrivelse og lovreferanse for hver regelkode
     const sporingMedInfo = sporing.map((regelkode) => {
-        const regel = beregningsregler?.beregningsregler.find((r) => r.regelkode === regelkode)
+        const regel = beregningsregler?.find((r) => r.kode === regelkode)
         return {
             regelkode,
             beskrivelse: regel?.beskrivelse,
-            lovreferanse: regel?.lovreferanse,
+            vilkårshjemmel: regel?.vilkårshjemmel,
         }
     })
 
@@ -47,15 +47,15 @@ export function BergingssporingInnsikt(): ReactElement {
                                 </div>
                             </Table.DataCell>
                             <Table.DataCell>
-                                {item.lovreferanse ? (
+                                {item.vilkårshjemmel ? (
                                     <div className="text-gray-500 text-xs">
-                                        {item.lovreferanse.lovverk} §{item.lovreferanse.paragraf}
-                                        {item.lovreferanse.ledd && ` ledd ${item.lovreferanse.ledd}`}
-                                        {item.lovreferanse.setning && ` setning ${item.lovreferanse.setning}`}
-                                        {item.lovreferanse.bokstav && ` bokstav ${item.lovreferanse.bokstav}`}
+                                        {item.vilkårshjemmel.lovverk} §{item.vilkårshjemmel.paragraf}
+                                        {item.vilkårshjemmel.ledd && ` ledd ${item.vilkårshjemmel.ledd}`}
+                                        {item.vilkårshjemmel.setning && ` setning ${item.vilkårshjemmel.setning}`}
+                                        {item.vilkårshjemmel.bokstav && ` bokstav ${item.vilkårshjemmel.bokstav}`}
                                     </div>
                                 ) : (
-                                    <span className="text-gray-400 text-xs italic">Ingen lovreferanse</span>
+                                    <span className="text-gray-400 text-xs italic">Ingen vilkårshjemmel</span>
                                 )}
                             </Table.DataCell>
                         </Table.Row>
