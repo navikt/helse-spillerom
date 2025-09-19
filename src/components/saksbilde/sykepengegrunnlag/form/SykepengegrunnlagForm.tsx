@@ -70,7 +70,7 @@ export function SykepengegrunnlagForm({
                 {yrkesaktivitet.map((forhold, index) => (
                     <VStack key={forhold.id} gap="4">
                         <HStack align="end" gap="4" wrap={false}>
-                            <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} className="mb-0.5" />
+                            <NavnOgIkon kategorisering={forhold.kategorisering} className="mb-0.5" />
                             <PengerField
                                 className="ml-auto w-[212px]"
                                 name={`inntekter.${index}.beløpPerMånedØre`}

@@ -101,7 +101,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                                     <React.Fragment key={forhold.id}>
                                         <VStack gap="3">
                                             <HStack justify="space-between">
-                                                <NavnOgIkon orgnummer={forhold.kategorisering['ORGNUMMER'] as string} />
+                                                <NavnOgIkon kategorisering={forhold.kategorisering} />
                                                 <BodyShort>
                                                     {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
                                                 </BodyShort>
@@ -180,13 +180,41 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
     )
 }
 
-export function NavnOgIkon({ orgnummer, className }: { orgnummer: string; className?: string }): ReactElement {
+function getKategoriseringTekst(kategorisering: Record<string, string | string[]>): ReactElement {
+    const kategori = kategorisering['INNTEKTSKATEGORI']
+    const orgnummer = kategorisering['ORGNUMMER'] as string
+
+    switch (kategori) {
+        case 'ARBEIDSTAKER':
+            return <Organisasjonsnavn orgnummer={orgnummer} />
+        case 'FRILANSER':
+            return (
+                <>
+                    Frilanser hos <Organisasjonsnavn orgnummer={orgnummer} />
+                </>
+            )
+        case 'SELVSTENDIG_NÆRINGSDRIVENDE':
+            return <>Selvstendig næringsdrivende</>
+        case 'ARBEIDSLEDIG':
+            return <>Arbeidsledig</>
+        case 'INAKTIV':
+            return <>Inaktiv</>
+        default:
+            return <>Ukjent</>
+    }
+}
+
+export function NavnOgIkon({
+    kategorisering,
+    className,
+}: {
+    kategorisering: Record<string, string | string[]>
+    className?: string
+}): ReactElement {
     return (
         <HStack gap="2" className={className} wrap={false}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
-            <BodyShort>
-                <Organisasjonsnavn orgnummer={orgnummer} />
-            </BodyShort>
+            <BodyShort>{getKategoriseringTekst(kategorisering)}</BodyShort>
         </HStack>
     )
 }
