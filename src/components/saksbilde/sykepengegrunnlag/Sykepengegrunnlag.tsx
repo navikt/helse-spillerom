@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, VStack } from '@navikt/ds-react'
+import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { BriefcaseIcon, PersonPencilIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
@@ -51,6 +51,16 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                     refetch={() => void Promise.all([refetch(), yrkesaktivitetRefetch()])}
                     message="Kunne ikke laste sykepengegrunnlag."
                 />
+            </SaksbildePanel>
+        )
+    }
+
+    if (yrkesaktivitet.length === 0) {
+        return (
+            <SaksbildePanel value={value}>
+                <Alert variant="info">
+                    <BodyShort>Du kan ikke sette sykepengegrunnlag før yrkesaktiviteter er satt.</BodyShort>
+                </Alert>
             </SaksbildePanel>
         )
     }
