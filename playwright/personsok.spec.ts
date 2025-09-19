@@ -12,7 +12,7 @@ test.describe('Førstesiden', () => {
     test('Viser feilmelding ved ugyldig input med 6 siffer', async ({ page }) => {
         await søkPerson('123456')(page)
 
-        const errorMessage = page.getByText('Ident må være 11 eller 13 siffer lang')
+        const errorMessage = page.getByText('Ident må være 11 eller 13 siffer')
         await expect(errorMessage).toBeVisible()
     })
 
