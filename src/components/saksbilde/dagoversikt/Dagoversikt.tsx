@@ -208,7 +208,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         </Checkbox>
                                                     </TableHeaderCell>
                                                 )}
-                                                <TableHeaderCell className="w-20 min-w-20">Dato</TableHeaderCell>
+                                                <TableHeaderCell className="w-26 min-w-20">Dato</TableHeaderCell>
                                                 <TableHeaderCell className="w-32 min-w-32">Dagtype</TableHeaderCell>
                                                 <TableHeaderCell align="right" className="w-16 min-w-16">
                                                     Grad
@@ -216,7 +216,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 <TableHeaderCell className="w-16 min-w-16">Kilde</TableHeaderCell>
                                                 <TableHeaderCell
                                                     align="right"
-                                                    className="w-20 min-w-20"
+                                                    className="w-24 min-w-20 whitespace-nowrap"
                                                     title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
                                                 >
                                                     Total grad
@@ -229,11 +229,11 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 </TableHeaderCell>
                                                 <TableHeaderCell
                                                     align="right"
-                                                    className="hidden w-20 min-w-20 md:table-cell"
+                                                    className="hidden w-28 min-w-20 whitespace-nowrap md:table-cell"
                                                 >
                                                     Dager igjen
                                                 </TableHeaderCell>
-                                                <TableHeaderCell className="min-w-32">Merknader</TableHeaderCell>
+                                                <TableHeaderCell className="min-w-28">Merknader</TableHeaderCell>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
