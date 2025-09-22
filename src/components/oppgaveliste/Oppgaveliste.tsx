@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { FilterIcon, MinusIcon, PlusIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
+import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { useAlleSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
 import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@/schemas/saksbehandlingsperiode'
@@ -15,6 +16,7 @@ import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { Bruker } from '@schemas/bruker'
 import { Filter, filterList, FilterStatus, filtrer } from '@components/oppgaveliste/filter'
+import { OppgavelisteSkeleton } from '@components/oppgaveliste/OppgavelisteSkeleton'
 
 type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
@@ -32,7 +34,7 @@ export function Oppgaveliste(): ReactElement {
     }
 
     if (isLoading) {
-        return <div>Laster...</div>
+        return <OppgavelisteSkeleton />
     }
 
     if (error) {
@@ -187,34 +189,34 @@ function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): Re
 
     return (
         <Table zebraStripes>
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell>Saksbehandler</Table.HeaderCell>
-                    <Table.HeaderCell>Status</Table.HeaderCell>
-                    <Table.HeaderCell>Periode</Table.HeaderCell>
-                    <Table.HeaderCell>Opprettet</Table.HeaderCell>
-                    <Table.HeaderCell>Beslutter</Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
+            <TableHeader>
+                <TableRow>
+                    <TableHeaderCell>Saksbehandler</TableHeaderCell>
+                    <TableHeaderCell>Status</TableHeaderCell>
+                    <TableHeaderCell>Periode</TableHeaderCell>
+                    <TableHeaderCell>Opprettet</TableHeaderCell>
+                    <TableHeaderCell>Beslutter</TableHeaderCell>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
                 {perioder.map((periode) => (
-                    <Table.Row
+                    <TableRow
                         key={periode.id}
                         onClick={() => handleRadKlikk(periode)}
                         className="hover:bg-gray-50 cursor-pointer"
                     >
-                        <Table.DataCell>{periode.opprettetAvNavn}</Table.DataCell>
-                        <Table.DataCell>
+                        <TableDataCell>{periode.opprettetAvNavn}</TableDataCell>
+                        <TableDataCell>
                             <Tag variant={statusTilTagVariant(periode.status)}>{statusTilTekst[periode.status]}</Tag>
-                        </Table.DataCell>
-                        <Table.DataCell>
+                        </TableDataCell>
+                        <TableDataCell>
                             {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}
-                        </Table.DataCell>
-                        <Table.DataCell>{getFormattedDatetimeString(periode.opprettet)}</Table.DataCell>
-                        <Table.DataCell>{periode.beslutter || '-'}</Table.DataCell>
-                    </Table.Row>
+                        </TableDataCell>
+                        <TableDataCell>{getFormattedDatetimeString(periode.opprettet)}</TableDataCell>
+                        <TableDataCell>{periode.beslutter || '-'}</TableDataCell>
+                    </TableRow>
                 ))}
-            </Table.Body>
+            </TableBody>
         </Table>
     )
 }
