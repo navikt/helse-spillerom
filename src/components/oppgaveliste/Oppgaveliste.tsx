@@ -17,6 +17,7 @@ import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { Bruker } from '@schemas/bruker'
 import { Filter, filterList, FilterStatus, filtrer } from '@components/oppgaveliste/filter'
 import { OppgavelisteSkeleton } from '@components/oppgaveliste/OppgavelisteSkeleton'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
@@ -24,7 +25,7 @@ export function Oppgaveliste(): ReactElement {
     const [filters, setFilters] = useState<Filter[]>(filterList)
     const [showFilters, setShowFilters] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<SakerTabs>('ALLE')
-    const { data: saksbehandlingsperioder = [], isLoading, error } = useAlleSaksbehandlingsperioder()
+    const { data: saksbehandlingsperioder = [], isLoading, error, refetch } = useAlleSaksbehandlingsperioder()
     const { data: aktivBruker } = useBrukerinfo()
 
     const { mine, behandlet, alle } = splitPerioderForTabs(saksbehandlingsperioder, aktivBruker)
@@ -38,7 +39,11 @@ export function Oppgaveliste(): ReactElement {
     }
 
     if (error) {
-        return <div>Noe gikk galt: {error.message}</div>
+        return (
+            <div className="p-8">
+                <FetchError message="Kunne ikke laste oppgaveliste" refetch={() => refetch()} />
+            </div>
+        )
     }
 
     return (
