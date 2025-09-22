@@ -6,7 +6,7 @@ import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navi
 import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useErBeslutter } from '@hooks/queries/useErBeslutter'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
@@ -16,6 +16,7 @@ import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
 import { Skjæringstidspunkt } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/Skjæringstidspunkt'
+import { VenstremenySkeleton } from '@components/sidemenyer/venstremeny/VenstremenySkeleton'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
@@ -30,7 +31,7 @@ import { IndividuellBegrunnelse } from './IndividuellBegrunnelse'
 export function Venstremeny(): ReactElement {
     const router = useRouter()
     const { visToast } = useToast()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const { aktivSaksbehandlingsperiode, isLoading } = useAktivSaksbehandlingsperiodeMedLoading()
     const kanSaksbehandles = useKanSaksbehandles()
     const erBeslutter = useErBeslutter()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
@@ -49,45 +50,44 @@ export function Venstremeny(): ReactElement {
     const godkjenn = useGodkjenn()
     const sendTilbake = useSendTilbake()
 
+    if (isLoading) return <VenstremenySkeleton />
+
     const håndterSendTilGodkjenning = () => {
-        if (aktivSaksbehandlingsperiode) {
-            const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
-            sendTilBeslutning.mutate({
-                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
-                individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
-            })
-        }
+        if (!aktivSaksbehandlingsperiode) return
+        const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
+        sendTilBeslutning.mutate({
+            saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
+        })
     }
 
     const håndterTaTilBeslutning = () => {
-        if (aktivSaksbehandlingsperiode) {
-            taTilBeslutning.mutate(
-                {
-                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+        if (!aktivSaksbehandlingsperiode) return
+        taTilBeslutning.mutate(
+            {
+                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            },
+            {
+                onSuccess: () => {
+                    visToast('Saken er tatt til beslutning', 'success')
                 },
-                {
-                    onSuccess: () => {
-                        visToast('Saken er tatt til beslutning', 'success')
-                    },
-                },
-            )
-        }
+            },
+        )
     }
 
     const håndterGodkjenn = () => {
-        if (aktivSaksbehandlingsperiode) {
-            godkjenn.mutate(
-                {
-                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+        if (!aktivSaksbehandlingsperiode) return
+        godkjenn.mutate(
+            {
+                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            },
+            {
+                onSuccess: () => {
+                    visToast('Saken er godkjent', 'success')
+                    router.push('/')
                 },
-                {
-                    onSuccess: () => {
-                        visToast('Saken er godkjent', 'success')
-                        router.push('/')
-                    },
-                },
-            )
-        }
+            },
+        )
     }
 
     const håndterSendTilbake = () => {
@@ -95,20 +95,19 @@ export function Venstremeny(): ReactElement {
     }
 
     const håndterSendTilbakeBekreft = (kommentar: string) => {
-        if (aktivSaksbehandlingsperiode) {
-            sendTilbake.mutate(
-                {
-                    saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
-                    kommentar,
+        if (!aktivSaksbehandlingsperiode) return
+        sendTilbake.mutate(
+            {
+                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                kommentar,
+            },
+            {
+                onSuccess: () => {
+                    visToast('Saken er sendt tilbake til saksbehandler', 'success')
+                    setVisSendTilbakeModal(false)
                 },
-                {
-                    onSuccess: () => {
-                        visToast('Saken er sendt tilbake til saksbehandler', 'success')
-                        setVisSendTilbakeModal(false)
-                    },
-                },
-            )
-        }
+            },
+        )
     }
 
     return (

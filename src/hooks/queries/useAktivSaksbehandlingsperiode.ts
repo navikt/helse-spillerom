@@ -1,15 +1,28 @@
 import { useParams } from 'next/navigation'
-import { useMemo } from 'react'
+
+import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
 
 import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
 
+function findAktivSaksbehandlingsperiode(
+    saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
+    saksbehandlingsperiodeId: string | undefined,
+) {
+    if (!saksbehandlingsperioder || !saksbehandlingsperiodeId) return undefined
+    return saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+}
+
 export function useAktivSaksbehandlingsperiode() {
-    const params = useParams()
-    const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
+    const { saksbehandlingsperiodeId } = useParams<{ saksbehandlingsperiodeId: string }>()
+    const { data } = useSaksbehandlingsperioder()
+    return findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId)
+}
 
-    const aktivSaksbehandlingsperiode = useMemo(() => {
-        return saksbehandlingsperioder?.find((periode) => periode.id === params.saksbehandlingsperiodeId)
-    }, [saksbehandlingsperioder, params.saksbehandlingsperiodeId])
-
-    return aktivSaksbehandlingsperiode
+export function useAktivSaksbehandlingsperiodeMedLoading() {
+    const { saksbehandlingsperiodeId } = useParams<{ saksbehandlingsperiodeId: string }>()
+    const { data, isLoading } = useSaksbehandlingsperioder()
+    return {
+        aktivSaksbehandlingsperiode: findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId),
+        isLoading,
+    }
 }
