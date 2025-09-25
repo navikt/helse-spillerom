@@ -105,7 +105,7 @@ export function Oppgaveliste(): ReactElement {
     )
 }
 
-const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
+export const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
     UNDER_BEHANDLING: 'Under behandling',
     TIL_BESLUTNING: 'Til beslutning',
     UNDER_BESLUTNING: 'Under beslutning',

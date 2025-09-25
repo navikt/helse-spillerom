@@ -1,23 +1,25 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
-import { BodyShort, Button, HStack, Skeleton, VStack } from '@navikt/ds-react'
+import { PropsWithChildren, ReactElement } from 'react'
+import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { FolderFileFillIcon, TasklistFillIcon } from '@navikt/aksel-icons'
+import { ClipboardFillIcon, PencilFillIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
 import { Søknad } from '@/schemas/søknad'
-import { getFormattedDateString } from '@utils/date-format'
+import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
+import { statusTilTekst } from '@components/oppgaveliste/Oppgaveliste'
+import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
 
 export function Tidslinje(): ReactElement {
-    const [activeSoknadId, setActiveSoknadId] = useState<string>('')
+    // const [activeSoknadId, setActiveSoknadId] = useState<string>('')
     const router = useRouter()
     const params = useParams()
     const {
@@ -60,14 +62,10 @@ export function Tidslinje(): ReactElement {
                                 }
                             }}
                             activePeriod={params.saksbehandlingsperiodeId === periode.id}
-                            icon={<FolderFileFillIcon />}
+                            icon={<PencilFillIcon />}
                             status="behandling"
                         >
-                            <BodyShort size="small">Saksbehandlingsperiode</BodyShort>
-                            <BodyShort size="small">
-                                Periode:{' '}
-                                {getFormattedDateString(periode.fom) + ' - ' + getFormattedDateString(periode.tom)}
-                            </BodyShort>
+                            <SaksbehandlingsperiodePopover periode={periode} />
                         </TimelinePeriod>
                     ))}
                 </TimelineRow>
@@ -79,23 +77,88 @@ export function Tidslinje(): ReactElement {
                             key={søknad.id}
                             startDate={dayjs(søknad.fom!)}
                             endDate={dayjs(søknad.tom!)}
-                            onSelectPeriod={() => setActiveSoknadId(søknad.id)}
-                            activePeriod={activeSoknadId === søknad.id}
-                            icon={<TasklistFillIcon />}
+                            // onSelectPeriod={() => setActiveSoknadId(søknad.id)}
+                            // activePeriod={activeSoknadId === søknad.id}
+                            icon={<ClipboardFillIcon />}
                             status="soknad"
                         >
-                            <BodyShort size="small">{formaterArbeidssituasjon(søknad.arbeidssituasjon)}</BodyShort>
-                            <BodyShort size="small">{søknad.arbeidsgiver?.navn}</BodyShort>
-                            <BodyShort size="small">
-                                Periode:{' '}
-                                {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
-                            </BodyShort>
+                            <SøknadPopover søknad={søknad} />
                         </TimelinePeriod>
                     ))}
                 </TimelineRow>
             ))}
             <TimelineZoom />
         </Timeline>
+    )
+}
+
+function SaksbehandlingsperiodePopover({ periode }: { periode: Saksbehandlingsperiode }): ReactElement {
+    return (
+        <PopoverContentWrapper heading="Saksbehandlingsperiode">
+            <BodyShort size="small">Periode:</BodyShort>
+            <BodyShort size="small">
+                {getFormattedDateString(periode.fom) + ' - ' + getFormattedDateString(periode.tom)}
+            </BodyShort>
+
+            {periode.skjæringstidspunkt && (
+                <>
+                    <BodyShort size="small">Skjæringstidspunkt:</BodyShort>
+                    <BodyShort size="small">{getFormattedDateString(periode.skjæringstidspunkt)}</BodyShort>
+                </>
+            )}
+
+            <BodyShort size="small">Opprettet:</BodyShort>
+            <BodyShort size="small">{getFormattedDatetimeString(periode.opprettet)}</BodyShort>
+
+            <BodyShort size="small">Opprettet av:</BodyShort>
+            <BodyShort size="small">{periode.opprettetAvNavIdent}</BodyShort>
+
+            <BodyShort size="small">Status:</BodyShort>
+            <BodyShort size="small">{statusTilTekst[periode.status]}</BodyShort>
+            {periode.beslutter && (
+                <>
+                    <BodyShort size="small">Beslutter:</BodyShort>
+                    <BodyShort size="small">{periode.beslutter}</BodyShort>
+                </>
+            )}
+        </PopoverContentWrapper>
+    )
+}
+
+function SøknadPopover({ søknad }: { søknad: Søknad }): ReactElement {
+    return (
+        <PopoverContentWrapper heading="Søknad">
+            <BodyShort size="small">Arbeidssituasjon:</BodyShort>
+            <BodyShort size="small">{formaterArbeidssituasjon(søknad.arbeidssituasjon)}</BodyShort>
+
+            {søknad.arbeidsgiver && (
+                <>
+                    <BodyShort size="small">Arbeidsgivernavn:</BodyShort>
+                    <BodyShort size="small">{søknad.arbeidsgiver.navn}</BodyShort>
+
+                    <BodyShort size="small">Orgnummer:</BodyShort>
+                    <BodyShort size="small">{søknad.arbeidsgiver.orgnummer}</BodyShort>
+                </>
+            )}
+
+            <BodyShort size="small">Periode:</BodyShort>
+            <BodyShort size="small">
+                {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
+            </BodyShort>
+        </PopoverContentWrapper>
+    )
+}
+
+function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ heading: string }>): ReactElement {
+    return (
+        <VStack gap="1">
+            <Heading size="xsmall" level="3">
+                {heading}
+            </Heading>
+            <HGrid columns={2} gap="1 6">
+                {children}
+            </HGrid>
+        </VStack>
     )
 }
 

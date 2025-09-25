@@ -53,11 +53,11 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
             <button
                 data-color={statusTilDataColor(status)}
                 className={cn(
-                    'aksel-timeline__period--clickable aksel-timeline__period absolute h-[24px] rounded-full hover:cursor-pointer',
+                    'aksel-timeline__period--clickable aksel-timeline__period inset-shadow- absolute h-[24px] rounded-full',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
-                        'border-2 border-ax-border-accent-strong': isActive,
+                        'border-ax-border-accent-strong inset-ring-1 inset-ring-ax-border-accent-strong': isActive,
                     },
                 )}
                 style={{ left: placement, width }}
