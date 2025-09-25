@@ -82,13 +82,13 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
                 const cropLeft = Boolean(
                     nextPeriodStartDate &&
                         dayjs(endDate).add(1, 'day').isSame(nextPeriodStartDate, 'day') &&
-                        shouldCrop(skjæringstidspunkt, nextPeriodSkjæringstidspunkt),
+                        shouldCrop(period.props.status, skjæringstidspunkt, nextPeriodSkjæringstidspunkt),
                 )
 
                 const cropRight = Boolean(
                     prevPeriodEndDate &&
                         dayjs(prevPeriodEndDate).add(1, 'day').isSame(startDate, 'day') &&
-                        shouldCrop(skjæringstidspunkt, prevPeriodSkjæringstidspunkt),
+                        shouldCrop(period.props.status, skjæringstidspunkt, prevPeriodSkjæringstidspunkt),
                 )
 
                 periods.push({
@@ -115,10 +115,14 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
     return parsedRow
 }
 
-function shouldCrop(thisSkjæringstidspunkt?: Dayjs, neighborSkjæringstidspunkt?: Dayjs): boolean {
+function shouldCrop(status: string, thisSkjæringstidspunkt?: Dayjs, neighborSkjæringstidspunkt?: Dayjs): boolean {
+    if (status === 'SØKNAD') {
+        return true
+    }
+
     return (
-        !thisSkjæringstidspunkt ||
-        !neighborSkjæringstidspunkt ||
+        !!thisSkjæringstidspunkt &&
+        !!neighborSkjæringstidspunkt &&
         thisSkjæringstidspunkt.isSame(neighborSkjæringstidspunkt)
     )
 }
