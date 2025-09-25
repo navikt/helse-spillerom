@@ -37,21 +37,10 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
     const daysFromEnd = timelineEnd.diff(endDate, 'day')
     const placement = daysFromEnd * dayLength
 
-    function statusTilDataColor(status: string) {
-        switch (status) {
-            case 'behandling':
-                return 'warning'
-            case 'soknad':
-                return 'info'
-            default:
-                return 'neutral'
-        }
-    }
-
     return (
         <>
             <button
-                data-color={statusTilDataColor(status)}
+                data-color={statusTilDataColor[status]}
                 className={cn(
                     'aksel-timeline__period--clickable aksel-timeline__period inset-shadow- absolute h-[24px] rounded-full',
                     {
@@ -76,6 +65,14 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 }
 
 TimelinePeriod.componentType = 'TimelinePeriod'
+
+export const statusTilDataColor: Record<string, string> = {
+    UNDER_BEHANDLING: 'warning',
+    TIL_BESLUTNING: 'warning',
+    UNDER_BESLUTNING: 'warning',
+    GODKJENT: 'success',
+    SØKNAD: 'info',
+}
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {
     const [isWider, setIsWider] = useState(false)

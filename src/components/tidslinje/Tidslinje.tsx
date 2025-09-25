@@ -3,7 +3,7 @@
 import { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { ClipboardFillIcon, PencilFillIcon } from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, ClipboardFillIcon, PencilFillIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
 import { useSoknader } from '@hooks/queries/useSoknader'
@@ -16,7 +16,7 @@ import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
 import { statusTilTekst } from '@components/oppgaveliste/Oppgaveliste'
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
 
 export function Tidslinje(): ReactElement {
     // const [activeSoknadId, setActiveSoknadId] = useState<string>('')
@@ -62,8 +62,8 @@ export function Tidslinje(): ReactElement {
                                 }
                             }}
                             activePeriod={params.saksbehandlingsperiodeId === periode.id}
-                            icon={<PencilFillIcon />}
-                            status="behandling"
+                            icon={statusTilIkon[periode.status]}
+                            status={periode.status}
                         >
                             <SaksbehandlingsperiodePopover periode={periode} />
                         </TimelinePeriod>
@@ -80,7 +80,7 @@ export function Tidslinje(): ReactElement {
                             // onSelectPeriod={() => setActiveSoknadId(søknad.id)}
                             // activePeriod={activeSoknadId === søknad.id}
                             icon={<ClipboardFillIcon />}
-                            status="soknad"
+                            status="SØKNAD"
                         >
                             <SøknadPopover søknad={søknad} />
                         </TimelinePeriod>
@@ -160,6 +160,13 @@ function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ headin
             </HGrid>
         </VStack>
     )
+}
+
+export const statusTilIkon: Record<SaksbehandlingsperiodeStatus, ReactElement> = {
+    UNDER_BEHANDLING: <PencilFillIcon />,
+    TIL_BESLUTNING: <PencilFillIcon />,
+    UNDER_BESLUTNING: <PencilFillIcon />,
+    GODKJENT: <CheckmarkCircleFillIcon />,
 }
 
 function TimelineSkeleton(): ReactElement {
