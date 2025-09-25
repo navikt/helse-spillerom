@@ -14,6 +14,7 @@ import { Maybe } from '@/utils/tsUtils'
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
     endDate: Dayjs
+    skjæringstidspunkt?: Dayjs
     activePeriod?: boolean
     onSelectPeriod?: () => void
     icon?: ReactElement
@@ -42,7 +43,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
             <button
                 data-color={statusTilDataColor[status]}
                 className={cn(
-                    'aksel-timeline__period--clickable aksel-timeline__period inset-shadow- absolute h-[24px] rounded-full',
+                    'aksel-timeline__period--clickable aksel-timeline__period absolute h-[24px] rounded-full',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,

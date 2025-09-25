@@ -56,6 +56,7 @@ export function Tidslinje(): ReactElement {
                             key={periode.id}
                             startDate={dayjs(periode.fom)}
                             endDate={dayjs(periode.tom)}
+                            skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
                             onSelectPeriod={() => {
                                 if (params.saksbehandlingsperiodeId !== periode.id) {
                                     router.push(`/person/${params.personId as string}/${periode.id}`)

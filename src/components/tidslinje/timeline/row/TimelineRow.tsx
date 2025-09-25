@@ -27,6 +27,7 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
                     <TimelinePeriod
                         startDate={period.startDate}
                         endDate={period.endDate}
+                        skjæringstidspunkt={period.skjæringstidspunkt}
                         icon={period.icon}
                         status={period.status}
                     />
