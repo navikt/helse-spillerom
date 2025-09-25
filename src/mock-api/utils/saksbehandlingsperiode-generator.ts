@@ -5,6 +5,7 @@ import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Søknad } from '@/schemas/søknad'
 import { Dokument } from '@/schemas/dokument'
+import { Bruker } from '@schemas/bruker'
 
 import { genererDagoversikt } from './dagoversikt-generator'
 import { lagKategorisering } from './kategorisering-generator'
@@ -22,6 +23,7 @@ export function opprettSaksbehandlingsperiode(
     tom: string,
     søknadIder: string[],
     uuid?: string,
+    aktivBruker?: Bruker,
 ): {
     saksbehandlingsperiode: Saksbehandlingsperiode
     yrkesaktivitet: Yrkesaktivitet[]
@@ -35,8 +37,8 @@ export function opprettSaksbehandlingsperiode(
         id: uuid || uuidv4(),
         spilleromPersonId: spilleromPersonId,
         opprettet: new Date().toISOString(),
-        opprettetAvNavIdent: 'Z123456',
-        opprettetAvNavn: 'Saks McBehandlersen',
+        opprettetAvNavIdent: aktivBruker ? aktivBruker.navIdent : 'Z123456',
+        opprettetAvNavn: aktivBruker ? aktivBruker.navn : 'Saks McBehandlersen',
         fom: fom,
         tom: tom,
         status: 'UNDER_BEHANDLING',
@@ -128,11 +130,10 @@ export function genererSaksbehandlingsperioder(
         saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 
         // Inkluder dagoversikt i yrkesaktivitet (matcher logikken i saksbehandlingsperiode-handlers.ts)
-        const yrkesaktivitetMedDagoversikt = resultat.yrkesaktivitet.map((forhold) => ({
+        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = resultat.yrkesaktivitet.map((forhold) => ({
             ...forhold,
             dagoversikt: resultat.dagoversikt[forhold.id] || [],
         }))
-        alleInntektsforhold[resultat.saksbehandlingsperiode.id] = yrkesaktivitetMedDagoversikt
 
         // Kombiner dagoversikt
         Object.assign(alleDagoversikt, resultat.dagoversikt)

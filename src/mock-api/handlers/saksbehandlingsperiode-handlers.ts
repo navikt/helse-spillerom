@@ -100,18 +100,21 @@ export async function handlePostSaksbehandlingsperioder(
     const testperson = finnPerson(personIdFraRequest)
     const søknader = testperson?.soknader || []
 
+    const aktivBruker = await hentAktivBruker()
+
     const resultat = opprettSaksbehandlingsperiode(
         personIdFraRequest,
         søknader,
         body.fom,
         body.tom,
         body.søknader || [],
+        undefined,
+        aktivBruker,
     )
 
     person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 
     // Legg til historikk for opprettelse
-    const aktivBruker = await hentAktivBruker()
     leggTilHistorikkinnslag(
         person,
         resultat.saksbehandlingsperiode.id,
@@ -126,11 +129,10 @@ export async function handlePostSaksbehandlingsperioder(
             person.yrkesaktivitet = {}
         }
         // Inkluder dagoversikt i yrkesaktivitet
-        const yrkesaktivitetMedDagoversikt = resultat.yrkesaktivitet.map((forhold) => ({
+        person.yrkesaktivitet[resultat.saksbehandlingsperiode.id] = resultat.yrkesaktivitet.map((forhold) => ({
             ...forhold,
             dagoversikt: resultat.dagoversikt[forhold.id] || [],
         }))
-        person.yrkesaktivitet[resultat.saksbehandlingsperiode.id] = yrkesaktivitetMedDagoversikt
     }
 
     // Legg til dagoversikt hvis det finnes noen
