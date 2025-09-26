@@ -167,7 +167,9 @@ export function fyllUtInaktivYrkesaktivitet(dekningsgrad: string) {
             const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
             await typeSelect.selectOption('INAKTIV')
 
-            const dekningsgradRadio = page.getByRole('group', { name: 'En fornuftig spørsmålstekst' })
+            const dekningsgradRadio = page.getByRole('group', {
+                name: 'Hvordan fylles vilkårene i vilkårene i §8-47 første ledd?',
+            })
             await dekningsgradRadio.waitFor({ state: 'visible' })
             await dekningsgradRadio.getByRole('radio', { name: dekningsgrad }).check()
         })

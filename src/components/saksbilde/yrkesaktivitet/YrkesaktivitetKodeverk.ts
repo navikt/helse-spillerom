@@ -195,7 +195,7 @@ export const yrkesaktivitetKodeverk = {
             underspørsmål: [
                 {
                     kode: 'VARIANT_AV_INAKTIV',
-                    navn: 'En fornuftig spørsmålstekst',
+                    navn: 'Hvordan fylles vilkårene i vilkårene i §8-47 første ledd?',
                     variant: 'RADIO',
                     alternativer: [
                         { kode: 'INAKTIV_VARIANT_A', navn: 'Bokstav A, 65% dekningsgrad' },
