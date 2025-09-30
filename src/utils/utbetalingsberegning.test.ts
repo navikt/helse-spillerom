@@ -496,10 +496,10 @@ describe('utbetalingsberegning', () => {
                 arbeidsgivere: [
                     {
                         orgnummer: '123456789',
-                        refusjonØre: 1000,
+                        refusjonØre: 10,
                     },
                 ],
-                direkteUtbetalingØre: 2000,
+                direkteUtbetalingØre: 20,
             }
 
             const resultat = formaterUtbetalingssum(mockUtbetalingssum)
