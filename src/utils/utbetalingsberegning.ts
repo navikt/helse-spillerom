@@ -110,10 +110,10 @@ export function beregnUtbetalingssum(
  */
 export function formaterUtbetalingssum(utbetalingssum: Utbetalingssum) {
     return {
-        direkteUtbetaling: formaterBeløpØre(utbetalingssum.direkteUtbetalingØre),
+        direkteUtbetaling: formaterBeløpØre(utbetalingssum.direkteUtbetalingØre * 100),
         arbeidsgivere: utbetalingssum.arbeidsgivere.map((ag) => ({
             ...ag,
-            refusjon: formaterBeløpØre(ag.refusjonØre),
+            refusjon: formaterBeløpØre(ag.refusjonØre * 100),
         })),
     }
 }

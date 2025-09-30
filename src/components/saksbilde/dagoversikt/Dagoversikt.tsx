@@ -105,12 +105,12 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     }
 
     // Hjelpefunksjon for å formatere beløp
-    const formaterBeløp = (beløpØre: number) => {
+    const formaterBeløp = (beløp: number) => {
         return new Intl.NumberFormat('nb-NO', {
             style: 'currency',
             currency: 'NOK',
             minimumFractionDigits: 0,
-        }).format(beløpØre / 100)
+        }).format(beløp)
     }
 
     // Hjelpefunksjon for å formatere total grad med farger

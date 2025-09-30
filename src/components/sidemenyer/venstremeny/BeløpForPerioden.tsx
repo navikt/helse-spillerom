@@ -52,7 +52,7 @@ export function BeløpForPerioden(): ReactElement {
                     </BodyShort>
 
                     <BodyShort weight="semibold" size="small">
-                        {formaterBeløpØre(totalUtbetaling)}
+                        {formaterBeløpØre(totalUtbetaling * 100)}
                     </BodyShort>
                 </HStack>
 
