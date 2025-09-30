@@ -34,7 +34,12 @@ function hentBeløpFraØkonomi(økonomi: Økonomi, beløpType: keyof Økonomi): 
  * Hjelpefunksjon for å sjekke om en dag er en arbeidsdag (ikke helg)
  */
 function erArbeidsdag(dag: Dag): boolean {
-    return dag['@type'] === 'NavDagDto'
+    return (
+        dag['@type'] === 'NavDagDto' ||
+        dag['@type'] === 'ArbeidsgiverperiodeDagDto' ||
+        dag['@type'] === 'ArbeidsgiverperiodeDagNavDto' ||
+        dag['@type'] === 'ArbeidsdagDto'
+    )
 }
 
 /**

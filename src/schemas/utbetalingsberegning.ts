@@ -47,7 +47,59 @@ export const navHelgDagDtoSchema = z.object({
     økonomi: økonomiSchema,
 })
 
-export const dagSchema = z.discriminatedUnion('@type', [navDagDtoSchema, navHelgDagDtoSchema])
+export const arbeidsgiverperiodeDagDtoSchema = z.object({
+    '@type': z.literal('ArbeidsgiverperiodeDagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const arbeidsgiverperiodeDagNavDtoSchema = z.object({
+    '@type': z.literal('ArbeidsgiverperiodeDagNavDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const fridagDtoSchema = z.object({
+    '@type': z.literal('FridagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const arbeidsdagDtoSchema = z.object({
+    '@type': z.literal('ArbeidsdagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const foreldetDagDtoSchema = z.object({
+    '@type': z.literal('ForeldetDagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const ukjentDagDtoSchema = z.object({
+    '@type': z.literal('UkjentDagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const ventetidsdagDtoSchema = z.object({
+    '@type': z.literal('VentetidsdagDto'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
+
+export const dagSchema = z.discriminatedUnion('@type', [
+    navDagDtoSchema,
+    navHelgDagDtoSchema,
+    arbeidsgiverperiodeDagDtoSchema,
+    arbeidsgiverperiodeDagNavDtoSchema,
+    fridagDtoSchema,
+    arbeidsdagDtoSchema,
+    foreldetDagDtoSchema,
+    ukjentDagDtoSchema,
+    ventetidsdagDtoSchema,
+])
 
 // Utbetalingstidslinje schema
 export const utbetalingstidslinjeSchema = z.object({
@@ -145,6 +197,13 @@ export type ProsentDto = z.infer<typeof prosentDtoSchema>
 export type Økonomi = z.infer<typeof økonomiSchema>
 export type NavDagDto = z.infer<typeof navDagDtoSchema>
 export type NavHelgDagDto = z.infer<typeof navHelgDagDtoSchema>
+export type ArbeidsgiverperiodeDagDto = z.infer<typeof arbeidsgiverperiodeDagDtoSchema>
+export type ArbeidsgiverperiodeDagNavDto = z.infer<typeof arbeidsgiverperiodeDagNavDtoSchema>
+export type FridagDto = z.infer<typeof fridagDtoSchema>
+export type ArbeidsdagDto = z.infer<typeof arbeidsdagDtoSchema>
+export type ForeldetDagDto = z.infer<typeof foreldetDagDtoSchema>
+export type UkjentDagDto = z.infer<typeof ukjentDagDtoSchema>
+export type VentetidsdagDto = z.infer<typeof ventetidsdagDtoSchema>
 export type Dag = z.infer<typeof dagSchema>
 export type Utbetalingstidslinje = z.infer<typeof utbetalingstidslinjeSchema>
 export type DekningsgradMedSporing = z.infer<typeof dekningsgradMedSporingSchema>
