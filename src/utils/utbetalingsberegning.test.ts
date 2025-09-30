@@ -24,10 +24,114 @@ describe('utbetalingsberegning', () => {
                     yrkesaktiviteter: [
                         {
                             yrkesaktivitetId: 'ya-1',
-                            dager: [
-                                { dato: '2023-01-01', utbetalingØre: 1000, refusjonØre: 500, totalGrad: 100 },
-                                { dato: '2023-01-02', utbetalingØre: 1000, refusjonØre: 500, totalGrad: 100 },
-                            ],
+                            utbetalingstidslinje: {
+                                dager: [
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-01',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-02',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
                         },
                     ],
                 },
@@ -67,11 +171,121 @@ describe('utbetalingsberegning', () => {
                     yrkesaktiviteter: [
                         {
                             yrkesaktivitetId: 'ya-1', // Kun direkte utbetaling
-                            dager: [{ dato: '2023-01-01', utbetalingØre: 1000, refusjonØre: 0, totalGrad: 100 }],
+                            utbetalingstidslinje: {
+                                dager: [
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-01',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
                         },
                         {
                             yrkesaktivitetId: 'ya-2', // Med refusjon
-                            dager: [{ dato: '2023-01-01', utbetalingØre: 500, refusjonØre: 1000, totalGrad: 100 }],
+                            utbetalingstidslinje: {
+                                dager: [
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-01',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
                         },
                     ],
                 },
@@ -122,11 +336,121 @@ describe('utbetalingsberegning', () => {
                     yrkesaktiviteter: [
                         {
                             yrkesaktivitetId: 'ya-1',
-                            dager: [{ dato: '2023-01-01', utbetalingØre: 500, refusjonØre: 500, totalGrad: 100 }],
+                            utbetalingstidslinje: {
+                                dager: [
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-01',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
                         },
                         {
                             yrkesaktivitetId: 'ya-2',
-                            dager: [{ dato: '2023-01-01', utbetalingØre: 500, refusjonØre: 1000, totalGrad: 100 }],
+                            utbetalingstidslinje: {
+                                dager: [
+                                    {
+                                        '@type': 'NavDagDto',
+                                        dato: '2023-01-01',
+                                        økonomi: {
+                                            grad: { prosentDesimal: 1 },
+                                            totalGrad: { prosentDesimal: 1 },
+                                            utbetalingsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverRefusjonsbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            aktuellDagsinntekt: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                            inntektjustering: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            dekningsgrad: { prosentDesimal: 1 },
+                                            arbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            personbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 500 },
+                                            },
+                                            reservertArbeidsgiverbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 0 },
+                                            },
+                                            reservertPersonbeløp: {
+                                                årlig: { beløp: 0 },
+                                                månedligDouble: { beløp: 0 },
+                                                dagligDouble: { beløp: 0 },
+                                                dagligInt: { beløp: 1000 },
+                                            },
+                                        },
+                                    },
+                                ],
+                            },
                         },
                     ],
                 },

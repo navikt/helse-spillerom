@@ -101,7 +101,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
             return null
         }
 
-        return yrkesaktivitetData.dager.find((dag) => dag.dato === dato) || null
+        return yrkesaktivitetData.utbetalingstidslinje.dager.find((dag) => dag.dato === dato) || null
     }
 
     // Hjelpefunksjon for å formatere beløp
@@ -285,22 +285,34 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         </TableDataCell>
                                                         <TableDataCell align="right">
                                                             <BodyShort>
-                                                                {utbetalingsdata?.totalGrad
-                                                                    ? formaterTotalGrad(utbetalingsdata.totalGrad)
+                                                                {utbetalingsdata?.økonomi.totalGrad
+                                                                    ? formaterTotalGrad(
+                                                                          Math.round(
+                                                                              utbetalingsdata.økonomi.totalGrad
+                                                                                  .prosentDesimal * 100,
+                                                                          ),
+                                                                      )
                                                                     : '-'}
                                                             </BodyShort>
                                                         </TableDataCell>
                                                         <TableDataCell align="right">
                                                             <BodyShort>
                                                                 {utbetalingsdata
-                                                                    ? formaterBeløp(utbetalingsdata.refusjonØre)
+                                                                    ? formaterBeløp(
+                                                                          utbetalingsdata.økonomi
+                                                                              .arbeidsgiverRefusjonsbeløp?.dagligInt
+                                                                              ?.beløp || 0,
+                                                                      )
                                                                     : '-'}
                                                             </BodyShort>
                                                         </TableDataCell>
                                                         <TableDataCell align="right">
                                                             <BodyShort>
                                                                 {utbetalingsdata
-                                                                    ? formaterBeløp(utbetalingsdata.utbetalingØre)
+                                                                    ? formaterBeløp(
+                                                                          utbetalingsdata.økonomi.personbeløp?.dagligInt
+                                                                              ?.beløp || 0,
+                                                                      )
                                                                     : '-'}
                                                             </BodyShort>
                                                         </TableDataCell>
