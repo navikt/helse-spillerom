@@ -37,6 +37,7 @@ import {
     handlePostInntektsforhold,
     handlePutDagoversikt,
     handlePutInntektsforholdKategorisering,
+    handlePutInntektsforholdPerioder,
 } from '@/mock-api/handlers/yrkesaktivitet-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
@@ -142,6 +143,13 @@ const handlers: Record<string, HandlerFunction> = {
         uuid,
         yrkesaktivitetId,
     }) => handlePutDagoversikt(request, await person, uuid!, yrkesaktivitetId!),
+
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/perioder': async ({
+        request,
+        person,
+        uuid,
+        yrkesaktivitetId,
+    }) => handlePutInntektsforholdPerioder(request, await person, uuid!, yrkesaktivitetId!),
 
     'GET /v1/[personId]/soknader/[uuid]': async ({ personId, uuid }) => handleGetSoknad(personId, uuid!),
 

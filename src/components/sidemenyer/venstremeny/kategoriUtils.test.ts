@@ -23,7 +23,7 @@ describe('kategoriUtils', () => {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
-
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },
@@ -31,6 +31,7 @@ describe('kategoriUtils', () => {
                     id: '2',
                     kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
                     dagoversikt: null,
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },
@@ -38,6 +39,7 @@ describe('kategoriUtils', () => {
                     id: '3',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
                     dagoversikt: null,
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },
@@ -53,6 +55,7 @@ describe('kategoriUtils', () => {
                     id: '1',
                     kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
                     dagoversikt: null,
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },
@@ -60,6 +63,7 @@ describe('kategoriUtils', () => {
                     id: '2',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
                     dagoversikt: null,
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },
@@ -67,6 +71,7 @@ describe('kategoriUtils', () => {
                     id: '3',
                     kategorisering: {}, // mangler INNTEKTSKATEGORI
                     dagoversikt: null,
+                    perioder: null,
                     generertFraDokumenter: [],
                     dekningsgrad: 100,
                 },

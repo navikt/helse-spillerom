@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
+import { Perioder } from '@/schemas/yrkesaktivitet'
 
 type KategoriseringMutationProps = {
     yrkesaktivitetId: string
@@ -13,6 +14,11 @@ type OppdaterDagerMutationProps = {
     yrkesaktivitetId: string
     dager: Dagoversikt // Kun dagene som skal oppdateres
     notat: string
+}
+
+type OppdaterPerioderMutationProps = {
+    yrkesaktivitetId: string
+    perioder: Perioder | null
 }
 
 export function useOppdaterYrkesaktivitetKategorisering() {
@@ -50,6 +56,31 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
             return await putNoContent(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
                 { dager, notat },
+            )
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+            })
+        },
+    })
+}
+
+export function useOppdaterYrkesaktivitetPerioder() {
+    const params = useParams()
+    const queryClient = useQueryClient()
+
+    return useMutation<void, Error, OppdaterPerioderMutationProps>({
+        mutationFn: async ({ yrkesaktivitetId, perioder }) => {
+            return await putNoContent(
+                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/perioder`,
+                perioder,
             )
         },
         onSuccess: () => {

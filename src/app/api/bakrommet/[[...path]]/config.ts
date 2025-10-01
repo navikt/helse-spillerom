@@ -20,6 +20,7 @@ export const allowedAPIs = [
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/kategorisering',
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/dagoversikt',
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/perioder',
     'GET /v1/[personId]/soknader/[uuid]',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tatilbeslutning',

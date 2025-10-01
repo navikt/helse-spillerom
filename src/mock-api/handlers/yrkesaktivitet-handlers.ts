@@ -54,6 +54,7 @@ export async function handlePostInntektsforhold(
             : [],
         generertFraDokumenter: [],
         dekningsgrad,
+        perioder: null, // Starter med null, kan oppdateres senere
     }
 
     if (!person.yrkesaktivitet) {
@@ -214,6 +215,37 @@ export async function handlePutInntektsforholdKategorisering(
         // Bruk standard dekningsgrad hvis beregning feiler
         yrkesaktivitet.dekningsgrad = 100
     }
+
+    // Slett sykepengegrunnlag når yrkesaktivitet endres
+    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
+        delete person.sykepengegrunnlag[uuid]
+    }
+
+    // Slett utbetalingsberegning når yrkesaktivitet endres
+    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+        delete person.utbetalingsberegning[uuid]
+    }
+
+    return new Response(null, { status: 204 })
+}
+
+export async function handlePutInntektsforholdPerioder(
+    request: Request,
+    person: Person | undefined,
+    uuid: string,
+    yrkesaktivitetId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid]?.find((forhold) => forhold.id === yrkesaktivitetId)
+    if (!yrkesaktivitet) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+
+    const body = await request.json()
+    yrkesaktivitet.perioder = body
 
     // Slett sykepengegrunnlag når yrkesaktivitet endres
     if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {

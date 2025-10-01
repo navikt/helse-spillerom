@@ -78,6 +78,7 @@ export function opprettSaksbehandlingsperiode(
                 dagoversikt: [],
                 generertFraDokumenter: søknaderForKategori.map((s) => s.id),
                 dekningsgrad,
+                perioder: null,
             }
 
             yrkesaktivitet.push(nyttInntektsforhold)
