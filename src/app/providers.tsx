@@ -31,6 +31,7 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
                            mount Even if the query had data hydrated from the server side render */
                         refetchOnMount: true, // Lar React Query refetche invalidated queries ved mount
                         refetchOnWindowFocus: false,
+                        retry: 1, // Prøv på nytt én gang hvis en request feiler
                         staleTime: 5 * 60 * 1000, // Data er ferske i 5 minutter som standard
                     },
                 },

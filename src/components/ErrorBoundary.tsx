@@ -4,7 +4,6 @@ import { ReactElement, ReactNode, Component, ErrorInfo } from 'react'
 import { Alert, BodyShort, Button, HStack, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { useState } from 'react'
-import { ZodError } from 'zod/v4'
 
 interface ErrorBoundaryState {
     hasError: boolean
@@ -60,14 +59,7 @@ interface ErrorDisplayProps {
 function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactElement {
     const [showDetails, setShowDetails] = useState(false)
 
-    const isZodError = error instanceof ZodError
-    const isZodParsingError = error.message === 'Invalid response format from server'
-    const zodErrorFromCause = error.cause instanceof ZodError
-
     const getErrorMessage = () => {
-        if (isZodError || isZodParsingError || zodErrorFromCause) {
-            return 'Det oppstod en feil ved validering av data fra serveren. Dette kan skyldes endringer i API-et eller uventet dataformat.'
-        }
         return error.message || 'En uventet feil oppstod'
     }
 
@@ -76,16 +68,6 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
             message: error.message,
             name: error.name,
             stack: error.stack,
-        }
-
-        if (isZodError) {
-            details.zodIssues = error.issues
-        } else if (zodErrorFromCause && error.cause instanceof ZodError) {
-            details.zodIssues = error.cause.issues
-            details.originalZodError = {
-                message: error.cause.message,
-                name: error.cause.name,
-            }
         }
 
         if (errorInfo) {

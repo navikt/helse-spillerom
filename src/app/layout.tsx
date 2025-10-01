@@ -9,6 +9,7 @@ import { Header } from '@/components/header/Header'
 import { Preload } from '@/app/preload'
 import { Providers } from '@/app/providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { QueryErrors } from '@/components/QueryErrors'
 
 function title() {
     function postfix() {
@@ -37,6 +38,7 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
                     <ErrorBoundary>
                         <Page contentBlockPadding="none">
                             <Header />
+                            <QueryErrors />
                             {children}
                         </Page>
                     </ErrorBoundary>
