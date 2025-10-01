@@ -66,10 +66,6 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
 
     const getErrorMessage = () => {
         if (isZodError || isZodParsingError || zodErrorFromCause) {
-            const url = (error as Error & { url?: string }).url
-            if (url) {
-                return `Det oppstod en feil ved validering av data fra ${url}. Dette kan skyldes endringer i API-et eller uventet dataformat.`
-            }
             return 'Det oppstod en feil ved validering av data fra serveren. Dette kan skyldes endringer i API-et eller uventet dataformat.'
         }
         return error.message || 'En uventet feil oppstod'
@@ -90,17 +86,6 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
                 message: error.cause.message,
                 name: error.cause.name,
             }
-        }
-
-        // Legg til original payload hvis tilgjengelig
-        const errorWithPayload = error as Error & { originalPayload?: unknown; url?: string }
-        if (errorWithPayload.originalPayload) {
-            details.originalPayload = errorWithPayload.originalPayload
-        }
-
-        // Legg til URL hvis tilgjengelig
-        if (errorWithPayload.url) {
-            details.failedUrl = errorWithPayload.url
         }
 
         if (errorInfo) {
