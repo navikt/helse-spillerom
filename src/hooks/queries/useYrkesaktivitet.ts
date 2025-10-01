@@ -22,7 +22,7 @@ export function useYrkesaktivitet() {
     })
 
     useEffect(() => {
-        if (query.error && query.error.problem.status === 404) {
+        if (query.error && query.error.problem?.status === 404) {
             // Naviger til rot-nivået hvis API-et returnerer 404
             router.push('/')
         }
