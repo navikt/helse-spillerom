@@ -8,6 +8,7 @@ import { erDemo, erDev, erLokal } from '@/env'
 import { Header } from '@/components/header/Header'
 import { Preload } from '@/app/preload'
 import { Providers } from '@/app/providers'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 function title() {
     function postfix() {
@@ -33,10 +34,12 @@ export default async function RootLayout({ children }: Readonly<PropsWithChildre
             <Preload />
             <body className="min-w-2xl">
                 <Providers>
-                    <Page contentBlockPadding="none">
-                        <Header />
-                        {children}
-                    </Page>
+                    <ErrorBoundary>
+                        <Page contentBlockPadding="none">
+                            <Header />
+                            {children}
+                        </Page>
+                    </ErrorBoundary>
                 </Providers>
             </body>
         </html>
