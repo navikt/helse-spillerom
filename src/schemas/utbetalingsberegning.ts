@@ -1,7 +1,7 @@
-import {z} from 'zod/v4'
+import { z } from 'zod/v4'
 
-import {sykepengegrunnlagResponseSchema} from './sykepengegrunnlag'
-import {yrkesaktivitetSchema} from './yrkesaktivitet'
+import { sykepengegrunnlagResponseSchema } from './sykepengegrunnlag'
+import { yrkesaktivitetSchema } from './yrkesaktivitet'
 
 export const saksbehandlingsperiodeSchema = z.object({
     fom: z.string(), // LocalDate som string
@@ -10,10 +10,10 @@ export const saksbehandlingsperiodeSchema = z.object({
 
 // Økonomi-relaterte schemas
 export const beløpSchema = z.object({
-    årlig: z.object({beløp: z.number()}),
-    månedligDouble: z.object({beløp: z.number()}),
-    dagligDouble: z.object({beløp: z.number()}),
-    dagligInt: z.object({beløp: z.number()}),
+    årlig: z.object({ beløp: z.number() }),
+    månedligDouble: z.object({ beløp: z.number() }),
+    dagligDouble: z.object({ beløp: z.number() }),
+    dagligInt: z.object({ beløp: z.number() }),
 })
 
 export const prosentDtoSchema = z.object({
@@ -121,33 +121,38 @@ export const yrkesaktivitetUtbetalingsberegningSchema = z.object({
 
 // Oppdrag schemas (kan ignoreres for nå, men inkludert for komplett struktur)
 export const endringskodeSchema = z.discriminatedUnion('@type', [
-    z.object({'@type': z.literal('NY')}),
-    z.object({'@type': z.literal('ENDR')}),
-    z.object({'@type': z.literal('ANUL')}),
+    z.object({ '@type': z.literal('NY') }),
+    z.object({ '@type': z.literal('ENDR') }),
+    z.object({ '@type': z.literal('ANUL') }),
 ])
 
 export const fagområdeSchema = z.discriminatedUnion('@type', [
-    z.object({'@type': z.literal('SPREF')}),
-    z.object({'@type': z.literal('SP')}),
+    z.object({ '@type': z.literal('SPREF') }),
+    z.object({ '@type': z.literal('SP') }),
 ])
 
 export const klassekodeSchema = z.discriminatedUnion('@type', [
     z.object({
         '@type': z.literal('SykepengerArbeidstakerOrdinær'),
         verdi: z.string(),
-    }), z.object({
+    }),
+    z.object({
         '@type': z.literal('RefusjonIkkeOpplysningspliktig'),
         verdi: z.string(),
-    }), z.object({
+    }),
+    z.object({
         '@type': z.literal('SelvstendigNæringsdrivendeOppgavepliktig'),
         verdi: z.string(),
-    }), z.object({
+    }),
+    z.object({
         '@type': z.literal('SelvstendigNæringsdrivendeFisker'),
         verdi: z.string(),
-    }), z.object({
+    }),
+    z.object({
         '@type': z.literal('SelvstendigNæringsdrivendeJordbrukOgSkogbruk'),
         verdi: z.string(),
-    }), z.object({
+    }),
+    z.object({
         '@type': z.literal('SelvstendigNæringsdrivendeBarnepasserOppgavepliktig'),
         verdi: z.string(),
     }),
