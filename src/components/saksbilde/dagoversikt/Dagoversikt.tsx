@@ -16,6 +16,7 @@ import { Kilde } from '@/schemas/dagoversikt'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { cn } from '@utils/tw'
 import { DagendringForm } from '@components/saksbilde/dagoversikt/DagendringForm'
+import { PeriodeForm } from '@components/saksbilde/dagoversikt/PeriodeForm'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
@@ -172,6 +173,11 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                     >
                         {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
                             <>
+                                {/* Periode-form for arbeidsgiverperiode/ventetid */}
+                                <div className="mb-6">
+                                    <PeriodeForm yrkesaktivitet={forhold} kanSaksbehandles={kanSaksbehandles} />
+                                </div>
+
                                 {kanSaksbehandles && (
                                     <Button
                                         size="small"
