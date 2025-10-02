@@ -201,7 +201,7 @@ function beregnSykepengegrunnlag(
         begrunnelse,
         grunnbeløpVirkningstidspunkt,
         opprettet: now,
-        opprettetAv: 'Z123456',
+        opprettetAv: 'Saks McBehandlersen',
         sistOppdatert: now,
     }
 }
