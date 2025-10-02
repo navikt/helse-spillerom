@@ -18,7 +18,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
             await expect(page.getByRole('tabpanel', { name: 'Vilkårsvurdering' })).toBeVisible()
             // Vent på at Kapittel 2 - Medlemskap i folketrygden er synlig
             await expect(
-                page.getByRole('row', { name: 'Kapittel 2 - Medlemskap i folketrygden Ikke vurdert Vis mer' }),
+                page.getByRole('row', { name: 'Kapittel 2. Medlemskap i folketrygden Ikke vurdert Vis mer' }),
             ).toBeVisible()
         })
 
@@ -29,7 +29,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
         await test.step('Utvid Kapittel 2 - Medlemskap i folketrygden', async () => {
             // Klikk på "Vis mer" knappen for Kapittel 2
             const kapittel2Row = page.getByRole('row', {
-                name: 'Kapittel 2 - Medlemskap i folketrygden Ikke vurdert Vis mer',
+                name: 'Kapittel 2. Medlemskap i folketrygden Ikke vurdert Vis mer',
             })
             await kapittel2Row.getByRole('button', { name: 'Vis mer' }).click()
 
@@ -51,7 +51,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
 
             // Verifiser at status er oppdatert
             await expect(page.getByText('Ikke oppfylt')).toBeVisible()
-            await expect(page.getByText('1/16')).toBeVisible()
+            await expect(page.getByText('1/12')).toBeVisible()
         })
 
         // Naviger til Dagoversikt-fanen
