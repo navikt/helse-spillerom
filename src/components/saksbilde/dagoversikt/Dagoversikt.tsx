@@ -275,7 +275,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                         </TableDataCell>
                                                         <TableDataCell>
                                                             <HStack wrap={false} gap="2" align="center">
-                                                                {getDagtypeIcon(dag.dagtype)}
+                                                                {getDagtypeIcon(dag.dagtype, erHelgedag)}
                                                                 <BodyShort>
                                                                     {getDagtypeText(
                                                                         dag.dagtype,
@@ -366,13 +366,19 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     )
 }
 
-function getDagtypeIcon(dagtype: Dagtype): ReactElement {
+function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElement {
+    const spanMedBredde = <span className="w-[18px]" />
+
+    if (helgedag) {
+        return spanMedBredde
+    }
+
     switch (dagtype) {
         case 'Syk':
         case 'SykNav':
             return <BandageIcon aria-hidden />
         default:
-            return <span className="w-[18px]" />
+            return spanMedBredde
     }
 }
 
