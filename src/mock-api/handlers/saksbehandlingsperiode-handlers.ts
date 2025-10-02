@@ -128,12 +128,15 @@ export async function handlePostSaksbehandlingsperioder(
         if (!person.yrkesaktivitet[resultat.saksbehandlingsperiode.id]) {
             person.yrkesaktivitet[resultat.saksbehandlingsperiode.id] = []
         }
-        person.yrkesaktivitet[resultat.saksbehandlingsperiode.id].push(
-            ...person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].map((item) => ({
-                ...item,
-                dagoversikt: genererDagoversikt(body.fom, body.tom),
-            })),
-        )
+        const tidligereYrkesaktivitet = person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id]
+        if (tidligereYrkesaktivitet) {
+            person.yrkesaktivitet[resultat.saksbehandlingsperiode.id].push(
+                ...tidligereYrkesaktivitet.map((item) => ({
+                    ...item,
+                    dagoversikt: genererDagoversikt(body.fom, body.tom),
+                })),
+            )
+        }
     }
 
     person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
