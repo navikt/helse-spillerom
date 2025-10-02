@@ -244,15 +244,7 @@ export async function handlePutInntektsforholdPerioder(
     const body = await request.json()
     yrkesaktivitet.perioder = body
 
-    // Slett sykepengegrunnlag når yrkesaktivitet endres
-    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
-        delete person.sykepengegrunnlag[uuid]
-    }
-
-    // Slett utbetalingsberegning når yrkesaktivitet endres
-    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
-        delete person.utbetalingsberegning[uuid]
-    }
+    await triggerUtbetalingsberegning(person, uuid)
 
     return new Response(null, { status: 204 })
 }
