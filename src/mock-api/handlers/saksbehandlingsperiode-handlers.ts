@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server'
+import dayjs from 'dayjs'
 
 import { getSession, hentAktivBruker, Person } from '@/mock-api/session'
 import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
+import { SykepengegrunnlagResponse } from '@schemas/sykepengegrunnlag'
+import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 
 /**
  * Sjekker om to datoperioder overlapper med hverandre
@@ -102,6 +105,10 @@ export async function handlePostSaksbehandlingsperioder(
 
     const aktivBruker = await hentAktivBruker()
 
+    const tidligerePeriodeInntilNyPeriode = person.saksbehandlingsperioder.find((periode) =>
+        dayjs(periode.tom).add(1, 'day').isSame(body.fom, 'day'),
+    )
+
     const resultat = opprettSaksbehandlingsperiode(
         personIdFraRequest,
         søknader,
@@ -110,7 +117,24 @@ export async function handlePostSaksbehandlingsperioder(
         body.søknader || [],
         undefined,
         aktivBruker,
+        tidligerePeriodeInntilNyPeriode?.skjæringstidspunkt ?? body.fom,
     )
+
+    if (tidligerePeriodeInntilNyPeriode) {
+        person.sykepengegrunnlag[resultat.saksbehandlingsperiode.id] = {
+            ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
+        } as SykepengegrunnlagResponse
+
+        if (!person.yrkesaktivitet[resultat.saksbehandlingsperiode.id]) {
+            person.yrkesaktivitet[resultat.saksbehandlingsperiode.id] = []
+        }
+        person.yrkesaktivitet[resultat.saksbehandlingsperiode.id].push(
+            ...person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].map((item) => ({
+                ...item,
+                dagoversikt: genererDagoversikt(body.fom, body.tom),
+            })),
+        )
+    }
 
     person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
 

@@ -76,7 +76,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
     const { data: aktivSøknad, isLoading: lasterSoknad } = useSoknad(activeSoknadId)
 
-    const { mutate: opprettSaksbehandlingsperiode, isPending, isSuccess, error } = useOpprettSaksbehandlingsperiode()
+    const { mutate: opprettSaksbehandlingsperiode, isPending, error } = useOpprettSaksbehandlingsperiode()
 
     // Funksjon for å få feilmelding fra error
     const getErrorMessage = (error: unknown): string => {
@@ -320,7 +320,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     </div>
                 )}
 
-                <Button className="mt-8 block" size="small" type="submit" loading={isPending || isSuccess}>
+                <Button className="mt-8" size="small" type="submit" loading={isPending}>
                     Start behandling
                 </Button>
 

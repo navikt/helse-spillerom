@@ -24,6 +24,7 @@ export function opprettSaksbehandlingsperiode(
     søknadIder: string[],
     uuid?: string,
     aktivBruker?: Bruker,
+    skjæringstidspunkt?: string,
 ): {
     saksbehandlingsperiode: Saksbehandlingsperiode
     yrkesaktivitet: Yrkesaktivitet[]
@@ -42,7 +43,7 @@ export function opprettSaksbehandlingsperiode(
         fom: fom,
         tom: tom,
         status: 'UNDER_BEHANDLING',
-        skjæringstidspunkt: fom,
+        skjæringstidspunkt: skjæringstidspunkt ?? fom,
         individuellBegrunnelse: undefined,
     }
 
