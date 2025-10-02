@@ -228,7 +228,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     </TableHeaderCell>
                                                 )}
                                                 <TableHeaderCell className="w-26 min-w-20">Dato</TableHeaderCell>
-                                                <TableHeaderCell className="w-32 min-w-32">Dagtype</TableHeaderCell>
+                                                <TableHeaderCell className="w-46">Dagtype</TableHeaderCell>
                                                 <TableHeaderCell align="right" className="w-16 min-w-16">
                                                     Grad
                                                 </TableHeaderCell>
