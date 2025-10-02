@@ -22,6 +22,7 @@ import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
 import { formatParagraf, getLovdataUrl } from '@utils/paragraf-formatering'
 import { erHelg } from '@utils/erHelg'
+import { Periodetype, Yrkesaktivitet, Periode } from '@schemas/yrkesaktivitet'
 
 interface DagoversiktProps {
     value: string
@@ -104,6 +105,17 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
         }
 
         return yrkesaktivitetData.utbetalingstidslinje.dager.find((dag) => dag.dato === dato) || null
+    }
+
+    // Hjelpefunksjon for å sjekke om en dag er i en spesifikk periode
+    const erDagIPeriode = (dato: string, periodeType: Periodetype, yrkesaktivitet: Yrkesaktivitet) => {
+        if (!yrkesaktivitet?.perioder) return false
+
+        // Sjekk om perioder.type matcher ønsket periodeType
+        if (yrkesaktivitet.perioder.type !== periodeType) return false
+
+        // Sjekk om datoen faller innenfor noen av periodene
+        return yrkesaktivitet.perioder.perioder.some((periode: Periode) => dato >= periode.fom && dato <= periode.tom)
     }
 
     // Hjelpefunksjon for å formatere beløp
@@ -248,12 +260,18 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                 const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
 
                                                 const erHelgedag = erHelg(new Date(dag.dato))
+                                                const erAGP = erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', forhold)
+                                                const erVentetid =
+                                                    erDagIPeriode(dag.dato, 'VENTETID', forhold) ||
+                                                    erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', forhold)
+
                                                 return (
                                                     <TableRow
                                                         key={i}
                                                         className={cn(
                                                             dag.dagtype === 'Avslått' && 'bg-ax-bg-danger-moderate',
                                                             erHelgedag && 'bg-stripes',
+                                                            (erAGP || erVentetid) && 'bg-gray-100',
                                                         )}
                                                     >
                                                         {erIRedigeringsmodus && (
@@ -281,6 +299,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                                         dag.dagtype,
                                                                         dag.andreYtelserBegrunnelse,
                                                                         erHelgedag,
+                                                                        erAGP,
+                                                                        erVentetid,
                                                                     )}
                                                                 </BodyShort>
                                                             </HStack>
@@ -449,7 +469,13 @@ function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunn
     )
 }
 
-function getDagtypeText(type: Dagtype, andreYtelserType?: string[], erHelgedag?: boolean): string {
+function getDagtypeText(
+    type: Dagtype,
+    andreYtelserType?: string[],
+    erHelgedag?: boolean,
+    erAGP?: boolean,
+    erVentetid?: boolean,
+): string {
     const baseText = (() => {
         switch (type) {
             case 'Syk':
@@ -471,7 +497,26 @@ function getDagtypeText(type: Dagtype, andreYtelserType?: string[], erHelgedag?:
         }
     })()
 
-    return erHelgedag ? `Helg (${baseText})` : baseText
+    // Prioriter AGP og ventetid over dagtype for helgedager
+    if (erHelgedag) {
+        if (erAGP) {
+            return 'Helg (AGP)'
+        }
+        if (erVentetid) {
+            return 'Helg (Ventetid)'
+        }
+        return `Helg (${baseText})`
+    }
+
+    if (erAGP) {
+        return `${baseText} (AGP)`
+    }
+
+    if (erVentetid) {
+        return `${baseText} (Ventetid)`
+    }
+
+    return baseText
 }
 
 export const andreYtelserTypeText: Record<string, string> = {

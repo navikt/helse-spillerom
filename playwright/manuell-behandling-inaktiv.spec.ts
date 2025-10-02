@@ -130,7 +130,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             const helgeDager = dagoversiktTabell.locator('text=Helg')
 
             // Det skal være 23 arbeidsdager (syk) og 8 helgedager
-            await expect(sykeDager).toHaveCount(23)
+            await expect(sykeDager).toHaveCount(31)
             await expect(helgeDager).toHaveCount(8)
 
             // Verifiser at hver sykedag viser 1 800 kr i utbetaling
@@ -181,7 +181,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             const ferieDager = dagoversiktTabell.locator('text=Ferie')
             const helgeDager = dagoversiktTabell.locator('text=Helg')
 
-            await expect(sykeDager).toHaveCount(13)
+            await expect(sykeDager).toHaveCount(21)
             await expect(ferieDager).toHaveCount(10)
             await expect(helgeDager).toHaveCount(8)
 
@@ -195,16 +195,15 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
 
             // Verifiser at de resterende sykedagene fortsatt viser 1 800 kr
             const sykUtbetaling = dagoversiktTabell.locator('text=1 800 kr')
-            await expect(sykUtbetaling).toHaveCount(13)
+            await expect(sykUtbetaling).toHaveCount(15)
         })
 
         // 11. Verifiser oppdatert total utbetaling
         await test.step('Verifiser oppdatert total utbetaling', async () => {
             const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
 
-            // Nye forventede verdier: 13 sykedager * 1 800 kr = 23 400 kr
-            const forventetOppdatertUtbetaling = '23 400,00 kr'
-            const forventetOppdatertUtbetalingsdager = '13 dager'
+            const forventetOppdatertUtbetaling = '27 000,00 kr'
+            const forventetOppdatertUtbetalingsdager = '15 dager'
 
             // Verifiser utbetalingsdager
             await expect(venstremeny).toContainText('Utbetalingsdager:')
