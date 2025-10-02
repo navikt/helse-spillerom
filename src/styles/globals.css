@@ -3,6 +3,27 @@
 
 @config '../../tailwind.config.ts';
 
+/* Skravert bakgrunn for helgedager */
+.bg-stripes {
+    background: repeating-linear-gradient(
+        123deg,
+        var(--ax-border-neutral-subtle),
+        var(--ax-border-neutral-subtle) 1px,
+        transparent 1px,
+        transparent 9px
+    );
+}
+
+.bg-stripes:hover {
+    background: repeating-linear-gradient(
+        123deg,
+        transparent,
+        transparent 1px,
+        var(--ax-border-neutral-subtle) 1px,
+        var(--ax-border-neutral-subtle) 9px
+    );
+}
+
 /* Retro tema styling */
 .retro-tema {
     font-family:

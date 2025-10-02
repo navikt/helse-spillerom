@@ -21,6 +21,7 @@ import { FetchError } from '@components/saksbilde/FetchError'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
 import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
 import { formatParagraf, getLovdataUrl } from '@utils/paragraf-formatering'
+import { erHelg } from '@utils/erHelg'
 
 interface DagoversiktProps {
     value: string
@@ -246,12 +247,14 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             {forhold.dagoversikt.map((dag, i) => {
                                                 const utbetalingsdata = finnUtbetalingsdata(forhold.id, dag.dato)
 
+                                                const erHelgedag = erHelg(new Date(dag.dato))
                                                 return (
                                                     <TableRow
                                                         key={i}
-                                                        className={
-                                                            dag.dagtype === 'Avslått' ? 'bg-ax-bg-danger-moderate' : ''
-                                                        }
+                                                        className={cn(
+                                                            dag.dagtype === 'Avslått' && 'bg-ax-bg-danger-moderate',
+                                                            erHelgedag && 'bg-stripes',
+                                                        )}
                                                     >
                                                         {erIRedigeringsmodus && (
                                                             <TableDataCell>
@@ -277,6 +280,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                                     {getDagtypeText(
                                                                         dag.dagtype,
                                                                         dag.andreYtelserBegrunnelse,
+                                                                        erHelgedag,
                                                                     )}
                                                                 </BodyShort>
                                                             </HStack>
@@ -439,25 +443,29 @@ function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: AvslåttBegrunn
     )
 }
 
-function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
-    switch (type) {
-        case 'Syk':
-            return 'Syk'
-        case 'SykNav':
-            return 'Syk (NAV)'
-        case 'Ferie':
-            return 'Ferie'
-        case 'Arbeidsdag':
-            return 'Arbeid'
-        case 'Permisjon':
-            return 'Permisjon'
-        case 'Avslått':
-            return 'Avslått'
-        case 'AndreYtelser':
-            return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Andre ytelser'
-        default:
-            return type
-    }
+function getDagtypeText(type: Dagtype, andreYtelserType?: string[], erHelgedag?: boolean): string {
+    const baseText = (() => {
+        switch (type) {
+            case 'Syk':
+                return 'Syk'
+            case 'SykNav':
+                return 'Syk (NAV)'
+            case 'Ferie':
+                return 'Ferie'
+            case 'Arbeidsdag':
+                return 'Arbeid'
+            case 'Permisjon':
+                return 'Permisjon'
+            case 'Avslått':
+                return 'Avslått'
+            case 'AndreYtelser':
+                return andreYtelserType ? andreYtelserTypeText[andreYtelserType[0]] : 'Andre ytelser'
+            default:
+                return type
+        }
+    })()
+
+    return erHelgedag ? `Helg (${baseText})` : baseText
 }
 
 export const andreYtelserTypeText: Record<string, string> = {
