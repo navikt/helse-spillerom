@@ -155,49 +155,53 @@ export async function handlePostSaksbehandlingsperioder(
             person.yrkesaktivitet[nyPeriodeId] = []
         }
 
-        const key = (k: Record<string, unknown>) => JSON.stringify(k)
-
         const gammelTilNyIdMap = new Map<string, string>()
 
-        const map = new Map(person.yrkesaktivitet[nyPeriodeId].map((item) => [key(item.kategorisering), item]))
+        if (person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
+            const key = (k: Record<string, unknown>) => JSON.stringify(k)
 
-        person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].forEach((item) => {
-            const k = key(item.kategorisering)
-            if (!map.has(k)) {
-                const newItem = {
-                    ...item,
-                    id: randomUUID(),
-                    dagoversikt: genererDagoversikt(body.fom, body.tom),
+            const map = new Map(person.yrkesaktivitet[nyPeriodeId].map((item) => [key(item.kategorisering), item]))
+
+            person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].forEach((item) => {
+                const k = key(item.kategorisering)
+                if (!map.has(k)) {
+                    const newItem = {
+                        ...item,
+                        id: randomUUID(),
+                        dagoversikt: genererDagoversikt(body.fom, body.tom),
+                    }
+                    map.set(k, newItem)
+                    gammelTilNyIdMap.set(item.id, newItem.id)
+                } else {
+                    gammelTilNyIdMap.set(item.id, map.get(k)!.id)
                 }
-                map.set(k, newItem)
-                gammelTilNyIdMap.set(item.id, newItem.id)
-            } else {
-                gammelTilNyIdMap.set(item.id, map.get(k)!.id)
-            }
-        })
+            })
 
-        person.yrkesaktivitet[nyPeriodeId] = [
-            ...person.yrkesaktivitet[nyPeriodeId],
-            ...Array.from(map.values()).filter(
-                (i) =>
-                    !person.yrkesaktivitet[nyPeriodeId].some(
-                        (existing) => key(existing.kategorisering) === key(i.kategorisering),
-                    ),
-            ),
-        ]
+            person.yrkesaktivitet[nyPeriodeId] = [
+                ...person.yrkesaktivitet[nyPeriodeId],
+                ...Array.from(map.values()).filter(
+                    (i) =>
+                        !person.yrkesaktivitet[nyPeriodeId].some(
+                            (existing) => key(existing.kategorisering) === key(i.kategorisering),
+                        ),
+                ),
+            ]
+        }
 
-        person.sykepengegrunnlag[nyPeriodeId] = {
-            ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
-            id: randomUUID(),
-            saksbehandlingsperiodeId: nyPeriodeId,
-            opprettetAv: aktivBruker.navIdent,
-            opprettet: new Date().toISOString(),
-            sistOppdatert: new Date().toISOString(),
-            inntekter: person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id]!.inntekter.map((inntekt) => ({
-                ...inntekt,
-                yrkesaktivitetId: gammelTilNyIdMap.get(inntekt.yrkesaktivitetId) ?? randomUUID(),
-            })),
-        } as SykepengegrunnlagResponse
+        if (person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
+            person.sykepengegrunnlag[nyPeriodeId] = {
+                ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
+                id: randomUUID(),
+                saksbehandlingsperiodeId: nyPeriodeId,
+                opprettetAv: aktivBruker.navIdent,
+                opprettet: new Date().toISOString(),
+                sistOppdatert: new Date().toISOString(),
+                inntekter: person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id]!.inntekter.map((inntekt) => ({
+                    ...inntekt,
+                    yrkesaktivitetId: gammelTilNyIdMap.get(inntekt.yrkesaktivitetId) ?? randomUUID(),
+                })),
+            } as SykepengegrunnlagResponse
+        }
     }
 
     // Legg til dokumenter hvis det finnes noen
