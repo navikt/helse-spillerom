@@ -3,7 +3,7 @@ import { type HovedspørsmålArray } from '@schemas/saksbehandlergrensesnitt'
 export const saksbehandlerUi: HovedspørsmålArray = [
     {
         kode: 'KRAV_RETTIDIG_FRAMSATT',
-        beskrivelse: 'Frist for framsetting av krav',
+        beskrivelse: '§ 22-13. Frist for framsetting av krav',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -22,19 +22,19 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                 variant: 'RADIO',
                                 alternativer: [
                                     {
-                                        kode: 'KRAV_FRAMSATT_I_TIDE_HELE_PERIODEN_JA_TRE_MÅNEDER',
+                                        kode: 'KRAV_FRAMSATT_INNEN_TRE_MAANEDER',
                                         navn: 'Søkt innen tre måneder',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
                                     },
                                     {
-                                        kode: 'KRAV_FRAMSATT_I_TIDE_HELE_PERIODEN_JA_TRE_ÅR_IKKE_I_STAND',
+                                        kode: 'KRAV_FRAMSATT_INNEN_TRE_AAR_UTEAVSTAND',
                                         navn: 'Søkt innen tre år, ikke vært i stand til å søke tidligere',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
                                     },
                                     {
-                                        kode: 'KRAV_FRAMSATT_INNEN_TRE_AAR_FOR_DELER_AV_PERIODEN_PGA_MISVISENDE_OPPLYSNINGER',
+                                        kode: 'KRAV_FRAMSATT_INNEN_TRE_AAR_OPPLYSNINGER',
                                         navn: 'Søkt innen tre år, misvisende opplysninger',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
@@ -44,40 +44,8 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                         ],
                     },
                     {
-                        kode: 'KRAV_FRAMSATT_I_TIDE_DELER_AV_PERIODEN_JA',
-                        navn: 'Ja, for deler av perioden',
-                        harUnderspørsmål: false,
-                        underspørsmål: [
-                            {
-                                kode: 'KRAV_FRAMSATT_I_TIDE_DELER_AV_PERIODEN_JA_BEGRUNNELSE',
-                                navn: 'Velg begrunnelse',
-                                variant: 'RADIO',
-                                alternativer: [
-                                    {
-                                        kode: 'KRAV_FRAMSATT_I_TIDE_DELER_AV_PERIODEN_JA_TRE_MÅNEDER',
-                                        navn: 'Søkt innen tre måneder',
-                                        harUnderspørsmål: false,
-                                        underspørsmål: [],
-                                    },
-                                    {
-                                        kode: 'KRAV_FRAMSATT_I_TIDE_DELER_AV_PERIODEN_JA_TRE_ÅR_IKKE_I_STAND',
-                                        navn: 'Søkt innen tre år, ikke vært i stand til å søke tidligere',
-                                        harUnderspørsmål: false,
-                                        underspørsmål: [],
-                                    },
-                                    {
-                                        kode: 'KRAV_FRAMSATT_I_TIDE_DELER_AV_PERIODEN_JA_TRE_ÅR_MISVISENDE_OPPLYSNINGER',
-                                        navn: 'Søkt innen tre år, misvisende opplysninger',
-                                        harUnderspørsmål: false,
-                                        underspørsmål: [],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        kode: 'KRAV_FRAMSATT_I_TIDE_NEI',
-                        navn: 'Nei',
+                        kode: 'KRAV_IKKE_RETTIDIG_FRAMSATT',
+                        navn: 'Nei, kravet er ikke framsatt rettidig for hele eller deler av perioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
@@ -87,7 +55,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'MEDLEMSKAP',
-        beskrivelse: 'Kapittel 2 - Medlemskap i folketrygden',
+        beskrivelse: 'Kapittel 2. Medlemskap i folketrygden',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -113,7 +81,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'OPPTJENING',
-        beskrivelse: '§ 8-2 - Opptjeningstid',
+        beskrivelse: '§ 8-2. Opptjeningstid',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -122,20 +90,20 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 variant: 'RADIO',
                 alternativer: [
                     {
+                        kode: 'OPPTJENING_MINST_4_UKER',
+                        navn: 'Ja, minst fire uker i arbeid umiddelbart før arbeidsuførhet',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
                         kode: 'ab6e09a4-e770-4a0d-a63c-872f640b8b1a',
-                        navn: 'Ja',
+                        navn: 'Ja, andre årsaker',
                         harUnderspørsmål: true,
                         underspørsmål: [
                             {
                                 kode: 'OPPTJENING_OPPFYLT_JA_ALTERNATIVER',
                                 variant: 'RADIO',
                                 alternativer: [
-                                    {
-                                        kode: 'OPPTJENING_MINST_4_UKER',
-                                        navn: 'Minst fire uker i arbeid umiddelbart før arbeidsuførhet',
-                                        harUnderspørsmål: false,
-                                        underspørsmål: [],
-                                    },
                                     {
                                         kode: 'OPPTJENING_ANNEN_YTELSE',
                                         navn: 'Mottak av ytelse som er likestilt med arbeid',
@@ -226,7 +194,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'INNTEKTSTAP_OG_MINSTEINNTEKT',
-        beskrivelse: '§ 8-3 - Tap av pensjonsgivende inntekt og minsteinntekt',
+        beskrivelse: '§ 8-3. Tap av pensjonsgivende inntekt og minsteinntekt',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -290,7 +258,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'ARBEIDSUFØR',
-        beskrivelse: '§ 8-4 - Arbeidsuførhet',
+        beskrivelse: '§ 8-4. Arbeidsuførhet',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -299,20 +267,20 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 variant: 'RADIO',
                 alternativer: [
                     {
+                        kode: 'ARBUFOR_FUNK',
+                        navn: 'Ja, arbeidsufør på grunn av en funksjonsnedsettelse som klart skyldes sykdom eller skade',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
                         kode: '04999541-b6b3-4e25-9969-5021ec06b795',
-                        navn: 'Ja',
+                        navn: 'Ja, andre årsaker',
                         harUnderspørsmål: true,
                         underspørsmål: [
                             {
                                 kode: 'ARBEIDSUFØRHET_JA_ALTERNATIVER',
                                 variant: 'RADIO',
                                 alternativer: [
-                                    {
-                                        kode: 'ARBUFOR_FUNK',
-                                        navn: 'Arbeidsufør på grunn av en funksjonsnedsettelse som klart skyldes sykdom eller skade',
-                                        harUnderspørsmål: false,
-                                        underspørsmål: [],
-                                    },
                                     {
                                         kode: 'ARBUFOR_INSTITUSJON',
                                         navn: 'Innlagt i en godkjent helseinstitusjon',
@@ -399,7 +367,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                         underspørsmål: [],
                                     },
                                     {
-                                        kode: 'IKKE_ARBUFOR_KOSMETISK_IKKE_MED_BEGRUNNET',
+                                        kode: 'ARBUFOR_KOSM_IKKE_MEDISINSK',
                                         navn: 'Kosmetisk inngrep som ikke er medisinsk begrunnet',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
@@ -414,22 +382,74 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'FRISKMELDING_TIL_ARBEIDSFORMIDLING',
-        beskrivelse: 'Sykepenger ved friskmelding til arbeidsformidling',
+        beskrivelse: '§ 8-5. Sykepenger ved friskmelding til arbeidsformidling',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
                 kode: 'FRISKMELDING_TIL_ARBEIDSFORMIDLING_ALTERNATIVER',
                 navn: 'Er vilkårene oppfylt?',
-                variant: 'RADIO',
+                variant: 'CHECKBOX',
                 alternativer: [
                     {
-                        kode: 'FRISKMELDING_TIL_ARBEIDSFORMIDLING_JA',
-                        navn: 'Ja, personen er av helsemessige grunner ikke i stand til å utføre sitt arbeid, men er ellers arbeidsfør. Personen har også meldt seg som arbeidssøker hos Arbeids- og velferdsetaten og et eventuelt arbeidsforhold har opphørt i samsvar med arbeidsmiljølovens bestemmelser',
+                        kode: 'HAR_SAGT_OPP',
+                        navn: 'Et eventuelt arbeidsforhold har opphørt',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
                     {
-                        kode: 'FRISKMELDING_TIL_ARBEIDSFORMIDLING_NEI',
+                        kode: 'ER_ARBEIDSSOEKER',
+                        navn: 'Den sykmeldte har meldt seg som arbeidssøker',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        kode: 'DOKUMENTASJON_AV_ARBEIDSUFØRHET',
+        beskrivelse: '§ 8-7. Dokumentasjon av arbeidsuførhet',
+        kategori: 'generelle_bestemmelser',
+        underspørsmål: [
+            {
+                kode: '8e18daa0-c67e-4b5e-aca8-3497e63126c7',
+                navn: 'Tilbakedatering',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'ARBEIDSUFOR_TILBAKEDATERING_GODKJENT',
+                        navn: 'Tilbakedatering godkjent',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'TILBAKEDATERING_IKKE_GODKJENT',
+                        navn: 'Tilbakedatering ikke godkjent',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        kode: 'MEDVIRKNING',
+        beskrivelse: '§ 8-8. Medlemmets medvirkning',
+        kategori: 'generelle_bestemmelser',
+        underspørsmål: [
+            {
+                kode: '03c7ac25-aef9-4864-896b-765e07a6d4ec',
+                navn: 'Oppfyller den sykmeldte medvirkningsplikten?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'MEDVIRKNING_OPPFYLT',
+                        navn: 'Ja',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'MEDVIRKNING_IKKE_OPPFYLT',
                         navn: 'Nei',
                         harUnderspørsmål: false,
                         underspørsmål: [],
@@ -439,69 +459,86 @@ export const saksbehandlerUi: HovedspørsmålArray = [
         ],
     },
     {
-        kode: 'GRADERT_SYKMELDING',
-        beskrivelse: 'Gradert sykmelding',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
-        kode: 'DOKUMENTASJON_AV_ARBEIDSUFØRHET',
-        beskrivelse: 'Dokumentasjon av arbeidsuførhet',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
-        kode: 'OPPFØLGING',
-        beskrivelse: 'Oppfølging mv. i regi av Arbeids- og velferdsetaten',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
-        kode: 'MEDVIRKNING',
-        beskrivelse: 'Medlemmets medvirkning',
+        kode: 'OPPHOLDSKRAV',
+        beskrivelse: '§ 8-9. Oppholdskrav',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
-                kode: 'MEDVIRKNING_IKKE_OPPFYLT',
-                variant: 'CHECKBOX',
+                kode: '80c22f9f-44e3-4b5f-b98f-aeb7c23f0618',
+                navn: 'Er vilkårene oppfylt?',
+                variant: 'RADIO',
                 alternativer: [
                     {
-                        kode: 'MEDVIRKNING_IKKE_OPPFYLT_OPPLYSNINGER_OG_UTREDNING',
-                        navn: 'Personen nekter å gi opplysninger eller medvirke til utredning, eller uten rimelig grunn nekter å ta imot tilbud om behandling, rehabilitering, tilrettelegging av arbeid og arbeidsutprøving eller arbeidsrettede tiltak ',
-                        harUnderspørsmål: false,
-                        underspørsmål: [],
+                        kode: '368b2285-87aa-4c9e-b8c5-6d784354282b',
+                        navn: 'Ja',
+                        harUnderspørsmål: true,
+                        underspørsmål: [
+                            {
+                                kode: '11ab26dc-99ec-4198-9778-aa920c2b303d',
+                                navn: null,
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: 'GODKJENT_OPPHOLD_UTENFOR_EOS',
+                                        navn: 'Ja, den sykmeldte har oppholdt seg utenfor EØS og har fått oppholdet godkjent av Nav',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'GODKJENT_OPPHOLD_UTENFOR_NORGE',
+                                        navn: 'Ja, den sykmeldte har oppholdt seg utenfor Norge og har fått oppholdet godkjent av Nav',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
-                        kode: 'MEDVIRKNING_IKKE_OPPFYLT_OPPFØLGING_OG_AKTIVITET',
-                        navn: 'Personen unnlater å medvirke ved utarbeiding og gjennomføring av oppfølgingsplaner, unnlater å delta i dialogmøter eller unnlater å være i arbeidsrelatert aktivitet',
-                        harUnderspørsmål: false,
-                        underspørsmål: [],
+                        kode: '2d04d571-fd4b-45d0-a8b5-3ed76ea5bfa6',
+                        navn: 'Nei',
+                        harUnderspørsmål: true,
+                        underspørsmål: [
+                            {
+                                kode: 'db2cb139-151a-4301-9000-fd328b90323d',
+                                navn: null,
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: 'IKKE_SOKT_OM_OPPHOLD_UTENFOR_EOS',
+                                        navn: 'Nei, den sykmeldte har ikke søkt om å få beholde sykepengene under opphold utenfor EØS',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'IKKE_RETT_TIL_OPPHOLD_UTENFOR_EOS',
+                                        navn: 'Nei, den sykmeldte har søkt om å få beholde sykepengene under opphold utenfor EØS, men har fått avslag',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'IKKE_SOKT_OM_OPPHOLD_UTENFOR_NORGE',
+                                        navn: 'Nei, den sykmeldte har ikke søkt om å få beholde sykepengene under opphold utenfor Norge',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'IKKE_RETT_TIL_OPPHOLD_UTENFOR_NORGE',
+                                        navn: 'Nei, den sykmeldte har søkt om å få beholde sykepengene under opphold utenfor Norge, men har fått avslag',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                ],
+                            },
+                        ],
                     },
                 ],
             },
         ],
     },
     {
-        kode: 'OPPHOLDSKRAV',
-        beskrivelse: 'Oppholdskrav',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
-        kode: 'SYKEPENGEGRUNNLAG',
-        beskrivelse: 'Sykepengegrunnlag',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
-        kode: 'SYKEPENGEDAGER',
-        beskrivelse: 'Sykepengedager',
-        kategori: 'generelle_bestemmelser',
-        underspørsmål: [],
-    },
-    {
         kode: 'SYKEPENGEDAGER_IGJEN',
-        beskrivelse: 'Antall sykepengedager',
+        beskrivelse: '§ 8-12. Antall sykepengedager',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
@@ -510,20 +547,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 variant: 'RADIO',
                 alternativer: [
                     {
-                        kode: 'SYKEPENGEDAGER_IGJEN_HELE',
-                        navn: 'Ja, sykepengedager igjen for hele perioden',
+                        kode: 'DAGER_IGJEN',
+                        navn: 'Ja, dager igjen for hele perioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
                     {
-                        kode: 'SYKEPENGEDAGER_IGJEN_DELER',
-                        navn: 'Ja, sykepengedager igjen for deler av perioden',
-                        harUnderspørsmål: false,
-                        underspørsmål: [],
-                    },
-                    {
-                        kode: 'SYKEPENGEDAGER_IGJEN_INGEN',
-                        navn: 'Nei, tidligere fått utbetalt sykepenger til maksdato og ikke opptjent ny rett til sykepenger',
+                        kode: 'DAGER_IGJEN_NEI',
+                        navn: 'Nei, ikke dager igjen for hele eller deler av perioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
@@ -533,29 +564,23 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'GRADERTE_SYKEPENGER',
-        beskrivelse: 'Graderte sykepenger',
+        beskrivelse: '§ 8-13. Graderte sykepenger',
         kategori: 'generelle_bestemmelser',
         underspørsmål: [
             {
                 kode: 'GRADERTE_SYKEPENGER_ARBEIDSUFØR',
-                navn: 'Er personens evne til å utføre inntektsgivende arbeid nedsatt med minst 20 prosent?',
+                navn: 'Er den sykmeldte minst 20 prosent arbeidsufør?',
                 variant: 'RADIO',
                 alternativer: [
                     {
-                        kode: 'GRADERTE_SYKEPENGER_ARBEIDSUFØR_HELE',
+                        kode: 'ARBEIDSUFOR_20_ELLER_MER',
                         navn: 'Ja, for hele perioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
                     {
-                        kode: 'GRADERTE_SYKEPENGER_ARBEIDSUFØR_DELER',
-                        navn: 'Ja, for deler av perioden',
-                        harUnderspørsmål: false,
-                        underspørsmål: [],
-                    },
-                    {
-                        kode: 'GRADERTE_SYKEPENGER_ARBEIDSUFØR_INGEN',
-                        navn: 'Nei, evnen er nedsatt med mindre enn 20 prosent for hele perioden',
+                        kode: 'ARBEIDSUFOR_MINDRE_ENN_20',
+                        navn: 'Nei, for hele eller deler av perioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
@@ -565,8 +590,74 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'ARBEIDSREISER',
-        beskrivelse: 'Tilskott til arbeidsreiser',
+        beskrivelse: '§ 8-14. Tilskott til arbeidsreiser',
         kategori: 'generelle_bestemmelser',
+        underspørsmål: [
+            {
+                kode: 'b149fa3f-8143-4660-abf8-d9f92f231208',
+                navn: 'Har den sykmeldte rett til reisetilskudd?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'REISETILSKUDD_OPPFYLT',
+                        navn: 'Ja',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'REISETILSKUDD_IKKE_OPPFYLT',
+                        navn: 'Nei',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        kode: '589381f7-c5e4-4c7e-b3f1-c8471e5703ce',
+        beskrivelse: '§ 8-17. Sykepenger fra trygden',
+        kategori: 'arbeidstakere',
+        underspørsmål: [
+            {
+                kode: 'f223060e-6f85-4a38-82dc-332c0cd63a08',
+                navn: 'Yter trygden sykepenger?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'SYKEPENGER_TRYGDEN_AGUT',
+                        navn: 'Ja, trygden yter sykepenger etter utløpet av arbeidsgiverperioden',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'd74dfdaa-0640-4909-a7e4-f5d6aaca2251',
+                        navn: 'Ja, trygden yter sykepenger også i de 16 første dagene',
+                        harUnderspørsmål: true,
+                        underspørsmål: [
+                            {
+                                kode: '3ca1cef5-c4c0-4775-bd16-c96098746369',
+                                navn: 'Alternativer',
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: 'SYKEPENGER_TRYGDEN_IKKEARB',
+                                        navn: 'Arbeidsgiver er ikke forpliktet etter § 8-18',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        kode: 'c902f282-9886-414c-85a0-e5ce05ecab09',
+        beskrivelse: '§ 8-47. Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
+        kategori: 'særskilte_grupper',
         underspørsmål: [],
     },
 ]

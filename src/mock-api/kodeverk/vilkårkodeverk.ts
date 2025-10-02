@@ -371,9 +371,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         beskrivelse: 'Oppholdskrav',
         oppfylt: [
             {
-                kode: 'OPPHOLD_INNENFOR_EOS',
-                beskrivelse:
-                    'Den sykmeldte oppholder seg i Norge, i et annet EØS-land eller i et land eller område der trygdeforordningen er gitt anvendelse for vedkommende ved en bi- eller multilateral trygdeavtale',
+                kode: 'GODKJENT_OPPHOLD_UTENFOR_EOS',
+                beskrivelse: 'Den sykmeldte har oppholdt seg utenfor EØS og har fått oppholdet godkjent av Nav',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-12-20',
@@ -385,8 +384,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
             {
-                kode: 'GODKJENT_OPPHOLD_UTENFOR_EOS',
-                beskrivelse: 'TODO',
+                kode: 'GODKJENT_OPPHOLD_UTENFOR_NORGE',
+                beskrivelse: 'Den sykmeldte har oppholdt seg utenfor Norge og har fått oppholdet godkjent av Nav',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-12-20',
@@ -401,7 +400,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         ikkeOppfylt: [
             {
                 kode: 'IKKE_SOKT_OM_OPPHOLD_UTENFOR_EOS',
-                beskrivelse: 'TODO',
+                beskrivelse: 'Den sykmeldte har ikke søkt om å få beholde sykepengene under opphold utenfor EØS',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-12-20',
@@ -414,7 +413,21 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
             {
                 kode: 'IKKE_RETT_TIL_OPPHOLD_UTENFOR_EOS',
-                beskrivelse: 'TODO',
+                beskrivelse:
+                    'Den sykmeldte har søkt om å få beholde sykepengene under opphold utenfor EØS, men har fått avslag',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2023-12-20',
+                    kapittel: '8',
+                    paragraf: '9',
+                    ledd: null,
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+            {
+                kode: 'IKKE_SOKT_OM_OPPHOLD_UTENFOR_NORGE',
+                beskrivelse: 'Den sykmeldte har ikke søkt om å få beholde sykepengene under opphold utenfor Norge',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-12-20',
@@ -427,7 +440,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
             {
                 kode: 'IKKE_RETT_TIL_OPPHOLD_UTENFOR_NORGE',
-                beskrivelse: 'TODO',
+                beskrivelse:
+                    'Den sykmeldte har søkt om å få beholde sykepengene under opphold utenfor Norge, men har fått avslag',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-12-20',
@@ -439,63 +453,6 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-    },
-    {
-        vilkårshjemmel: {
-            lovverk: 'Folketrygdloven',
-            lovverksversjon: '2019-01-01',
-            kapittel: '8',
-            paragraf: '12',
-            ledd: '1',
-            setning: '1',
-            bokstav: null,
-        },
-        vilkårskode: 'DAGER_IGJEN',
-        beskrivelse: 'Retten til sykepenger fra trygden opphører ved mottak av sykepenger over en bestemt periode',
-        oppfylt: [
-            {
-                kode: 'DAGER_IGJEN_ARB_SN_FRI',
-                beskrivelse:
-                    'arbeidstaker, selvstendig næringsdrivende eller frilanser (maks 248 dager i de siste tre årene))',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2019-01-01',
-                    kapittel: '8',
-                    paragraf: '12',
-                    ledd: '1',
-                    setning: '1',
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'DAGER_IGJEN_ANDRE',
-                beskrivelse:
-                    'Når andre medlemmer har mottatt sykepenger fra trygden i til sammen 250 dager i de siste tre årene, opphører retten til sykepenger fra trygden',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2019-01-01',
-                    kapittel: '8',
-                    paragraf: '12',
-                    ledd: '1',
-                    setning: '2',
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'DAGER_IGJEN_26UKER_ARBEIDSFOR',
-                beskrivelse: 'Har vært helt arbeidsfør i 26 uker etter sykepenger fra trygden',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2019-01-01',
-                    kapittel: '8',
-                    paragraf: '12',
-                    ledd: '2',
-                    setning: '1',
-                    bokstav: null,
-                },
-            },
-        ],
-        ikkeOppfylt: [],
     },
     {
         vilkårshjemmel: {
@@ -510,7 +467,21 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         vilkårskode: 'JEVNLIG_INNTEKT',
         beskrivelse: 'Har hatt jevnlig frilanser inntekt ',
         oppfylt: [],
-        ikkeOppfylt: [],
+        ikkeOppfylt: [
+            {
+                kode: 'SPORADISK_INNTEKT',
+                beskrivelse: 'Medlem har ikke hatt jevn inntekt',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2019-01-01',
+                    kapittel: '8',
+                    paragraf: '38',
+                    ledd: '1',
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
     },
     {
         vilkårshjemmel: {
@@ -621,21 +592,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         beskrivelse: 'Antall sykepengedager',
         oppfylt: [
             {
-                kode: 'DAGER_IGJEN_OPPFYLT_FOR_HELE_PERIODEN',
-                beskrivelse: 'Sykepengedager igjen for hele perioden',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2021-06-01',
-                    kapittel: '8',
-                    paragraf: '12',
-                    ledd: '1',
-                    setning: null,
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'DAGER_IGJEN_OPPFYLT_FOR_DELER_AV_PERIODEN',
-                beskrivelse: 'Sykepengedager igjen for deler av perioden',
+                kode: 'DAGER_IGJEN',
+                beskrivelse: 'Medlem har gjenstående sykepengedager',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2021-06-01',
@@ -649,8 +607,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         ],
         ikkeOppfylt: [
             {
-                kode: 'IKKE_DAGER_IGJEN',
-                beskrivelse: 'Fått utbetalt sykepenger til maksdato og ikke opptjent ny rett til sykepenger',
+                kode: 'DAGER_IGJEN_NEI',
+                beskrivelse: 'Har fått utbetalt sykepenger til maksdato og har ikke opptjent ny rett til sykepenger',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2021-06-01',
@@ -669,7 +627,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             lovverksversjon: '1998-12-18',
             kapittel: '8',
             paragraf: '15',
-            ledd: '2',
+            ledd: '',
             setning: null,
             bokstav: null,
         },
@@ -793,14 +751,42 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             lovverksversjon: '2019-01-01',
             kapittel: '8',
             paragraf: '22',
-            ledd: '1',
-            setning: '1',
+            ledd: '',
+            setning: '',
             bokstav: null,
         },
         vilkårskode: 'ARB_BETALER_IKKE',
         beskrivelse: 'Trygdens ansvar når arbeidsgiveren ikke betaler',
-        oppfylt: [],
-        ikkeOppfylt: [],
+        oppfylt: [
+            {
+                kode: 'NAV_FORSKUTTERER_AGPERIODEN',
+                beskrivelse: 'Nav forskutterer sykepenger i arbeidsgiverperioden',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2019-01-01',
+                    kapittel: '8',
+                    paragraf: '22',
+                    ledd: '1',
+                    setning: '1',
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [
+            {
+                kode: 'NAV_FORSKUTTERER_IKKE_AGPERIODEN',
+                beskrivelse: 'Nav forskutterer ikke sykepenger i arbeidsgiverperioden',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2019-01-01',
+                    kapittel: '8',
+                    paragraf: '22',
+                    ledd: '1',
+                    setning: '1',
+                    bokstav: null,
+                },
+            },
+        ],
     },
     {
         vilkårshjemmel: {
@@ -817,7 +803,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         oppfylt: [
             {
                 kode: 'ARBUFOR_SKIP_OPPFYLT',
-                beskrivelse: 'Arbeidsufør på skip',
+                beskrivelse: 'Arbeidsufør som ansatt på et norsk skip i utenriksfart',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2021-05-21',
@@ -829,7 +815,21 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        ikkeOppfylt: [],
+        ikkeOppfylt: [
+            {
+                kode: 'ARBUFOR_SKIP_NO',
+                beskrivelse: 'Ble ikke arbeidsufør som ansatt på et norsk skip i utenriksfart',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2021-05-21',
+                    kapittel: '8',
+                    paragraf: '44',
+                    ledd: '1',
+                    setning: null,
+                    bokstav: 'a',
+                },
+            },
+        ],
     },
     {
         vilkårshjemmel: {
@@ -1204,9 +1204,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         beskrivelse: 'Dokumentasjon av arbeidsuførhet',
         oppfylt: [
             {
-                kode: 'ARBEIDSUFOR_DOKUMENTERT_TILBAKEDATERING_GODKJENT',
-                beskrivelse:
-                    'Den sykmeldte har vært forhindret fra å søke lege og det er godtgjort at han eller hun har vært arbeidsufør fra et tidligere tidspunkt',
+                kode: 'ARBEIDSUFOR_TILBAKEDATERING_GODKJENT',
+                beskrivelse: 'Den sykmeldte har godtgjort arbeidsuførhet fra et tidligere tidspunkt',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-07-01',
@@ -1218,8 +1217,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
             {
-                kode: 'AKTIVITETSPLIKT_UNTATT',
-                beskrivelse: 'TODO',
+                kode: 'UNNTATT_LEGEERKLAERING_INNLAGT',
+                beskrivelse: 'Unntatt fra utdypende legeerklæring fordi medlemmet er innlagt i helseinstitusjon',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-07-01',
@@ -1227,28 +1226,42 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     paragraf: '7',
                     ledd: '8',
                     setning: null,
-                    bokstav: 'a-c',
+                    bokstav: 'a',
                 },
             },
             {
-                kode: 'ARBEIDSUFOR_DOKUMENTERT_LEGEERKLAERING',
-                beskrivelse: 'Har dokumentert arbeidsuførheten med legeerklæring',
+                kode: 'UNNTATT_LEGEERKLAERING_ALVORLIG_LIDELSE',
+                beskrivelse:
+                    'Unntatt fra utdypende legeerklæring fordi lidelsen er så alvorlig at en ikke kan regne med at medlemmet blir arbeidsfør igjen',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-07-01',
                     kapittel: '8',
                     paragraf: '7',
-                    ledd: '1',
+                    ledd: '8',
                     setning: '1',
-                    bokstav: null,
+                    bokstav: 'b',
+                },
+            },
+            {
+                kode: 'UNNTATT_LEGEERKLAERING_SNART_FRISK',
+                beskrivelse:
+                    'Unntatt fra utdypende legeerklæring fordi medlemmet forventes å bli friskmeldt innen kort tid',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2023-07-01',
+                    kapittel: '8',
+                    paragraf: '7',
+                    ledd: '8',
+                    setning: null,
+                    bokstav: 'c',
                 },
             },
         ],
         ikkeOppfylt: [
             {
                 kode: 'TILBAKEDATERING_IKKE_GODKJENT',
-                beskrivelse:
-                    'Den sykmeldte har ikke vært forhindret fra å søke lege og det er godtgjort at han eller hun har vært arbeidsufør fra et tidligere tidspunkt',
+                beskrivelse: 'Den sykmeldte har ikke godtgjort arbeidsuførhet fra et tidligere tidspunkt',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2023-07-01',
@@ -1257,19 +1270,6 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     ledd: '2',
                     setning: '2',
                     bokstav: null,
-                },
-            },
-            {
-                kode: 'AKTIVITETSPLIKT_IKKE_UNTATT',
-                beskrivelse: 'TODO',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2023-07-01',
-                    kapittel: '8',
-                    paragraf: '7',
-                    ledd: '8',
-                    setning: null,
-                    bokstav: 'a-c',
                 },
             },
         ],
@@ -1312,6 +1312,135 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     ledd: '2',
                     setning: '',
                     bokstav: 'b',
+                },
+            },
+        ],
+        ikkeOppfylt: [],
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2002-01-01',
+            kapittel: '8',
+            paragraf: '14',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'REISETILSKUDD',
+        beskrivelse: 'Reisetilskudd til arbeidsreiser',
+        oppfylt: [
+            {
+                kode: 'REISETILSKUDD_OPPFYLT',
+                beskrivelse:
+                    'Reisetilskudd i stedet for sykepenger fordi den sykmeldte ikke kan reise på vanlig måte til og fra arbeidsstedet på grunn av sykdom eller skade',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2002-01-01',
+                    kapittel: '8',
+                    paragraf: '14',
+                    ledd: '1',
+                    setning: '1',
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [
+            {
+                kode: 'REISETILSKUDD_IKKE_OPPFYLT',
+                beskrivelse: 'Den sykmeldte har ikke rett til reisetilskudd',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2002-01-01',
+                    kapittel: '8',
+                    paragraf: '14',
+                    ledd: '1',
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '1997-01-01',
+            kapittel: '8',
+            paragraf: '13',
+            ledd: '',
+            setning: '',
+            bokstav: null,
+        },
+        vilkårskode: 'GRADERTE_SYKEPENGER',
+        beskrivelse: 'Graderte sykepenger',
+        oppfylt: [
+            {
+                kode: 'ARBEIDSUFOR_20_ELLER_MER',
+                beskrivelse: 'Den sykmeldte er minst 20 prosent arbeidsufør',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '1997-01-01',
+                    kapittel: '8',
+                    paragraf: '13',
+                    ledd: '1',
+                    setning: '2',
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [
+            {
+                kode: 'ARBEIDSUFOR_MINDRE_ENN_20',
+                beskrivelse: 'Den sykmeldte er mindre enn 20 prosent arbeidsufør',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '1997-01-01',
+                    kapittel: '8',
+                    paragraf: '13',
+                    ledd: '1',
+                    setning: '2',
+                    bokstav: null,
+                },
+            },
+        ],
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2006-07-01',
+            kapittel: '8',
+            paragraf: '5',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'FRISKMELDING_ARBFORMIDLING',
+        beskrivelse: 'Friskmelding til arbeidsformidling',
+        oppfylt: [
+            {
+                kode: 'HAR_SAGT_OPP',
+                beskrivelse: 'Arbeidsforhold har opphørt i samsvar med arbeidsmiljølovens bestemmelser',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2006-07-01',
+                    kapittel: '8',
+                    paragraf: '5',
+                    ledd: '2',
+                    setning: '1',
+                    bokstav: null,
+                },
+            },
+            {
+                kode: 'ER_ARBEIDSSOEKER',
+                beskrivelse: 'Den sykmeldte har meldt seg som arbeidssøker hos Arbeids- og velferdsetaten',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2006-07-01',
+                    kapittel: '8',
+                    paragraf: '5',
+                    ledd: '2',
+                    setning: '1',
+                    bokstav: null,
                 },
             },
         ],
