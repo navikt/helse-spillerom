@@ -445,8 +445,6 @@ function getDagtypeText(type: Dagtype, andreYtelserType?: string[]): string {
             return 'Syk'
         case 'SykNav':
             return 'Syk (NAV)'
-        case 'Helg':
-            return 'Helg'
         case 'Ferie':
             return 'Ferie'
         case 'Arbeidsdag':

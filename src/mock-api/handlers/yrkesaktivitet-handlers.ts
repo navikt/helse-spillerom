@@ -141,10 +141,7 @@ export function oppdaterDagoversiktPåYrkesaktivitet(
         const index = oppdaterteDager.findIndex((d) => d.dato === oppdatertDag.dato)
         if (index !== -1) {
             const eksisterendeDag = oppdaterteDager[index]
-            // Ignorer oppdatering hvis den eksisterende dagen er en helg
-            if (eksisterendeDag.dagtype !== 'Helg') {
-                oppdaterteDager[index] = { ...eksisterendeDag, ...oppdatertDag, kilde: 'Saksbehandler' }
-            }
+            oppdaterteDager[index] = { ...eksisterendeDag, ...oppdatertDag, kilde: 'Saksbehandler' }
         }
     }
     yrkesaktivitet.dagoversikt = oppdaterteDager

@@ -1,16 +1,6 @@
 import { z } from 'zod/v4'
 
-export const dagtypeSchema = z.enum([
-    'Syk',
-    'SykNav',
-    'Arbeidsdag',
-    'Helg',
-    'Ferie',
-    'Permisjon',
-    'Avslått',
-    'AndreYtelser',
-    'Ventetid',
-])
+export const dagtypeSchema = z.enum(['Syk', 'SykNav', 'Arbeidsdag', 'Ferie', 'Permisjon', 'Avslått', 'AndreYtelser'])
 
 export const andreYtelserBegrunnelseSchema = z.enum([
     'AndreYtelserAap',

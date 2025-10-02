@@ -1,10 +1,6 @@
 import { Dag, Dagoversikt } from '@/schemas/dagoversikt'
 import { Søknad } from '@/schemas/søknad'
 
-function erHelg(dato: Date): boolean {
-    return dato.getDay() === 0 || dato.getDay() === 6
-}
-
 function initialiserDager(fom: string, tom: string): Dagoversikt {
     const dager: Dag[] = []
     const startDato = new Date(fom)
@@ -12,13 +8,12 @@ function initialiserDager(fom: string, tom: string): Dagoversikt {
 
     const currentDato = new Date(startDato)
     while (currentDato <= sluttDato) {
-        const erHelgdag = erHelg(currentDato)
         dager.push({
             dato: currentDato.toISOString().split('T')[0], // YYYY-MM-DD format
-            dagtype: erHelgdag ? 'Helg' : 'Arbeidsdag',
+            dagtype: 'Arbeidsdag',
             grad: null,
             avslåttBegrunnelse: [],
-            kilde: erHelgdag ? null : 'Saksbehandler',
+            kilde: 'Saksbehandler',
         })
 
         currentDato.setDate(currentDato.getDate() + 1)
@@ -44,7 +39,7 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
             while (currentDato <= overlappendeTom) {
                 const datoString = currentDato.toISOString().split('T')[0]
                 const eksisterendeDag = dagerMap.get(datoString)
-                if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                if (eksisterendeDag) {
                     dagerMap.set(datoString, {
                         ...eksisterendeDag,
                         dagtype: 'Syk',
@@ -74,7 +69,7 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
                 while (currentDato <= overlappendeTom) {
                     const datoString = currentDato.toISOString().split('T')[0]
                     const eksisterendeDag = dagerMap.get(datoString)
-                    if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                    if (eksisterendeDag) {
                         dagerMap.set(datoString, {
                             ...eksisterendeDag,
                             dagtype: 'Permisjon',
@@ -101,7 +96,7 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
                 while (currentDato <= overlappendeTom) {
                     const datoString = currentDato.toISOString().split('T')[0]
                     const eksisterendeDag = dagerMap.get(datoString)
-                    if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                    if (eksisterendeDag) {
                         dagerMap.set(datoString, {
                             ...eksisterendeDag,
                             dagtype: 'Ferie',
@@ -122,7 +117,7 @@ function oppdaterDagerMedSøknadsdata(dager: Dagoversikt, søknad: Søknad, fom:
             while (currentDato <= sluttDato) {
                 const datoString = currentDato.toISOString().split('T')[0]
                 const eksisterendeDag = dagerMap.get(datoString)
-                if (eksisterendeDag && eksisterendeDag.dagtype !== 'Helg') {
+                if (eksisterendeDag) {
                     dagerMap.set(datoString, {
                         ...eksisterendeDag,
                         dagtype: 'Arbeidsdag',
