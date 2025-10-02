@@ -8,7 +8,7 @@ type MutationProps = {
     kategorisering: Record<string, string | string[]>
 }
 
-export function useOpprettInntektsforhold() {
+export function useOpprettYrkesaktivitet() {
     const params = useParams()
     const queryClient = useQueryClient()
 

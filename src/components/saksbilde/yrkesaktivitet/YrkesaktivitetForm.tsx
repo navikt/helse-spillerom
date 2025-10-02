@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useState, useEffect } from 'react'
+import { Fragment, ReactElement, useEffect, useState } from 'react'
 import {
     Button,
     Checkbox,
@@ -13,7 +13,7 @@ import {
 } from '@navikt/ds-react'
 
 import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetKodeverk'
-import { useOpprettInntektsforhold } from '@hooks/mutations/useOpprettInntektsforhold'
+import { useOpprettYrkesaktivitet } from '@hooks/mutations/useOpprettYrkesaktivitet'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { organisasjonerForSelect } from '@utils/organisasjoner'
@@ -68,7 +68,7 @@ export default function YrkesaktivitetForm({
     lagreLabel = 'Opprett',
 }: InntektsforholdFormProps): ReactElement {
     const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
-    const mutation = useOpprettInntektsforhold()
+    const mutation = useOpprettYrkesaktivitet()
     const { data: existingInntektsforhold = [] } = useYrkesaktivitet()
     const kansaksbehandles = useKanSaksbehandles()
 

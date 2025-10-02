@@ -4,13 +4,14 @@ import { NextResponse } from 'next/server'
 import dayjs from 'dayjs'
 
 import { getSession, hentAktivBruker, Person } from '@/mock-api/session'
-import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
+import { Saksbehandlingsperiode, SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
 import { SykepengegrunnlagResponse } from '@schemas/sykepengegrunnlag'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { triggerUtbetalingsberegning } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
+import { Bruker } from '@schemas/bruker'
 
 /**
  * Sjekker om to datoperioder overlapper med hverandre
@@ -90,6 +91,8 @@ export async function handlePostSaksbehandlingsperioder(
 
     const body = await request.json()
 
+    console.log(body)
+
     // Valider datoer
     if (body.fom && body.tom && new Date(body.fom) > new Date(body.tom)) {
         return opprettProblemDetailsResponse('Fom-dato kan ikke være etter tom-dato')
@@ -112,7 +115,7 @@ export async function handlePostSaksbehandlingsperioder(
         dayjs(periode.tom).add(1, 'day').isSame(body.fom, 'day'),
     )
 
-    const resultat = opprettSaksbehandlingsperiode(
+    const { saksbehandlingsperiode, yrkesaktivitet, dagoversikt, dokumenter } = opprettSaksbehandlingsperiode(
         personIdFraRequest,
         søknader,
         body.fom,
@@ -123,98 +126,53 @@ export async function handlePostSaksbehandlingsperioder(
         tidligerePeriodeInntilNyPeriode?.skjæringstidspunkt ?? body.fom,
     )
 
-    person.saksbehandlingsperioder.push(resultat.saksbehandlingsperiode)
+    const nyPeriodeId = saksbehandlingsperiode.id
 
-    const nyPeriodeId = resultat.saksbehandlingsperiode.id
+    person.saksbehandlingsperioder.push(saksbehandlingsperiode)
 
     // Legg til historikk for opprettelse
     leggTilHistorikkinnslag(person, nyPeriodeId, 'STARTET', 'UNDER_BEHANDLING', aktivBruker.navIdent)
 
     // Legg til yrkesaktivitet hvis det finnes noen
-    if (resultat.yrkesaktivitet.length > 0) {
+    if (yrkesaktivitet.length > 0) {
         if (!person.yrkesaktivitet) {
             person.yrkesaktivitet = {}
         }
         // Inkluder dagoversikt i yrkesaktivitet
-        person.yrkesaktivitet[nyPeriodeId] = resultat.yrkesaktivitet.map((forhold) => ({
+        person.yrkesaktivitet[nyPeriodeId] = yrkesaktivitet.map((forhold) => ({
             ...forhold,
-            dagoversikt: resultat.dagoversikt[forhold.id] || [],
+            dagoversikt: dagoversikt[forhold.id] || [],
         }))
     }
 
     // Legg til dagoversikt hvis det finnes noen
-    if (Object.keys(resultat.dagoversikt).length > 0) {
+    if (Object.keys(dagoversikt).length > 0) {
         if (!person.dagoversikt) {
             person.dagoversikt = {}
         }
-        Object.assign(person.dagoversikt, resultat.dagoversikt)
+        Object.assign(person.dagoversikt, dagoversikt)
     }
 
     if (tidligerePeriodeInntilNyPeriode) {
-        if (!person.yrkesaktivitet[nyPeriodeId]) {
-            person.yrkesaktivitet[nyPeriodeId] = []
-        }
-
-        const gammelTilNyIdMap = new Map<string, string>()
-
-        if (person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
-            const key = (k: Record<string, unknown>) => JSON.stringify(k)
-
-            const map = new Map(person.yrkesaktivitet[nyPeriodeId].map((item) => [key(item.kategorisering), item]))
-
-            person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].forEach((item) => {
-                const k = key(item.kategorisering)
-                if (!map.has(k)) {
-                    const newItem = {
-                        ...item,
-                        id: randomUUID(),
-                        dagoversikt: genererDagoversikt(body.fom, body.tom),
-                    }
-                    map.set(k, newItem)
-                    gammelTilNyIdMap.set(item.id, newItem.id)
-                } else {
-                    gammelTilNyIdMap.set(item.id, map.get(k)!.id)
-                }
-            })
-
-            person.yrkesaktivitet[nyPeriodeId] = [
-                ...person.yrkesaktivitet[nyPeriodeId],
-                ...Array.from(map.values()).filter(
-                    (i) =>
-                        !person.yrkesaktivitet[nyPeriodeId].some(
-                            (existing) => key(existing.kategorisering) === key(i.kategorisering),
-                        ),
-                ),
-            ]
-        }
-
-        if (person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
-            person.sykepengegrunnlag[nyPeriodeId] = {
-                ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
-                id: randomUUID(),
-                saksbehandlingsperiodeId: nyPeriodeId,
-                opprettetAv: aktivBruker.navIdent,
-                opprettet: new Date().toISOString(),
-                sistOppdatert: new Date().toISOString(),
-                inntekter: person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id]!.inntekter.map((inntekt) => ({
-                    ...inntekt,
-                    yrkesaktivitetId: gammelTilNyIdMap.get(inntekt.yrkesaktivitetId) ?? randomUUID(),
-                })),
-            } as SykepengegrunnlagResponse
-        }
+        arvYrkesaktivitetOgSykepengegrunnlag(
+            tidligerePeriodeInntilNyPeriode,
+            saksbehandlingsperiode,
+            person,
+            aktivBruker,
+        )
     }
 
     // Legg til dokumenter hvis det finnes noen
-    if (resultat.dokumenter.length > 0) {
+    if (dokumenter.length > 0) {
         if (!person.dokumenter) {
             person.dokumenter = {}
         }
-        person.dokumenter[nyPeriodeId] = resultat.dokumenter
+        person.dokumenter[nyPeriodeId] = dokumenter
     }
 
     await triggerUtbetalingsberegning(person, nyPeriodeId)
 
-    return NextResponse.json(resultat.saksbehandlingsperiode, { status: 201 })
+    return NextResponse.json(saksbehandlingsperiode, { status: 201 })
 }
 
 export async function handleSendTilBeslutning(
@@ -410,4 +368,64 @@ export async function handleOppdaterSkjæringstidspunkt(
     periode.skjæringstidspunkt = skjæringstidspunkt
 
     return NextResponse.json(periode, { status: 200 })
+}
+
+function arvYrkesaktivitetOgSykepengegrunnlag(
+    tidligerePeriodeInntilNyPeriode: Saksbehandlingsperiode,
+    nyPeriode: Saksbehandlingsperiode,
+    person: Person,
+    aktivBruker: Bruker,
+) {
+    const nyPeriodeId = nyPeriode.id
+    if (!person.yrkesaktivitet[nyPeriodeId]) {
+        person.yrkesaktivitet[nyPeriodeId] = []
+    }
+
+    const gammelTilNyIdMap = new Map<string, string>()
+
+    if (person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
+        const key = (k: Record<string, unknown>) => JSON.stringify(k)
+
+        const map = new Map(person.yrkesaktivitet[nyPeriodeId].map((item) => [key(item.kategorisering), item]))
+
+        person.yrkesaktivitet[tidligerePeriodeInntilNyPeriode.id].forEach((item) => {
+            const k = key(item.kategorisering)
+            if (!map.has(k)) {
+                const newItem = {
+                    ...item,
+                    id: randomUUID(),
+                    dagoversikt: genererDagoversikt(nyPeriode.fom, nyPeriode.tom),
+                }
+                map.set(k, newItem)
+                gammelTilNyIdMap.set(item.id, newItem.id)
+            } else {
+                gammelTilNyIdMap.set(item.id, map.get(k)!.id)
+            }
+        })
+
+        person.yrkesaktivitet[nyPeriodeId] = [
+            ...person.yrkesaktivitet[nyPeriodeId],
+            ...Array.from(map.values()).filter(
+                (i) =>
+                    !person.yrkesaktivitet[nyPeriodeId].some(
+                        (existing) => key(existing.kategorisering) === key(i.kategorisering),
+                    ),
+            ),
+        ]
+    }
+
+    if (person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
+        person.sykepengegrunnlag[nyPeriodeId] = {
+            ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
+            id: randomUUID(),
+            saksbehandlingsperiodeId: nyPeriodeId,
+            opprettetAv: aktivBruker.navIdent,
+            opprettet: new Date().toISOString(),
+            sistOppdatert: new Date().toISOString(),
+            inntekter: person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id]!.inntekter.map((inntekt) => ({
+                ...inntekt,
+                yrkesaktivitetId: gammelTilNyIdMap.get(inntekt.yrkesaktivitetId) ?? randomUUID(),
+            })),
+        } as SykepengegrunnlagResponse
+    }
 }
