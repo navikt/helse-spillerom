@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Person } from '@/mock-api/session'
 import {
-    SykepengegrunnlagRequest,
-    SykepengegrunnlagResponse,
     Inntekt,
     Inntektskilde,
+    SykepengegrunnlagRequest,
+    SykepengegrunnlagResponse,
 } from '@/schemas/sykepengegrunnlag'
-import { beregn6GØre, beregn1GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
+import { beregn1GØre, beregn6GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 
@@ -201,12 +201,12 @@ function beregnSykepengegrunnlag(
         begrunnelse,
         grunnbeløpVirkningstidspunkt,
         opprettet: now,
-        opprettetAv: 'Saks McBehandlersen',
+        opprettetAv: 'Z123456',
         sistOppdatert: now,
     }
 }
 
-async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
+export async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
     const sykepengegrunnlag = person.sykepengegrunnlag?.[saksbehandlingsperiodeId]
     const yrkesaktivitet = person.yrkesaktivitet?.[saksbehandlingsperiodeId]
     const saksbehandlingsperiode = person.saksbehandlingsperioder?.find((p) => p.id === saksbehandlingsperiodeId)

@@ -1,7 +1,7 @@
 import { Testperson } from '@/mock-api/testpersoner/testpersoner'
 import { genererSaksbehandlingsperioder } from '@/mock-api/utils/saksbehandlingsperiode-generator'
+import { settOppVilkaarsvurderingPåPerson } from '@/mock-api/handlers'
 
-import { settOppVilkaarsvurderingPåPerson } from '../handlers/vilkaar-handlers'
 import { oppdaterDagoversiktPåYrkesaktivitet } from '../handlers/yrkesaktivitet-handlers'
 
 // Grunndata for Kalle
@@ -225,6 +225,37 @@ const kalleGrunndata = {
                 {
                     fom: '2025-09-01',
                     tom: '2025-09-20',
+                    grad: 100,
+                    sykmeldingstype: 'Sykemldingstype',
+                },
+            ],
+        },
+        {
+            id: '9',
+            type: 'ARBEIDSTAKERE' as const,
+            status: 'NY' as const,
+            arbeidssituasjon: 'ARBEIDSTAKER' as const,
+            fom: '2025-09-21',
+            tom: '2025-09-30',
+            korrigerer: null,
+            korrigertAv: null,
+            sykmeldingSkrevet: '2025-09-21',
+            startSyketilfelle: '2025-09-01',
+            opprettet: '2025-09-21',
+            sendtNav: '2025-09-21',
+            sendtArbeidsgiver: '2025-09-21',
+            // arbeidsgiver: {
+            //     navn: 'Kranførerkompaniet',
+            //     orgnummer: '987654321',
+            // },
+            arbeidsgiver: {
+                navn: 'Krankompisen',
+                orgnummer: '123456789',
+            },
+            soknadsperioder: [
+                {
+                    fom: '2025-09-21',
+                    tom: '2025-09-30',
                     grad: 100,
                     sykmeldingstype: 'Sykemldingstype',
                 },
