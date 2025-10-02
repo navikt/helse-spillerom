@@ -1,7 +1,10 @@
 'use client'
 
-import { Fragment, ReactElement, useEffect, useState } from 'react'
+import { Fragment, ReactElement, useEffect, useRef } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod/v4'
 
 import { useOpprettVilkaarsvurdering } from '@hooks/mutations/useOpprettVilkaarsvurdering'
 import { useKodeverk } from '@/hooks/queries/useKodeverk'
@@ -31,11 +34,128 @@ interface VilkårsvurderingFormProps {
     onSuccess?: () => void
 }
 
+// Dynamisk schema basert på vilkårstruktur
+const createDynamicSchema = (vilkår: Hovedspørsmål) => {
+    // Bygger et objekt med alle mulige spørsmål
+    const spørsmålFields: Record<string, z.ZodString | z.ZodOptional<z.ZodString>> = {}
+
+    const samleSpørsmålKoder = (spørsmål: UnderspørsmålSchema, isTopLevel: boolean = false) => {
+        // Registrer dette spørsmålet
+        // Top level spørsmål er påkrevd, men ikke CHECKBOX (som er valgfri)
+        if (isTopLevel && spørsmål.variant !== 'CHECKBOX') {
+            spørsmålFields[spørsmål.kode] = z
+                .string({
+                    message: 'Du må velge et alternativ',
+                })
+                .min(1, 'Du må velge et alternativ')
+        } else {
+            spørsmålFields[spørsmål.kode] = z.string().optional()
+        }
+
+        // Gå gjennom alternativer og deres underspørsmål
+        if (spørsmål.alternativer) {
+            for (const alt of spørsmål.alternativer) {
+                if (alt.underspørsmål) {
+                    for (const nestedSpørsmål of alt.underspørsmål) {
+                        samleSpørsmålKoder(nestedSpørsmål, false)
+                    }
+                }
+            }
+        }
+    }
+
+    // Samle alle spørsmål - første nivå er påkrevd
+    for (const spørsmål of vilkår.underspørsmål) {
+        samleSpørsmålKoder(spørsmål, true)
+    }
+
+    return z
+        .object({
+            ...spørsmålFields,
+            notat: z.string().optional(),
+        })
+        .superRefine((data, ctx) => {
+            // Custom validering for å sjekke at underspørsmål er besvart
+            const validerUnderspørsmål = (spørsmål: UnderspørsmålSchema, path: string[] = []) => {
+                if (spørsmål.variant === 'RADIO' || spørsmål.variant === 'SELECT') {
+                    const valgtVerdi = (data as Record<string, string | undefined>)[spørsmål.kode]
+                    if (valgtVerdi) {
+                        const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
+                        if (valgtAlternativ?.underspørsmål) {
+                            for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
+                                const nestedVerdi = (data as Record<string, string | undefined>)[nestedSpørsmål.kode]
+                                if (!nestedVerdi || nestedVerdi.trim() === '') {
+                                    ctx.addIssue({
+                                        code: z.ZodIssueCode.custom,
+                                        path: [nestedSpørsmål.kode],
+                                        message: 'Dette feltet er påkrevd',
+                                    })
+                                } else {
+                                    // Rekursivt valider nestede spørsmål
+                                    validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
+                                }
+                            }
+                        }
+                    }
+                } else if (spørsmål.variant === 'CHECKBOX') {
+                    const verdi = (data as Record<string, string | undefined>)[spørsmål.kode]
+                    const valgteVerdier = verdi?.split(',').filter((v: string) => v) || []
+                    if (valgteVerdier.length > 0) {
+                        for (const valgtVerdi of valgteVerdier) {
+                            const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
+                            if (valgtAlternativ?.underspørsmål) {
+                                for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
+                                    const nestedVerdi = (data as Record<string, string | undefined>)[
+                                        nestedSpørsmål.kode
+                                    ]
+                                    if (!nestedVerdi || nestedVerdi.trim() === '') {
+                                        ctx.addIssue({
+                                            code: z.ZodIssueCode.custom,
+                                            path: [nestedSpørsmål.kode],
+                                            message: 'Dette feltet er påkrevd',
+                                        })
+                                    } else {
+                                        validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Valider alle hovedspørsmål
+            for (const spørsmål of vilkår.underspørsmål) {
+                validerUnderspørsmål(spørsmål)
+            }
+        })
+}
+
 export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: VilkårsvurderingFormProps): ReactElement {
-    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>({})
-    const [notat, setNotat] = useState<string>(vurdering?.notat ?? '')
     const mutation = useOpprettVilkaarsvurdering()
     const { data: kodeverk = [] } = useKodeverk()
+    const errorSummaryRef = useRef<HTMLDivElement>(null)
+
+    const schema = createDynamicSchema(vilkår)
+    type FormValues = z.infer<typeof schema>
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        setValue,
+    } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        defaultValues: {},
+    })
+
+    // Flytt fokus til ErrorSummary når det er feil
+    useEffect(() => {
+        if (Object.keys(errors).length > 0 && errorSummaryRef.current) {
+            errorSummaryRef.current.focus()
+        }
+    }, [errors])
 
     const finnSpørsmålForAlternativ = (alternativKode: string): string | null => {
         const søkIUnderspørsmål = (spørsmål: UnderspørsmålSchema): string | null => {
@@ -108,138 +228,66 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         return koder
     }
 
-    const fjernUnderspørsmålForAndreAlternativer = (
-        spørsmålKode: string,
-        valgtAlternativKode: string,
-    ): Record<string, string | string[]> => {
-        const spørsmål = finnSpørsmålByKode(spørsmålKode)
-        if (!spørsmål || !spørsmål.alternativer) {
-            return selectedValues
-        }
+    useEffect(() => {
+        if (vurdering) {
+            // Gjenopprett verdier fra eksisterende vurdering
+            const values: Record<string, string> = { notat: vurdering.notat ?? '' }
 
+            if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
+                for (const usp of vurdering.underspørsmål) {
+                    const spørsmålKode = finnSpørsmålForAlternativ(usp.svar)
+                    if (spørsmålKode) {
+                        const spørsmål = finnSpørsmålByKode(spørsmålKode)
+                        if (spørsmål) {
+                            if (spørsmål.variant === 'CHECKBOX') {
+                                // For checkboxes, samle alle verdier med komma
+                                const existing = values[spørsmålKode] || ''
+                                values[spørsmålKode] = existing ? `${existing},${usp.svar}` : usp.svar
+                            } else {
+                                values[spørsmålKode] = usp.svar
+                            }
+                        }
+                    }
+                }
+            }
+
+            reset(values)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [vurdering])
+
+    const fjernUnderspørsmålForAndreAlternativer = (spørsmålKode: string, valgtAlternativKode: string | string[]) => {
+        const spørsmål = finnSpørsmålByKode(spørsmålKode)
+        if (!spørsmål || !spørsmål.alternativer) return
+
+        const valgteKoder = Array.isArray(valgtAlternativKode) ? valgtAlternativKode : [valgtAlternativKode]
         const alternativerTilFjerning: string[] = []
 
-        // Samle alle underspørsmål-koder fra andre alternativer
         for (const alternativ of spørsmål.alternativer) {
-            if (alternativ.kode !== valgtAlternativKode) {
+            if (!valgteKoder.includes(alternativ.kode)) {
                 const koder = samleUnderspørsmålKoder(alternativ)
                 alternativerTilFjerning.push(...koder)
             }
         }
 
-        // Fjern alle disse koder fra selectedValues
-        const nyeValgteVerdier = { ...selectedValues }
+        // Nullstill alle underspørsmål for alternativer som ikke er valgt
         alternativerTilFjerning.forEach((kode) => {
-            delete nyeValgteVerdier[kode]
-        })
-
-        return nyeValgteVerdier
-    }
-
-    const gjenopprettValgteVerdierFraUnderspørsmål = (
-        underspørsmål: VilkaarsvurderingUnderspørsmål[],
-    ): Record<string, string | string[]> => {
-        const gjenopprettedeVerdier: Record<string, string | string[]> = {}
-
-        // For each underspørsmål, find which spørsmål it belongs to and set the value
-        for (const usp of underspørsmål) {
-            const spørsmålKode = finnSpørsmålForAlternativ(usp.svar)
-            if (spørsmålKode) {
-                const spørsmål = finnSpørsmålByKode(spørsmålKode)
-                if (spørsmål) {
-                    if (spørsmål.variant === 'CHECKBOX') {
-                        const existing = (gjenopprettedeVerdier[spørsmålKode] as string[]) || []
-                        gjenopprettedeVerdier[spørsmålKode] = [...existing, usp.svar]
-                    } else {
-                        gjenopprettedeVerdier[spørsmålKode] = usp.svar
-                    }
-                }
-            }
-        }
-
-        return gjenopprettedeVerdier
-    }
-
-    useEffect(() => {
-        if (vurdering) {
-            // Initialize form with existing values if available
-            setNotat(vurdering.notat ?? '')
-
-            // Reconstruct selectedValues based on existing underspørsmål
-            if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
-                const gjenopprettedeVerdier = gjenopprettValgteVerdierFraUnderspørsmål(vurdering.underspørsmål)
-                setSelectedValues(gjenopprettedeVerdier)
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [vurdering])
-
-    const håndterRadioEndring = (kode: string, value: string) => {
-        setSelectedValues(() => {
-            const nyeVerdier = fjernUnderspørsmålForAndreAlternativer(kode, value)
-            return {
-                ...nyeVerdier,
-                [kode]: value,
-            }
+            setValue(kode as keyof FormValues, '')
         })
     }
 
-    const håndterCheckboxEndring = (kode: string, values: string[]) => {
-        setSelectedValues(() => {
-            // For checkbox grupper, fjern underspørsmål for alternativer som ikke lenger er valgt
-            const spørsmål = finnSpørsmålByKode(kode)
-            if (!spørsmål || !spørsmål.alternativer) {
-                return {
-                    ...selectedValues,
-                    [kode]: values,
-                }
-            }
+    const onSubmit = async (data: FormValues) => {
+        // Bestem samlet vurdering
+        const samletVurdering = bestemSamletVurdering(data)
 
-            const alternativerTilFjerning: string[] = []
-
-            // Samle alle underspørsmål-koder fra alternativer som ikke lenger er valgt
-            for (const alternativ of spørsmål.alternativer) {
-                if (!values.includes(alternativ.kode)) {
-                    const koder = samleUnderspørsmålKoder(alternativ)
-                    alternativerTilFjerning.push(...koder)
-                }
-            }
-
-            // Fjern alle disse koder fra selectedValues
-            const nyeValgteVerdier = { ...selectedValues }
-            alternativerTilFjerning.forEach((kodeTilFjerning) => {
-                delete nyeValgteVerdier[kodeTilFjerning]
-            })
-
-            return {
-                ...nyeValgteVerdier,
-                [kode]: values,
-            }
-        })
-    }
-
-    const håndterSelectEndring = (kode: string, value: string) => {
-        setSelectedValues(() => {
-            const nyeVerdier = fjernUnderspørsmålForAndreAlternativer(kode, value)
-            return {
-                ...nyeVerdier,
-                [kode]: value,
-            }
-        })
-    }
-
-    const håndterInnsending = async () => {
-        // Determine the overall assessment based on selected values
-        const samletVurdering = bestemSamletVurdering()
-
-        // Create underspørsmål array from selected values
-        const underspørsmål = opprettUnderspørsmålFraValgteVerdier()
+        // Opprett underspørsmål array
+        const underspørsmål = opprettUnderspørsmålFraFormData(data)
 
         await mutation.mutateAsync({
             kode: vilkår.kode,
             vurdering: samletVurdering,
             underspørsmål,
-            notat,
+            notat: data.notat || '',
         })
 
         if (onSuccess) {
@@ -247,51 +295,35 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         }
     }
 
-    const bestemSamletVurdering = (): Vurdering => {
-        // Logic to determine overall assessment based on selected values
-        // IKKE_OPPFYLT takes precedence over OPPFYLT - if any condition is not met, the entire assessment fails
+    const bestemSamletVurdering = (data: FormValues): Vurdering => {
+        const values = Object.entries(data)
+            .filter(([key]) => key !== 'notat')
+            .filter(([, value]) => value && value !== '')
 
-        // Looper gjennom alle oppfylt og ikkeOppfylt lister i hele kodeverket
-        const harOppfylt = Object.values(selectedValues).some((value) => {
-            if (typeof value === 'string') {
-                return kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === value))
-            }
-            if (Array.isArray(value)) {
-                return value.some((v) => kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === v)))
-            }
-            return false
+        const harOppfylt = values.some(([, value]) => {
+            const verdier = typeof value === 'string' ? value.split(',').filter((v) => v) : []
+            return verdier.some((v) => kodeverk.some((vilkår) => vilkår.oppfylt.some((årsak) => årsak.kode === v)))
         })
 
-        const harIkkeOppfylt = Object.values(selectedValues).some((value) => {
-            if (typeof value === 'string') {
-                return kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === value))
-            }
-            if (Array.isArray(value)) {
-                return value.some((v) =>
-                    kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === v)),
-                )
-            }
-            return false
+        const harIkkeOppfylt = values.some(([, value]) => {
+            const verdier = typeof value === 'string' ? value.split(',').filter((v) => v) : []
+            return verdier.some((v) => kodeverk.some((vilkår) => vilkår.ikkeOppfylt.some((årsak) => årsak.kode === v)))
         })
 
-        // IKKE_OPPFYLT takes precedence - if anything is not fulfilled, the entire assessment fails
         if (harIkkeOppfylt) return 'IKKE_OPPFYLT'
         if (harOppfylt) return 'OPPFYLT'
         return 'IKKE_RELEVANT'
     }
 
-    const opprettUnderspørsmålFraValgteVerdier = (): VilkaarsvurderingUnderspørsmål[] => {
+    const opprettUnderspørsmålFraFormData = (data: FormValues): VilkaarsvurderingUnderspørsmål[] => {
         const underspørsmål: VilkaarsvurderingUnderspørsmål[] = []
 
-        // Convert selectedValues to underspørsmål format
-        Object.entries(selectedValues).forEach(([spørsmålKode, value]) => {
+        Object.entries(data).forEach(([spørsmålKode, value]) => {
+            if (spørsmålKode === 'notat') return
+
             if (typeof value === 'string' && value) {
-                underspørsmål.push({
-                    spørsmål: spørsmålKode,
-                    svar: value,
-                })
-            } else if (Array.isArray(value)) {
-                value.forEach((v) => {
+                const verdier = value.split(',').filter((v) => v)
+                verdier.forEach((v) => {
                     if (v) {
                         underspørsmål.push({
                             spørsmål: spørsmålKode,
@@ -306,111 +338,165 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     }
 
     const rendreUnderspørsmål = (spørsmål: UnderspørsmålSchema): ReactElement => {
+        const error = errors[spørsmål.kode as keyof FormValues]
+
         switch (spørsmål.variant) {
             case 'CHECKBOX':
                 return (
-                    <CheckboxGroup
-                        legend={spørsmål.navn || ''}
-                        value={(selectedValues[spørsmål.kode] as string[]) || []}
-                        onChange={(values) => håndterCheckboxEndring(spørsmål.kode, values)}
-                        size="small"
-                    >
-                        <VStack gap="3">
-                            {spørsmål.alternativer?.map((alt) => {
-                                const isSelected = ((selectedValues[spørsmål.kode] as string[]) || []).includes(
-                                    alt.kode,
-                                )
-                                return (
-                                    <div key={alt.kode}>
-                                        <Checkbox value={alt.kode} size="small">
-                                            {alt.navn || ''}
-                                        </Checkbox>
-                                        {isSelected &&
-                                            alt.underspørsmål?.map((us) => (
-                                                <div key={us.kode} className="mt-2 ml-6">
-                                                    {rendreUnderspørsmål(us)}
+                    <Controller
+                        name={spørsmål.kode as keyof FormValues}
+                        control={control}
+                        render={({ field }) => {
+                            const valgteVerdier = field.value
+                                ? String(field.value)
+                                      .split(',')
+                                      .filter((v) => v)
+                                : []
+
+                            return (
+                                <CheckboxGroup
+                                    id={spørsmål.kode}
+                                    legend={spørsmål.navn || ''}
+                                    value={valgteVerdier}
+                                    onChange={(values) => {
+                                        field.onChange(values.join(','))
+                                        fjernUnderspørsmålForAndreAlternativer(spørsmål.kode, values)
+                                    }}
+                                    size="small"
+                                    error={error?.message}
+                                >
+                                    <VStack gap="3">
+                                        {spørsmål.alternativer?.map((alt) => {
+                                            const isSelected = valgteVerdier.includes(alt.kode)
+                                            return (
+                                                <div key={alt.kode}>
+                                                    <Checkbox value={alt.kode} size="small">
+                                                        {alt.navn || ''}
+                                                    </Checkbox>
+                                                    {isSelected &&
+                                                        alt.underspørsmål?.map((us) => (
+                                                            <div key={us.kode} className="mt-2 ml-6">
+                                                                {rendreUnderspørsmål(us)}
+                                                            </div>
+                                                        ))}
                                                 </div>
-                                            ))}
-                                    </div>
-                                )
-                            })}
-                        </VStack>
-                    </CheckboxGroup>
+                                            )
+                                        })}
+                                    </VStack>
+                                </CheckboxGroup>
+                            )
+                        }}
+                    />
                 )
             case 'RADIO':
                 return (
-                    <RadioGroup
-                        legend={spørsmål.navn || ''}
-                        value={(selectedValues[spørsmål.kode] as string) || ''}
-                        onChange={(value) => håndterRadioEndring(spørsmål.kode, value)}
-                        size="small"
-                    >
-                        <VStack gap="3">
-                            {spørsmål.alternativer?.map((alt) => {
-                                const isSelected = selectedValues[spørsmål.kode] === alt.kode
-                                return (
-                                    <div key={alt.kode}>
-                                        <Radio value={alt.kode} size="small">
-                                            {alt.navn || ''}
-                                        </Radio>
-                                        {isSelected &&
-                                            alt.underspørsmål?.map((us) => (
-                                                <div key={us.kode} className="mt-2 ml-6">
-                                                    {rendreUnderspørsmål(us)}
-                                                </div>
-                                            ))}
-                                    </div>
-                                )
-                            })}
-                        </VStack>
-                    </RadioGroup>
+                    <Controller
+                        name={spørsmål.kode as keyof FormValues}
+                        control={control}
+                        render={({ field }) => (
+                            <RadioGroup
+                                id={spørsmål.kode}
+                                legend={spørsmål.navn || ''}
+                                value={field.value || ''}
+                                onChange={(value) => {
+                                    field.onChange(value)
+                                    fjernUnderspørsmålForAndreAlternativer(spørsmål.kode, value)
+                                }}
+                                size="small"
+                                error={error?.message}
+                            >
+                                <VStack gap="3">
+                                    {spørsmål.alternativer?.map((alt) => {
+                                        const isSelected = field.value === alt.kode
+                                        return (
+                                            <div key={alt.kode}>
+                                                <Radio value={alt.kode} size="small">
+                                                    {alt.navn || ''}
+                                                </Radio>
+                                                {isSelected &&
+                                                    alt.underspørsmål?.map((us) => (
+                                                        <div key={us.kode} className="mt-2 ml-6">
+                                                            {rendreUnderspørsmål(us)}
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                        )
+                                    })}
+                                </VStack>
+                            </RadioGroup>
+                        )}
+                    />
                 )
             case 'SELECT':
                 return (
-                    <Select
-                        label={spørsmål.navn || ''}
-                        value={(selectedValues[spørsmål.kode] as string) || ''}
-                        onChange={(e) => håndterSelectEndring(spørsmål.kode, e.target.value)}
-                        size="small"
-                        className="max-w-96"
-                    >
-                        <option value="">Velg...</option>
-                        {spørsmål.alternativer?.map((alt) => (
-                            <option key={alt.kode} value={alt.kode}>
-                                {alt.navn || ''}
-                            </option>
-                        ))}
-                    </Select>
+                    <Controller
+                        name={spørsmål.kode as keyof FormValues}
+                        control={control}
+                        render={({ field }) => {
+                            const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === field.value)
+
+                            return (
+                                <>
+                                    <Select
+                                        id={spørsmål.kode}
+                                        label={spørsmål.navn || ''}
+                                        value={field.value || ''}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
+                                            fjernUnderspørsmålForAndreAlternativer(spørsmål.kode, e.target.value)
+                                        }}
+                                        size="small"
+                                        className="max-w-96"
+                                        error={error?.message}
+                                    >
+                                        <option value="">Velg...</option>
+                                        {spørsmål.alternativer?.map((alt) => (
+                                            <option key={alt.kode} value={alt.kode}>
+                                                {alt.navn || ''}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    {valgtAlternativ?.underspørsmål?.map((us) => (
+                                        <div key={us.kode} className="mt-2 ml-6">
+                                            {rendreUnderspørsmål(us)}
+                                        </div>
+                                    ))}
+                                </>
+                            )
+                        }}
+                    />
                 )
         }
     }
 
     return (
-        <VStack className="max-w-[800px] pb-4 pl-[46px]" gap="6">
-            {vilkår.underspørsmål.map((spørsmål) => (
-                <Fragment key={spørsmål.kode}>{rendreUnderspørsmål(spørsmål)}</Fragment>
-            ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack className="max-w-[800px] pb-4 pl-[46px]" gap="6">
+                {vilkår.underspørsmål.map((spørsmål) => (
+                    <Fragment key={spørsmål.kode}>{rendreUnderspørsmål(spørsmål)}</Fragment>
+                ))}
 
-            <Textarea
-                label="Utvidet begrunnelse"
-                description="Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn."
-                value={notat}
-                onChange={(e) => setNotat(e.target.value)}
-                size="small"
-                minRows={3}
-            />
+                <Controller
+                    name="notat"
+                    control={control}
+                    render={({ field }) => (
+                        <Textarea
+                            label="Utvidet begrunnelse"
+                            description="Teksten blir ikke vist til den sykmeldte, med mindre hen ber om innsyn."
+                            value={field.value || ''}
+                            onChange={field.onChange}
+                            size="small"
+                            minRows={3}
+                        />
+                    )}
+                />
 
-            <HStack gap="4">
-                <Button
-                    variant="primary"
-                    size="small"
-                    type="button"
-                    loading={mutation.isPending}
-                    onClick={håndterInnsending}
-                >
-                    Lagre vurdering
-                </Button>
-            </HStack>
-        </VStack>
+                <HStack gap="4">
+                    <Button variant="primary" size="small" type="submit" loading={mutation.isPending}>
+                        Lagre vurdering
+                    </Button>
+                </HStack>
+            </VStack>
+        </form>
     )
 }
