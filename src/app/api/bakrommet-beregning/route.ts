@@ -31,7 +31,7 @@ export async function POST(req: Request): Promise<Response> {
 
         return Response.json(data)
     } catch (error) {
-        logger.error('Feil ved kall til bakrommet API', { error })
+        logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`)
         return Response.json({ message: 'Feil ved kall til bakrommet API' }, { status: 500 })
     }
 }

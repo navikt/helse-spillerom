@@ -1,6 +1,6 @@
 import { logger } from '@navikt/next-logger'
 
-import { UtbetalingsberegningInput, UtbetalingsberegningData } from '@/schemas/utbetalingsberegning'
+import { UtbetalingsberegningData, UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 
 /**
  * Kaller bakrommet demo utbetalingsberegning API
@@ -31,18 +31,17 @@ export async function kallBakrommetUtbetalingsberegning(
                         JSON.stringify(data),
                 )
             } catch (error) {
-                logger.error('Feil ved kall til bakrommet API ' + JSON.stringify(error))
+                logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`)
             }
             // Bakrommet API kallet feilet
             return null
         }
 
-        logger.info('Bakrommet API kallet var OK', { status: response.status, statusText: response.statusText })
+        logger.info(`Bakrommet API kallet var OK: ${response.status} ${response.statusText}`)
 
-        const data = await response.json()
-        return data
+        return await response.json()
     } catch (error) {
-        logger.error('Feil ved kall til bakrommet API', { error })
+        logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`)
         // Feil ved kall til bakrommet API
         return null
     }

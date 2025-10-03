@@ -230,7 +230,7 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         raise(new Error(`Unknown path: ${path}`))
     } catch (error) {
-        logger.error('Error in mocketBakrommetData:', error)
+        logger.error(`Error in mocketBakrommetData: ${JSON.stringify(error)}`)
         return NextResponse.json(
             { message: 'Internal server error', error: error instanceof Error ? error.message : 'Unknown error' },
             { status: 500 },
