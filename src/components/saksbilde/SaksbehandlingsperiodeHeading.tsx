@@ -1,7 +1,8 @@
 'use client'
 
-import { useParams } from 'next/navigation'
-import { useMemo } from 'react'
+import { useParams, usePathname, useRouter } from 'next/navigation'
+import { useEffect, useMemo } from 'react'
+import dayjs from 'dayjs'
 
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
@@ -12,14 +13,27 @@ interface SaksbehandlingsperiodeHeadingProps {
 }
 
 export function SaksbehandlingsperiodeHeading({ className }: SaksbehandlingsperiodeHeadingProps) {
-    const params = useParams()
+    const router = useRouter()
+    const { saksbehandlingsperiodeId } = useParams() as { saksbehandlingsperiodeId: string }
+    const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
     const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
 
     const aktivPeriode = useMemo(() => {
-        if (!saksbehandlingsperioder || !params.saksbehandlingsperiodeId) return null
-        return saksbehandlingsperioder.find((periode) => periode.id === params.saksbehandlingsperiodeId)
-    }, [saksbehandlingsperioder, params.saksbehandlingsperiodeId])
+        if (!saksbehandlingsperioder || !saksbehandlingsperiodeId) return null
+
+        const periode = saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+        if (periode) return periode
+
+        return saksbehandlingsperioder.reduce((latest, p) => (dayjs(p.tom).isAfter(dayjs(latest.tom)) ? p : latest))
+    }, [saksbehandlingsperioder, saksbehandlingsperiodeId])
+
+    useEffect(() => {
+        if (!aktivPeriode || !saksbehandlingsperiodeId) return
+        if (aktivPeriode.id !== saksbehandlingsperiodeId) {
+            router.replace(pathname.replace(saksbehandlingsperiodeId, aktivPeriode.id), { scroll: false })
+        }
+    }, [aktivPeriode, saksbehandlingsperiodeId, pathname, router])
 
     const formattedFom = useMemo(() => {
         if (!aktivPeriode?.fom) return ''
