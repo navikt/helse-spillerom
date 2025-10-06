@@ -329,9 +329,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             <BodyShort>
                                                                 {utbetalingsdata
                                                                     ? formaterBeløp(
-                                                                          utbetalingsdata.økonomi
-                                                                              .arbeidsgiverRefusjonsbeløp?.dagligInt
-                                                                              ?.beløp || 0,
+                                                                          utbetalingsdata.økonomi.arbeidsgiverbeløp
+                                                                              ?.dagligInt?.beløp || 0,
                                                                       )
                                                                     : '-'}
                                                             </BodyShort>
