@@ -3,10 +3,8 @@ import { VStack, HStack, BodyShort } from '@navikt/ds-react'
 import { BriefcaseIcon, PersonIcon } from '@navikt/aksel-icons'
 
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
-import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
-import { beregnUtbetalingssum, formaterUtbetalingssum } from '@utils/utbetalingsberegning'
 import { formaterBeløpØre } from '@/schemas/sykepengegrunnlag'
 
 interface ArbeidsgiverRadProps {
@@ -30,19 +28,24 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
 
 export function BeløpForPerioden(): ReactElement {
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
-    const { data: yrkesaktivitet } = useYrkesaktivitet()
     const { data: personinfo } = usePersoninfo()
 
-    // Beregn utbetalinger
-    const utbetalingssum = beregnUtbetalingssum(utbetalingsberegning, yrkesaktivitet)
-    const formatertUtbetalingssum = formaterUtbetalingssum(utbetalingssum)
-    // Summert total fra utbetalingssum
-    const totalUtbetaling =
-        formatertUtbetalingssum.arbeidsgivere.reduce((acc, arbeidsgiver) => acc + arbeidsgiver.refusjonØre, 0) +
-        utbetalingssum.direkteUtbetalingØre
+    // Hent oppdrag fra utbetalingsberegning
+    const oppdrag = utbetalingsberegning?.beregningData?.oppdrag || []
+
+    // Filtrer oppdrag basert på fagområde
+    const personUtbetalinger = oppdrag.filter((oppdrag) => oppdrag.fagområde['@type'] === 'SP')
+    const arbeidsgiverUtbetalinger = oppdrag.filter((oppdrag) => oppdrag.fagområde['@type'] === 'SPREF')
+
+    // Beregn total beløp
+    const totalPersonUtbetaling = personUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.nettoBeløp, 0)
+    const totalArbeidsgiverUtbetaling = arbeidsgiverUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.nettoBeløp, 0)
+    const totalUtbetaling = totalPersonUtbetaling + totalArbeidsgiverUtbetaling
+
     if (totalUtbetaling === 0) {
         return <></>
     }
+
     return (
         <div>
             <VStack gap="3">
@@ -57,22 +60,22 @@ export function BeløpForPerioden(): ReactElement {
                 </HStack>
 
                 {/* Vis arbeidsgivere med refusjonsutbetaling */}
-                {formatertUtbetalingssum.arbeidsgivere.map((arbeidsgiver) => (
+                {arbeidsgiverUtbetalinger.map((oppdrag) => (
                     <ArbeidsgiverRad
-                        key={arbeidsgiver.orgnummer}
-                        orgnummer={arbeidsgiver.orgnummer}
-                        refusjon={arbeidsgiver.refusjon}
+                        key={oppdrag.mottaker}
+                        orgnummer={oppdrag.mottaker}
+                        refusjon={formaterBeløpØre(oppdrag.nettoBeløp * 100)}
                     />
                 ))}
 
                 {/* Vis direkteutbetaling til person */}
-                {utbetalingssum.direkteUtbetalingØre > 0 && (
+                {totalPersonUtbetaling > 0 && (
                     <HStack justify="space-between">
                         <HStack gap="2" align="center">
                             <PersonIcon aria-hidden fontSize="1rem" />
                             <BodyShort size="small">{personinfo?.navn || 'Ukjent person'}</BodyShort>
                         </HStack>
-                        <BodyShort size="small">{formatertUtbetalingssum.direkteUtbetaling}</BodyShort>
+                        <BodyShort size="small">{formaterBeløpØre(totalPersonUtbetaling * 100)}</BodyShort>
                     </HStack>
                 )}
             </VStack>
