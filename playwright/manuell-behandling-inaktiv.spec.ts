@@ -61,11 +61,6 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             const inaktivRad = yrkesaktivitetTabell.locator('tbody tr').first()
             await expect(inaktivRad).toContainText('Inaktiv')
             await expect(inaktivRad).toContainText('Ja') // Sykmeldt
-
-            // Verifiser at venstremeny viser 65% dekning
-            const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
-            await expect(venstremeny).toContainText('Dekningsgrad:')
-            await expect(venstremeny).toContainText('65%')
         })
 
         // 5. Naviger til sykepengegrunnlag og sett til 60000
@@ -97,6 +92,13 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             // Verifiser at inntekten vises i tabellen
             const inntektRad = page.locator('text=60 000,00 kr')
             await expect(inntektRad).toBeVisible()
+        })
+
+        await test.step('Verifiser dekningsgrad', async () => {
+            // Verifiser at venstremeny viser 65% dekning
+            const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
+            await expect(venstremeny).toContainText('Dekningsgrad:')
+            await expect(venstremeny).toContainText('65%')
         })
 
         // 7. Naviger til dagoversikt og sett alle arbeidsdager til syk

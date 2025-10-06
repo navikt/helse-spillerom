@@ -7,7 +7,6 @@ import { Dag } from '@/schemas/dagoversikt'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
-import { beregnDekningsgrad } from '@/mock-api/utils/dekningsgrad-beregner'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']
@@ -43,9 +42,6 @@ export async function handlePostInntektsforhold(
     const body = await request.json()
     const kategorisering = body.kategorisering
 
-    // Beregn dekningsgrad basert på kategorisering
-    const dekningsgrad = beregnDekningsgrad(kategorisering)
-
     const nyttInntektsforhold: Yrkesaktivitet = {
         id: uuidv4(),
         kategorisering,
@@ -53,7 +49,6 @@ export async function handlePostInntektsforhold(
             ? genererDagoversikt(saksbehandlingsperiode.fom, saksbehandlingsperiode.tom)
             : [],
         generertFraDokumenter: [],
-        dekningsgrad,
         perioder: null, // Starter med null, kan oppdateres senere
     }
 
@@ -205,14 +200,6 @@ export async function handlePutInntektsforholdKategorisering(
     const body = await request.json()
     yrkesaktivitet.kategorisering = body
 
-    // Beregn og oppdater dekningsgrad basert på ny kategorisering
-    try {
-        yrkesaktivitet.dekningsgrad = beregnDekningsgrad(body)
-    } catch (error) {
-        // Bruk standard dekningsgrad hvis beregning feiler
-        yrkesaktivitet.dekningsgrad = 100
-    }
-
     // Slett sykepengegrunnlag når yrkesaktivitet endres
     if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
         delete person.sykepengegrunnlag[uuid]
@@ -266,7 +253,6 @@ async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiod
         saksbehandlingsperiodeId,
         opprettet: new Date().toISOString(),
         generertFraDokumenter: [],
-        dekningsgrad: ya.dekningsgrad || 100, // Bruk eksisterende dekningsgrad eller standard
     }))
 
     const input: UtbetalingsberegningInput = {

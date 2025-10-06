@@ -19,7 +19,6 @@ export const yrkesaktivitetSchema = z.object({
     kategorisering: z.record(z.string(), z.union([z.string(), z.array(z.string())])),
     dagoversikt: dagoversiktSchema.nullable(),
     generertFraDokumenter: z.array(z.string()),
-    dekningsgrad: z.number(),
     perioder: perioderSchema.nullable(),
 })
 

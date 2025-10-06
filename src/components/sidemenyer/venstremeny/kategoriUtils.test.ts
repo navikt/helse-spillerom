@@ -25,7 +25,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
                 {
                     id: '2',
@@ -33,7 +32,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
                 {
                     id: '3',
@@ -41,7 +39,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
             ]
 
@@ -57,7 +54,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
                 {
                     id: '2',
@@ -65,7 +61,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
                 {
                     id: '3',
@@ -73,7 +68,6 @@ describe('kategoriUtils', () => {
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
-                    dekningsgrad: 100,
                 },
             ]
 

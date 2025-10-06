@@ -5,6 +5,7 @@ import {
     fyllUtNæringsdrivendeYrkesaktivitet,
     hentVenstremeny,
     opprettManuellBehandlingMedYrkesaktivitet,
+    settSykepengegrunnlag,
     verifiserKategoriTag,
 } from './actions/saksbehandler-actions'
 import { test } from './fixtures'
@@ -19,6 +20,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
         await opprettManuellBehandlingMedYrkesaktivitet('12345214260', () =>
             fyllUtArbeidstakerYrkesaktivitet('123456789', true)(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Arbeidstaker')(page)
         await verifiserDekningsgradIkkeSynlig(page)
@@ -28,6 +30,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
         await opprettManuellBehandlingMedYrkesaktivitet('12345214261', () =>
             fyllUtNæringsdrivendeYrkesaktivitet('Ordinær selvstendig næringsdrivende', 'Ingen forsikring', true)(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
         await verifiserDekningsgradSynlig(page, '80%')
@@ -37,6 +40,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
         await opprettManuellBehandlingMedYrkesaktivitet('12345214262', () =>
             fyllUtNæringsdrivendeYrkesaktivitet('Fisker', null, true)(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
         await verifiserDekningsgradSynlig(page, '100%')
@@ -50,6 +54,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
                 true,
             )(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
         await verifiserDekningsgradSynlig(page, '100%')
@@ -59,6 +64,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
         await opprettManuellBehandlingMedYrkesaktivitet('12345214264', () =>
             fyllUtInaktivYrkesaktivitet('Bokstav A, 65% dekningsgrad')(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Inaktiv')(page)
         await verifiserDekningsgradSynlig(page, '65%')
@@ -68,6 +74,7 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
         await opprettManuellBehandlingMedYrkesaktivitet('12345214265', () =>
             fyllUtInaktivYrkesaktivitet('Bokstav B, 100% dekningsgrad')(page),
         )(page)
+        await settSykepengegrunnlag()(page)
 
         await verifiserKategoriTag('Inaktiv')(page)
         await verifiserDekningsgradSynlig(page, '100%')

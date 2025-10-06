@@ -460,3 +460,70 @@ export function opprettManuellBehandlingMedYrkesaktivitet(
         })
     }
 }
+
+export function navigerTilSykepengegrunnlagFane() {
+    return async (page: Page) => {
+        await test.step('Naviger til sykepengegrunnlag-fanen', async () => {
+            const sykepengegrunnlagTab = page.getByRole('tab', { name: /Sykepengegrunnlag/i })
+            await sykepengegrunnlagTab.click()
+        })
+    }
+}
+
+export function åpneSykepengegrunnlagSkjema() {
+    return async (page: Page) => {
+        await test.step('Åpne skjema for å redigere sykepengegrunnlag', async () => {
+            // Vent på at sykepengegrunnlag-fanen er lastet
+            await page.waitForSelector('[role="tabpanel"]:has-text("Sykepengegrunnlag")', { state: 'visible' })
+
+            // Finn rediger-knappen i inntekter-seksjonen
+            const inntekterSection = page.locator('h1:has-text("Inntekter")').locator('..')
+            const redigerButton = inntekterSection.getByRole('button', { name: 'Rediger' })
+            await redigerButton.waitFor({ state: 'visible' })
+            await redigerButton.click()
+        })
+    }
+}
+
+export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = 'Test inntekt for sykepengegrunnlag') {
+    return async (page: Page) => {
+        await test.step(`Fyll ut sykepengegrunnlag med inntekt ${inntekt}`, async () => {
+            // Vent på at skjemaet er åpent
+            await page.waitForSelector('form', { state: 'visible' })
+
+            const inntektField = page.getByRole('textbox', { name: 'Inntekt' })
+            await inntektField.waitFor({ state: 'visible' })
+            await inntektField.fill(inntekt)
+
+            const begrunnelseField = page.getByRole('textbox', { name: 'Begrunnelse' })
+            await begrunnelseField.waitFor({ state: 'visible' })
+            await begrunnelseField.fill(begrunnelse)
+        })
+    }
+}
+
+export function lagreSykepengegrunnlag() {
+    return async (page: Page) => {
+        await test.step('Lagre sykepengegrunnlag', async () => {
+            const lagreButton = page.getByRole('button', { name: 'Lagre' })
+            await lagreButton.click()
+
+            // Vent på at skjemaet lukkes
+            await lagreButton.waitFor({ state: 'hidden' })
+        })
+    }
+}
+
+export function settSykepengegrunnlag(
+    inntekt: string = '500000',
+    begrunnelse: string = 'Test inntekt for sykepengegrunnlag',
+) {
+    return async (page: Page) => {
+        await test.step(`Sett sykepengegrunnlag med inntekt ${inntekt}`, async () => {
+            await navigerTilSykepengegrunnlagFane()(page)
+            await åpneSykepengegrunnlagSkjema()(page)
+            await fyllUtSykepengegrunnlag(inntekt, begrunnelse)(page)
+            await lagreSykepengegrunnlag()(page)
+        })
+    }
+}

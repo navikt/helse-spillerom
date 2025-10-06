@@ -62,8 +62,11 @@ export function kategoriSetTilTekstOgWarning(kategorier: Set<string>): { tekst: 
     return { tekst, warning: false }
 }
 
+// type som extender Yrkesaktivitet med dekningsgrad
+export type YrkesaktivitetMedDekningsgrad = Yrkesaktivitet & { dekningsgrad: number }
+
 export function beregnDekningsgradTiVenstremeny(
-    yrkesaktivitet: Yrkesaktivitet[],
+    yrkesaktivitet: YrkesaktivitetMedDekningsgrad[],
 ): { tekst: string; tall: number } | null {
     if (!yrkesaktivitet || yrkesaktivitet.length === 0) return null
 
