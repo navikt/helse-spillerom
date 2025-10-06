@@ -91,8 +91,6 @@ export async function handlePostSaksbehandlingsperioder(
 
     const body = await request.json()
 
-    console.log(body)
-
     // Valider datoer
     if (body.fom && body.tom && new Date(body.fom) > new Date(body.tom)) {
         return opprettProblemDetailsResponse('Fom-dato kan ikke være etter tom-dato')
