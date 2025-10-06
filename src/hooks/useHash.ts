@@ -9,13 +9,11 @@ export function useHash(): string | undefined {
 
     useEffect(() => {
         // Les initial hash
-        const initialHash = window.location.hash.slice(1)
-        setHash(initialHash || undefined)
+        setHash(window.location.hash.slice(1) || undefined)
 
-        // Lyt til hash-endringer
+        // Lytt til hash-endringer
         const handleHashChange = () => {
-            const newHash = window.location.hash.slice(1)
-            setHash(newHash || undefined)
+            setHash(window.location.hash.slice(1) || undefined)
         }
 
         window.addEventListener('hashchange', handleHashChange)

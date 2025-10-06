@@ -1,7 +1,6 @@
 'use client'
 
-import { ReactElement, useEffect, useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { ReactElement } from 'react'
 import { Tabs } from '@navikt/ds-react'
 import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 
@@ -15,27 +14,18 @@ import { useHash } from '@hooks/useHash'
 const VALID_TABS = ['yrkesaktivitet', 'sykepengegrunnlag', 'vilkar', 'dagoversikt'] as const
 const DEFAULT_TAB = 'yrkesaktivitet'
 
-export default function PersonPage(): ReactElement {
-    const router = useRouter()
-    const pathname = usePathname()
-    const hash = useHash()
-    const [activeTab, setActiveTab] = useState<string>(DEFAULT_TAB)
-
-    // Oppdater aktiv tab basert på hash
-    useEffect(() => {
-        if (hash && VALID_TABS.includes(hash as (typeof VALID_TABS)[number])) {
-            setActiveTab(hash)
-        } else {
-            setActiveTab(DEFAULT_TAB)
-        }
-    }, [hash])
-
-    const handleTabChange = (newTab: string) => {
-        setActiveTab(newTab)
-
-        // Bruk Next.js router for å oppdatere hash fragment
-        router.push(`${pathname}#${newTab}`, { scroll: false })
+function validTabOrDefault(tab?: string) {
+    if (tab && VALID_TABS.includes(tab as (typeof VALID_TABS)[number])) {
+        return tab
     }
+    return DEFAULT_TAB
+}
+
+export default function PersonPage(): ReactElement {
+    const hash = useHash()
+    const activeTab = validTabOrDefault(hash)
+
+    const handleTabChange = (newTab: string) => (window.location.hash = newTab)
 
     return (
         <section className="flex-auto">
