@@ -79,7 +79,8 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                         </Tag>
                                         {vilkår.vilkårshjemmel && (
                                             <div className="text-gray-500 text-xs">
-                                                {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.paragraf}
+                                                {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.kapittel}-
+                                                {vilkår.vilkårshjemmel.paragraf}
                                                 {vilkår.vilkårshjemmel.ledd && ` ledd ${vilkår.vilkårshjemmel.ledd}`}
                                                 {vilkår.vilkårshjemmel.setning &&
                                                     ` setning ${vilkår.vilkårshjemmel.setning}`}
@@ -107,8 +108,9 @@ export function VilkårsvurderingInnsikt(): ReactElement {
 
                                                     {årsak.vilkårshjemmel && (
                                                         <div className="text-gray-500 mb-1 text-xs">
-                                                            {årsak.vilkårshjemmel.lovverk} §
-                                                            {årsak.vilkårshjemmel.paragraf}
+                                                            {vilkår.vilkårshjemmel.lovverk} §
+                                                            {vilkår.vilkårshjemmel.kapittel}-
+                                                            {vilkår.vilkårshjemmel.paragraf}
                                                             {årsak.vilkårshjemmel.ledd &&
                                                                 ` ledd ${årsak.vilkårshjemmel.ledd}`}
                                                             {årsak.vilkårshjemmel.setning &&
