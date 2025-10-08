@@ -75,6 +75,15 @@ export const inntektSchema = z
     })
 export type Inntekt = z.infer<typeof inntektSchema>
 
+export const inntektBeregnetSchema = z.object({
+    yrkesaktivitetId: z.string(),
+    inntektMånedligØre: z.number().int().min(0), // Opprinnelig inntekt i øre
+    grunnlagMånedligØre: z.number().int().min(0), // Beregnet grunnlag i øre
+    kilde: inntektskildeSchema,
+    refusjon: z.array(refusjonsperiodeSchema).optional(),
+})
+export type InntektBeregnet = z.infer<typeof inntektBeregnetSchema>
+
 export const sykepengegrunnlagRequestSchema = z.object({
     inntekter: z.array(inntektSchema).min(1, 'Må ha minst én inntekt'),
     begrunnelse: z.string().max(1000, { error: 'Maks 1000 tegn i begrunnelsen' }).nullable().optional(),
@@ -85,7 +94,7 @@ export const sykepengegrunnlagResponseSchema = z
     .object({
         id: z.string(),
         saksbehandlingsperiodeId: z.string(),
-        inntekter: z.array(inntektSchema),
+        inntekter: z.array(inntektBeregnetSchema),
         totalInntektØre: z.number().int().min(0), // Årsinntekt i øre
         grunnbeløpØre: z.number().int().min(0), // 1G i øre
         grunnbeløp6GØre: z.number().int().min(0), // 6G i øre

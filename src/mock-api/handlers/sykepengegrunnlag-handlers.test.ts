@@ -45,7 +45,19 @@ describe('sykepengegrunnlag-handlers', () => {
                 },
             ],
             vilkaarsvurderinger: {},
-            yrkesaktivitet: {},
+            yrkesaktivitet: {
+                [testUuid]: [
+                    {
+                        id: 'test-inntekt-id',
+                        kategorisering: {
+                            INNTEKTSKATEGORI: 'ARBEIDSTAKER',
+                        },
+                        dagoversikt: [],
+                        generertFraDokumenter: [],
+                        perioder: null,
+                    },
+                ],
+            },
             dagoversikt: {},
             dokumenter: {},
             historikk: {},
@@ -167,6 +179,31 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(responseData.message).toBe('Periode mangler skjæringstidspunkt')
         })
 
+        it('skal returnere 400 når ingen yrkesaktivitet finnes for perioden', async () => {
+            // Fjern yrkesaktivitet for testperioden
+            testPerson.yrkesaktivitet = {}
+
+            const request = new NextRequest('http://localhost/test', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    inntekter: [
+                        {
+                            yrkesaktivitetId: 'test-inntekt-id',
+                            beløpPerMånedØre: 5000000,
+                            kilde: 'AINNTEKT',
+                        },
+                    ],
+                }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+
+            const response = await handlePutSykepengegrunnlag(request, testPerson, testUuid)
+            const responseData = await response.json()
+
+            expect(response.status).toBe(400)
+            expect(responseData.message).toBe('Ingen yrkesaktivitet funnet for denne perioden')
+        })
+
         it('skal returnere 400 når inntekter mangler', async () => {
             const request = new NextRequest('http://localhost/test', {
                 method: 'PUT',
@@ -271,6 +308,14 @@ describe('sykepengegrunnlag-handlers', () => {
             expect(response.status).toBe(200)
             expect(responseData.saksbehandlingsperiodeId).toBe(testUuid)
             expect(responseData.inntekter).toHaveLength(1)
+
+            // Verifiser at inntekten har riktig struktur (InntektBeregnet)
+            expect(responseData.inntekter[0]).toMatchObject({
+                yrkesaktivitetId: 'test-inntekt-id',
+                inntektMånedligØre: 5000000, // Opprinnelig inntekt
+                grunnlagMånedligØre: 5000000, // Beregnet grunnlag (samme som inntekt for arbeidstaker)
+                kilde: 'AINNTEKT',
+            })
 
             expect(responseData.totalInntektØre).toBe(60000000) // 50 000 * 12 * 100
             expect(responseData.begrensetTil6G).toBe(false)

@@ -48,7 +48,7 @@ export function SykepengegrunnlagForm({
                 )
                 return {
                     yrkesaktivitetId: forhold.id,
-                    beløpPerMånedØre: inntektFraSykepengegrunnlag?.beløpPerMånedØre ?? 0,
+                    beløpPerMånedØre: inntektFraSykepengegrunnlag?.inntektMånedligØre ?? 0,
                     kilde: inntektFraSykepengegrunnlag?.kilde ?? 'INNTEKTSMELDING',
                     refusjon: inntektFraSykepengegrunnlag?.refusjon ?? [],
                 }

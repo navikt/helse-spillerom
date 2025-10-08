@@ -103,7 +103,7 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
                                             <HStack justify="space-between">
                                                 <NavnOgIkon kategorisering={forhold.kategorisering} />
                                                 <BodyShort>
-                                                    {formaterBeløpØre(inntektFraSykepengegrunnlag?.beløpPerMånedØre)}
+                                                    {formaterBeløpØre(inntektFraSykepengegrunnlag?.grunnlagMånedligØre)}
                                                 </BodyShort>
                                             </HStack>
                                             {(inntektFraSykepengegrunnlag?.refusjon ?? []).length > 0 && (

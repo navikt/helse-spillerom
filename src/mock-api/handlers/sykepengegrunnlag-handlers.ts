@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Person } from '@/mock-api/session'
 import {
     Inntekt,
+    InntektBeregnet,
     Inntektskilde,
     SykepengegrunnlagRequest,
     SykepengegrunnlagResponse,
@@ -11,6 +12,7 @@ import {
 import { beregn1GØre, beregn6GØre, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
+import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 
 export async function handleGetSykepengegrunnlag(person: Person | undefined, uuid: string): Promise<Response> {
     if (!person) {
@@ -53,6 +55,12 @@ export async function handlePutSykepengegrunnlag(
 
     if (!periode.skjæringstidspunkt) {
         return NextResponse.json({ message: 'Periode mangler skjæringstidspunkt' }, { status: 400 })
+    }
+
+    // Hent yrkesaktivitet for denne perioden
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid] || []
+    if (yrkesaktivitet.length === 0) {
+        return NextResponse.json({ message: 'Ingen yrkesaktivitet funnet for denne perioden' }, { status: 400 })
     }
 
     // Valider inntekter
@@ -134,7 +142,13 @@ export async function handlePutSykepengegrunnlag(
     }
 
     // Beregn sykepengegrunnlag med avansert logikk
-    const grunnlag = beregnSykepengegrunnlag(uuid, body.inntekter, body.begrunnelse, periode.skjæringstidspunkt)
+    const grunnlag = beregnSykepengegrunnlag(
+        uuid,
+        body.inntekter,
+        body.begrunnelse,
+        periode.skjæringstidspunkt,
+        yrkesaktivitet,
+    )
 
     // Lagre i session
     if (!person.sykepengegrunnlag) {
@@ -172,6 +186,7 @@ function beregnSykepengegrunnlag(
     inntekter: Inntekt[],
     begrunnelse: string | null | undefined,
     skjæringstidspunkt: string,
+    yrkesaktivitet: Yrkesaktivitet[],
 ): SykepengegrunnlagResponse {
     // Hent gjeldende grunnbeløp basert på skjæringstidspunkt
     const seksGØre = beregn6GØre(skjæringstidspunkt)
@@ -180,8 +195,40 @@ function beregnSykepengegrunnlag(
     // Hent virkningstidspunktet for grunnbeløpet som ble brukt
     const grunnbeløpVirkningstidspunkt = finnGrunnbeløpVirkningstidspunkt(skjæringstidspunkt)
 
+    // Summer opp alle inntekter som kommer fra arbeidstaker ved å se om yrkesaktivteten er arbeidstaker
+    const sumAvArbeidstakerInntekterØre = inntekter
+        .filter((inntekt) => {
+            const yrkesaktivitetForInntekt = yrkesaktivitet.find((ya) => ya.id === inntekt.yrkesaktivitetId)
+            return yrkesaktivitetForInntekt?.kategorisering?.['INNTEKTSKATEGORI'] === 'ARBEIDSTAKER'
+        })
+        .reduce((sum, inntekt) => sum + inntekt.beløpPerMånedØre, 0)
+
+    // Beregn inntekter med grunnlag basert på yrkesaktivitet kategorisering
+    const inntekterBeregnet: InntektBeregnet[] = inntekter.map((inntekt) => {
+        const yrkesaktivitetForInntekt = yrkesaktivitet.find((ya) => ya.id === inntekt.yrkesaktivitetId)
+        const erSelvstendigNæringsdrivende =
+            yrkesaktivitetForInntekt?.kategorisering?.['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE'
+
+        let grunnlagMånedligØre = inntekt.beløpPerMånedØre
+
+        if (erSelvstendigNæringsdrivende) {
+            // For selvstendig næringsdrivende: pensjonsgivende inntekt er begrenset til 6G minus arbeidstakerinntekter
+            const pensjonsgivendeCappet6g = Math.min(inntekt.beløpPerMånedØre, seksGØre)
+            const næringsinntekt = pensjonsgivendeCappet6g - sumAvArbeidstakerInntekterØre
+            grunnlagMånedligØre = Math.max(næringsinntekt, 0)
+        }
+
+        return {
+            yrkesaktivitetId: inntekt.yrkesaktivitetId,
+            inntektMånedligØre: inntekt.beløpPerMånedØre,
+            grunnlagMånedligØre,
+            kilde: inntekt.kilde,
+            refusjon: inntekt.refusjon,
+        }
+    })
+
     // Summer opp alle månedlige inntekter og konverter til årsinntekt (i øre)
-    const totalInntektØre = inntekter.reduce((sum, inntekt) => sum + inntekt.beløpPerMånedØre, 0) * 12
+    const totalInntektØre = inntekterBeregnet.reduce((sum, inntekt) => sum + inntekt.grunnlagMånedligØre, 0) * 12
 
     // Begrens til 6G
     const begrensetTil6G = totalInntektØre > seksGØre
@@ -192,7 +239,7 @@ function beregnSykepengegrunnlag(
     return {
         id: uuidv4(),
         saksbehandlingsperiodeId,
-        inntekter,
+        inntekter: inntekterBeregnet,
         totalInntektØre,
         grunnbeløpØre,
         grunnbeløp6GØre: seksGØre,
