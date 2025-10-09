@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement } from 'react'
-import { Accordion, BodyShort, HStack, Table } from '@navikt/ds-react'
+import { Accordion, BodyShort, Table, Tag, TagProps } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import {
     TableBody,
@@ -11,18 +11,12 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@navikt/ds-react/Table'
-import {
-    CheckmarkCircleFillIcon,
-    CircleSlashFillIcon,
-    InformationSquareFillIcon,
-    QuestionmarkCircleFillIcon,
-} from '@navikt/aksel-icons'
 
 import { VilkårsvurderingForm } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingForm'
 import { VilkårsvurderingSkeleton } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingSkeleton'
 import { useVilkaarsvurderinger } from '@hooks/queries/useVilkaarsvurderinger'
 import { Hovedspørsmål } from '@schemas/saksbehandlergrensesnitt'
-import { Vurdering } from '@schemas/vilkaarsvurdering'
+import { Vilkaarsvurdering, Vurdering } from '@schemas/vilkaarsvurdering'
 import { useSaksbehandlerui } from '@hooks/queries/useSaksbehandlerui'
 import { FetchError } from '@components/saksbilde/FetchError'
 
@@ -73,10 +67,9 @@ export function Vilkårsvurdering(): ReactElement {
                             <Table size="medium">
                                 <TableHeader>
                                     <TableRow>
+                                        <TableHeaderCell aria-hidden="true" className="w-26"></TableHeaderCell>
                                         <TableHeaderCell>Vilkår</TableHeaderCell>
-                                        <TableHeaderCell className="min-w-[12rem] whitespace-nowrap">
-                                            Status
-                                        </TableHeaderCell>
+                                        <TableHeaderCell className="w-32">Status</TableHeaderCell>
                                         <TableHeaderCell aria-hidden="true" />
                                     </TableRow>
                                 </TableHeader>
@@ -98,14 +91,11 @@ export function Vilkårsvurdering(): ReactElement {
                                                     />
                                                 }
                                             >
+                                                <TableDataCell align="left">
+                                                    {getVurderingTag(vilkår, vilkårsvurdering)}
+                                                </TableDataCell>
                                                 <TableDataCell align="center" className="pl-[13px]">
-                                                    <HStack wrap={false} gap="4" align="center">
-                                                        <span className="h-6 w-6" aria-hidden="true">
-                                                            {getVurderingIcon(vilkårsvurdering?.vurdering)}
-                                                        </span>
-
-                                                        <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
-                                                    </HStack>
+                                                    <BodyShort align="start">{vilkår.beskrivelse}</BodyShort>
                                                 </TableDataCell>
                                                 <TableDataCell className="whitespace-nowrap">
                                                     {getVurderingText(vilkårsvurdering?.vurdering)}
@@ -123,21 +113,29 @@ export function Vilkårsvurdering(): ReactElement {
     )
 }
 
-function getVurderingIcon(vurdering?: Vurdering): ReactElement {
-    switch (vurdering) {
-        case 'OPPFYLT': {
-            return <CheckmarkCircleFillIcon fontSize={24} className="text-ax-text-success-decoration" />
-        }
-        case 'IKKE_OPPFYLT': {
-            return <CircleSlashFillIcon fontSize={24} className="text-ax-text-danger-decoration" />
-        }
-        case 'IKKE_RELEVANT': {
-            return <InformationSquareFillIcon fontSize={24} className="text-ax-text-info-decoration" />
-        }
-        default: {
-            return <QuestionmarkCircleFillIcon fontSize={24} className="text-ax-text-accent-decoration" />
+function getVurderingTag(vilkår: Hovedspørsmål, vurdering?: Vilkaarsvurdering): ReactElement {
+    function tagFarge(vurdering?: Vurdering): TagProps['variant'] {
+        switch (vurdering) {
+            case 'OPPFYLT': {
+                return 'success'
+            }
+            case 'IKKE_OPPFYLT': {
+                return 'error'
+            }
+            case 'IKKE_RELEVANT': {
+                return 'info'
+            }
+            default: {
+                return 'warning'
+            }
         }
     }
+
+    return (
+        <Tag size="small" className="w-20" variant={tagFarge(vurdering?.vurdering)}>
+            {vilkår.paragrafTag}
+        </Tag>
+    )
 }
 
 function getVurderingText(vurdering?: Vurdering): string {
