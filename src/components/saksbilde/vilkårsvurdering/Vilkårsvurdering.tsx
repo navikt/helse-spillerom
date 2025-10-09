@@ -132,7 +132,7 @@ function getVurderingTag(vilkår: Hovedspørsmål, vurdering?: Vilkaarsvurdering
     }
 
     return (
-        <Tag size="small" className="w-20" variant={tagFarge(vurdering?.vurdering)}>
+        <Tag size="small" className="w-20 justify-start" variant={tagFarge(vurdering?.vurdering)}>
             {vilkår.paragrafTag}
         </Tag>
     )
