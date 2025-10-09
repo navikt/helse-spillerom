@@ -162,6 +162,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-02T10:17:47.061Z',
     },
     {
         vilkårshjemmel: {
@@ -356,6 +358,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-02T10:17:47.061Z',
     },
     {
         vilkårshjemmel: {
@@ -453,6 +457,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Netland, Morten Jonassen',
+        sistEndretDato: '2025-09-30T08:16:00.777Z',
     },
     {
         vilkårshjemmel: {
@@ -482,6 +488,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
         vilkårshjemmel: {
@@ -577,6 +585,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
         vilkårshjemmel: {
@@ -620,6 +630,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
         vilkårshjemmel: {
@@ -663,6 +675,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-18T12:37:12.807Z',
     },
     {
         vilkårshjemmel: {
@@ -744,6 +758,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
         vilkårshjemmel: {
@@ -787,6 +803,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-09-22T10:38:59.472Z',
     },
     {
         vilkårshjemmel: {
@@ -794,12 +812,12 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             lovverksversjon: '2021-05-21',
             kapittel: '8',
             paragraf: '44',
-            ledd: '1',
+            ledd: '',
             setning: null,
-            bokstav: 'a',
+            bokstav: '',
         },
         vilkårskode: 'ARBUFOR_SKIP',
-        beskrivelse: 'Er arbeidsufør som arbeidstaker på skip, selv om vedkommende ikke ellers er arbeidsufør',
+        beskrivelse: 'Arbeidstaker på skip',
         oppfylt: [
             {
                 kode: 'ARBUFOR_SKIP_OPPFYLT',
@@ -830,61 +848,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-    },
-    {
-        vilkårshjemmel: {
-            lovverk: 'Hurraloven',
-            lovverksversjon: '1999',
-            kapittel: '1',
-            paragraf: '2',
-            ledd: '3',
-            setning: '4',
-            bokstav: null,
-        },
-        vilkårskode: 'TMP_UNNTAKTSVILKAAR_OPPTJENING',
-        beskrivelse: 'Midlertidig lagt inn for å legge inn uttaktsvilkår på opptjening',
-        oppfylt: [
-            {
-                kode: 'OPPTJENING_UNNTAK_FISKER',
-                beskrivelse: 'Fisker som er tatt opp på blad B i fiskermanntallet',
-                vilkårshjemmel: {
-                    lovverk: 'Hurraloven',
-                    lovverksversjon: '1999',
-                    kapittel: '1',
-                    paragraf: '2',
-                    ledd: '3',
-                    setning: '4',
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'OPPTJENING_UNNTAK_MILITARTJENESTE',
-                beskrivelse: 'Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten',
-                vilkårshjemmel: {
-                    lovverk: 'Hurraloven',
-                    lovverksversjon: '1999',
-                    kapittel: '1',
-                    paragraf: '2',
-                    ledd: '3',
-                    setning: '4',
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'OPPTJENING_UNNTAK_YRKESSKADE',
-                beskrivelse: 'Arbeidsufør på grunn av en godkjent yrkesskade',
-                vilkårshjemmel: {
-                    lovverk: 'Hurraloven',
-                    lovverksversjon: '1999',
-                    kapittel: '1',
-                    paragraf: '2',
-                    ledd: '3',
-                    setning: '4',
-                    bokstav: null,
-                },
-            },
-        ],
-        ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:59:32.459Z',
     },
     {
         vilkårshjemmel: {
@@ -1101,6 +1066,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1144,6 +1111,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1189,6 +1158,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1273,6 +1244,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1316,6 +1289,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1360,6 +1335,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1403,6 +1380,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
         vilkårshjemmel: {
@@ -1445,5 +1424,102 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '1999-10-12',
+            kapittel: '8',
+            paragraf: '45',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'FISKERE',
+        beskrivelse: 'Fiskere',
+        oppfylt: [
+            {
+                kode: 'OPPTJENING_UNNTAK_FISKER',
+                beskrivelse:
+                    'Fisker som er tatt opp på blad B i fiskermanntallet har rett til sykepenger uten hensyn til bestemmelsene i § 8-2 om opptjeningstid',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '1999-10-12',
+                    kapittel: '8',
+                    paragraf: '45',
+                    ledd: null,
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:58:43.416Z',
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2017-07-01',
+            kapittel: '8',
+            paragraf: '46',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'MILITARTJENESTE',
+        beskrivelse: 'Vernepliktige',
+        oppfylt: [
+            {
+                kode: 'OPPTJENING_UNNTAK_MILITARTJENESTE',
+                beskrivelse:
+                    'Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten, har rett til sykepenger ved arbeidsuførhet uten hensyn til vilkårene i § 8-2 dersom arbeidsuførheten oppstår under tjenesten',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2017-07-01',
+                    kapittel: '8',
+                    paragraf: '46',
+                    ledd: '1',
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:58:13.119Z',
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven',
+            lovverksversjon: '2021-07-01',
+            kapittel: '8',
+            paragraf: '55',
+            ledd: null,
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'YRKESSKADE',
+        beskrivelse: 'Sykepenger ved yrkesskade',
+        oppfylt: [
+            {
+                kode: 'OPPTJENING_UNNTAK_YRKESSKADE',
+                beskrivelse: 'Arbeidsufør på grunn av en godkjent yrkesskade',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2021-07-01',
+                    kapittel: '8',
+                    paragraf: '55',
+                    ledd: null,
+                    setning: null,
+                    bokstav: 'a',
+                },
+            },
+        ],
+        ikkeOppfylt: [],
+        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
 ]

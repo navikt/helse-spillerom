@@ -57,6 +57,9 @@ export const hovedspørsmålSchema = z.object({
     beskrivelse: z.string().min(5),
     kategori: kategoriEnum,
     underspørsmål: z.array(underspørsmålSchema),
+    paragrafTag: z.string().min(1),
+    sistEndretAv: maybeString,
+    sistEndretDato: z.string().datetime().optional(),
 })
 
 // Hele kodeverket (saksbehandler-UI)

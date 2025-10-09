@@ -3,8 +3,9 @@ import { type HovedspørsmålArray } from '@schemas/saksbehandlergrensesnitt'
 export const saksbehandlerUi: HovedspørsmålArray = [
     {
         kode: 'ab787988-5774-4aa1-8586-49251f459769',
-        beskrivelse: '§ 22-13. Frist for framsetting av krav',
+        beskrivelse: 'Frist for framsetting av krav',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 22-13',
         underspørsmål: [
             {
                 kode: 'fa4941fa-1b19-4a86-abdc-9c91e33178bb',
@@ -52,11 +53,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:09.864Z',
     },
     {
         kode: 'e40375fa-d0a5-4a68-a90a-9e145a0a63b4',
-        beskrivelse: 'Kapittel 2. Medlemskap i folketrygden',
+        beskrivelse: 'Medlemskap i folketrygden',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: 'Kapittel 2',
         underspørsmål: [
             {
                 kode: '86f6875b-0e0b-41a8-856f-0454b9f7c693',
@@ -78,11 +82,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:04.434Z',
     },
     {
         kode: 'afe35fff-7cbc-46b8-8311-07bdcb67009b',
-        beskrivelse: '§ 8-2. Opptjeningstid',
+        beskrivelse: 'Opptjeningstid',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-2',
         underspørsmål: [
             {
                 kode: '81618640-755e-4c23-92c0-0806d05faa5b',
@@ -191,11 +198,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:16.637Z',
     },
     {
         kode: '1edc2c94-65f0-4bd4-83dd-43b36ce43cc5',
-        beskrivelse: '§ 8-3. Tap av pensjonsgivende inntekt og minsteinntekt',
+        beskrivelse: 'Tap av pensjonsgivende inntekt og minsteinntekt',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-3',
         underspørsmål: [
             {
                 kode: 'e08bf756-59ad-4f38-87e6-bdf67bb027c8',
@@ -255,11 +265,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:23.876Z',
     },
     {
         kode: 'afb2d485-1360-4f95-badc-faa9a50c0682',
-        beskrivelse: '§ 8-4. Arbeidsuførhet',
+        beskrivelse: 'Arbeidsuførhet',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-4',
         underspørsmål: [
             {
                 kode: '82da88f3-bcf5-420f-9fda-4d1a8fdd10b0',
@@ -379,11 +392,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:33.071Z',
     },
     {
         kode: 'a50527a0-95ec-41d1-b029-b5d957505c0d',
-        beskrivelse: '§ 8-5. Sykepenger ved friskmelding til arbeidsformidling',
+        beskrivelse: 'Sykepenger ved friskmelding til arbeidsformidling',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-5',
         underspørsmål: [
             {
                 kode: 'd4af097d-c1b4-4511-8d6c-b892f3ea6fd7',
@@ -405,11 +421,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:42.002Z',
     },
     {
         kode: 'd79c0628-512b-404d-9277-3e5620c90da2',
-        beskrivelse: '§ 8-7. Dokumentasjon av arbeidsuførhet',
+        beskrivelse: 'Dokumentasjon av arbeidsuførhet',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-7',
         underspørsmål: [
             {
                 kode: '8e18daa0-c67e-4b5e-aca8-3497e63126c7',
@@ -431,11 +450,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:48.754Z',
     },
     {
         kode: '2cb89e63-69ee-4926-9208-d0a100fcc6d4',
-        beskrivelse: '§ 8-8. Medlemmets medvirkning',
+        beskrivelse: 'Medlemmets medvirkning',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-8',
         underspørsmål: [
             {
                 kode: '03c7ac25-aef9-4864-896b-765e07a6d4ec',
@@ -457,11 +479,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:16:54.639Z',
     },
     {
         kode: 'OPPHOLDSKRAV',
-        beskrivelse: '§ 8-9. Oppholdskrav',
+        beskrivelse: 'Oppholdskrav',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-9',
         underspørsmål: [
             {
                 kode: '80c22f9f-44e3-4b5f-b98f-aeb7c23f0618',
@@ -535,11 +560,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:00.972Z',
     },
     {
         kode: 'SYKEPENGEDAGER_IGJEN',
-        beskrivelse: '§ 8-12. Antall sykepengedager',
+        beskrivelse: 'Antall sykepengedager',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-12',
         underspørsmål: [
             {
                 kode: 'SYKEPENGEDAGER_IGJEN_ALTERNATIVER',
@@ -561,11 +589,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:07.920Z',
     },
     {
         kode: 'GRADERTE_SYKEPENGER',
-        beskrivelse: '§ 8-13. Graderte sykepenger',
+        beskrivelse: 'Graderte sykepenger',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-13',
         underspørsmål: [
             {
                 kode: 'GRADERTE_SYKEPENGER_ARBEIDSUFØR',
@@ -587,11 +618,14 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:17.175Z',
     },
     {
         kode: 'ARBEIDSREISER',
-        beskrivelse: '§ 8-14. Tilskott til arbeidsreiser',
+        beskrivelse: 'Tilskott til arbeidsreiser',
         kategori: 'generelle_bestemmelser',
+        paragrafTag: '§ 8-14',
         underspørsmål: [
             {
                 kode: 'b149fa3f-8143-4660-abf8-d9f92f231208',
@@ -613,26 +647,29 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:23.473Z',
     },
     {
         kode: '589381f7-c5e4-4c7e-b3f1-c8471e5703ce',
-        beskrivelse: '§ 8-17. Sykepenger fra trygden',
+        beskrivelse: 'Sykepenger fra trygden',
         kategori: 'arbeidstakere',
+        paragrafTag: '§ 8-17',
         underspørsmål: [
             {
                 kode: 'f223060e-6f85-4a38-82dc-332c0cd63a08',
-                navn: 'Yter trygden sykepenger?',
+                navn: 'Utbetaler Nav sykepenger?',
                 variant: 'RADIO',
                 alternativer: [
                     {
                         kode: 'SYKEPENGER_TRYGDEN_AGUT',
-                        navn: 'Ja, trygden yter sykepenger etter utløpet av arbeidsgiverperioden',
+                        navn: 'Ja, Nav utbetaler sykepenger etter utløpet av arbeidsgiverperioden',
                         harUnderspørsmål: false,
                         underspørsmål: [],
                     },
                     {
                         kode: 'd74dfdaa-0640-4909-a7e4-f5d6aaca2251',
-                        navn: 'Ja, trygden yter sykepenger også i de 16 første dagene',
+                        navn: 'Ja, Nav utbetaler sykepenger også i de 16 første dagene',
                         harUnderspørsmål: true,
                         underspørsmål: [
                             {
@@ -646,6 +683,24 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
                                     },
+                                    {
+                                        kode: 'SYKEPENGER_TRYGDEN_STREIK_LOCKOUT',
+                                        navn: 'Under streik eller lockout',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'SYKEPENGER_TRYGDEN_KONTROLL',
+                                        navn: 'Under nødvendig kontrollundersøkelse som krever minst 24 timers fravær',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'SYKEPENGER_TRYGDEN_DONOR',
+                                        navn: 'Når arbeidstakeren er donor',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
                                 ],
                             },
                         ],
@@ -653,11 +708,45 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:29.816Z',
+    },
+    {
+        kode: '8a7622c9-f305-4d56-8aae-14eb9a1d94a5',
+        beskrivelse: 'Trygdens ansvar når arbeidsgiveren ikke betaler',
+        kategori: 'arbeidstakere',
+        paragrafTag: '§ 8-22',
+        underspørsmål: [
+            {
+                kode: '4627f248-0b3c-40a7-a85e-19c58de4c9b6',
+                navn: 'Forskutter Nav sykepenger i arbeidsgiverperioden?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'NAV_FORSKUTTERER_AGPERIODEN',
+                        navn: 'Ja',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'NAV_FORSKUTTERER_IKKE_AGPERIODEN',
+                        navn: 'Nei',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+        ],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:37.193Z',
     },
     {
         kode: 'c902f282-9886-414c-85a0-e5ce05ecab09',
-        beskrivelse: '§ 8-47. Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
+        beskrivelse: 'Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
         kategori: 'særskilte_grupper',
+        paragrafTag: '§ 8-47',
         underspørsmål: [],
+        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretDato: '2025-10-09T06:17:46.238Z',
     },
 ]
