@@ -180,13 +180,16 @@ export function Sykepengegrunnlag({ value }: SykepengegrunnlagProps): ReactEleme
     )
 }
 
-function getKategoriseringTekst(kategorisering: Record<string, string | string[]>): ReactElement {
+function getKategoriseringTekst(
+    kategorisering: Record<string, string | string[]>,
+    medOrgnummer: boolean,
+): ReactElement {
     const kategori = kategorisering['INNTEKTSKATEGORI']
     const orgnummer = kategorisering['ORGNUMMER'] as string
 
     switch (kategori) {
         case 'ARBEIDSTAKER':
-            return <Organisasjonsnavn orgnummer={orgnummer} />
+            return <Organisasjonsnavn orgnummer={orgnummer} medOrgnummer={medOrgnummer} />
         case 'FRILANSER':
             return (
                 <>
@@ -207,14 +210,16 @@ function getKategoriseringTekst(kategorisering: Record<string, string | string[]
 export function NavnOgIkon({
     kategorisering,
     className,
+    medOrgnummer = false,
 }: {
     kategorisering: Record<string, string | string[]>
     className?: string
+    medOrgnummer?: boolean
 }): ReactElement {
     return (
         <HStack gap="2" className={className} wrap={false}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
-            <BodyShort>{getKategoriseringTekst(kategorisering)}</BodyShort>
+            <BodyShort>{getKategoriseringTekst(kategorisering, medOrgnummer)}</BodyShort>
         </HStack>
     )
 }
