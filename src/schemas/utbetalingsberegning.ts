@@ -88,6 +88,11 @@ export const ventetidsdagDtoSchema = z.object({
     dato: z.string(), // LocalDate som string
     økonomi: økonomiSchema,
 })
+export const avvistdagDtoSchema = z.object({
+    '@type': z.literal('avvistdagDtoSchema'),
+    dato: z.string(), // LocalDate som string
+    økonomi: økonomiSchema,
+})
 
 export const dagSchema = z.discriminatedUnion('@type', [
     navDagDtoSchema,
@@ -99,6 +104,7 @@ export const dagSchema = z.discriminatedUnion('@type', [
     foreldetDagDtoSchema,
     ukjentDagDtoSchema,
     ventetidsdagDtoSchema,
+    avvistdagDtoSchema,
 ])
 
 // Utbetalingstidslinje schema
