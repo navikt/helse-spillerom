@@ -291,9 +291,13 @@ const PensjonsgivendeInntektKomponent = () => {
                                 onChange={(value) => setÅrsak(value)}
                             >
                                 <VStack gap="2" align="start">
-                                    <Radio value="AVVIK_25_PROSENT_VARIG_ENDRING">25% avvik og varig endring</Radio>
-                                    <Radio value="MANGLENDE_OPPLYSNINGER">Manglende opplysninger</Radio>
-                                    <Radio value="FEILAKTIGE_OPPLYSNINGER">Feilaktige opplysninger</Radio>
+                                    <Radio value="AVVIK_25_PROSENT_VARIG_ENDRING">
+                                        25% avvik og varig endring (§ 8-35 tredje ledd første punktum)
+                                    </Radio>
+                                    <Radio value="SISTE_TRE_YRKESAKTIV">
+                                        Har blitt yrkesaktiv i løpet av de siste tre årene (§ 8-35 tredje ledd andre
+                                        punktum)
+                                    </Radio>
                                 </VStack>
                             </RadioGroup>
 
