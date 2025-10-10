@@ -20,9 +20,6 @@ export async function fetchAndParse<T>(url: string, schema: z.ZodType<T>, option
             throw error
         }
     }
-    if (res.ok) {
-        return schema.parse(payload)
-    }
 
     const maybeProblem = problemDetailsSchema.safeParse(payload)
     if (maybeProblem.success) {
