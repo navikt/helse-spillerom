@@ -154,14 +154,22 @@ const ArbeidstakerKomponent = () => {
                             />
 
                             <RadioGroup
-                                legend="Årsak for skjønnsfastsettelse"
+                                legend="Årsak til skjønnsfastsettelse"
                                 value={årsak}
                                 onChange={(value) => setÅrsak(value)}
                             >
                                 <VStack gap="2" align="start">
-                                    <Radio value="MANGFULL_RAPPORTERING">Mangelfull rapportering</Radio>
-                                    <Radio value="FEILAKTIG_RAPPORTERING">Feilaktig rapportering</Radio>
-                                    <Radio value="AVVIK_25_PROSENT">Skjønnsfastsatt pga 25% avvik</Radio>
+                                    <Radio value="AVVIK_25_PROSENT">
+                                        Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)
+                                    </Radio>
+                                    <Radio value="MANGFULL_RAPPORTERING">
+                                        Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje
+                                        ledd)
+                                    </Radio>
+                                    <Radio value="TIDSAVGRENSET">
+                                        Skjønnsfastsettelse ved tidsbegrenset arbeidsforhold under 6 måneder (§ 8-30
+                                        fjerde ledd)
+                                    </Radio>
                                 </VStack>
                             </RadioGroup>
 
@@ -357,14 +365,18 @@ const FrilanserKomponent = () => {
                             />
 
                             <RadioGroup
-                                legend="Årsak for skjønnsfastsettelse"
+                                legend="Årsak til skjønnsfastsettelse"
                                 value={årsak}
                                 onChange={(value) => setÅrsak(value)}
                             >
                                 <VStack gap="2" align="start">
-                                    <Radio value="MANGFULL_RAPPORTERING">Mangelfull rapportering</Radio>
-                                    <Radio value="FEILAKTIG_RAPPORTERING">Feilaktig rapportering</Radio>
-                                    <Radio value="AVVIK_25_PROSENT">Skjønnsfastsatt pga 25% avvik</Radio>
+                                    <Radio value="AVVIK_25_PROSENT">
+                                        Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)
+                                    </Radio>
+                                    <Radio value="MANGFULL_RAPPORTERING">
+                                        Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje
+                                        ledd)
+                                    </Radio>
                                 </VStack>
                             </RadioGroup>
 
