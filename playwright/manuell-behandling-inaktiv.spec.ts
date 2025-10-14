@@ -65,7 +65,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
 
         // 5. Naviger til sykepengegrunnlag og sett til 60000
         await test.step('Sett sykepengegrunnlag til 60000', async () => {
-            const sykepengegrunnlagTab = page.getByRole('tab', { name: 'Sykepengegrunnlag' })
+            const sykepengegrunnlagTab = page.getByRole('tab', { name: 'Sykepengegrunnlag', exact: true })
             await sykepengegrunnlagTab.click()
 
             // Klikk på "Rediger" knapp
