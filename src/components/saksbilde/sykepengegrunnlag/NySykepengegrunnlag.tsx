@@ -14,6 +14,9 @@ import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegru
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
+import { EnForm } from '@components/saksbilde/sykepengegrunnlag/form/EnForm'
+import { ToForm } from '@components/saksbilde/sykepengegrunnlag/form/ToForm'
+import { TreForm } from '@components/saksbilde/sykepengegrunnlag/form/TreForm'
 
 export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -147,7 +150,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                 {aktivYrkesaktivitet && (
                     <VStack
                         gap="4"
-                        className="w-[500px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
+                        className="w-[710px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
                     >
                         {kanSaksbehandles && (
                             <div className="-ml-[4px]">
@@ -199,14 +202,16 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                 </VStack>
                             </>
                         )}
-                        {erIRedigeringsmodus && (
-                            <VStack gap="4">
-                                <span>form</span>
-                            </VStack>
-                        )}
+                        {erIRedigeringsmodus && forms[aktivYrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as string]}
                     </VStack>
                 )}
             </HStack>
         </SaksbildePanel>
     )
+}
+
+const forms: Record<string, ReactElement> = {
+    ARBEIDSTAKER: <EnForm />,
+    SELVSTENDIG_NÆRINGSDRIVENDE: <ToForm />,
+    ARBEIDSLEDIG: <TreForm />,
 }
