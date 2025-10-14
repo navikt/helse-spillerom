@@ -4,12 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOppdaterInntekt } from '@hooks/mutations/useOppdaterInntekt'
-import { InntektRequest, inntektRequestSchema, Inntektskategori } from '@schemas/inntektRequest'
+import { inntektRequestSchema, Inntektskategori } from '@schemas/inntektRequest'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { ArbeidstakerFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/ArbeidstakerFormFields'
 import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/PensjonsgivendeInntektFormFields'
 import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/FrilanserInntektFormFields'
-import { getDefaultValues } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
 import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/ArbeidsledigInntektFormFields'
 
 type NySykepengegrunnlagFormProps = {
@@ -20,12 +20,12 @@ type NySykepengegrunnlagFormProps = {
 export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
     const kategori = yrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
-    const form = useForm<InntektRequest>({
+    const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
         defaultValues: getDefaultValues(kategori),
     })
 
-    async function onSubmit(values: InntektRequest) {
+    async function onSubmit(values: InntektRequestFor<typeof kategori>) {
         console.log(values)
         await mutation.mutateAsync({ yrkesaktivitetId: yrkesaktivitet.id, inntektRequest: values }).then(() => {
             form.reset()
