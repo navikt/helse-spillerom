@@ -1,0 +1,74 @@
+import React, { ReactElement } from 'react'
+import { Controller, useFormContext } from 'react-hook-form'
+import { Radio, RadioGroup } from '@navikt/ds-react'
+
+import {
+    FrilanserInntektType,
+    frilanserInntektTypeSchema,
+    FrilanserSkjønnsfastsettelseÅrsak,
+    frilanserSkjønnsfastsettelseÅrsakSchema,
+} from '@schemas/inntektRequest'
+import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+
+export function FrilanserInntektFormFields(): ReactElement {
+    const { control, watch, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
+    const valgtType = watch('data.type')
+
+    return (
+        <>
+            <Controller
+                control={control}
+                name="data.type"
+                render={({ field }) => (
+                    <RadioGroup
+                        {...field}
+                        legend="Velg kilde for inntektsdata"
+                        size="small"
+                        onChange={(value) => {
+                            field.onChange(value)
+                            if (value === 'SKJONNSFASTSETTELSE') {
+                                setValue('data.årsak', frilanserSkjønnsfastsettelseÅrsakSchema.options[0])
+                                setValue('data.månedsbeløp', 0)
+                            }
+                        }}
+                    >
+                        {frilanserInntektTypeSchema.options.map((option) => (
+                            <Radio key={option} value={option}>
+                                {typeLabels[option]}
+                            </Radio>
+                        ))}
+                    </RadioGroup>
+                )}
+            />
+            {valgtType === 'SKJONNSFASTSETTELSE' && (
+                <>
+                    <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
+                    <Controller
+                        control={control}
+                        name="data.årsak"
+                        render={({ field }) => (
+                            <RadioGroup {...field} legend="Årsak til skjønnsfastsettelse" size="small">
+                                {frilanserSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
+                                    <Radio key={option} value={option}>
+                                        {årsakLabels[option]}
+                                    </Radio>
+                                ))}
+                            </RadioGroup>
+                        )}
+                    />
+                </>
+            )}
+        </>
+    )
+}
+
+const typeLabels: Record<FrilanserInntektType, string> = {
+    AINNTEKT: 'Hent fra A-inntekt',
+    SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
+}
+
+const årsakLabels: Record<FrilanserSkjønnsfastsettelseÅrsak, string> = {
+    AVVIK_25_PROSENT: 'Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)',
+    MANGELFULL_RAPPORTERING: 'Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje ledd)',
+}

@@ -14,9 +14,7 @@ import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegru
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
-import { EnForm } from '@components/saksbilde/sykepengegrunnlag/form/EnForm'
-import { ToForm } from '@components/saksbilde/sykepengegrunnlag/form/ToForm'
-import { TreForm } from '@components/saksbilde/sykepengegrunnlag/form/TreForm'
+import { NySykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/ny/NySykepengegrunnlagForm'
 
 export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -100,7 +98,10 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                             'bg-ax-bg-accent-soft after:absolute after:top-0 after:bottom-0 after:z-10 after:w-[3px] after:bg-ax-bg-accent-soft':
                                                 aktivYrkesaktivitet?.id === yrkesaktivitet.id,
                                         })}
-                                        onClick={() => setAktivYrkesaktivitet(yrkesaktivitet)}
+                                        onClick={() => {
+                                            setAktivYrkesaktivitet(yrkesaktivitet)
+                                            setErIRedigeringsmodus(false)
+                                        }}
                                     >
                                         <TableDataCell className="pl-8">
                                             <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
@@ -202,16 +203,15 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                 </VStack>
                             </>
                         )}
-                        {erIRedigeringsmodus && forms[aktivYrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as string]}
+                        {erIRedigeringsmodus && (
+                            <NySykepengegrunnlagForm
+                                yrkesaktivitet={aktivYrkesaktivitet}
+                                avbryt={() => setErIRedigeringsmodus(false)}
+                            />
+                        )}
                     </VStack>
                 )}
             </HStack>
         </SaksbildePanel>
     )
-}
-
-const forms: Record<string, ReactElement> = {
-    ARBEIDSTAKER: <EnForm />,
-    SELVSTENDIG_NÆRINGSDRIVENDE: <ToForm />,
-    ARBEIDSLEDIG: <TreForm />,
 }

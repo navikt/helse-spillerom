@@ -1,0 +1,91 @@
+import {
+    ArbeidsledigInntektRequest,
+    ArbeidstakerInntektRequest,
+    ArbeidstakerInntektType,
+    arbeidstakerSkjønnsfastsettelseÅrsakSchema,
+    FrilanserInntektRequest,
+    FrilanserInntektType,
+    frilanserSkjønnsfastsettelseÅrsakSchema,
+    InntektRequest,
+    Inntektskategori,
+    PensjonsgivendeInntektRequest,
+    PensjonsgivendeInntektType,
+    pensjonsgivendeSkjønnsfastsettelseÅrsakSchema,
+} from '@schemas/inntektRequest'
+
+export type InntektRequestFor<K extends Inntektskategori> = Extract<InntektRequest, { inntektskategori: K }>
+
+export function getDefaultValues<K extends Inntektskategori>(
+    kategori: K,
+    persisted?: Partial<InntektRequestFor<K>>,
+): InntektRequestFor<K> {
+    const base: InntektRequestFor<K> = {
+        inntektskategori: kategori,
+        data: defaultValuesMap[kategori],
+    } as InntektRequestFor<K>
+
+    // Merge persisted
+    return { ...base, ...persisted } as InntektRequestFor<K>
+}
+
+// Arbeidstaker
+const arbeidstakerDefaults: Record<
+    ArbeidstakerInntektType,
+    Extract<ArbeidstakerInntektRequest, { type: ArbeidstakerInntektType }>
+> = {
+    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '' },
+    AINNTEKT: { type: 'AINNTEKT' },
+    SKJONNSFASTSETTELSE: {
+        type: 'SKJONNSFASTSETTELSE',
+        månedsbeløp: 0,
+        årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0],
+        begrunnelse: '',
+        refusjon: undefined,
+    },
+    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', månedsbeløp: 0, begrunnelse: '' },
+}
+
+// SELVSTENDIG / INAKTIV
+const pensjonsgivendeDefaults: Record<
+    PensjonsgivendeInntektType,
+    Extract<PensjonsgivendeInntektRequest, { type: PensjonsgivendeInntektType }>
+> = {
+    PENSJONSGIVENDE_INNTEKT: { type: 'PENSJONSGIVENDE_INNTEKT' },
+    SKJONNSFASTSETTELSE: {
+        type: 'SKJONNSFASTSETTELSE',
+        årsinntekt: 0,
+        årsak: pensjonsgivendeSkjønnsfastsettelseÅrsakSchema.options[0],
+        begrunnelse: '',
+    },
+}
+
+// FRILANSER
+const frilanserDefaults: Record<
+    FrilanserInntektType,
+    Extract<FrilanserInntektRequest, { type: FrilanserInntektType }>
+> = {
+    AINNTEKT: { type: 'AINNTEKT' },
+    SKJONNSFASTSETTELSE: {
+        type: 'SKJONNSFASTSETTELSE',
+        månedsbeløp: 0,
+        årsak: frilanserSkjønnsfastsettelseÅrsakSchema.options[0],
+        begrunnelse: '',
+    },
+}
+
+// ARBEIDSLEDIG
+const arbeidsledigDefaults: ArbeidsledigInntektRequest = { type: 'DAGPENGER', månedligBeløp: 0 }
+
+const defaultValuesMap: {
+    ARBEIDSTAKER: ArbeidstakerInntektRequest
+    SELVSTENDIG_NÆRINGSDRIVENDE: PensjonsgivendeInntektRequest
+    INAKTIV: PensjonsgivendeInntektRequest
+    FRILANSER: FrilanserInntektRequest
+    ARBEIDSLEDIG: ArbeidsledigInntektRequest
+} = {
+    ARBEIDSTAKER: arbeidstakerDefaults['MANUELT_BEREGNET'],
+    SELVSTENDIG_NÆRINGSDRIVENDE: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
+    INAKTIV: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
+    FRILANSER: frilanserDefaults['AINNTEKT'],
+    ARBEIDSLEDIG: arbeidsledigDefaults,
+}

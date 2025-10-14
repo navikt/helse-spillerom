@@ -39,3 +39,31 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
         />
     )
 }
+
+export function NyPengerField({ name, label, className }: PengerFieldProps): ReactElement {
+    const { field, fieldState } = useController({ name })
+    const [display, setDisplay] = useState(() => (field.value == null ? '' : String(field.value).replace('.', ',')))
+    const commit = () => field.onChange(Number(String(display).replace(',', '.')))
+
+    return (
+        <TextField
+            value={display}
+            onMouseDown={(e) => {
+                if (document.activeElement !== e.target) {
+                    e.preventDefault()
+                    ;(e.target as HTMLInputElement).select()
+                }
+            }}
+            onChange={(e) => setDisplay(e.target.value)}
+            onBlur={() => {
+                commit()
+                field.onBlur()
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && commit()}
+            className={cn('[&_input]:text-right', className)}
+            error={fieldState.error?.message}
+            label={label}
+            size="small"
+        />
+    )
+}
