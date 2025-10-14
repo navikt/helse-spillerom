@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 
 export function hentVenstremeny() {
     return async (page: Page) => {
@@ -464,7 +464,7 @@ export function opprettManuellBehandlingMedYrkesaktivitet(
 export function navigerTilSykepengegrunnlagFane() {
     return async (page: Page) => {
         await test.step('Naviger til sykepengegrunnlag-fanen', async () => {
-            const sykepengegrunnlagTab = page.getByRole('tab', { name: /Sykepengegrunnlag/i })
+            const sykepengegrunnlagTab = page.getByRole('tab', { name: 'Sykepengegrunnlag', exact: true })
             await sykepengegrunnlagTab.click()
         })
     }
