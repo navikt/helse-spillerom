@@ -23,27 +23,27 @@ export const arbeidstakerInntektTypeSchema = z.enum([
     'MANUELT_BEREGNET',
 ])
 
-export const arbeidstakerInntektRequestSchema = z.discriminatedUnion('type', [
-    z.object({
-        type: arbeidstakerInntektTypeSchema.extract(['INNTEKTSMELDING']),
-        inntektsmeldingId: z.string(),
-    }),
-    z.object({
-        type: arbeidstakerInntektTypeSchema.extract(['AINNTEKT']),
-    }),
-    z.object({
-        type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-        månedsbeløp: z.number(),
-        årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
-        begrunnelse: z.string(),
-        refusjon: refusjonInfoSchema.optional(),
-    }),
-    z.object({
-        type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
-        månedsbeløp: z.number(),
-        begrunnelse: z.string(),
-    }),
-])
+export const arbeidstakerInntektRequestSchema = z
+    .discriminatedUnion('type', [
+        z.object({
+            type: arbeidstakerInntektTypeSchema.extract(['INNTEKTSMELDING']),
+            inntektsmeldingId: z.string(),
+        }),
+        z.object({
+            type: arbeidstakerInntektTypeSchema.extract(['AINNTEKT']),
+        }),
+        z.object({
+            type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
+            månedsbeløp: z.number(),
+            årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
+            refusjon: refusjonInfoSchema.optional(),
+        }),
+        z.object({
+            type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
+            månedsbeløp: z.number(),
+        }),
+    ])
+    .and(z.object({ begrunnelse: z.string() }))
 
 // Pensjonsgivende inntekt typer (for selvstendig næringsdrivende og inaktiv)
 export const pensjonsgivendeSkjønnsfastsettelseÅrsakSchema = z.enum([
@@ -53,34 +53,36 @@ export const pensjonsgivendeSkjønnsfastsettelseÅrsakSchema = z.enum([
 
 export const pensjonsgivendeInntektTypeSchema = z.enum(['PENSJONSGIVENDE_INNTEKT', 'SKJONNSFASTSETTELSE'])
 
-export const pensjonsgivendeInntektRequestSchema = z.discriminatedUnion('type', [
-    z.object({
-        type: pensjonsgivendeInntektTypeSchema.extract(['PENSJONSGIVENDE_INNTEKT']),
-    }),
-    z.object({
-        type: pensjonsgivendeInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-        årsinntekt: z.number(),
-        årsak: pensjonsgivendeSkjønnsfastsettelseÅrsakSchema,
-        begrunnelse: z.string(),
-    }),
-])
+export const pensjonsgivendeInntektRequestSchema = z
+    .discriminatedUnion('type', [
+        z.object({
+            type: pensjonsgivendeInntektTypeSchema.extract(['PENSJONSGIVENDE_INNTEKT']),
+        }),
+        z.object({
+            type: pensjonsgivendeInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
+            årsinntekt: z.number(),
+            årsak: pensjonsgivendeSkjønnsfastsettelseÅrsakSchema,
+        }),
+    ])
+    .and(z.object({ begrunnelse: z.string() }))
 
 // Frilanser inntekt typer
 export const frilanserSkjønnsfastsettelseÅrsakSchema = z.enum(['AVVIK_25_PROSENT', 'MANGELFULL_RAPPORTERING'])
 
 export const frilanserInntektTypeSchema = z.enum(['AINNTEKT', 'SKJONNSFASTSETTELSE'])
 
-export const frilanserInntektRequestSchema = z.discriminatedUnion('type', [
-    z.object({
-        type: frilanserInntektTypeSchema.extract(['AINNTEKT']),
-    }),
-    z.object({
-        type: frilanserInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-        månedsbeløp: z.number(),
-        årsak: frilanserSkjønnsfastsettelseÅrsakSchema,
-        begrunnelse: z.string(),
-    }),
-])
+export const frilanserInntektRequestSchema = z
+    .discriminatedUnion('type', [
+        z.object({
+            type: frilanserInntektTypeSchema.extract(['AINNTEKT']),
+        }),
+        z.object({
+            type: frilanserInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
+            månedsbeløp: z.number(),
+            årsak: frilanserSkjønnsfastsettelseÅrsakSchema,
+        }),
+    ])
+    .and(z.object({ begrunnelse: z.string() }))
 
 // Arbeidsledig inntekt typer
 export const arbeidsledigInntektTypeSchema = z.enum(['DAGPENGER', 'VENTELONN', 'VARTPENGER'])
@@ -88,6 +90,7 @@ export const arbeidsledigInntektTypeSchema = z.enum(['DAGPENGER', 'VENTELONN', '
 export const arbeidsledigInntektRequestSchema = z.object({
     type: arbeidsledigInntektTypeSchema,
     månedligBeløp: z.number(),
+    begrunnelse: z.string(),
 })
 
 // Hovedunion for alle inntekt requests

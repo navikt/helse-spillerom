@@ -33,8 +33,8 @@ const arbeidstakerDefaults: Record<
     ArbeidstakerInntektType,
     Extract<ArbeidstakerInntektRequest, { type: ArbeidstakerInntektType }>
 > = {
-    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '' },
-    AINNTEKT: { type: 'AINNTEKT' },
+    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '', begrunnelse: '' },
+    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '' },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         månedsbeløp: 0,
@@ -50,7 +50,7 @@ const pensjonsgivendeDefaults: Record<
     PensjonsgivendeInntektType,
     Extract<PensjonsgivendeInntektRequest, { type: PensjonsgivendeInntektType }>
 > = {
-    PENSJONSGIVENDE_INNTEKT: { type: 'PENSJONSGIVENDE_INNTEKT' },
+    PENSJONSGIVENDE_INNTEKT: { type: 'PENSJONSGIVENDE_INNTEKT', begrunnelse: '' },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         årsinntekt: 0,
@@ -64,7 +64,7 @@ const frilanserDefaults: Record<
     FrilanserInntektType,
     Extract<FrilanserInntektRequest, { type: FrilanserInntektType }>
 > = {
-    AINNTEKT: { type: 'AINNTEKT' },
+    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '' },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         månedsbeløp: 0,
@@ -74,7 +74,7 @@ const frilanserDefaults: Record<
 }
 
 // ARBEIDSLEDIG
-const arbeidsledigDefaults: ArbeidsledigInntektRequest = { type: 'DAGPENGER', månedligBeløp: 0 }
+const arbeidsledigDefaults: ArbeidsledigInntektRequest = { type: 'DAGPENGER', månedligBeløp: 0, begrunnelse: '' }
 
 const defaultValuesMap: {
     ARBEIDSTAKER: ArbeidstakerInntektRequest
