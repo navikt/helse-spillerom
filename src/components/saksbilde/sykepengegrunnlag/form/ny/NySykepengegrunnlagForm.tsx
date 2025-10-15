@@ -22,7 +22,7 @@ export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengeg
     const kategori = yrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
-        defaultValues: getDefaultValues(kategori),
+        defaultValues: getDefaultValues(kategori, yrkesaktivitet.inntektRequest as InntektRequestFor<typeof kategori>),
     })
 
     async function onSubmit(values: InntektRequestFor<typeof kategori>) {
