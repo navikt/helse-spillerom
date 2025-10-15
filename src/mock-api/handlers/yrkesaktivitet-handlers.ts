@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Person } from '@/mock-api/session'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Dag } from '@/schemas/dagoversikt'
+import { InntektRequest } from '@/schemas/inntektRequest'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
@@ -232,6 +233,40 @@ export async function handlePutInntektsforholdPerioder(
     yrkesaktivitet.perioder = body
 
     await triggerUtbetalingsberegning(person, uuid)
+
+    return new Response(null, { status: 204 })
+}
+
+export async function handlePutInntekt(
+    request: Request,
+    person: Person | undefined,
+    uuid: string,
+    yrkesaktivitetId: string,
+): Promise<Response> {
+    if (!person) {
+        return NextResponse.json({ message: 'Person not found' }, { status: 404 })
+    }
+
+    const yrkesaktivitet = person.yrkesaktivitet?.[uuid]?.find((forhold) => forhold.id === yrkesaktivitetId)
+    if (!yrkesaktivitet) {
+        return NextResponse.json({ message: 'Inntektsforhold not found' }, { status: 404 })
+    }
+
+    const body = await request.json()
+    const inntektRequest: InntektRequest = body
+
+    // Oppdater inntektRequest på yrkesaktiviteten
+    yrkesaktivitet.inntektRequest = inntektRequest
+
+    // Slett sykepengegrunnlag når inntekt endres
+    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
+        delete person.sykepengegrunnlag[uuid]
+    }
+
+    // Slett utbetalingsberegning når inntekt endres
+    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+        delete person.utbetalingsberegning[uuid]
+    }
 
     return new Response(null, { status: 204 })
 }
