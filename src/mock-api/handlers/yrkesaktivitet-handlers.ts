@@ -406,7 +406,7 @@ function genererArbeidsledigInntektData(data: ArbeidsledigInntektRequest): Innte
     // Arbeidsledig inntekt er alltid månedlig beløp, så vi beregner om til årsinntekt
     return {
         inntektstype: 'ARBEIDSLEDIG',
-        omregnetÅrsinntekt: data.månedligBeløp * 12,
+        omregnetÅrsinntekt: 300000,
         sporing: 'BEREGNINGSSPORINGVERDI',
     }
 }
