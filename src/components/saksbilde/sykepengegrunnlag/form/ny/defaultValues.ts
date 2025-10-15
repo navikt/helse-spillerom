@@ -1,5 +1,6 @@
 import {
     ArbeidsledigInntektRequest,
+    ArbeidsledigInntektType,
     ArbeidstakerInntektRequest,
     ArbeidstakerInntektType,
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
@@ -74,7 +75,14 @@ const frilanserDefaults: Record<
 }
 
 // ARBEIDSLEDIG
-const arbeidsledigDefaults: ArbeidsledigInntektRequest = { type: 'DAGPENGER', månedligBeløp: 0, begrunnelse: '' }
+const arbeidsledigDefaults: Record<
+    ArbeidsledigInntektType,
+    Extract<ArbeidsledigInntektRequest, { type: ArbeidsledigInntektType }>
+> = {
+    DAGPENGER: { type: 'DAGPENGER', dagbeløp: 0, begrunnelse: '' },
+    VENTELONN: { type: 'VENTELONN', månedsbeløp: 0, begrunnelse: '' },
+    VARTPENGER: { type: 'VARTPENGER', månedsbeløp: 0, begrunnelse: '' },
+}
 
 const defaultValuesMap: {
     ARBEIDSTAKER: ArbeidstakerInntektRequest
@@ -87,5 +95,5 @@ const defaultValuesMap: {
     SELVSTENDIG_NÆRINGSDRIVENDE: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
     INAKTIV: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
     FRILANSER: frilanserDefaults['AINNTEKT'],
-    ARBEIDSLEDIG: arbeidsledigDefaults,
+    ARBEIDSLEDIG: arbeidsledigDefaults['DAGPENGER'],
 }

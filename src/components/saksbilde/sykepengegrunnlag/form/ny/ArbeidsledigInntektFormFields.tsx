@@ -7,7 +7,8 @@ import { ArbeidsledigInntektType, arbeidsledigInntektTypeSchema } from '@schemas
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 
 export function ArbeidsledigInntektFormFields(): ReactElement {
-    const { control } = useFormContext<InntektRequestFor<'ARBEIDSLEDIG'>>()
+    const { control, watch } = useFormContext<InntektRequestFor<'ARBEIDSLEDIG'>>()
+    const valgtType = watch('data.type')
 
     return (
         <>
@@ -24,7 +25,11 @@ export function ArbeidsledigInntektFormFields(): ReactElement {
                     </RadioGroup>
                 )}
             />
-            <NyPengerField className="w-[212px]" name="data.månedligBeløp" label="Månedsbeløp" />
+            {valgtType === 'DAGPENGER' ? (
+                <NyPengerField className="w-[212px]" name="data.dagbeløp" label="Dagsats" />
+            ) : (
+                <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
+            )}
         </>
     )
 }

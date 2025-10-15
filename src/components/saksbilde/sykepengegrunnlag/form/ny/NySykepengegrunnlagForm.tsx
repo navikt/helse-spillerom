@@ -26,7 +26,6 @@ export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengeg
     })
 
     async function onSubmit(values: InntektRequestFor<typeof kategori>) {
-        console.log(values)
         await mutation.mutateAsync({ yrkesaktivitetId: yrkesaktivitet.id, inntektRequest: values }).then(() => {
             form.reset()
             avbryt()

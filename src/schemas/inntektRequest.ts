@@ -87,11 +87,22 @@ export const frilanserInntektRequestSchema = z
 // Arbeidsledig inntekt typer
 export const arbeidsledigInntektTypeSchema = z.enum(['DAGPENGER', 'VENTELONN', 'VARTPENGER'])
 
-export const arbeidsledigInntektRequestSchema = z.object({
-    type: arbeidsledigInntektTypeSchema,
-    månedligBeløp: z.number(),
-    begrunnelse: z.string(),
-})
+export const arbeidsledigInntektRequestSchema = z
+    .discriminatedUnion('type', [
+        z.object({
+            type: arbeidsledigInntektTypeSchema.extract(['DAGPENGER']),
+            dagbeløp: z.number(),
+        }),
+        z.object({
+            type: arbeidsledigInntektTypeSchema.extract(['VENTELONN']),
+            månedsbeløp: z.number(),
+        }),
+        z.object({
+            type: arbeidsledigInntektTypeSchema.extract(['VARTPENGER']),
+            månedsbeløp: z.number(),
+        }),
+    ])
+    .and(z.object({ begrunnelse: z.string() }))
 
 // Hovedunion for alle inntekt requests
 export const inntektRequestSchema = z.discriminatedUnion('inntektskategori', [
