@@ -403,10 +403,25 @@ function genererFrilanserInntektData(data: FrilanserInntektRequest): InntektData
 }
 
 function genererArbeidsledigInntektData(data: ArbeidsledigInntektRequest): InntektData {
-    // Arbeidsledig inntekt er alltid månedlig beløp, så vi beregner om til årsinntekt
+    let omregnetÅrsinntekt: number
+
+    switch (data.type) {
+        case 'DAGPENGER':
+            // Dagpenger: dagbeløp * 260 arbeidsdager per år
+            omregnetÅrsinntekt = data.dagbeløp * 260
+            break
+        case 'VENTELONN':
+        case 'VARTPENGER':
+            // Ventelønn og vartpenger: månedsbeløp * 12 måneder
+            omregnetÅrsinntekt = data.månedsbeløp * 12
+            break
+        default:
+            throw new Error('Ukjent arbeidsledig inntekt type')
+    }
+
     return {
         inntektstype: 'ARBEIDSLEDIG',
-        omregnetÅrsinntekt: 300000,
+        omregnetÅrsinntekt,
         sporing: 'BEREGNINGSSPORINGVERDI',
     }
 }
@@ -446,24 +461,4 @@ async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiod
         }
         person.utbetalingsberegning[saksbehandlingsperiodeId] = beregningData
     }
-}
-
-// Test funksjon for å verifisere at det nye formatet fungerer
-export function testNyttFormat() {
-    const testData = {
-        dager: [
-            {
-                dato: '2024-08-06',
-                dagtype: 'Arbeidsdag',
-                grad: null,
-                avslåttBegrunnelse: [],
-                kilde: 'Saksbehandler',
-            },
-        ],
-        notat: '',
-    }
-
-    // Simuler at dette er et array av dager
-    const dagerSomSkalOppdateres = testData.dager
-    return dagerSomSkalOppdateres
 }
