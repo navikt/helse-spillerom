@@ -2,6 +2,7 @@ import { z } from 'zod/v4'
 
 import { dagoversiktSchema } from './dagoversikt'
 import { inntektRequestSchema } from './inntektRequest'
+import { inntektDataSchema } from './inntektData'
 
 export const periodetypeSchema = z.enum(['ARBEIDSGIVERPERIODE', 'VENTETID', 'VENTETID_INAKTIV'])
 
@@ -22,6 +23,7 @@ export const yrkesaktivitetSchema = z.object({
     generertFraDokumenter: z.array(z.string()),
     perioder: perioderSchema.nullable(),
     inntektRequest: inntektRequestSchema.nullable().optional(),
+    inntektData: inntektDataSchema.nullable().optional(),
 })
 
 export type Yrkesaktivitet = z.infer<typeof yrkesaktivitetSchema>
