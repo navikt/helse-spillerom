@@ -9,7 +9,7 @@ import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import { formaterBeløpØre } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner, formaterBeløpØre } from '@schemas/sykepengegrunnlag'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
@@ -87,9 +87,6 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                         </TableHeader>
                         <TableBody className="border-b-1 border-b-ax-bg-neutral-strong">
                             {yrkesaktiviteter.map((yrkesaktivitet) => {
-                                const inntektFraSykepengegrunnlag = sykepengegrunnlag?.inntekter.find(
-                                    (inntekt) => inntekt.yrkesaktivitetId === yrkesaktivitet.id,
-                                )
                                 return (
                                     <TableRow
                                         key={yrkesaktivitet.id}
@@ -106,7 +103,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                             <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
                                         </TableDataCell>
                                         <TableDataCell className="pr-16 text-right">
-                                            {formaterBeløpØre(inntektFraSykepengegrunnlag?.grunnlagMånedligØre)}
+                                            {formaterBeløpKroner(yrkesaktivitet?.inntektData?.omregnetÅrsinntekt)}
                                         </TableDataCell>
                                     </TableRow>
                                 )
