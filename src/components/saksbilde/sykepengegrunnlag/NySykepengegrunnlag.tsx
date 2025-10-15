@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Detail, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
@@ -31,15 +31,9 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
     } = useSykepengegrunnlag()
 
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
-    const [aktivYrkesaktivitet, setAktivYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
+    const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
 
     const kanSaksbehandles = useKanSaksbehandles()
-
-    useEffect(() => {
-        if (!aktivYrkesaktivitet && !yrkesaktivitetLoading && yrkesaktiviteter?.length) {
-            setAktivYrkesaktivitet(yrkesaktiviteter[0])
-        }
-    }, [aktivYrkesaktivitet, yrkesaktivitetLoading, yrkesaktiviteter])
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (
@@ -68,8 +62,13 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
         )
     }
 
+    const aktivYrkesaktivitet =
+        yrkesaktiviteter?.find((y) => y.id === selectedYrkesaktivitet?.id) ||
+        selectedYrkesaktivitet ||
+        yrkesaktiviteter?.[0]
+
     const aktivInntekt = sykepengegrunnlag?.inntekter.find(
-        (inntekt) => inntekt.yrkesaktivitetId === aktivYrkesaktivitet?.id,
+        (inntekt) => inntekt.yrkesaktivitetId === selectedYrkesaktivitet?.id,
     )
 
     return (
@@ -99,7 +98,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                                 aktivYrkesaktivitet?.id === yrkesaktivitet.id,
                                         })}
                                         onClick={() => {
-                                            setAktivYrkesaktivitet(yrkesaktivitet)
+                                            setSelectedYrkesaktivitet(yrkesaktivitet)
                                             setErIRedigeringsmodus(false)
                                         }}
                                     >
