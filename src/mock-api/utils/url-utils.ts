@@ -1,11 +1,11 @@
 export function hentPersonIdFraUrl(url: string): string {
     const parts = url.split('/')
-    // Finn indeksen til 'v1' og ta neste del som er personId
-    const v1Index = parts.findIndex((part) => part === 'v1')
-    if (v1Index === -1 || v1Index + 1 >= parts.length) {
+    // Finn indeksen til 'v1' eller 'v2' og ta neste del som er personId
+    const versionIndex = parts.findIndex((part) => part === 'v1' || part === 'v2')
+    if (versionIndex === -1 || versionIndex + 1 >= parts.length) {
         throw new Error('Kunne ikke finne personId i URL')
     }
-    return parts[v1Index + 1]
+    return parts[versionIndex + 1]
 }
 
 export function hentUuidFraUrl(url: string): string {

@@ -48,6 +48,7 @@ import {
     handleGetSykepengegrunnlag,
     handlePutSykepengegrunnlag,
 } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
+import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 
 interface HandlerContext {
@@ -179,6 +180,9 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
         handleGetSykepengegrunnlag(await person, uuid!),
 
+    'GET /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
+        handleGetSykepengegrunnlagV2(await person, uuid!),
+
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ request, person, uuid }) =>
         handlePutSykepengegrunnlag(request, await person, uuid!),
 
@@ -247,7 +251,8 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         raise(new Error(`Unknown path: ${path}`))
     } catch (error) {
-        logger.error(`Error in mocketBakrommetData: ${JSON.stringify(error)}`)
+        /* eslint-disable-next-line no-console */
+        console.error(error)
         return NextResponse.json(
             { message: 'Internal server error', error: error instanceof Error ? error.message : 'Unknown error' },
             { status: 500 },

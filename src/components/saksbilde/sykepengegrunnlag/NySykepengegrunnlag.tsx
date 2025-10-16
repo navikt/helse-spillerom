@@ -5,16 +5,16 @@ import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
-import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import { formaterBeløpKroner, formaterBeløpØre } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
-import { getFormattedDateString, getFormattedNorwegianLongDate } from '@utils/date-format'
+import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { NySykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/ny/NySykepengegrunnlagForm'
+import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
 
 export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -28,7 +28,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
         refetch,
-    } = useSykepengegrunnlag()
+    } = useSykepengegrunnlagV2()
 
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
@@ -67,10 +67,6 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
         selectedYrkesaktivitet ||
         yrkesaktiviteter?.[0]
 
-    const aktivInntekt = sykepengegrunnlag?.inntekter.find(
-        (inntekt) => inntekt.yrkesaktivitetId === selectedYrkesaktivitet?.id,
-    )
-
     return (
         <SaksbildePanel value={value} className="mb-8 p-0">
             <HStack wrap={false}>
@@ -87,6 +83,11 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                         </TableHeader>
                         <TableBody className="border-b-1 border-b-ax-bg-neutral-strong">
                             {yrkesaktiviteter.map((yrkesaktivitet) => {
+                                // Er næringsdrivende og er kombinert. Altså denne er næringsdelen og det finnes andre yrkesaktiviteter
+                                const erNæringsdrivendeOgKombinert =
+                                    yrkesaktivitet.kategorisering?.['INNTEKTSKATEGORI'] ===
+                                        'SELVSTENDIG_NÆRINGSDRIVENDE' && yrkesaktiviteter.length > 1
+
                                 return (
                                     <TableRow
                                         key={yrkesaktivitet.id}
@@ -103,7 +104,18 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                             <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
                                         </TableDataCell>
                                         <TableDataCell className="pr-16 text-right">
-                                            {formaterBeløpKroner(yrkesaktivitet?.inntektData?.omregnetÅrsinntekt)}
+                                            {(() => {
+                                                // For selvstendig næringsdrivende, vis næringsdel hvis den finnes
+                                                if (erNæringsdrivendeOgKombinert) {
+                                                    return formaterBeløpKroner(
+                                                        sykepengegrunnlag?.næringsdel?.næringsdel,
+                                                    )
+                                                }
+                                                // Ellers vis omregnet årsinntekt som vanlig
+                                                return formaterBeløpKroner(
+                                                    yrkesaktivitet?.inntektData?.omregnetÅrsinntekt,
+                                                )
+                                            })()}
                                         </TableDataCell>
                                     </TableRow>
                                 )
@@ -113,7 +125,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                             <TableRow>
                                 <TableDataCell className="border-0 pl-8 font-semibold">Totalt</TableDataCell>
                                 <TableDataCell className="border-0 pr-16 text-right font-semibold">
-                                    {formaterBeløpØre(sykepengegrunnlag?.totalInntektØre)}
+                                    {formaterBeløpKroner(sykepengegrunnlag?.totaltInntektsgrunnlag)}
                                 </TableDataCell>
                             </TableRow>
                         </tfoot>
@@ -123,7 +135,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                             <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                                 <HStack justify="space-between">
                                     <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
-                                    <BodyShort>{formaterBeløpØre(sykepengegrunnlag?.sykepengegrunnlagØre)}</BodyShort>
+                                    <BodyShort>{formaterBeløpKroner(sykepengegrunnlag?.sykepengegrunnlag)}</BodyShort>
                                 </HStack>
                             </BoxNew>
                         </Bleed>
@@ -132,11 +144,11 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                 {sykepengegrunnlag.begrensetTil6G && (
                                     <>
                                         Sykepengegrunnlaget er begrenset til 6G:{' '}
-                                        {formaterBeløpØre(sykepengegrunnlag.grunnbeløp6GØre, 0)} §8-10 <br />
+                                        {formaterBeløpKroner(sykepengegrunnlag.seksG, 0)} §8-10 <br />
                                     </>
                                 )}
                                 Grunnbeløp (G) ved skjæringstidspunkt:{' '}
-                                {formaterBeløpØre(sykepengegrunnlag.grunnbeløpØre, 0)} (
+                                {formaterBeløpKroner(sykepengegrunnlag.grunnbeløp, 0)} (
                                 {getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
                             </BodyLong>
                         )}
@@ -170,34 +182,25 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                         )}
                         <NavnOgIkon kategorisering={aktivYrkesaktivitet.kategorisering} medOrgnummer />
                         {!erIRedigeringsmodus && (
-                            <>
-                                <VStack gap="2">
-                                    <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                                    <BodyShort>{formaterBeløpØre(aktivInntekt?.grunnlagMånedligØre)}</BodyShort>
-                                </VStack>
-                                <Table size="small" zebraStripes>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHeaderCell textSize="small">Fra og med dato</TableHeaderCell>
-                                            <TableHeaderCell textSize="small">Til og med dato</TableHeaderCell>
-                                            <TableHeaderCell textSize="small">Refusjonsbeløp</TableHeaderCell>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {aktivInntekt?.refusjon?.map((refusjon) => (
-                                            <TableRow key={refusjon.fom}>
-                                                <TableDataCell>{getFormattedDateString(refusjon.fom)}</TableDataCell>
-                                                <TableDataCell>{getFormattedDateString(refusjon.tom)}</TableDataCell>
-                                                <TableDataCell>{formaterBeløpØre(refusjon.beløpØre)}</TableDataCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                                <VStack gap="2">
-                                    <BodyShort weight="semibold">Begrunnelse</BodyShort>
-                                    <BodyLong>{sykepengegrunnlag?.begrunnelse}</BodyLong>
-                                </VStack>
-                            </>
+                            <VStack gap="2">
+                                <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
+                                {aktivYrkesaktivitet.inntektRequest && (
+                                    <pre className="text-sm">
+                                        {JSON.stringify(aktivYrkesaktivitet.inntektRequest, null, 2)}
+                                    </pre>
+                                )}
+                                {aktivYrkesaktivitet.inntektData && (
+                                    <pre className="text-sm">
+                                        {JSON.stringify(aktivYrkesaktivitet.inntektData, null, 2)}
+                                    </pre>
+                                )}
+
+                                {sykepengegrunnlag?.næringsdel && (
+                                    <pre className="text-sm">
+                                        {JSON.stringify(sykepengegrunnlag.næringsdel, null, 2)}
+                                    </pre>
+                                )}
+                            </VStack>
                         )}
                         {erIRedigeringsmodus && (
                             <NySykepengegrunnlagForm
