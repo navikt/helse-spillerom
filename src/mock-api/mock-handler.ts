@@ -50,6 +50,7 @@ import {
 } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
 import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
+import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
 
 interface HandlerContext {
     request: Request
@@ -194,6 +195,9 @@ const handlers: Record<string, HandlerFunction> = {
 
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt': async ({ request, person, uuid }) =>
         handleOppdaterSkjæringstidspunkt(request, await person, uuid!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger': async () =>
+        handleGetInntektsmeldinger(),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {

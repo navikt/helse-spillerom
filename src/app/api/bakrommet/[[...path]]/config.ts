@@ -33,6 +33,7 @@ export const allowedAPIs = [
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
