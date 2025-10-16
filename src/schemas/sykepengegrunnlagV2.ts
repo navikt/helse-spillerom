@@ -22,4 +22,3 @@ export const sykepengegrunnlagV2Schema = z.object({
 
 export type SykepengegrunnlagV2 = z.infer<typeof sykepengegrunnlagV2Schema>
 export type Næringsdel = z.infer<typeof næringsdelSchema>
-
