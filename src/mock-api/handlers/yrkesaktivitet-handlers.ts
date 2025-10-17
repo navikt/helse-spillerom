@@ -343,28 +343,32 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
     if (data.type === 'PENSJONSGIVENDE_INNTEKT') {
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
-            omregnetÅrsinntekt: 755568, // TODO: Hent ekte pensjonsgivende inntekt data
+            omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
-                inntektAar: [{
-                    aar: 2024,
-                    rapportertinntekt: 2000000, // langt over 12 G
-                    inntektGrunnbelopsbegrenset: 992224,
-                    grunnbeløpAar: 2024,
-                    grunnbeløp: 124028,
-                },{
-                    aar: 2023,
-                    rapportertinntekt: 900000,
-                    inntektGrunnbelopsbegrenset: 774480,
-                    grunnbeløpAar: 2024,
-                    grunnbeløp: 118620,
-                },{
-                    aar: 2022,
-                    rapportertinntekt: 500000,
-                    inntektGrunnbelopsbegrenset: 500000,
-                    grunnbeløpAar: 2024,
-                    grunnbeløp: 111477,
-                }],
+                inntektAar: [
+                    {
+                        aar: 2024,
+                        rapportertinntekt: 2000000, // langt over 12 G
+                        inntektGrunnbelopsbegrenset: 992224,
+                        grunnbeløpAar: 2024,
+                        grunnbeløp: 124028,
+                    },
+                    {
+                        aar: 2023,
+                        rapportertinntekt: 900000,
+                        inntektGrunnbelopsbegrenset: 774480,
+                        grunnbeløpAar: 2024,
+                        grunnbeløp: 118620,
+                    },
+                    {
+                        aar: 2022,
+                        rapportertinntekt: 620000,
+                        inntektGrunnbelopsbegrenset: 620000,
+                        grunnbeløpAar: 2024,
+                        grunnbeløp: 111477,
+                    },
+                ],
             },
         }
     }
