@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { Inntektsmelding } from '../../schemas/inntektsmelding'
+import { Inntektsmelding } from '@schemas/inntektsmelding'
 
 const mockInntektsmeldinger: Inntektsmelding[] = [
     {

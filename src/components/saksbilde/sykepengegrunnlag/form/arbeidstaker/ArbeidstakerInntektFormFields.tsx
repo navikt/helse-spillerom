@@ -1,6 +1,6 @@
 import React, { Fragment, ReactElement } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { BodyShort, Radio, RadioGroup } from '@navikt/ds-react'
+import { BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
 
 import {
     ArbeidstakerInntektType,
@@ -11,6 +11,8 @@ import {
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
+import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
+import { formaterBeløpKroner } from '@/mock-api/utils/formaterBeløp'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
@@ -100,12 +102,50 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
             control={control}
             name="data.inntektsmeldingId"
             render={({ field }) => (
-                <RadioGroup {...field} legend="Velg inntektsmelding" hideLegend size="small" className="m-4">
-                    {inntektsmeldinger.map((inntektsmelding) => (
-                        <Fragment key={inntektsmelding.inntektsmeldingId}>
-                            <Radio value={inntektsmelding.inntektsmeldingId}>{inntektsmelding.inntektsmeldingId}</Radio>
-                        </Fragment>
-                    ))}
+                <RadioGroup {...field} legend="Velg inntektsmelding" hideLegend size="small">
+                    <VStack gap="2" className="m-4 ml-6">
+                        {inntektsmeldinger.map((inntektsmelding) => (
+                            <Radio
+                                key={inntektsmelding.inntektsmeldingId}
+                                value={inntektsmelding.inntektsmeldingId}
+                                className="w-[400px] items-center rounded-lg border border-ax-bg-neutral-strong bg-ax-bg-neutral-soft p-4"
+                            >
+                                <HGrid columns={2} gap="1 6">
+                                    <BodyShort weight="semibold" size="small">
+                                        Orgnummer:
+                                    </BodyShort>
+                                    <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
+
+                                    <BodyShort weight="semibold" size="small">
+                                        Mottatt:
+                                    </BodyShort>
+                                    <BodyShort size="small">
+                                        {getFormattedDatetimeString(inntektsmelding.mottattDato)}
+                                    </BodyShort>
+
+                                    <BodyShort weight="semibold" size="small">
+                                        Beregnet inntekt:
+                                    </BodyShort>
+                                    <BodyShort size="small">
+                                        {formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}
+                                    </BodyShort>
+
+                                    {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
+                                        <Fragment key={i + arbeidsgiverperiode.fom}>
+                                            <BodyShort weight="semibold" size="small">
+                                                Arbeidsgiverperiode:
+                                            </BodyShort>
+                                            <BodyShort size="small">
+                                                {getFormattedDateString(arbeidsgiverperiode.fom) +
+                                                    ' - ' +
+                                                    getFormattedDateString(arbeidsgiverperiode.tom)}
+                                            </BodyShort>
+                                        </Fragment>
+                                    ))}
+                                </HGrid>
+                            </Radio>
+                        ))}
+                    </VStack>
                 </RadioGroup>
             )}
         />
