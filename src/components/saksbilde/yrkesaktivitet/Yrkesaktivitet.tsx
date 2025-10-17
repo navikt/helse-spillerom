@@ -22,11 +22,11 @@ import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
-import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
+import {useSykepengegrunnlagV2} from "@hooks/queries/useSykepengegrunnlagV2";
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -34,7 +34,7 @@ export function Yrkesaktivitet(): ReactElement {
     const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: yrkesaktivitet, isLoading, isError, refetch } = useYrkesaktivitet()
-    const { data: sykepengegrunnlag } = useSykepengegrunnlag()
+    const { data: sykepengegrunnlag } = useSykepengegrunnlagV2()
     const slettMutation = useSlettYrkesaktivitet()
     const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
     const kanSaksbehandles = useKanSaksbehandles()

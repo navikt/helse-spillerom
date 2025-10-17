@@ -10,8 +10,9 @@ import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsp
 import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
 import { SykepengegrunnlagResponse } from '@schemas/sykepengegrunnlag'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
-import { triggerUtbetalingsberegning } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
 import { Bruker } from '@schemas/bruker'
+
+import { triggerUtbetalingsberegning } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
 
 /**
  * Sjekker om to datoperioder overlapper med hverandre

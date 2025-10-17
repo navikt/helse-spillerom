@@ -4,7 +4,6 @@ import { ReactElement } from 'react'
 import { Tabs } from '@navikt/ds-react'
 import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 
-import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { VilkårsvurderingTab } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingTab'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
 import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
@@ -35,13 +34,11 @@ export default function PersonPage(): ReactElement {
                 <TabsList>
                     <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
                     <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
-                    <TabsTab value="nysykepengegrunnlag" label="Ny Sykepengegrunnlag" />
                     <TabsTab value="vilkar" label="Vilkårsvurdering" />
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
                 <YrkesaktivitetTab value="yrkesaktivitet" />
-                <Sykepengegrunnlag value="sykepengegrunnlag" />
-                <NySykepengegrunnlag value="nysykepengegrunnlag" />
+                <NySykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTab value="vilkar" />
                 <Dagoversikt value="dagoversikt" />
             </Tabs>

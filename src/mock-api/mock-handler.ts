@@ -43,14 +43,15 @@ import {
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
+import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
+import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
+import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
+
 import {
     handleDeleteSykepengegrunnlag,
     handleGetSykepengegrunnlag,
     handlePutSykepengegrunnlag,
 } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
-import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
-import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
-import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
 
 interface HandlerContext {
     request: Request

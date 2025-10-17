@@ -8,13 +8,13 @@ import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
-import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { NySykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/ny/NySykepengegrunnlagForm'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
+import {formaterBeløpKroner} from "@/mock-api/utils/formaterBeløp";
+import {NavnOgIkon} from "@components/saksbilde/sykepengegrunnlag/NavnOgIkon";
 
 export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
