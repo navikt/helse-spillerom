@@ -344,6 +344,7 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
             omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
+            beregnetPensjonsgivendeInntekt: 795568, // Opprinnelig beregnet verdi fra Sigrun
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
                 inntektAar: [

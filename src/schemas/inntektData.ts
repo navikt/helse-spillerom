@@ -73,6 +73,7 @@ export const inaktivSkjønnsfastsattSchema = z.object({
 export const selvstendigNæringsdrivendePensjonsgivendeSchema = z.object({
     inntektstype: z.literal('SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE'),
     omregnetÅrsinntekt: z.number(),
+    beregnetPensjonsgivendeInntekt: z.number().nullable().optional(),
     sporing: z.string(),
     pensjonsgivendeInntekt: pensjonsgivendeInntektSchema,
 })
