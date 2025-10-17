@@ -15,6 +15,7 @@ import { InntektData } from '@/schemas/inntektData'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
+import { beregnSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']
@@ -68,11 +69,6 @@ export async function handlePostInntektsforhold(
     }
     person.yrkesaktivitet[uuid].push(nyttInntektsforhold)
 
-    // Slett sykepengegrunnlag når yrkesaktivitet endres
-    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
-        delete person.sykepengegrunnlag[uuid]
-    }
-
     return NextResponse.json(nyttInntektsforhold, { status: 201 })
 }
 
@@ -103,11 +99,6 @@ export async function handleDeleteInntektsforhold(
     // Also remove associated dagoversikt if it exists
     if (person.dagoversikt && person.dagoversikt[yrkesaktivitetId]) {
         delete person.dagoversikt[yrkesaktivitetId]
-    }
-
-    // Slett sykepengegrunnlag når yrkesaktivitet endres
-    if (person.sykepengegrunnlag && person.sykepengegrunnlag[saksbehandlingsperiodeId]) {
-        delete person.sykepengegrunnlag[saksbehandlingsperiodeId]
     }
 
     // Slett utbetalingsberegning når yrkesaktivitet endres
@@ -208,11 +199,6 @@ export async function handlePutInntektsforholdKategorisering(
     const body = await request.json()
     yrkesaktivitet.kategorisering = body
 
-    // Slett sykepengegrunnlag når yrkesaktivitet endres
-    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
-        delete person.sykepengegrunnlag[uuid]
-    }
-
     // Slett utbetalingsberegning når yrkesaktivitet endres
     if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
         delete person.utbetalingsberegning[uuid]
@@ -268,16 +254,11 @@ export async function handlePutInntekt(
     // Generer inntektData basert på inntektRequest
     const inntektData = genererInntektData(inntektRequest)
     yrkesaktivitet.inntektData = inntektData
-
-    // Slett sykepengegrunnlag når inntekt endres
-    if (person.sykepengegrunnlag && person.sykepengegrunnlag[uuid]) {
-        delete person.sykepengegrunnlag[uuid]
-    }
-
     // Slett utbetalingsberegning når inntekt endres
     if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
         delete person.utbetalingsberegning[uuid]
     }
+    await triggerUtbetalingsberegning(person, uuid)
 
     return new Response(null, { status: 204 })
 }
@@ -426,12 +407,16 @@ function genererArbeidsledigInntektData(data: ArbeidsledigInntektRequest): Innte
     }
 }
 
-async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
-    const sykepengegrunnlag = person.sykepengegrunnlag?.[saksbehandlingsperiodeId]
+export async function triggerUtbetalingsberegning(person: Person, saksbehandlingsperiodeId: string) {
+    // TODO flytt til egen fil
     const yrkesaktivitet = person.yrkesaktivitet?.[saksbehandlingsperiodeId]
     const saksbehandlingsperiode = person.saksbehandlingsperioder?.find((p) => p.id === saksbehandlingsperiodeId)
+    if (!yrkesaktivitet || yrkesaktivitet.length === 0 || !saksbehandlingsperiode) {
+        return
+    }
 
-    if (!sykepengegrunnlag || !yrkesaktivitet || yrkesaktivitet.length === 0 || !saksbehandlingsperiode) {
+    const sykepengegrunnlag = beregnSykepengegrunnlagV2(yrkesaktivitet, saksbehandlingsperiode.skjæringstidspunkt!)
+    if (!sykepengegrunnlag) {
         return
     }
 

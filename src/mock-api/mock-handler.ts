@@ -47,12 +47,6 @@ import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunn
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
 
-import {
-    handleDeleteSykepengegrunnlag,
-    handleGetSykepengegrunnlag,
-    handlePutSykepengegrunnlag,
-} from '@/mock-api/handlers/sykepengegrunnlag-handlers'
-
 interface HandlerContext {
     request: Request
     person?: ReturnType<typeof hentPerson>
@@ -179,17 +173,8 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/historikk': async ({ person, uuid }) =>
         handleGetHistorikk(await person, uuid!),
 
-    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
-        handleGetSykepengegrunnlag(await person, uuid!),
-
     'GET /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
         handleGetSykepengegrunnlagV2(await person, uuid!),
-
-    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ request, person, uuid }) =>
-        handlePutSykepengegrunnlag(request, await person, uuid!),
-
-    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag': async ({ person, uuid }) =>
-        handleDeleteSykepengegrunnlag(await person, uuid!),
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/utbetalingsberegning': async ({ person, uuid }) =>
         handleGetUtbetalingsberegning(await person, uuid!),

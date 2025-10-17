@@ -62,7 +62,6 @@ describe('saksbehandlingsperiode-handlers', () => {
                 dagoversikt: {},
                 dokumenter: {},
                 historikk: {},
-                sykepengegrunnlag: {},
                 utbetalingsberegning: {},
             }
         })

@@ -34,7 +34,7 @@ export async function handleGetSykepengegrunnlagV2(person: Person | undefined, u
     return NextResponse.json(sykepengegrunnlag)
 }
 
-function beregnSykepengegrunnlagV2(
+export function beregnSykepengegrunnlagV2(
     yrkesaktiviteter: Yrkesaktivitet[],
     skjæringstidspunkt: string,
 ): SykepengegrunnlagV2 | null {

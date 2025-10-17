@@ -8,11 +8,9 @@ import { Saksbehandlingsperiode, SaksbehandlingsperiodeEndring } from '@/schemas
 import { finnPerson } from '@/mock-api/testpersoner/testpersoner'
 import { opprettSaksbehandlingsperiode } from '@/mock-api/utils/saksbehandlingsperiode-generator'
 import { leggTilHistorikkinnslag } from '@/mock-api/utils/historikk-utils'
-import { SykepengegrunnlagResponse } from '@schemas/sykepengegrunnlag'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { Bruker } from '@schemas/bruker'
-
-import { triggerUtbetalingsberegning } from '@/mock-api/handlers/sykepengegrunnlag-handlers'
+import { triggerUtbetalingsberegning } from '@/mock-api/handlers/yrkesaktivitet-handlers'
 
 /**
  * Sjekker om to datoperioder overlapper med hverandre
@@ -373,6 +371,7 @@ function arvYrkesaktivitetOgSykepengegrunnlag(
     tidligerePeriodeInntilNyPeriode: Saksbehandlingsperiode,
     nyPeriode: Saksbehandlingsperiode,
     person: Person,
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     aktivBruker: Bruker,
 ) {
     const nyPeriodeId = nyPeriode.id
@@ -412,19 +411,5 @@ function arvYrkesaktivitetOgSykepengegrunnlag(
             ),
         ]
     }
-
-    if (person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id] !== undefined) {
-        person.sykepengegrunnlag[nyPeriodeId] = {
-            ...person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id],
-            id: randomUUID(),
-            saksbehandlingsperiodeId: nyPeriodeId,
-            opprettetAv: aktivBruker.navIdent,
-            opprettet: new Date().toISOString(),
-            sistOppdatert: new Date().toISOString(),
-            inntekter: person.sykepengegrunnlag[tidligerePeriodeInntilNyPeriode.id]!.inntekter.map((inntekt) => ({
-                ...inntekt,
-                yrkesaktivitetId: gammelTilNyIdMap.get(inntekt.yrkesaktivitetId) ?? randomUUID(),
-            })),
-        } as SykepengegrunnlagResponse
-    }
+    // TODO arve sykepengegrunnlag pekeren
 }

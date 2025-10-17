@@ -1,6 +1,7 @@
 import { z } from 'zod/v4'
 
-import { sykepengegrunnlagResponseSchema } from './sykepengegrunnlag'
+import { sykepengegrunnlagV2Schema } from '@schemas/sykepengegrunnlagV2'
+
 import { yrkesaktivitetSchema } from './yrkesaktivitet'
 
 export const saksbehandlingsperiodeSchema = z.object({
@@ -203,7 +204,7 @@ export const utbetalingsberegningDataSchema = z.object({
 })
 
 export const utbetalingsberegningInputSchema = z.object({
-    sykepengegrunnlag: sykepengegrunnlagResponseSchema,
+    sykepengegrunnlag: sykepengegrunnlagV2Schema,
     yrkesaktivitet: z.array(yrkesaktivitetSchema),
     saksbehandlingsperiode: saksbehandlingsperiodeSchema,
 })

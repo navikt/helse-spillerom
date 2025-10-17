@@ -11,7 +11,6 @@ import { Vilkaarsvurdering } from '@/schemas/vilkaarsvurdering'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Dokument } from '@/schemas/dokument'
-import { SykepengegrunnlagResponse } from '@/schemas/sykepengegrunnlag'
 import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 import { Bruker } from '@/schemas/bruker'
 import { UtbetalingsberegningData } from '@/schemas/utbetalingsberegning'
@@ -26,7 +25,6 @@ export interface Person {
     dagoversikt: Record<string, Dagoversikt>
     dokumenter: Record<string, Dokument[]>
     historikk: Record<string, SaksbehandlingsperiodeEndring[]>
-    sykepengegrunnlag: Record<string, SykepengegrunnlagResponse>
     utbetalingsberegning: Record<string, UtbetalingsberegningData>
 }
 
@@ -129,7 +127,6 @@ function skapPerson(fnr: string): Person {
         dagoversikt: {},
         dokumenter: {},
         historikk: {},
-        sykepengegrunnlag: {},
         utbetalingsberegning: {},
     }
 }

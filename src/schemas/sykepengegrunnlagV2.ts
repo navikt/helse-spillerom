@@ -17,7 +17,7 @@ export const sykepengegrunnlagV2Schema = z.object({
     seksG: z.number(), // 6G i øre
     begrensetTil6G: z.boolean(),
     grunnbeløpVirkningstidspunkt: z.string(), // ISO 8601 date string
-    næringsdel: næringsdelSchema.nullable().optional(),
+    næringsdel: næringsdelSchema.nullable(),
 })
 
 export type SykepengegrunnlagV2 = z.infer<typeof sykepengegrunnlagV2Schema>
