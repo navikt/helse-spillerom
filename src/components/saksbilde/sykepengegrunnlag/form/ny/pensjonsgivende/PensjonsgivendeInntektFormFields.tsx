@@ -52,7 +52,7 @@ export function PensjonsgivendeInntektFormFields({ kategori }: { kategori: Innte
                             <RadioGroup {...field} legend="Årsak til skjønnsfastsettelse" size="small">
                                 {pensjonsgivendeSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
                                     <Radio key={option} value={option}>
-                                        {årsakLabels[option]}
+                                        {pensjonsgivendeSkjønnsfastsettelseÅrsakLabels[option]}
                                     </Radio>
                                 ))}
                             </RadioGroup>
@@ -69,7 +69,7 @@ const typeLabels: Record<PensjonsgivendeInntektType, string> = {
     SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
 }
 
-const årsakLabels: Record<PensjonsgivendeSkjønnsfastsettelseÅrsak, string> = {
+export const pensjonsgivendeSkjønnsfastsettelseÅrsakLabels: Record<PensjonsgivendeSkjønnsfastsettelseÅrsak, string> = {
     AVVIK_25_PROSENT_VARIG_ENDRING: '25% avvik og varig endring (§ 8-35 tredje ledd første punktum)',
     SISTE_TRE_YRKESAKTIV: 'Har blitt yrkesaktiv i løpet av de siste tre årene (§ 8-35 tredje ledd andre punktum)',
 }

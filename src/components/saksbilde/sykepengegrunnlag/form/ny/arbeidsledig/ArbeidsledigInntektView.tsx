@@ -1,32 +1,70 @@
 import React, { ReactElement } from 'react'
-import { BodyShort } from '@navikt/ds-react'
+import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
-import { Maybe } from '@utils/tsUtils'
-import { InntektData } from '@schemas/inntektData'
-import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
+import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { ArbeidstakerInntektType, InntektRequest } from '@schemas/inntektRequest'
 
 type ArbeidsledigInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSLEDIG'>
-    inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<SykepengegrunnlagV2>
 }
 
-export function ArbeidsledigInntektView({
-    inntektRequest,
-    inntektData,
-    sykepengegrunnlag,
-}: ArbeidsledigInntektViewProps): ReactElement {
+export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektViewProps): ReactElement {
     const inntektRequestData = inntektRequest?.data
-    if (!inntektRequestData) return <></>
+
+    if (!inntektRequestData) {
+        return (
+            <VStack gap="2" className="w-fit">
+                <BodyShort weight="semibold">Dagbeløp</BodyShort>
+                <BodyShort className="text-right">-</BodyShort>
+            </VStack>
+        )
+    }
+
+    const { månedsbeløp, dagbeløp, begrunnelse } = normalize(inntektRequestData)
+
     return (
         <>
-            <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
-            <pre className="text-sm">{JSON.stringify(inntektRequestData, null, 2)}</pre>
-            {inntektData && <pre className="text-sm">{JSON.stringify(inntektData, null, 2)}</pre>}
-            {sykepengegrunnlag?.næringsdel && (
-                <pre className="text-sm">{JSON.stringify(sykepengegrunnlag.næringsdel, null, 2)}</pre>
+            {månedsbeløp && (
+                <VStack gap="1">
+                    <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                    <HStack gap="2">
+                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(månedsbeløp)}</BodyShort>
+                        <Tag variant="neutral" size="xsmall">
+                            manuelt beregnet
+                        </Tag>
+                    </HStack>
+                </VStack>
+            )}
+
+            {dagbeløp && (
+                <VStack gap="1">
+                    <BodyShort weight="semibold">Dagbeløp</BodyShort>
+                    <HStack gap="2">
+                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(dagbeløp)}</BodyShort>
+                        <Tag variant="neutral" size="xsmall">
+                            manuelt beregnet
+                        </Tag>
+                    </HStack>
+                </VStack>
+            )}
+
+            {begrunnelse && (
+                <VStack gap="1">
+                    <BodyShort weight="semibold">Begrunnelse</BodyShort>
+                    <BodyShort>{begrunnelse}</BodyShort>
+                </VStack>
             )}
         </>
     )
+}
+
+function normalize(data?: InntektRequest['data']) {
+    if (!data) return {}
+    return {
+        type: data.type as ArbeidstakerInntektType,
+        månedsbeløp: 'månedsbeløp' in data ? data.månedsbeløp : undefined,
+        dagbeløp: 'dagbeløp' in data ? data.dagbeløp : undefined,
+        begrunnelse: 'begrunnelse' in data ? data.begrunnelse : undefined,
+    }
 }

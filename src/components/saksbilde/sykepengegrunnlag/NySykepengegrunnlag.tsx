@@ -82,12 +82,12 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
         <SaksbildePanel value={value} className="mb-8 p-0">
             <HStack wrap={false}>
                 {/*tabell*/}
-                <VStack gap="4" className="w-[500px] pt-8">
+                <VStack gap="4" className="min-w-[500px] pt-8">
                     <Table className="[&_td]:border-0 [&_th]:border-0">
                         <TableHeader>
                             <TableRow>
                                 <TableHeaderCell />
-                                <TableHeaderCell>
+                                <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
                                     <Detail textColor="subtle">Omregnet årsinntekt</Detail>
                                 </TableHeaderCell>
                             </TableRow>
@@ -111,7 +111,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                             setErIRedigeringsmodus(false)
                                         }}
                                     >
-                                        <TableDataCell className="pl-8">
+                                        <TableDataCell className="pl-8 whitespace-nowrap">
                                             <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
                                         </TableDataCell>
                                         <TableDataCell className="pr-16 text-right">
@@ -227,8 +227,6 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                                 {kategori === 'ARBEIDSLEDIG' && (
                                     <ArbeidsledigInntektView
                                         inntektRequest={inntektRequest as InntektRequestFor<'ARBEIDSLEDIG'>}
-                                        inntektData={inntektData}
-                                        sykepengegrunnlag={sykepengegrunnlag}
                                     />
                                 )}
                             </>

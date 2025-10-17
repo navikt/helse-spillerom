@@ -51,7 +51,7 @@ export function FrilanserInntektFormFields(): ReactElement {
                             <RadioGroup {...field} legend="Årsak til skjønnsfastsettelse" size="small">
                                 {frilanserSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
                                     <Radio key={option} value={option}>
-                                        {årsakLabels[option]}
+                                        {frilanserSkjønnsfastsettelseÅrsakLabels[option]}
                                     </Radio>
                                 ))}
                             </RadioGroup>
@@ -68,7 +68,7 @@ const typeLabels: Record<FrilanserInntektType, string> = {
     SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
 }
 
-const årsakLabels: Record<FrilanserSkjønnsfastsettelseÅrsak, string> = {
+export const frilanserSkjønnsfastsettelseÅrsakLabels: Record<FrilanserSkjønnsfastsettelseÅrsak, string> = {
     AVVIK_25_PROSENT: 'Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)',
     MANGELFULL_RAPPORTERING: 'Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje ledd)',
 }
