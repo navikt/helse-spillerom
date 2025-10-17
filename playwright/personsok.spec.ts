@@ -14,6 +14,7 @@ test.describe('Førstesiden', () => {
 
         const errorMessage = page.getByText('Ident må være 11 eller 13 siffer')
         await expect(errorMessage).toBeVisible()
+        await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     })
 
     test('Viser feilmelding ved person som ikke finnes', async ({ page }) => {
