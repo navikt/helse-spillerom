@@ -37,10 +37,12 @@ export function SykepengegrunnlagForm({
         })
     }
 
+    const FormFields = FormFieldsFor[kategori]
+
     return (
         <FormProvider {...form}>
             <VStack as="form" role="form" gap="4" onSubmit={form.handleSubmit(onSubmit)}>
-                {FormFieldsFor[kategori]}
+                <FormFields yrkesaktivitetId={yrkesaktivitetId} kategori={kategori} />
                 <Controller
                     control={form.control}
                     name="data.begrunnelse"
@@ -80,10 +82,13 @@ export function SykepengegrunnlagForm({
     )
 }
 
-const FormFieldsFor: Record<Inntektskategori, ReactElement> = {
-    ARBEIDSTAKER: <ArbeidstakerInntektFormFields />,
-    SELVSTENDIG_NÆRINGSDRIVENDE: <PensjonsgivendeInntektFormFields kategori="SELVSTENDIG_NÆRINGSDRIVENDE" />,
-    INAKTIV: <PensjonsgivendeInntektFormFields kategori="INAKTIV" />,
-    FRILANSER: <FrilanserInntektFormFields />,
-    ARBEIDSLEDIG: <ArbeidsledigInntektFormFields />,
+const FormFieldsFor: Record<
+    Inntektskategori,
+    React.ComponentType<{ yrkesaktivitetId: string; kategori: Inntektskategori }>
+> = {
+    ARBEIDSTAKER: ArbeidstakerInntektFormFields,
+    SELVSTENDIG_NÆRINGSDRIVENDE: PensjonsgivendeInntektFormFields,
+    INAKTIV: PensjonsgivendeInntektFormFields,
+    FRILANSER: FrilanserInntektFormFields,
+    ARBEIDSLEDIG: ArbeidsledigInntektFormFields,
 }
