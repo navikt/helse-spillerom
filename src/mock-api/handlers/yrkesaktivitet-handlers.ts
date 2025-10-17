@@ -325,14 +325,46 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
             sporing: 'BEREGNINGSSPORINGVERDI',
         }
     }
+    /*
+
+        aar: z.number(),
+    rapportertinntekt: z.number(),
+    inntektGrunnbelopsbegrenset: z.number(),
+    grunnbeløpAar: z.number(),
+    grunnbeløp: z.number(),
+     */
+
+    /**
+     * { beløp: 124028, gyldigFra: '2024-05-01', virkningsdato: '2024-05-01', gyldigMinsteinntektKrav: '2024-06-03' },
+     *     { beløp: 118620, gyldigFra: '2023-05-01', virkningsdato: '2023-05-01', gyldigMinsteinntektKrav: '2023-05-29' },
+     *     { beløp: 111477, gyldigFra: '2022-0
+     */
 
     if (data.type === 'PENSJONSGIVENDE_INNTEKT') {
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
-            omregnetÅrsinntekt: 400000, // TODO: Hent ekte pensjonsgivende inntekt data
+            omregnetÅrsinntekt: 755568, // TODO: Hent ekte pensjonsgivende inntekt data
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
-                inntektAar: [], // TODO: Hent ekte data
+                inntektAar: [{
+                    aar: 2024,
+                    rapportertinntekt: 2000000, // langt over 12 G
+                    inntektGrunnbelopsbegrenset: 992224,
+                    grunnbeløpAar: 2024,
+                    grunnbeløp: 124028,
+                },{
+                    aar: 2023,
+                    rapportertinntekt: 900000,
+                    inntektGrunnbelopsbegrenset: 774480,
+                    grunnbeløpAar: 2024,
+                    grunnbeløp: 118620,
+                },{
+                    aar: 2022,
+                    rapportertinntekt: 500000,
+                    inntektGrunnbelopsbegrenset: 500000,
+                    grunnbeløpAar: 2024,
+                    grunnbeløp: 111477,
+                }],
             },
         }
     }
