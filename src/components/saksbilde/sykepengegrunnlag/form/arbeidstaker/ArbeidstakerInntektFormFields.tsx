@@ -34,7 +34,6 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                                 setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])
                             }
                             if (value === 'INNTEKTSMELDING') {
-                                // må få opp valg om å velge inntektsmelding når denne velges
                                 setValue('data.inntektsmeldingId', '')
                             }
                         }}
@@ -90,7 +89,7 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
 
     if (isLoading) {
-        return <BodyShort>Laster...</BodyShort> // TODO lag skeleton her
+        return <BodyShort className="m-4 ml-6">Laster...</BodyShort> // TODO lag skeleton her
     }
 
     if (isError || !inntektsmeldinger) {
