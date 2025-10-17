@@ -11,7 +11,7 @@ import {
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
 
-export function ArbeidstakerFormFields(): ReactElement {
+export function ArbeidstakerInntektFormFields(): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const valgtType = watch('data.type')
 
@@ -55,7 +55,7 @@ export function ArbeidstakerFormFields(): ReactElement {
                         <RadioGroup {...field} legend="Årsak til skjønnsfastsettelse" size="small">
                             {arbeidstakerSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
                                 <Radio key={option} value={option}>
-                                    {årsakLabels[option]}
+                                    {arbeidstakerSkjønnsfastsettelseÅrsakLabels[option]}
                                 </Radio>
                             ))}
                         </RadioGroup>
@@ -73,7 +73,7 @@ const typeLabels: Record<ArbeidstakerInntektType, string> = {
     MANUELT_BEREGNET: 'Manuelt beregnet',
 }
 
-const årsakLabels: Record<ArbeidstakerSkjønnsfastsettelseÅrsak, string> = {
+export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSkjønnsfastsettelseÅrsak, string> = {
     AVVIK_25_PROSENT: 'Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)',
     MANGELFULL_RAPPORTERING: 'Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje ledd)',
     TIDSAVGRENSET: 'Skjønnsfastsettelse ved tidsbegrenset arbeidsforhold under 6 måneder (§ 8-30 fjerde ledd)',

@@ -8,13 +8,20 @@ import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
+import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { NySykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/ny/NySykepengegrunnlagForm'
+import { Inntektskategori } from '@schemas/inntektRequest'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
-import {formaterBeløpKroner} from "@/mock-api/utils/formaterBeløp";
-import {NavnOgIkon} from "@components/saksbilde/sykepengegrunnlag/NavnOgIkon";
+import { ArbeidstakerInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidstaker/ArbeidstakerInntektView'
+import { SelvstendigNæringsdrivendeInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/SelvstendigNæringsdrivendeInntektView'
+import { InaktivInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/InaktivInntektView'
+import { FrilanserInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/frilanser/FrilanserInntektView'
+import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidsledig/ArbeidsledigInntektView'
+import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 
 export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -67,6 +74,10 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
         selectedYrkesaktivitet ||
         yrkesaktiviteter?.[0]
 
+    const kategori = aktivYrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
+    const inntektRequest = aktivYrkesaktivitet.inntektRequest as InntektRequestFor<typeof kategori>
+    const inntektData = aktivYrkesaktivitet.inntektData
+
     return (
         <SaksbildePanel value={value} className="mb-8 p-0">
             <HStack wrap={false}>
@@ -77,7 +88,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                             <TableRow>
                                 <TableHeaderCell />
                                 <TableHeaderCell>
-                                    <Detail textColor="subtle">Årsinntekt</Detail>
+                                    <Detail textColor="subtle">Omregnet årsinntekt</Detail>
                                 </TableHeaderCell>
                             </TableRow>
                         </TableHeader>
@@ -182,29 +193,51 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                         )}
                         <NavnOgIkon kategorisering={aktivYrkesaktivitet.kategorisering} medOrgnummer />
                         {!erIRedigeringsmodus && (
-                            <VStack gap="2">
-                                <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
-                                {aktivYrkesaktivitet.inntektRequest && (
-                                    <pre className="text-sm">
-                                        {JSON.stringify(aktivYrkesaktivitet.inntektRequest, null, 2)}
-                                    </pre>
+                            <>
+                                {kategori === 'ARBEIDSTAKER' && (
+                                    <ArbeidstakerInntektView
+                                        inntektRequest={inntektRequest as InntektRequestFor<'ARBEIDSTAKER'>}
+                                        inntektData={inntektData}
+                                        sykepengegrunnlag={sykepengegrunnlag}
+                                    />
                                 )}
-                                {aktivYrkesaktivitet.inntektData && (
-                                    <pre className="text-sm">
-                                        {JSON.stringify(aktivYrkesaktivitet.inntektData, null, 2)}
-                                    </pre>
+                                {kategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' && (
+                                    <SelvstendigNæringsdrivendeInntektView
+                                        inntektRequest={
+                                            inntektRequest as InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
+                                        }
+                                        inntektData={inntektData}
+                                        sykepengegrunnlag={sykepengegrunnlag}
+                                    />
                                 )}
-
-                                {sykepengegrunnlag?.næringsdel && (
-                                    <pre className="text-sm">
-                                        {JSON.stringify(sykepengegrunnlag.næringsdel, null, 2)}
-                                    </pre>
+                                {kategori === 'INAKTIV' && (
+                                    <InaktivInntektView
+                                        inntektRequest={inntektRequest as InntektRequestFor<'INAKTIV'>}
+                                        inntektData={inntektData}
+                                        sykepengegrunnlag={sykepengegrunnlag}
+                                    />
                                 )}
-                            </VStack>
+                                {kategori === 'FRILANSER' && (
+                                    <FrilanserInntektView
+                                        inntektRequest={inntektRequest as InntektRequestFor<'FRILANSER'>}
+                                        inntektData={inntektData}
+                                        sykepengegrunnlag={sykepengegrunnlag}
+                                    />
+                                )}
+                                {kategori === 'ARBEIDSLEDIG' && (
+                                    <ArbeidsledigInntektView
+                                        inntektRequest={inntektRequest as InntektRequestFor<'ARBEIDSLEDIG'>}
+                                        inntektData={inntektData}
+                                        sykepengegrunnlag={sykepengegrunnlag}
+                                    />
+                                )}
+                            </>
                         )}
                         {erIRedigeringsmodus && (
                             <NySykepengegrunnlagForm
-                                yrkesaktivitet={aktivYrkesaktivitet}
+                                kategori={kategori}
+                                inntektRequest={inntektRequest}
+                                yrkesaktivitetId={aktivYrkesaktivitet.id}
                                 avbryt={() => setErIRedigeringsmodus(false)}
                             />
                         )}

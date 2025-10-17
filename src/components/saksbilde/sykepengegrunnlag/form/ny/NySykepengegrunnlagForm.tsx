@@ -4,29 +4,34 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOppdaterInntekt } from '@hooks/mutations/useOppdaterInntekt'
-import { inntektRequestSchema, Inntektskategori } from '@schemas/inntektRequest'
-import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
-import { ArbeidstakerFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/ArbeidstakerFormFields'
-import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/PensjonsgivendeInntektFormFields'
-import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/FrilanserInntektFormFields'
+import { InntektRequest, inntektRequestSchema, Inntektskategori } from '@schemas/inntektRequest'
+import { ArbeidstakerInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidstaker/ArbeidstakerInntektFormFields'
+import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/PensjonsgivendeInntektFormFields'
+import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/frilanser/FrilanserInntektFormFields'
 import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
-import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/ArbeidsledigInntektFormFields'
+import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidsledig/ArbeidsledigInntektFormFields'
 
 type NySykepengegrunnlagFormProps = {
-    yrkesaktivitet: Yrkesaktivitet
+    kategori: Inntektskategori
+    inntektRequest: InntektRequest
+    yrkesaktivitetId: string
     avbryt: () => void
 }
 
-export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengegrunnlagFormProps): ReactElement {
+export function NySykepengegrunnlagForm({
+    kategori,
+    inntektRequest,
+    yrkesaktivitetId,
+    avbryt,
+}: NySykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
-    const kategori = yrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
-        defaultValues: getDefaultValues(kategori, yrkesaktivitet.inntektRequest as InntektRequestFor<typeof kategori>),
+        defaultValues: getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
     })
 
-    async function onSubmit(values: InntektRequestFor<typeof kategori>) {
-        await mutation.mutateAsync({ yrkesaktivitetId: yrkesaktivitet.id, inntektRequest: values }).then(() => {
+    async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
+        await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {
             form.reset()
             avbryt()
         })
@@ -35,11 +40,7 @@ export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengeg
     return (
         <FormProvider {...form}>
             <VStack as="form" role="form" gap="4" onSubmit={form.handleSubmit(onSubmit)}>
-                {kategori === 'ARBEIDSTAKER' && <ArbeidstakerFormFields />}
-                {kategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' && <PensjonsgivendeInntektFormFields kategori={kategori} />}
-                {kategori === 'INAKTIV' && <PensjonsgivendeInntektFormFields kategori={kategori} />}
-                {kategori === 'FRILANSER' && <FrilanserInntektFormFields />}
-                {kategori === 'ARBEIDSLEDIG' && <ArbeidsledigInntektFormFields />}
+                {FormFieldsFor[kategori]}
                 <Controller
                     control={form.control}
                     name="data.begrunnelse"
@@ -77,4 +78,12 @@ export function NySykepengegrunnlagForm({ yrkesaktivitet, avbryt }: NySykepengeg
             </VStack>
         </FormProvider>
     )
+}
+
+const FormFieldsFor: Record<Inntektskategori, ReactElement> = {
+    ARBEIDSTAKER: <ArbeidstakerInntektFormFields />,
+    SELVSTENDIG_NÆRINGSDRIVENDE: <PensjonsgivendeInntektFormFields kategori="SELVSTENDIG_NÆRINGSDRIVENDE" />,
+    INAKTIV: <PensjonsgivendeInntektFormFields kategori="INAKTIV" />,
+    FRILANSER: <FrilanserInntektFormFields />,
+    ARBEIDSLEDIG: <ArbeidsledigInntektFormFields />,
 }
