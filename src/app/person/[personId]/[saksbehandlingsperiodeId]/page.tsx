@@ -9,7 +9,7 @@ import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
 import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
 import { YrkesaktivitetTab } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTab'
 import { useHash } from '@hooks/useHash'
-import { NySykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/NySykepengegrunnlag'
+import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 
 const VALID_TABS = ['yrkesaktivitet', 'sykepengegrunnlag', 'nysykepengegrunnlag', 'vilkar', 'dagoversikt'] as const
 const DEFAULT_TAB = 'yrkesaktivitet'
@@ -38,7 +38,7 @@ export default function PersonPage(): ReactElement {
                     <TabsTab value="dagoversikt" label="Dagoversikt" />
                 </TabsList>
                 <YrkesaktivitetTab value="yrkesaktivitet" />
-                <NySykepengegrunnlag value="sykepengegrunnlag" />
+                <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTab value="vilkar" />
                 <Dagoversikt value="dagoversikt" />
             </Tabs>

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { ArbeidstakerInntektType, InntektRequest } from '@schemas/inntektRequest'
 

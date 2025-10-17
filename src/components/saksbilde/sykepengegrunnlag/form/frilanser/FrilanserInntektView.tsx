@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
-import { frilanserSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/ny/frilanser/FrilanserInntektFormFields'
+import { frilanserSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
 
 type FrilanserInntektViewProps = {
     inntektRequest?: InntektRequestFor<'FRILANSER'>

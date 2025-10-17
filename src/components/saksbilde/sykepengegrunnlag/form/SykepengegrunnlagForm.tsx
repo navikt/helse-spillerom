@@ -5,25 +5,25 @@ import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
 
 import { useOppdaterInntekt } from '@hooks/mutations/useOppdaterInntekt'
 import { InntektRequest, inntektRequestSchema, Inntektskategori } from '@schemas/inntektRequest'
-import { ArbeidstakerInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidstaker/ArbeidstakerInntektFormFields'
-import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/PensjonsgivendeInntektFormFields'
-import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/frilanser/FrilanserInntektFormFields'
-import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
-import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidsledig/ArbeidsledigInntektFormFields'
+import { ArbeidstakerInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektFormFields'
+import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
+import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
+import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
+import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektFormFields'
 
-type NySykepengegrunnlagFormProps = {
+type SykepengegrunnlagFormProps = {
     kategori: Inntektskategori
     inntektRequest: InntektRequest
     yrkesaktivitetId: string
     avbryt: () => void
 }
 
-export function NySykepengegrunnlagForm({
+export function SykepengegrunnlagForm({
     kategori,
     inntektRequest,
     yrkesaktivitetId,
     avbryt,
-}: NySykepengegrunnlagFormProps): ReactElement {
+}: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),

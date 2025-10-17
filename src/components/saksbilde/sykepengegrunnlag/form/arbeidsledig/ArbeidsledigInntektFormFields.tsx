@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Radio, RadioGroup } from '@navikt/ds-react'
 
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { ArbeidsledigInntektType, arbeidsledigInntektTypeSchema } from '@schemas/inntektRequest'
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 

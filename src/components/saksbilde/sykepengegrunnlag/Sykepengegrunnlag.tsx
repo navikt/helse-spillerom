@@ -12,18 +12,18 @@ import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
-import { NySykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/ny/NySykepengegrunnlagForm'
+import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/SykepengegrunnlagForm'
 import { Inntektskategori } from '@schemas/inntektRequest'
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
-import { ArbeidstakerInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidstaker/ArbeidstakerInntektView'
-import { SelvstendigNæringsdrivendeInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/SelvstendigNæringsdrivendeInntektView'
-import { InaktivInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/InaktivInntektView'
-import { FrilanserInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/frilanser/FrilanserInntektView'
-import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag/form/ny/arbeidsledig/ArbeidsledigInntektView'
+import { ArbeidstakerInntektView } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektView'
+import { SelvstendigNæringsdrivendeInntektView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/SelvstendigNæringsdrivendeInntektView'
+import { InaktivInntektView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/InaktivInntektView'
+import { FrilanserInntektView } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektView'
+import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektView'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 
-export function NySykepengegrunnlag({ value }: { value: string }): ReactElement {
+export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
         data: yrkesaktiviteter,
         isLoading: yrkesaktivitetLoading,
@@ -232,7 +232,7 @@ export function NySykepengegrunnlag({ value }: { value: string }): ReactElement 
                             </>
                         )}
                         {erIRedigeringsmodus && (
-                            <NySykepengegrunnlagForm
+                            <SykepengegrunnlagForm
                                 kategori={kategori}
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}

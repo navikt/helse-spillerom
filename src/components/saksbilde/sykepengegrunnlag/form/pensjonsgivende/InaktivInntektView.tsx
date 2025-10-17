@@ -1,24 +1,24 @@
 import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
-import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/ny/pensjonsgivende/PensjonsgivendeInntektFormFields'
+import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
 
-type SelvstendigNæringsdrivendeInntektViewProps = {
-    inntektRequest?: InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
+type InaktivInntektViewProps = {
+    inntektRequest?: InntektRequestFor<'INAKTIV'>
     inntektData?: Maybe<InntektData>
     sykepengegrunnlag?: Maybe<SykepengegrunnlagV2>
 }
 
-export function SelvstendigNæringsdrivendeInntektView({
+export function InaktivInntektView({
     inntektRequest,
     inntektData,
     sykepengegrunnlag,
-}: SelvstendigNæringsdrivendeInntektViewProps): ReactElement {
+}: InaktivInntektViewProps): ReactElement {
     const inntektRequestData = inntektRequest?.data
 
     if (!inntektRequestData) {

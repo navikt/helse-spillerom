@@ -9,7 +9,7 @@ import {
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
 } from '@schemas/inntektRequest'
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
 export function ArbeidstakerInntektFormFields(): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()

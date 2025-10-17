@@ -3,17 +3,16 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Radio, RadioGroup } from '@navikt/ds-react'
 
 import {
-    Inntektskategori,
-    PensjonsgivendeInntektType,
-    pensjonsgivendeInntektTypeSchema,
-    PensjonsgivendeSkjønnsfastsettelseÅrsak,
-    pensjonsgivendeSkjønnsfastsettelseÅrsakSchema,
+    FrilanserInntektType,
+    frilanserInntektTypeSchema,
+    FrilanserSkjønnsfastsettelseÅrsak,
+    frilanserSkjønnsfastsettelseÅrsakSchema,
 } from '@schemas/inntektRequest'
 import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/ny/defaultValues'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
-export function PensjonsgivendeInntektFormFields({ kategori }: { kategori: Inntektskategori }): ReactElement {
-    const { control, watch, setValue } = useFormContext<InntektRequestFor<typeof kategori>>()
+export function FrilanserInntektFormFields(): ReactElement {
+    const { control, watch, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
     const valgtType = watch('data.type')
 
     return (
@@ -29,12 +28,12 @@ export function PensjonsgivendeInntektFormFields({ kategori }: { kategori: Innte
                         onChange={(value) => {
                             field.onChange(value)
                             if (value === 'SKJONNSFASTSETTELSE') {
-                                setValue('data.årsak', pensjonsgivendeSkjønnsfastsettelseÅrsakSchema.options[0])
-                                setValue('data.årsinntekt', 0)
+                                setValue('data.årsak', frilanserSkjønnsfastsettelseÅrsakSchema.options[0])
+                                setValue('data.månedsbeløp', 0)
                             }
                         }}
                     >
-                        {pensjonsgivendeInntektTypeSchema.options.map((option) => (
+                        {frilanserInntektTypeSchema.options.map((option) => (
                             <Radio key={option} value={option}>
                                 {typeLabels[option]}
                             </Radio>
@@ -44,15 +43,15 @@ export function PensjonsgivendeInntektFormFields({ kategori }: { kategori: Innte
             />
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <>
-                    <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Pensjonsgivende årsinntekt" />
+                    <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
                     <Controller
                         control={control}
                         name="data.årsak"
                         render={({ field }) => (
                             <RadioGroup {...field} legend="Årsak til skjønnsfastsettelse" size="small">
-                                {pensjonsgivendeSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
+                                {frilanserSkjønnsfastsettelseÅrsakSchema.options.map((option) => (
                                     <Radio key={option} value={option}>
-                                        {pensjonsgivendeSkjønnsfastsettelseÅrsakLabels[option]}
+                                        {frilanserSkjønnsfastsettelseÅrsakLabels[option]}
                                     </Radio>
                                 ))}
                             </RadioGroup>
@@ -64,12 +63,12 @@ export function PensjonsgivendeInntektFormFields({ kategori }: { kategori: Innte
     )
 }
 
-const typeLabels: Record<PensjonsgivendeInntektType, string> = {
-    PENSJONSGIVENDE_INNTEKT: 'Bruk pensjonsgivende inntekt fra skatteetaten',
+const typeLabels: Record<FrilanserInntektType, string> = {
+    AINNTEKT: 'Hent fra A-inntekt',
     SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
 }
 
-export const pensjonsgivendeSkjønnsfastsettelseÅrsakLabels: Record<PensjonsgivendeSkjønnsfastsettelseÅrsak, string> = {
-    AVVIK_25_PROSENT_VARIG_ENDRING: '25% avvik og varig endring (§ 8-35 tredje ledd første punktum)',
-    SISTE_TRE_YRKESAKTIV: 'Har blitt yrkesaktiv i løpet av de siste tre årene (§ 8-35 tredje ledd andre punktum)',
+export const frilanserSkjønnsfastsettelseÅrsakLabels: Record<FrilanserSkjønnsfastsettelseÅrsak, string> = {
+    AVVIK_25_PROSENT: 'Skjønnsfastsettelse ved mer enn 25 % avvik (§ 8-30 andre ledd)',
+    MANGELFULL_RAPPORTERING: 'Skjønnsfastsettelse ved mangelfull eller uriktig rapportering (§ 8-30 tredje ledd)',
 }
