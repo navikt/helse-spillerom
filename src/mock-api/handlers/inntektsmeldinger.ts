@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 
-const mockInntektsmeldinger: Inntektsmelding[] = [
+export const mockInntektsmeldinger: Inntektsmelding[] = [
     {
         inntektsmeldingId: '67e56f3c-6eee-4378-b9e3-ad8be6b7a111',
         arbeidstakerFnr: '12345678787',

@@ -16,6 +16,7 @@ import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
 import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-client'
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 import { beregnSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
+import { mockInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
 
 function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
     const erSykmeldt = kategorisering['ER_SYKMELDT']
@@ -248,19 +249,26 @@ export async function handlePutInntekt(
     const body = await request.json()
     const inntektRequest: InntektRequest = body
 
-    // Oppdater inntektRequest på yrkesaktiviteten
-    yrkesaktivitet.inntektRequest = inntektRequest
+    try {
+        // Oppdater inntektRequest på yrkesaktiviteten
+        yrkesaktivitet.inntektRequest = inntektRequest
 
-    // Generer inntektData basert på inntektRequest
-    const inntektData = genererInntektData(inntektRequest)
-    yrkesaktivitet.inntektData = inntektData
-    // Slett utbetalingsberegning når inntekt endres
-    if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
-        delete person.utbetalingsberegning[uuid]
+        // Generer inntektData basert på inntektRequest
+        const inntektData = genererInntektData(inntektRequest)
+        yrkesaktivitet.inntektData = inntektData
+        // Slett utbetalingsberegning når inntekt endres
+        if (person.utbetalingsberegning && person.utbetalingsberegning[uuid]) {
+            delete person.utbetalingsberegning[uuid]
+        }
+        await triggerUtbetalingsberegning(person, uuid)
+
+        return new Response(null, { status: 204 })
+    } catch (error) {
+        if (error instanceof Error && error.message.includes('ikke funnet')) {
+            return NextResponse.json({ message: error.message }, { status: 400 })
+        }
+        throw error
     }
-    await triggerUtbetalingsberegning(person, uuid)
-
-    return new Response(null, { status: 204 })
 }
 
 function genererInntektData(inntektRequest: InntektRequest): InntektData {
@@ -306,11 +314,21 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
     }
 
     if (data.type === 'INNTEKTSMELDING') {
+        const inntektsmeldingId = data.inntektsmeldingId
+        if (!inntektsmeldingId) {
+            throw new Error('InntektsmeldingId er påkrevd for INNTEKTSMELDING type')
+        }
+
+        const inntektsmelding = mockInntektsmeldinger.find((im) => im.inntektsmeldingId === inntektsmeldingId)
+        if (!inntektsmelding) {
+            throw new Error(`Inntektsmelding med ID ${inntektsmeldingId} ikke funnet`)
+        }
+
         return {
             inntektstype: 'ARBEIDSTAKER_INNTEKTSMELDING',
-            omregnetÅrsinntekt: 400000, // TODO: Hent ekte inntektsmelding data
+            omregnetÅrsinntekt: parseFloat(inntektsmelding.beregnetInntekt || '0') * 12,
             sporing: 'BEREGNINGSSPORINGVERDI',
-            inntektsmeldingId: data.inntektsmeldingId,
+            inntektsmeldingId: inntektsmeldingId,
         }
     }
 
@@ -325,21 +343,6 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
             sporing: 'BEREGNINGSSPORINGVERDI',
         }
     }
-    /*
-
-        aar: z.number(),
-    rapportertinntekt: z.number(),
-    inntektGrunnbelopsbegrenset: z.number(),
-    grunnbeløpAar: z.number(),
-    grunnbeløp: z.number(),
-     */
-
-    /**
-     * { beløp: 124028, gyldigFra: '2024-05-01', virkningsdato: '2024-05-01', gyldigMinsteinntektKrav: '2024-06-03' },
-     *     { beløp: 118620, gyldigFra: '2023-05-01', virkningsdato: '2023-05-01', gyldigMinsteinntektKrav: '2023-05-29' },
-     *     { beløp: 111477, gyldigFra: '2022-0
-     */
-
     if (data.type === 'PENSJONSGIVENDE_INNTEKT') {
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
