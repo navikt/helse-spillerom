@@ -1,7 +1,8 @@
-import {ReactElement} from "react";
-import {Organisasjonsnavn} from "@components/organisasjon/Organisasjonsnavn";
-import {BodyShort, HStack} from "@navikt/ds-react";
-import {BriefcaseIcon} from "@navikt/aksel-icons";
+import { ReactElement } from 'react'
+import { BodyShort, HStack } from '@navikt/ds-react'
+import { BriefcaseIcon } from '@navikt/aksel-icons'
+
+import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 
 function getKategoriseringTekst(
     kategorisering: Record<string, string | string[]>,
@@ -31,10 +32,10 @@ function getKategoriseringTekst(
 }
 
 export function NavnOgIkon({
-                               kategorisering,
-                               className,
-                               medOrgnummer = false,
-                           }: {
+    kategorisering,
+    className,
+    medOrgnummer = false,
+}: {
     kategorisering: Record<string, string | string[]>
     className?: string
     medOrgnummer?: boolean

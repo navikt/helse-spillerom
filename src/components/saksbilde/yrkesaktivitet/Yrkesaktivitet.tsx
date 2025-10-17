@@ -26,7 +26,7 @@ import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import {useSykepengegrunnlagV2} from "@hooks/queries/useSykepengegrunnlagV2";
+import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
