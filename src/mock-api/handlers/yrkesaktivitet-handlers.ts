@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
+import { logger } from '@navikt/next-logger'
 
 import { Person } from '@/mock-api/session'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
@@ -457,6 +458,13 @@ export async function triggerUtbetalingsberegning(person: Person, saksbehandling
 
     const sykepengegrunnlag = beregnSykepengegrunnlagV2(yrkesaktivitet, saksbehandlingsperiode.skjæringstidspunkt!)
     if (!sykepengegrunnlag) {
+        return
+    }
+
+    // hvis ikke alle yrkesaktiviteter har inntektData, kan vi ikke beregne
+    const harFullInnntektsdata = yrkesaktivitet.every((ya) => ya.inntektData != null)
+    if (!harFullInnntektsdata) {
+        logger.info('Har ikke full inntektsdata')
         return
     }
 
