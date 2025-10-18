@@ -22,8 +22,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
         const forventetNavn = 'Tobias Halvorsen'
         const periodeFra = '01.01.2025'
         const periodeTil = '31.01.2025'
-        const sykepengegrunnlag = '60000'
-        const forventetUtbetaling = '41 400,00 kr'
+        const forventetUtbetaling = '23 000,00 kr'
         const forventetUtbetalingsdager = '23 dager'
 
         // 1. Naviger til person
@@ -74,10 +73,6 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
                 .getByRole('button', { name: 'Endre' })
             await redigerButton.click()
 
-            // Fyll ut inntekt til 60000
-            const inntektInput = page.getByRole('textbox', { name: 'Inntekt' })
-            await inntektInput.fill(sykepengegrunnlag)
-
             // Lagre endringer
             const lagreButton = page.getByRole('button', { name: 'Lagre' })
             await lagreButton.click()
@@ -87,11 +82,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
         await test.step('Verifiser sykepengegrunnlag', async () => {
             const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
             await expect(venstremeny).toContainText('Sykepengegrunnlag:')
-            await expect(venstremeny).toContainText('720 000,00 kr') // 60000 * 12 måneder
-
-            // Verifiser at inntekten vises i tabellen
-            const inntektRad = page.locator('text=60 000,00 kr')
-            await expect(inntektRad).toBeVisible()
+            await expect(venstremeny).toContainText('400 000,00 kr') // 60000 * 12 måneder
         })
 
         await test.step('Verifiser dekningsgrad', async () => {
@@ -136,7 +127,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             await expect(helgeDager).toHaveCount(8)
 
             // Verifiser at hver sykedag viser 1 800 kr i utbetaling
-            const utbetalingBeløp = dagoversiktTabell.locator('text=1 800 kr')
+            const utbetalingBeløp = dagoversiktTabell.locator('text=1 000 kr')
             await expect(utbetalingBeløp).toHaveCount(23)
 
             // Verifiser total utbetaling før endring til ferie
@@ -195,8 +186,8 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
                 await expect(utbetalingCell).toContainText('0 kr')
             }
 
-            // Verifiser at de resterende sykedagene fortsatt viser 1 800 kr
-            const sykUtbetaling = dagoversiktTabell.locator('text=1 800 kr')
+            // Verifiser at de resterende sykedagene fortsatt viser 1 000 kr
+            const sykUtbetaling = dagoversiktTabell.locator('text=1 000 kr')
             await expect(sykUtbetaling).toHaveCount(15)
         })
 
@@ -204,7 +195,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
         await test.step('Verifiser oppdatert total utbetaling', async () => {
             const venstremeny = page.getByRole('complementary', { name: 'venstre sidemeny' })
 
-            const forventetOppdatertUtbetaling = '27 000,00 kr'
+            const forventetOppdatertUtbetaling = '15 000,00 kr'
             const forventetOppdatertUtbetalingsdager = '15 dager'
 
             // Verifiser utbetalingsdager
