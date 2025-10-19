@@ -86,7 +86,9 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                     <Table className="[&_td]:border-0 [&_th]:border-0">
                         <TableHeader>
                             <TableRow>
-                                <TableHeaderCell />
+                                <TableHeaderCell>
+                                    <span className="sr-only">Yrkesaktivitet</span>
+                                </TableHeaderCell>
                                 <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
                                     <Detail textColor="subtle">Omregnet årsinntekt</Detail>
                                 </TableHeaderCell>

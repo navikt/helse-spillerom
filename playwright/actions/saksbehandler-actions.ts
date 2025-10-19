@@ -477,8 +477,9 @@ export function åpneSykepengegrunnlagSkjema() {
             await page.waitForSelector('[role="tabpanel"]:has-text("Sykepengegrunnlag")', { state: 'visible' })
 
             // Finn rediger-knappen i inntekter-seksjonen
-            const inntekterSection = page.locator('h1:has-text("Inntekter")').locator('..')
-            const redigerButton = inntekterSection.getByRole('button', { name: 'Rediger' })
+            const redigerButton = page
+                .getByRole('tabpanel', { name: 'Sykepengegrunnlag' })
+                .getByRole('button', { name: 'Endre' })
             await redigerButton.waitFor({ state: 'visible' })
             await redigerButton.click()
         })
@@ -491,7 +492,7 @@ export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = '
             // Vent på at skjemaet er åpent
             await page.waitForSelector('form', { state: 'visible' })
 
-            const inntektField = page.getByRole('textbox', { name: 'Inntekt' })
+            const inntektField = page.getByRole('textbox', { name: 'Månedsbeløp' })
             await inntektField.waitFor({ state: 'visible' })
             await inntektField.fill(inntekt)
 
@@ -510,6 +511,19 @@ export function lagreSykepengegrunnlag() {
 
             // Vent på at skjemaet lukkes
             await lagreButton.waitFor({ state: 'hidden' })
+        })
+    }
+}
+
+export function settSykepengegrunnlagNæringsdrivende(begrunnelse: string = 'Test inntekt for sykepengegrunnlag') {
+    return async (page: Page) => {
+        await test.step(`Forn næringsdrivende`, async () => {
+            await navigerTilSykepengegrunnlagFane()(page)
+            await åpneSykepengegrunnlagSkjema()(page)
+            const begrunnelseField = page.getByRole('textbox', { name: 'Begrunnelse' })
+            await begrunnelseField.waitFor({ state: 'visible' })
+            await begrunnelseField.fill(begrunnelse)
+            await lagreSykepengegrunnlag()(page)
         })
     }
 }
