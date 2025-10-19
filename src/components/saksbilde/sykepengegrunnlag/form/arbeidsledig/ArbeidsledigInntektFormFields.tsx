@@ -28,7 +28,7 @@ export function ArbeidsledigInntektFormFields(): ReactElement {
             {valgtType === 'DAGPENGER' ? (
                 <NyPengerField className="w-[212px]" name="data.dagbeløp" label="Dagbeløp" />
             ) : (
-                <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
+                <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
             )}
         </>
     )

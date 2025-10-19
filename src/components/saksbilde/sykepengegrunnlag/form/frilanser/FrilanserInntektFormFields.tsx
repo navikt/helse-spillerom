@@ -43,7 +43,7 @@ export function FrilanserInntektFormFields(): ReactElement {
             />
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <>
-                    <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
+                    <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
                     <Controller
                         control={control}
                         name="data.årsak"

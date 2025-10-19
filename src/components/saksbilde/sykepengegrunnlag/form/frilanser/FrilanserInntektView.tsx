@@ -24,7 +24,7 @@ export function FrilanserInntektView({
     if (!inntektRequestData) {
         return (
             <VStack gap="2" className="w-fit">
-                <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                <BodyShort weight="semibold">Årsinntekt</BodyShort>
                 <BodyShort className="text-right">-</BodyShort>
             </VStack>
         )

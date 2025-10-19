@@ -50,7 +50,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                 )}
             />
             {(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (
-                <NyPengerField className="w-[212px]" name="data.månedsbeløp" label="Månedsbeløp" />
+                <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
             )}
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <Controller

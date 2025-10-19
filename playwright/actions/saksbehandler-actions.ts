@@ -492,7 +492,7 @@ export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = '
             // Vent på at skjemaet er åpent
             await page.waitForSelector('form', { state: 'visible' })
 
-            const inntektField = page.getByRole('textbox', { name: 'Månedsbeløp' })
+            const inntektField = page.getByRole('textbox', { name: 'Årsinntekt' })
             await inntektField.waitFor({ state: 'visible' })
             await inntektField.fill(inntekt)
 
