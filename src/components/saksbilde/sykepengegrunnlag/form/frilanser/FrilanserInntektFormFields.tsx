@@ -29,7 +29,7 @@ export function FrilanserInntektFormFields(): ReactElement {
                             field.onChange(value)
                             if (value === 'SKJONNSFASTSETTELSE') {
                                 setValue('data.årsak', frilanserSkjønnsfastsettelseÅrsakSchema.options[0])
-                                setValue('data.månedsbeløp', 0)
+                                setValue('data.årsinntekt', 0)
                             }
                         }}
                     >

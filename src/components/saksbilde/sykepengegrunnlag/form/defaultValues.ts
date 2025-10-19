@@ -38,12 +38,12 @@ const arbeidstakerDefaults: Record<
     AINNTEKT: { type: 'AINNTEKT', begrunnelse: '' },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
-        månedsbeløp: 0,
+        årsinntekt: 0,
         årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0],
         begrunnelse: '',
         refusjon: undefined,
     },
-    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', månedsbeløp: 0, begrunnelse: '' },
+    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', årsinntekt: 0, begrunnelse: '' },
 }
 
 // SELVSTENDIG / INAKTIV
@@ -68,7 +68,7 @@ const frilanserDefaults: Record<
     AINNTEKT: { type: 'AINNTEKT', begrunnelse: '' },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
-        månedsbeløp: 0,
+        årsinntekt: 0,
         årsak: frilanserSkjønnsfastsettelseÅrsakSchema.options[0],
         begrunnelse: '',
     },
@@ -80,8 +80,8 @@ const arbeidsledigDefaults: Record<
     Extract<ArbeidsledigInntektRequest, { type: ArbeidsledigInntektType }>
 > = {
     DAGPENGER: { type: 'DAGPENGER', dagbeløp: 0, begrunnelse: '' },
-    VENTELONN: { type: 'VENTELONN', månedsbeløp: 0, begrunnelse: '' },
-    VARTPENGER: { type: 'VARTPENGER', månedsbeløp: 0, begrunnelse: '' },
+    VENTELONN: { type: 'VENTELONN', årsinntekt: 0, begrunnelse: '' },
+    VARTPENGER: { type: 'VARTPENGER', årsinntekt: 0, begrunnelse: '' },
 }
 
 const defaultValuesMap: {

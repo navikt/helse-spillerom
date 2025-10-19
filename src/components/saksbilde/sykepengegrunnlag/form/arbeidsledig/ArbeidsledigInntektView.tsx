@@ -3,7 +3,7 @@ import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
-import { ArbeidstakerInntektType, InntektRequest } from '@schemas/inntektRequest'
+import { ArbeidsledigInntektType, InntektRequest } from '@schemas/inntektRequest'
 
 type ArbeidsledigInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSLEDIG'>
@@ -21,15 +21,15 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
         )
     }
 
-    const { månedsbeløp, dagbeløp, begrunnelse } = normalize(inntektRequestData)
+    const { årsinntekt, dagbeløp, begrunnelse } = normalize(inntektRequestData)
 
     return (
         <>
-            {månedsbeløp && (
+            {årsinntekt && (
                 <VStack gap="1">
-                    <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                    <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2">
-                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(månedsbeløp)}</BodyShort>
+                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                         <Tag variant="neutral" size="xsmall">
                             manuelt beregnet
                         </Tag>
@@ -62,8 +62,8 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
 function normalize(data?: InntektRequest['data']) {
     if (!data) return {}
     return {
-        type: data.type as ArbeidstakerInntektType,
-        månedsbeløp: 'månedsbeløp' in data ? data.månedsbeløp : undefined,
+        type: data.type as ArbeidsledigInntektType,
+        årsinntekt: 'årsinntekt' in data ? data.årsinntekt : undefined,
         dagbeløp: 'dagbeløp' in data ? data.dagbeløp : undefined,
         begrunnelse: 'begrunnelse' in data ? data.begrunnelse : undefined,
     }

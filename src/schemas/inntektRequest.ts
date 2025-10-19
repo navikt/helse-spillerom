@@ -34,13 +34,13 @@ export const arbeidstakerInntektRequestSchema = z
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-            månedsbeløp: z.number(),
+            årsinntekt: z.number(),
             årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
             refusjon: refusjonInfoSchema.optional(),
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
-            månedsbeløp: z.number(),
+            årsinntekt: z.number(),
         }),
     ])
     .and(z.object({ begrunnelse: z.string() }))
@@ -78,7 +78,7 @@ export const frilanserInntektRequestSchema = z
         }),
         z.object({
             type: frilanserInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-            månedsbeløp: z.number(),
+            årsinntekt: z.number(),
             årsak: frilanserSkjønnsfastsettelseÅrsakSchema,
         }),
     ])
@@ -95,11 +95,11 @@ export const arbeidsledigInntektRequestSchema = z
         }),
         z.object({
             type: arbeidsledigInntektTypeSchema.extract(['VENTELONN']),
-            månedsbeløp: z.number(),
+            årsinntekt: z.number(),
         }),
         z.object({
             type: arbeidsledigInntektTypeSchema.extract(['VARTPENGER']),
-            månedsbeløp: z.number(),
+            årsinntekt: z.number(),
         }),
     ])
     .and(z.object({ begrunnelse: z.string() }))

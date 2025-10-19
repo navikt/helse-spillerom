@@ -293,7 +293,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
     if (data.type === 'SKJONNSFASTSETTELSE') {
         return {
             inntektstype: 'ARBEIDSTAKER_SKJØNNSFASTSATT',
-            omregnetÅrsinntekt: data.månedsbeløp * 12,
+            omregnetÅrsinntekt: data.årsinntekt,
             sporing: `SKJØNNSFASTSATT_${data.årsak} TODO`,
         }
     }
@@ -301,7 +301,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
     if (data.type === 'MANUELT_BEREGNET') {
         return {
             inntektstype: 'ARBEIDSTAKER_MANUELT_BEREGNET',
-            omregnetÅrsinntekt: data.månedsbeløp * 12,
+            omregnetÅrsinntekt: data.årsinntekt,
             sporing: 'BEREGNINGSSPORINGVERDI',
         }
     }
@@ -408,7 +408,7 @@ function genererFrilanserInntektData(data: FrilanserInntektRequest): InntektData
     if (data.type === 'SKJONNSFASTSETTELSE') {
         return {
             inntektstype: 'FRILANSER_SKJØNNSFASTSATT',
-            omregnetÅrsinntekt: data.månedsbeløp * 12,
+            omregnetÅrsinntekt: data.årsinntekt,
             sporing: 'BEREGNINGSSPORINGVERDI',
         }
     }
@@ -434,8 +434,7 @@ function genererArbeidsledigInntektData(data: ArbeidsledigInntektRequest): Innte
             break
         case 'VENTELONN':
         case 'VARTPENGER':
-            // Ventelønn og vartpenger: månedsbeløp * 12 måneder
-            omregnetÅrsinntekt = data.månedsbeløp * 12
+            omregnetÅrsinntekt = data.årsinntekt
             break
         default:
             throw new Error('Ukjent arbeidsledig inntekt type')

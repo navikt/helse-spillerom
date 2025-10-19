@@ -43,15 +43,15 @@ export function FrilanserInntektView({
         )
     }
 
-    const { månedsbeløp, årsak, begrunnelse } = inntektRequestData
+    const { årsinntekt, årsak, begrunnelse } = inntektRequestData
 
     return (
         <>
-            {månedsbeløp && (
+            {årsinntekt && (
                 <VStack gap="1">
-                    <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                    <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2">
-                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(månedsbeløp)}</BodyShort>
+                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                         <Tag variant="neutral" size="xsmall">
                             skjønnsfastsatt
                         </Tag>

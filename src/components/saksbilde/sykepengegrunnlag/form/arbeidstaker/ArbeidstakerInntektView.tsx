@@ -25,7 +25,7 @@ export function ArbeidstakerInntektView({
     if (!inntektRequestData) {
         return (
             <VStack gap="2" className="w-fit">
-                <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                <BodyShort weight="semibold">Årsinntekt</BodyShort>
                 <BodyShort className="text-right">-</BodyShort>
             </VStack>
         )
@@ -44,15 +44,15 @@ export function ArbeidstakerInntektView({
         )
     }
 
-    const { type, månedsbeløp, årsak, begrunnelse } = normalize(inntektRequestData)
+    const { type, årsinntekt, årsak, begrunnelse } = normalize(inntektRequestData)
 
     return (
         <>
-            {månedsbeløp && (
+            {årsinntekt && (
                 <VStack gap="1">
-                    <BodyShort weight="semibold">Månedsbeløp</BodyShort>
+                    <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2">
-                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(månedsbeløp)}</BodyShort>
+                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                         {TagFor[type]}
                     </HStack>
                 </VStack>
@@ -80,7 +80,7 @@ function normalize(data?: InntektRequest['data']) {
     return {
         type: data.type as ArbeidstakerInntektType,
         inntektsmeldingId: 'inntektsmeldingId' in data ? data.inntektsmeldingId : undefined,
-        månedsbeløp: 'månedsbeløp' in data ? data.månedsbeløp : undefined,
+        årsinntekt: 'årsinntekt' in data ? data.årsinntekt : undefined,
         årsak: 'årsak' in data ? (data.årsak as ArbeidstakerSkjønnsfastsettelseÅrsak) : undefined,
         refusjon: 'refusjon' in data ? data.refusjon : undefined,
         begrunnelse: 'begrunnelse' in data ? data.begrunnelse : undefined,
