@@ -53,7 +53,7 @@ export const InntektsmeldingSchema = z.object({
     mottattDato: z.string(),
     naerRelasjon: z.boolean().nullable().optional(),
     avsenderSystem: AvsenderSystemSchema.nullable().optional(),
-    inntektEndringAarsak: z.string().nullable().optional(),
+    inntektEndringAarsak: z.any().nullable().optional(),
     inntektEndringAarsaker: z.array(z.any()).nullable().optional(),
     arsakTilInnsending: ArsakTilInnsendingSchema.default('Ny'),
     mottaksKanal: MottaksKanalSchema.nullable().optional(),
