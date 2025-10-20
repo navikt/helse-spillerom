@@ -11,6 +11,7 @@ import {
     PensjonsgivendeInntektRequest,
     FrilanserInntektRequest,
     ArbeidsledigInntektRequest,
+    ArbeidstakerSkjønnsfastsettelseÅrsak,
 } from '@/schemas/inntektRequest'
 import { InntektData } from '@/schemas/inntektData'
 import { genererDagoversikt } from '@/mock-api/utils/dagoversikt-generator'
@@ -291,10 +292,22 @@ function genererInntektData(inntektRequest: InntektRequest): InntektData {
 
 function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): InntektData {
     if (data.type === 'SKJONNSFASTSETTELSE') {
+        function sporingsverdi(data: ArbeidstakerSkjønnsfastsettelseÅrsak): string {
+            switch (data) {
+                case 'AVVIK_25_PROSENT':
+                    return 'ARB_SPG_SKJOENN_AVVIK'
+                case 'MANGELFULL_RAPPORTERING':
+                    return 'ARB_SPG_SKJOENN_URIKTIG'
+                case 'TIDSAVGRENSET':
+                    return 'ARB_SPG_TIDSBEGRENSET_FOER_SLUTTDATO'
+            }
+            throw Error('Ukjent årsak for skjønnsfastsettelse')
+        }
+
         return {
             inntektstype: 'ARBEIDSTAKER_SKJØNNSFASTSATT',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: `SKJØNNSFASTSATT_${data.årsak} TODO`,
+            sporing: sporingsverdi(data.årsak),
         }
     }
 
@@ -302,7 +315,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_MANUELT_BEREGNET',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'MANUELT_BEREGNET_BEREGNINGSSPORINGVERDI',
         }
     }
 
@@ -310,7 +323,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_AINNTEKT',
             omregnetÅrsinntekt: 400000, // TODO: Hent ekte A-inntekt data
-            sporing: 'A-inntekt TODO',
+            sporing: 'ARB_SPG_HOVEDREGEL',
         }
     }
 
