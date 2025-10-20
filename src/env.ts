@@ -35,6 +35,8 @@ export const serverEnvSchema = z.object({
     BAKROMMET_HOST: z.string(),
     MODIA_SCOPE: z.string(),
     MODIA_BASE_URL: z.string(),
+    // Optional: kun brukt når vi ikke kjører mock-api
+    EREG_SERVICES_BASE_URL: z.string().optional(),
 })
 
 const getRawServerConfig = (): Partial<unknown> =>
@@ -48,6 +50,7 @@ const getRawServerConfig = (): Partial<unknown> =>
         BAKROMMET_HOST: process.env.BAKROMMET_HOST,
         MODIA_SCOPE: process.env.MODIA_SCOPE,
         MODIA_BASE_URL: process.env.MODIA_BASE_URL,
+        EREG_SERVICES_BASE_URL: process.env.EREG_SERVICES_BASE_URL,
     }) satisfies Record<keyof ServerEnv, string | undefined>
 
 export function getServerEnv(): ServerEnv & PublicEnv {
