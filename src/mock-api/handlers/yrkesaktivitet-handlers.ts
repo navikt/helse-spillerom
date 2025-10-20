@@ -328,7 +328,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_INNTEKTSMELDING',
             omregnetÅrsinntekt: parseFloat(inntektsmelding.beregnetInntekt || '0') * 12,
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'ARB_SPG_HOVEDREGEL',
             inntektsmeldingId: inntektsmeldingId,
         }
     }

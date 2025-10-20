@@ -5,10 +5,12 @@ import { Table } from '@navikt/ds-react'
 
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { useBeregningsregler } from '@/hooks/queries/useBeregningsregler'
+import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 
 export function BergingssporingInnsikt(): ReactElement {
     const { data: beregning } = useUtbetalingsberegning()
     const { data: beregningsregler } = useBeregningsregler()
+    const { data: yrkesaktiviteter } = useYrkesaktivitet()
 
     // Hent sporing fra beregning
     const sporing = beregning?.beregningData?.yrkesaktiviteter?.map((ya) => ya.dekningsgrad?.sporing) || []
@@ -20,6 +22,18 @@ export function BergingssporingInnsikt(): ReactElement {
             regelkode,
             beskrivelse: regel?.beskrivelse,
             vilkårshjemmel: regel?.vilkårshjemmel,
+        }
+    })
+
+    yrkesaktiviteter?.forEach((ya) => {
+        const inntektSporing = ya.inntektData?.sporing
+        if (inntektSporing) {
+            const regel = beregningsregler?.find((r) => r.kode === inntektSporing)
+            sporingMedInfo.push({
+                regelkode: inntektSporing,
+                beskrivelse: regel?.beskrivelse,
+                vilkårshjemmel: regel?.vilkårshjemmel,
+            })
         }
     })
 
