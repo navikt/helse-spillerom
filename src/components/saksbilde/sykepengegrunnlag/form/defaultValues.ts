@@ -34,8 +34,8 @@ const arbeidstakerDefaults: Record<
     ArbeidstakerInntektType,
     Extract<ArbeidstakerInntektRequest, { type: ArbeidstakerInntektType }>
 > = {
-    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '', begrunnelse: '' },
-    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '' },
+    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '', begrunnelse: '', refusjon: undefined },
+    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '', refusjon: undefined },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         årsinntekt: 0,
@@ -43,7 +43,7 @@ const arbeidstakerDefaults: Record<
         begrunnelse: '',
         refusjon: undefined,
     },
-    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', årsinntekt: 0, begrunnelse: '' },
+    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', årsinntekt: 0, begrunnelse: '', refusjon: undefined },
 }
 
 // SELVSTENDIG / INAKTIV

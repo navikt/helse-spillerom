@@ -36,14 +36,13 @@ export const arbeidstakerInntektRequestSchema = z
             type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
             årsinntekt: z.number(),
             årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
-            refusjon: refusjonInfoSchema.optional(),
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
             årsinntekt: z.number(),
         }),
     ])
-    .and(z.object({ begrunnelse: z.string() }))
+    .and(z.object({ begrunnelse: z.string(), refusjon: refusjonInfoSchema.optional() }))
 
 // Pensjonsgivende inntekt typer (for selvstendig næringsdrivende og inaktiv)
 export const pensjonsgivendeSkjønnsfastsettelseÅrsakSchema = z.enum([
