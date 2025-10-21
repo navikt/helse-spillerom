@@ -2,15 +2,17 @@ import { z } from 'zod/v4'
 
 // Hjelpeklasser
 export const inntektAarSchema = z.object({
-    aar: z.number(),
+    år: z.number(),
     rapportertinntekt: z.number(),
-    inntektGrunnbelopsbegrenset: z.number(),
-    grunnbeløpAar: z.number(),
-    grunnbeløp: z.number(),
+    justertÅrsgrunnlag: z.number(),
+    antallG: z.number(),
+    snittG: z.number(),
 })
 
 export const pensjonsgivendeInntektSchema = z.object({
-    inntektAar: z.array(inntektAarSchema),
+    omregnetÅrsinntekt: z.number(),
+    pensjonsgivendeInntekt: z.array(inntektAarSchema),
+    anvendtGrunnbeløp: z.number(),
 })
 
 // InntektData typer

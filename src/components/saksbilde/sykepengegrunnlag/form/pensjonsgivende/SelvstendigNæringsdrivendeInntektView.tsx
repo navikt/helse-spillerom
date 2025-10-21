@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, Label, Table, Tag, VStack } from '@navikt/ds-react'
+import { BodyShort, HelpText, HStack, Label, Table, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe } from '@utils/tsUtils'
@@ -42,18 +42,57 @@ export function SelvstendigNæringsdrivendeInntektView({
                         <Table.Row>
                             <Table.HeaderCell className="text-sm">År</Table.HeaderCell>
                             <Table.HeaderCell className="text-sm">Rapportert inntekt</Table.HeaderCell>
-                            <Table.HeaderCell className="text-sm">G justert inntekt</Table.HeaderCell>
+                            <Table.HeaderCell className="text-sm">Justert årsgrunnlag</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {inntektData.pensjonsgivendeInntekt.inntektAar.map((inntekt) => (
-                            <Table.Row key={inntekt.aar}>
-                                <Table.DataCell className="text-sm">{inntekt.aar}</Table.DataCell>
+                        {inntektData.pensjonsgivendeInntekt.pensjonsgivendeInntekt.map((inntekt) => (
+                            <Table.Row key={inntekt.år}>
+                                <Table.DataCell className="text-sm">{inntekt.år}</Table.DataCell>
                                 <Table.DataCell className="text-sm">
                                     {formaterBeløpKroner(inntekt.rapportertinntekt)}
                                 </Table.DataCell>
-                                <Table.DataCell className="text-sm">
-                                    {formaterBeløpKroner(inntekt.inntektGrunnbelopsbegrenset)}
+                                <Table.DataCell className="flex flex-row items-center gap-2 text-sm">
+                                    {formaterBeløpKroner(inntekt.justertÅrsgrunnlag)}
+                                    <HelpText placement="bottom">
+                                        <div className="space-y-2">
+                                            <div>
+                                                <BodyShort className="text-xs font-semibold">
+                                                    Kompensert antall G: {inntekt.antallG.toFixed(2)}
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    Rå inntekt: {formaterBeløpKroner(inntekt.rapportertinntekt)} ÷{' '}
+                                                    {formaterBeløpKroner(inntekt.snittG)} = {inntekt.antallG.toFixed(2)}{' '}
+                                                    G
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    (Eksempel: 8G rå inntekt → 6G + (2G × 1/3) = 6,67G kompensert)
+                                                </BodyShort>
+                                            </div>
+                                            <div>
+                                                <BodyShort className="text-xs font-semibold">
+                                                    G-verdi for {inntekt.år}: {formaterBeløpKroner(inntekt.snittG)}
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    Snitt G-verdi over året (justert for endringer i mai)
+                                                </BodyShort>
+                                            </div>
+                                            <div>
+                                                <BodyShort className="text-xs font-semibold">
+                                                    6G/12G begrensning:
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    • Inntekter opp til 6G: 100% kompensert
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    • Inntekter 6G-12G: 1/3 kompensert
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    • Inntekter over 12G: ikke kompensert
+                                                </BodyShort>
+                                            </div>
+                                        </div>
+                                    </HelpText>
                                 </Table.DataCell>
                             </Table.Row>
                         ))}

@@ -364,29 +364,31 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
             beregnetPensjonsgivendeInntekt: 795568, // Opprinnelig beregnet verdi fra Sigrun
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
-                inntektAar: [
+                omregnetÅrsinntekt: 795568,
+                pensjonsgivendeInntekt: [
                     {
-                        aar: 2024,
+                        år: 2024,
                         rapportertinntekt: 2000000, // langt over 12 G
-                        inntektGrunnbelopsbegrenset: 992224,
-                        grunnbeløpAar: 2024,
-                        grunnbeløp: 124028,
+                        justertÅrsgrunnlag: 992224,
+                        antallG: 8.0,
+                        snittG: 124028,
                     },
                     {
-                        aar: 2023,
+                        år: 2023,
                         rapportertinntekt: 900000,
-                        inntektGrunnbelopsbegrenset: 774480,
-                        grunnbeløpAar: 2024,
-                        grunnbeløp: 118620,
+                        justertÅrsgrunnlag: 774480,
+                        antallG: 6.5,
+                        snittG: 118620,
                     },
                     {
-                        aar: 2022,
+                        år: 2022,
                         rapportertinntekt: 620000,
-                        inntektGrunnbelopsbegrenset: 620000,
-                        grunnbeløpAar: 2024,
-                        grunnbeløp: 111477,
+                        justertÅrsgrunnlag: 620000,
+                        antallG: 5.6,
+                        snittG: 111477,
                     },
                 ],
+                anvendtGrunnbeløp: 124028,
             },
         }
     }
@@ -409,7 +411,9 @@ function genererInaktivInntektData(data: PensjonsgivendeInntektRequest): Inntekt
             omregnetÅrsinntekt: 400000, // TODO: Hent ekte pensjonsgivende inntekt data
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
-                inntektAar: [], // TODO: Hent ekte data
+                omregnetÅrsinntekt: 400000,
+                pensjonsgivendeInntekt: [], // TODO: Hent ekte data
+                anvendtGrunnbeløp: 124028,
             },
         }
     }
