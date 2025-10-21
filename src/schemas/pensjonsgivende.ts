@@ -3,10 +3,10 @@ import { z } from 'zod/v4'
 const pensjonsgivendeInntektItemSchema = z.object({
     skatteordning: z.string(),
     datoForFastsetting: z.string(),
-    pensjonsgivendeInntektAvLoennsinntekt: z.number().nullable(),
-    pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel: z.number().nullable(),
-    pensjonsgivendeInntektAvNaeringsinntekt: z.number().nullable(),
-    pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage: z.number().nullable(),
+    pensjonsgivendeInntektAvLoennsinntekt: z.string().nullable(),
+    pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel: z.string().nullable(),
+    pensjonsgivendeInntektAvNaeringsinntekt: z.string().nullable(),
+    pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage: z.string().nullable(),
 })
 
 const pensjonsgivendeInntektÅrSchema = z.object({

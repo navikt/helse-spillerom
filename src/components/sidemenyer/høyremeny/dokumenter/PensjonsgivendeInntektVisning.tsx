@@ -68,12 +68,13 @@ export function PensjonsgivendeInntektVisning({
                 // Lønnsinntekt
                 if (
                     inntektItem.pensjonsgivendeInntektAvLoennsinntekt !== null &&
-                    inntektItem.pensjonsgivendeInntektAvLoennsinntekt !== 0
+                    inntektItem.pensjonsgivendeInntektAvLoennsinntekt !== '' &&
+                    inntektItem.pensjonsgivendeInntektAvLoennsinntekt !== '0'
                 ) {
                     tableRader.push({
                         år: årData.inntektsaar,
                         type: 'Lønnsinntekt',
-                        beløp: inntektItem.pensjonsgivendeInntektAvLoennsinntekt,
+                        beløp: parseInt(inntektItem.pensjonsgivendeInntektAvLoennsinntekt),
                         skatteordning,
                     })
                 }
@@ -81,12 +82,13 @@ export function PensjonsgivendeInntektVisning({
                 // Lønnsinntekt bare pensjonsdel
                 if (
                     inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel !== null &&
-                    inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel !== 0
+                    inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel !== '' &&
+                    inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel !== '0'
                 ) {
                     tableRader.push({
                         år: årData.inntektsaar,
                         type: 'Lønn (pensjonsdel)',
-                        beløp: inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel,
+                        beløp: parseInt(inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel),
                         skatteordning,
                     })
                 }
@@ -94,12 +96,13 @@ export function PensjonsgivendeInntektVisning({
                 // Næringsinntekt
                 if (
                     inntektItem.pensjonsgivendeInntektAvNaeringsinntekt !== null &&
-                    inntektItem.pensjonsgivendeInntektAvNaeringsinntekt !== 0
+                    inntektItem.pensjonsgivendeInntektAvNaeringsinntekt !== '' &&
+                    inntektItem.pensjonsgivendeInntektAvNaeringsinntekt !== '0'
                 ) {
                     tableRader.push({
                         år: årData.inntektsaar,
                         type: 'Næringsinntekt',
-                        beløp: inntektItem.pensjonsgivendeInntektAvNaeringsinntekt,
+                        beløp: parseInt(inntektItem.pensjonsgivendeInntektAvNaeringsinntekt),
                         skatteordning,
                     })
                 }
@@ -107,12 +110,15 @@ export function PensjonsgivendeInntektVisning({
                 // Fiske/fangst/familiebarnehage
                 if (
                     inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage !== null &&
-                    inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage !== 0
+                    inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage !== '' &&
+                    inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage !== '0'
                 ) {
                     tableRader.push({
                         år: årData.inntektsaar,
                         type: 'Fiske/fangst/barnehage',
-                        beløp: inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage,
+                        beløp: parseInt(
+                            inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage,
+                        ),
                         skatteordning,
                     })
                 }
@@ -123,7 +129,7 @@ export function PensjonsgivendeInntektVisning({
                     inntektItem.pensjonsgivendeInntektAvLoennsinntektBarePensjonsdel,
                     inntektItem.pensjonsgivendeInntektAvNaeringsinntekt,
                     inntektItem.pensjonsgivendeInntektAvNaeringsinntektFraFiskeFangstEllerFamiliebarnehage,
-                ].some((verdi) => verdi !== null && verdi !== 0)
+                ].some((verdi) => verdi !== null && verdi !== '' && verdi !== '0')
 
                 if (!harInntekt) {
                     tableRader.push({
