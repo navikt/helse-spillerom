@@ -2,8 +2,8 @@ import { z } from 'zod/v4'
 
 // Hjelpeklasser
 export const refusjonInfoSchema = z.object({
-    fra: z.string(), // LocalDate som string
-    til: z.string(), // LocalDate som string
+    fom: z.string(), // LocalDate som string
+    tom: z.string(), // LocalDate som string
     beløp: z.number(),
 })
 
