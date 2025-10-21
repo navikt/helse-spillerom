@@ -2,7 +2,7 @@ import { z } from 'zod/v4'
 
 // Hjelpeklasser
 export const inntektAarSchema = z.object({
-    år: z.number(),
+    år: z.string(),
     rapportertinntekt: z.number(),
     justertÅrsgrunnlag: z.number(),
     antallG: z.number(),

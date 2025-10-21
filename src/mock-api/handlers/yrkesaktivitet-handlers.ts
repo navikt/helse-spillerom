@@ -367,21 +367,21 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
                 omregnetÅrsinntekt: 795568,
                 pensjonsgivendeInntekt: [
                     {
-                        år: 2024,
+                        år: "2024",
                         rapportertinntekt: 2000000, // langt over 12 G
                         justertÅrsgrunnlag: 992224,
                         antallG: 8.0,
                         snittG: 124028,
                     },
                     {
-                        år: 2023,
+                        år: "2023",
                         rapportertinntekt: 900000,
                         justertÅrsgrunnlag: 774480,
                         antallG: 6.5,
                         snittG: 118620,
                     },
                     {
-                        år: 2022,
+                        år: "2022",
                         rapportertinntekt: 620000,
                         justertÅrsgrunnlag: 620000,
                         antallG: 5.6,
