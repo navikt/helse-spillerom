@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { z } from 'zod'
 
-import { InntektsmeldingSchema } from '../../schemas/inntektsmelding'
+import { InntektsmeldingSchema } from '@schemas/inntektsmelding'
 
 const InntektsmeldingerResponseSchema = z.array(InntektsmeldingSchema)
 

@@ -20,6 +20,11 @@ export const RefusjonSchema = z.object({
     opphoersdato: z.string().nullable(),
 })
 
+export const EndringIRefusjonSchema = z.object({
+    endringsdato: z.string().nullable(),
+    beloep: z.string().nullable(),
+})
+
 export const AvsenderSystemSchema = z.object({
     navn: z.string().nullable(),
     versjon: z.string().nullable(),
@@ -42,7 +47,7 @@ export const InntektsmeldingSchema = z.object({
     beregnetInntekt: z.string().nullable().optional(),
     inntektsdato: z.string().nullable().optional(),
     refusjon: RefusjonSchema,
-    endringIRefusjoner: z.array(z.any()).default([]),
+    endringIRefusjoner: z.array(EndringIRefusjonSchema).default([]),
     opphoerAvNaturalytelser: z.array(z.any()).default([]),
     gjenopptakelseNaturalytelser: z.array(z.any()).default([]),
     arbeidsgiverperioder: z.array(PeriodeSchema),
@@ -69,4 +74,5 @@ export type MottaksKanal = z.infer<typeof MottaksKanalSchema>
 export type Format = z.infer<typeof FormatSchema>
 export type Periode = z.infer<typeof PeriodeSchema>
 export type Refusjon = z.infer<typeof RefusjonSchema>
+export type EndringIRefusjon = z.infer<typeof EndringIRefusjonSchema>
 export type AvsenderSystem = z.infer<typeof AvsenderSystemSchema>

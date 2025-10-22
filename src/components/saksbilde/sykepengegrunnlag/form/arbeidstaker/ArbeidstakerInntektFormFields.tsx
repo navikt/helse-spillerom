@@ -1,6 +1,7 @@
 import React, { Dispatch, Fragment, ReactElement, SetStateAction, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
+import dayjs from 'dayjs'
 
 import {
     ArbeidstakerInntektType,
@@ -199,11 +200,30 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
 }
 
 function refusjonFra(inntektsmelding: Inntektsmelding) {
-    return [
-        {
-            fom: inntektsmelding.foersteFravaersdag ?? '',
-            tom: inntektsmelding.refusjon?.opphoersdato,
-            beløp: Number(inntektsmelding.refusjon?.beloepPrMnd) ?? 0,
-        },
-    ]
+    const { refusjon, endringIRefusjoner: endringer = [], foersteFravaersdag } = inntektsmelding
+    const sortedEndringer = [...endringer].sort((a, b) => dayjs(a.endringsdato).diff(dayjs(b.endringsdato)))
+
+    const periods = []
+    let currentFom: string = foersteFravaersdag ?? ''
+    let currentBeløp: number = Number(refusjon?.beloepPrMnd) ?? 0
+
+    for (let i = 0; i < sortedEndringer.length; i++) {
+        const next = sortedEndringer[i]
+        periods.push({
+            fom: currentFom,
+            tom: dayjs(next.endringsdato).subtract(1, 'day').format('YYYY-MM-DD'),
+            beløp: currentBeløp,
+        })
+        currentFom = next.endringsdato ?? ''
+        currentBeløp = Number(next.beloep) ?? 0
+    }
+
+    // Last period
+    periods.push({
+        fom: currentFom,
+        tom: refusjon?.opphoersdato ?? null,
+        beløp: currentBeløp,
+    })
+
+    return periods
 }
