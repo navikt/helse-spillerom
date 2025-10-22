@@ -41,6 +41,9 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                             if (value === 'INNTEKTSMELDING') {
                                 setValue('data.inntektsmeldingId', '')
                             }
+                            if (value === 'SKJONNSFASTSETTELSE' || value === 'MANUELT_BEREGNET') {
+                                setValue('data.årsinntekt', 0)
+                            }
                         }}
                     >
                         {arbeidstakerInntektTypeSchema.options.map((option) => (
