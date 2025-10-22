@@ -216,7 +216,6 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                     <InaktivInntektView
                                         inntektRequest={inntektRequest as InntektRequestFor<'INAKTIV'>}
                                         inntektData={inntektData}
-                                        sykepengegrunnlag={sykepengegrunnlag}
                                     />
                                 )}
                                 {kategori === 'FRILANSER' && (

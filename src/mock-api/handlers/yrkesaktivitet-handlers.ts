@@ -407,11 +407,33 @@ function genererInaktivInntektData(data: PensjonsgivendeInntektRequest): Inntekt
     if (data.type === 'PENSJONSGIVENDE_INNTEKT') {
         return {
             inntektstype: 'INAKTIV_PENSJONSGIVENDE',
-            omregnetÅrsinntekt: 400000, // TODO: Hent ekte pensjonsgivende inntekt data
+            omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
             sporing: 'BEREGNINGSSPORINGVERDI',
             pensjonsgivendeInntekt: {
-                omregnetÅrsinntekt: 400000,
-                pensjonsgivendeInntekt: [], // TODO: Hent ekte data
+                omregnetÅrsinntekt: 795568,
+                pensjonsgivendeInntekt: [
+                    {
+                        år: '2024',
+                        rapportertinntekt: 2000000, // langt over 12 G
+                        justertÅrsgrunnlag: 992224,
+                        antallGKompensert: 8.0,
+                        snittG: 124028,
+                    },
+                    {
+                        år: '2023',
+                        rapportertinntekt: 900000,
+                        justertÅrsgrunnlag: 774480,
+                        antallGKompensert: 6.5,
+                        snittG: 118620,
+                    },
+                    {
+                        år: '2022',
+                        rapportertinntekt: 620000,
+                        justertÅrsgrunnlag: 620000,
+                        antallGKompensert: 5.6,
+                        snittG: 111477,
+                    },
+                ],
                 anvendtGrunnbeløp: 124028,
             },
         }
