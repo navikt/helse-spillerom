@@ -8,7 +8,7 @@ import {
     ArbeidstakerSkjønnsfastsettelseÅrsak,
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
 } from '@schemas/inntektRequest'
-import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
+import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -58,7 +58,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                 )}
             />
             {(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (
-                <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
+                <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
             )}
             <RadioGroup
                 legend="Refusjon"

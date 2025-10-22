@@ -8,6 +8,7 @@ import { ArbeidstakerInntektType, ArbeidstakerSkjønnsfastsettelseÅrsak, Inntek
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
 import { Maybe } from '@utils/tsUtils'
+import { getFormattedDateString } from '@utils/date-format'
 
 type ArbeidstakerInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSTAKER'>
@@ -44,7 +45,7 @@ export function ArbeidstakerInntektView({
         )
     }
 
-    const { type, årsinntekt, årsak, begrunnelse } = normalize(inntektRequestData)
+    const { type, årsinntekt, årsak, refusjon, begrunnelse } = normalize(inntektRequestData)
 
     return (
         <>
@@ -62,6 +63,22 @@ export function ArbeidstakerInntektView({
                 <VStack gap="1">
                     <BodyShort weight="semibold">Årsak</BodyShort>
                     <BodyShort>{arbeidstakerSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
+                </VStack>
+            )}
+
+            {refusjon && refusjon.length > 0 && (
+                <VStack gap="1">
+                    <BodyShort weight="semibold">Refusjon</BodyShort>
+                    {refusjon.map((refusjon) => (
+                        <HStack key={refusjon.fom} gap="12">
+                            <BodyShort>
+                                {refusjon.tom
+                                    ? `${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}`
+                                    : `${getFormattedDateString(refusjon.fom)} - til nå`}
+                            </BodyShort>
+                            <BodyShort>{formaterBeløpKroner(refusjon.beløp)}</BodyShort>
+                        </HStack>
+                    ))}
                 </VStack>
             )}
 

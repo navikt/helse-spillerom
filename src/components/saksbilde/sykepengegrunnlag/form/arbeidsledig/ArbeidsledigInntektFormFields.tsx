@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { ArbeidsledigInntektType, arbeidsledigInntektTypeSchema } from '@schemas/inntektRequest'
-import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
+import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 
 export function ArbeidsledigInntektFormFields(): ReactElement {
     const { control, watch } = useFormContext<InntektRequestFor<'ARBEIDSLEDIG'>>()
@@ -26,9 +26,9 @@ export function ArbeidsledigInntektFormFields(): ReactElement {
                 )}
             />
             {valgtType === 'DAGPENGER' ? (
-                <NyPengerField className="w-[212px]" name="data.dagbeløp" label="Dagbeløp" />
+                <PengerField className="w-[212px]" name="data.dagbeløp" label="Dagbeløp" />
             ) : (
-                <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
+                <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
             )}
         </>
     )

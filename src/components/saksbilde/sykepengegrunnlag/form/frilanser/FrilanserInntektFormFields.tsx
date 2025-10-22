@@ -8,7 +8,7 @@ import {
     FrilanserSkjønnsfastsettelseÅrsak,
     frilanserSkjønnsfastsettelseÅrsakSchema,
 } from '@schemas/inntektRequest'
-import { NyPengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
+import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
 export function FrilanserInntektFormFields(): ReactElement {
@@ -43,7 +43,7 @@ export function FrilanserInntektFormFields(): ReactElement {
             />
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <>
-                    <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
+                    <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
                     <Controller
                         control={control}
                         name="data.årsak"
