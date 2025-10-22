@@ -58,28 +58,15 @@ export function SelvstendigNæringsdrivendeInntektView({
                                         <div className="space-y-2">
                                             <div>
                                                 <BodyShort className="text-xs font-semibold">
-                                                    Kompensert antall G: {inntekt.antallG.toFixed(2)}
+                                                    Snitt G-verdi {inntekt.år}: {formaterBeløpKroner(inntekt.snittG)}
                                                 </BodyShort>
                                                 <BodyShort className="text-gray-600 text-xs">
-                                                    Rå inntekt: {formaterBeløpKroner(inntekt.rapportertinntekt)} ÷{' '}
-                                                    {formaterBeløpKroner(inntekt.snittG)} = {inntekt.antallG.toFixed(2)}{' '}
-                                                    G
-                                                </BodyShort>
-                                                <BodyShort className="text-gray-600 text-xs">
-                                                    (Eksempel: 8G rå inntekt → 6G + (2G × 1/3) = 6,67G kompensert)
+                                                    Snitt G-verdi i året, justert for endringer i mai
                                                 </BodyShort>
                                             </div>
                                             <div>
                                                 <BodyShort className="text-xs font-semibold">
-                                                    G-verdi for {inntekt.år}: {formaterBeløpKroner(inntekt.snittG)}
-                                                </BodyShort>
-                                                <BodyShort className="text-gray-600 text-xs">
-                                                    Snitt G-verdi over året (justert for endringer i mai)
-                                                </BodyShort>
-                                            </div>
-                                            <div>
-                                                <BodyShort className="text-xs font-semibold">
-                                                    6G/12G begrensning:
+                                                    Antall G kompensert: {inntekt.antallGKompensert.toFixed(2)}
                                                 </BodyShort>
                                                 <BodyShort className="text-gray-600 text-xs">
                                                     • Inntekter opp til 6G: 100% kompensert
@@ -89,6 +76,24 @@ export function SelvstendigNæringsdrivendeInntektView({
                                                 </BodyShort>
                                                 <BodyShort className="text-gray-600 text-xs">
                                                     • Inntekter over 12G: ikke kompensert
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    (Eksempel: 8G rå inntekt → 6G + (2G × 1/3) = 6,67G kompensert)
+                                                </BodyShort>
+                                            </div>
+                                            <div>
+                                                <BodyShort className="text-xs font-semibold">
+                                                    Justert årsgrunnlag:
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    Regnes ut som antall G kompensert × G-verdi på skjæringstidspunktet
+                                                </BodyShort>
+                                                <BodyShort className="text-gray-600 text-xs">
+                                                    {inntekt.antallGKompensert.toFixed(2)} ×{' '}
+                                                    {formaterBeløpKroner(
+                                                        inntektData.pensjonsgivendeInntekt.anvendtGrunnbeløp,
+                                                    )}{' '}
+                                                    = {formaterBeløpKroner(inntekt.justertÅrsgrunnlag)}
                                                 </BodyShort>
                                             </div>
                                         </div>
