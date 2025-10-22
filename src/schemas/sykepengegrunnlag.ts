@@ -21,10 +21,14 @@ export function formaterBeløpØre(ører: number | undefined, desimaler: number 
     }).format(ørerTilKroner(ører))
 }
 
-export function formaterBeløpKroner(kroner: number | undefined, desimaler: number = 2): string {
+export function formaterBeløpKroner(
+    kroner: number | undefined,
+    desimaler: number = 2,
+    style: 'currency' | 'decimal' = 'currency',
+): string {
     if (kroner === undefined || kroner === null) return '-'
     return new Intl.NumberFormat('nb-NO', {
-        style: 'currency',
+        style: style,
         currency: 'NOK',
         minimumFractionDigits: desimaler,
         maximumFractionDigits: desimaler,

@@ -7,7 +7,7 @@ import { arbeidstakerSkjønnsfastsettelseÅrsakLabels } from '@components/saksbi
 import { ArbeidstakerInntektType, ArbeidstakerSkjønnsfastsettelseÅrsak, InntektRequest } from '@schemas/inntektRequest'
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
-import { Maybe } from '@utils/tsUtils'
+import { Maybe, notNull } from '@utils/tsUtils'
 import { getFormattedDateString } from '@utils/date-format'
 
 type ArbeidstakerInntektViewProps = {
@@ -49,7 +49,7 @@ export function ArbeidstakerInntektView({
 
     return (
         <>
-            {årsinntekt && (
+            {notNull(årsinntekt) && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2">
@@ -92,8 +92,7 @@ export function ArbeidstakerInntektView({
     )
 }
 
-function normalize(data?: InntektRequest['data']) {
-    if (!data) return {}
+function normalize(data: InntektRequest['data']) {
     return {
         type: data.type as ArbeidstakerInntektType,
         inntektsmeldingId: 'inntektsmeldingId' in data ? data.inntektsmeldingId : undefined,

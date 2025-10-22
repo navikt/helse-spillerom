@@ -12,10 +12,10 @@ import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/Penger
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
-import { formaterBeløpKroner } from '@/mock-api/utils/formaterBeløp'
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
+import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
@@ -70,7 +70,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                             { fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '', tom: null, beløp: 0 },
                         ])
                     } else {
-                        setValue('data.refusjon', [])
+                        setValue('data.refusjon', undefined)
                     }
                 }}
                 value={visRefusjonsFelter}

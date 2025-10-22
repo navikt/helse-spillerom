@@ -3,6 +3,7 @@ import { useController } from 'react-hook-form'
 import { TextField } from '@navikt/ds-react'
 
 import { cn } from '@utils/tw'
+import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 
 interface PengerFieldProps {
     name: string
@@ -12,8 +13,16 @@ interface PengerFieldProps {
 
 export function PengerField({ name, label, className }: PengerFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
-    const [display, setDisplay] = useState(() => (field.value == null ? '' : String(field.value).replace('.', ',')))
-    const commit = () => field.onChange(Number(String(display).replace(',', '.')))
+    const [display, setDisplay] = useState<string>(
+        field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'),
+    )
+
+    const parse = (val: string) => Number(val.replace(/\s/g, '').replace(',', '.'))
+
+    const commit = () => {
+        const parsed = parse(display)
+        field.onChange(isNaN(parsed) ? null : parsed)
+    }
 
     return (
         <TextField
@@ -27,6 +36,9 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
             onChange={(e) => setDisplay(e.target.value)}
             onBlur={() => {
                 commit()
+                if (display !== '') {
+                    setDisplay(formaterBeløpKroner(parse(display), 2, 'decimal'))
+                }
                 field.onBlur()
             }}
             onKeyDown={(e) => e.key === 'Enter' && commit()}

@@ -38,21 +38,21 @@ const arbeidstakerDefaults: Record<
         type: 'INNTEKTSMELDING',
         inntektsmeldingId: '',
         begrunnelse: '',
-        refusjon: [{ fom: '', tom: null, beløp: 0 }],
+        refusjon: undefined,
     },
-    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '', refusjon: [{ fom: '', tom: null, beløp: 0 }] },
+    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '', refusjon: undefined },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         årsinntekt: 0,
         årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0],
         begrunnelse: '',
-        refusjon: [{ fom: '', tom: null, beløp: 0 }],
+        refusjon: undefined,
     },
     MANUELT_BEREGNET: {
         type: 'MANUELT_BEREGNET',
         årsinntekt: 0,
         begrunnelse: '',
-        refusjon: [{ fom: '', tom: null, beløp: 0 }],
+        refusjon: undefined,
     },
 }
 
