@@ -5,25 +5,22 @@ import { Button, HStack, VStack } from '@navikt/ds-react'
 import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateField'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { cn } from '@utils/tw'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
-export function RefusjonFields({ forholdIndex }: { forholdIndex: number }): ReactElement {
-    const { control } = useFormContext()
-    const refusjonFieldArray = useFieldArray({
+export function RefusjonFields(): ReactElement {
+    const { control } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const refusjonFieldArray = useFieldArray<InntektRequestFor<'ARBEIDSTAKER'>>({
         control,
-        name: `inntekter.${forholdIndex}.refusjon`,
+        name: 'data.refusjon',
     })
 
     return (
-        <VStack gap="4" className="self-end">
+        <VStack gap="4">
             {refusjonFieldArray.fields.map((field, index) => (
                 <HStack key={field.id} gap="2" align="center" wrap={false}>
-                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.fom`} label="F.o.m. dato" />
-                    <DateField name={`inntekter.${forholdIndex}.refusjon.${index}.tom`} label="T.o.m. dato" />
-                    <PengerField
-                        className="max-w-28"
-                        name={`inntekter.${forholdIndex}.refusjon.${index}.beløpØre`}
-                        label="Refusjonsbeløp"
-                    />
+                    <DateField name={`data.refusjon.${index}.fom`} label="F.o.m. dato" />
+                    <DateField name={`data.refusjon.${index}.tom`} label="T.o.m. dato" />
+                    <PengerField className="max-w-28" name={`data.refusjon.${index}.beløp`} label="Refusjonsbeløp" />
                     <Button
                         className={cn('mt-7 mr-5', { invisible: index === 0 })}
                         size="xsmall"
@@ -39,7 +36,7 @@ export function RefusjonFields({ forholdIndex }: { forholdIndex: number }): Reac
                 size="xsmall"
                 variant="tertiary"
                 type="button"
-                onClick={() => refusjonFieldArray.append({ fom: '', tom: null, beløpØre: 0 })}
+                onClick={() => refusjonFieldArray.append({ fom: '', tom: null, beløp: 0 })}
                 className="self-start"
             >
                 + Legg til

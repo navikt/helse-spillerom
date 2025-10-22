@@ -3,7 +3,7 @@ import { z } from 'zod/v4'
 // Hjelpeklasser
 export const refusjonInfoSchema = z.object({
     fom: z.string(), // LocalDate som string
-    tom: z.string(), // LocalDate som string
+    tom: z.string().nullable(), // LocalDate som string
     beløp: z.number(),
 })
 
@@ -42,7 +42,7 @@ export const arbeidstakerInntektRequestSchema = z
             årsinntekt: z.number(),
         }),
     ])
-    .and(z.object({ begrunnelse: z.string(), refusjon: refusjonInfoSchema.optional() }))
+    .and(z.object({ begrunnelse: z.string(), refusjon: z.array(refusjonInfoSchema).optional() }))
 
 // Pensjonsgivende inntekt typer (for selvstendig næringsdrivende og inaktiv)
 export const pensjonsgivendeSkjønnsfastsettelseÅrsakSchema = z.enum([

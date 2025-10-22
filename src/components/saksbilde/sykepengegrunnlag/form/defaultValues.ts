@@ -34,16 +34,26 @@ const arbeidstakerDefaults: Record<
     ArbeidstakerInntektType,
     Extract<ArbeidstakerInntektRequest, { type: ArbeidstakerInntektType }>
 > = {
-    INNTEKTSMELDING: { type: 'INNTEKTSMELDING', inntektsmeldingId: '', begrunnelse: '', refusjon: undefined },
-    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '', refusjon: undefined },
+    INNTEKTSMELDING: {
+        type: 'INNTEKTSMELDING',
+        inntektsmeldingId: '',
+        begrunnelse: '',
+        refusjon: [{ fom: '', tom: null, beløp: 0 }],
+    },
+    AINNTEKT: { type: 'AINNTEKT', begrunnelse: '', refusjon: [{ fom: '', tom: null, beløp: 0 }] },
     SKJONNSFASTSETTELSE: {
         type: 'SKJONNSFASTSETTELSE',
         årsinntekt: 0,
         årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0],
         begrunnelse: '',
-        refusjon: undefined,
+        refusjon: [{ fom: '', tom: null, beløp: 0 }],
     },
-    MANUELT_BEREGNET: { type: 'MANUELT_BEREGNET', årsinntekt: 0, begrunnelse: '', refusjon: undefined },
+    MANUELT_BEREGNET: {
+        type: 'MANUELT_BEREGNET',
+        årsinntekt: 0,
+        begrunnelse: '',
+        refusjon: [{ fom: '', tom: null, beløp: 0 }],
+    },
 }
 
 // SELVSTENDIG / INAKTIV

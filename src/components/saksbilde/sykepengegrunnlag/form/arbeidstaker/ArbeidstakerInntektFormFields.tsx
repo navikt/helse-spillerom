@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from 'react'
+import React, { Dispatch, Fragment, ReactElement, SetStateAction, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
 
@@ -13,9 +13,14 @@ import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@/mock-api/utils/formaterBeløp'
+import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
+import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { Inntektsmelding } from '@schemas/inntektsmelding'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const [visRefusjonsFelter, setVisRefusjonsFelter] = useState<boolean>(!!watch('data.refusjon')?.[0]?.fom)
+    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const valgtType = watch('data.type')
 
     return (
@@ -42,7 +47,10 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                             <Fragment key={option}>
                                 <Radio value={option}>{typeLabels[option]}</Radio>
                                 {valgtType === 'INNTEKTSMELDING' && option === 'INNTEKTSMELDING' && (
-                                    <VelgInntektsmelding yrkesaktivitetId={yrkesaktivitetId} />
+                                    <VelgInntektsmelding
+                                        yrkesaktivitetId={yrkesaktivitetId}
+                                        setVisRefusjonsFelter={setVisRefusjonsFelter}
+                                    />
                                 )}
                             </Fragment>
                         ))}
@@ -52,6 +60,25 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
             {(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (
                 <NyPengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
             )}
+            <RadioGroup
+                legend="Refusjon"
+                size="small"
+                onChange={(value: boolean) => {
+                    setVisRefusjonsFelter(value)
+                    if (value) {
+                        setValue('data.refusjon', [
+                            { fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '', tom: null, beløp: 0 },
+                        ])
+                    } else {
+                        setValue('data.refusjon', [])
+                    }
+                }}
+                value={visRefusjonsFelter}
+            >
+                <Radio value={true}>Ja</Radio>
+                <Radio value={false}>Nei</Radio>
+            </RadioGroup>
+            {visRefusjonsFelter && <RefusjonFields />}
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <Controller
                     control={control}
@@ -84,8 +111,13 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
     TIDSAVGRENSET: 'Skjønnsfastsettelse ved tidsbegrenset arbeidsforhold under 6 måneder (§ 8-30 fjerde ledd)',
 }
 
-function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
-    const { control } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+interface VelgInntektsmeldingProps {
+    yrkesaktivitetId: string
+    setVisRefusjonsFelter: Dispatch<SetStateAction<boolean>>
+}
+
+function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgInntektsmeldingProps): ReactElement {
+    const { control, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
 
     if (isLoading) {
@@ -107,6 +139,11 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                             <Radio
                                 key={inntektsmelding.inntektsmeldingId}
                                 value={inntektsmelding.inntektsmeldingId}
+                                onChange={(value) => {
+                                    field.onChange(value)
+                                    setValue('data.refusjon', refusjonFra(inntektsmelding))
+                                    setVisRefusjonsFelter(true)
+                                }}
                                 className="w-[400px] items-center rounded-lg border border-ax-bg-neutral-strong bg-ax-bg-neutral-soft p-4"
                             >
                                 <HGrid columns={2} gap="1 6">
@@ -129,6 +166,13 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                                         {formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}
                                     </BodyShort>
 
+                                    <BodyShort weight="semibold" size="small">
+                                        Første fraværsdag:
+                                    </BodyShort>
+                                    <BodyShort size="small">
+                                        {getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}
+                                    </BodyShort>
+
                                     {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
                                         <Fragment key={i + arbeidsgiverperiode.fom}>
                                             <BodyShort weight="semibold" size="small">
@@ -149,4 +193,14 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
             )}
         />
     )
+}
+
+function refusjonFra(inntektsmelding: Inntektsmelding) {
+    return [
+        {
+            fom: inntektsmelding.foersteFravaersdag ?? '',
+            tom: inntektsmelding.refusjon?.opphoersdato,
+            beløp: Number(inntektsmelding.refusjon?.beloepPrMnd) ?? 0,
+        },
+    ]
 }
