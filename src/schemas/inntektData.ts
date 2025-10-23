@@ -34,6 +34,7 @@ export const arbeidstakerAinntektSchema = z.object({
     inntektstype: z.literal('ARBEIDSTAKER_AINNTEKT'),
     omregnetÅrsinntekt: z.number(),
     sporing: z.string(),
+    kildedata: z.record(z.string(), z.number()),
 })
 
 export const arbeidstakerSkjønnsfastsattSchema = z.object({
@@ -46,6 +47,7 @@ export const frilanserAinntektSchema = z.object({
     inntektstype: z.literal('FRILANSER_AINNTEKT'),
     omregnetÅrsinntekt: z.number(),
     sporing: z.string(),
+    kildedata: z.record(z.string(), z.number()),
 })
 
 export const frilanserSkjønnsfastsattSchema = z.object({

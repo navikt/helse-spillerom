@@ -200,7 +200,6 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                     <ArbeidstakerInntektView
                                         inntektRequest={inntektRequest as InntektRequestFor<'ARBEIDSTAKER'>}
                                         inntektData={inntektData}
-                                        sykepengegrunnlag={sykepengegrunnlag}
                                     />
                                 )}
                                 {kategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' && (

@@ -322,8 +322,13 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
     if (data.type === 'AINNTEKT') {
         return {
             inntektstype: 'ARBEIDSTAKER_AINNTEKT',
-            omregnetÅrsinntekt: 400000, // TODO: Hent ekte A-inntekt data
+            omregnetÅrsinntekt: 400000,
             sporing: 'ARB_SPG_HOVEDREGEL',
+            kildedata: {
+                '2024-01': 30000,
+                '2024-02': 30000,
+                '2024-03': 30000,
+            },
         }
     }
 
@@ -457,6 +462,11 @@ function genererFrilanserInntektData(data: FrilanserInntektRequest): InntektData
             inntektstype: 'FRILANSER_AINNTEKT',
             omregnetÅrsinntekt: 400000, // TODO: Hent ekte A-inntekt data
             sporing: 'A-inntekt TODO',
+            kildedata: {
+                '2024-01': 30000,
+                '2024-02': 30000,
+                '2024-03': 30000,
+            },
         }
     }
 

@@ -7,6 +7,7 @@ import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { frilanserSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
+import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 
 type FrilanserInntektViewProps = {
     inntektRequest?: InntektRequestFor<'FRILANSER'>
@@ -14,11 +15,7 @@ type FrilanserInntektViewProps = {
     sykepengegrunnlag?: Maybe<SykepengegrunnlagV2>
 }
 
-export function FrilanserInntektView({
-    inntektRequest,
-    inntektData,
-    sykepengegrunnlag,
-}: FrilanserInntektViewProps): ReactElement {
+export function FrilanserInntektView({ inntektRequest, inntektData }: FrilanserInntektViewProps): ReactElement {
     const inntektRequestData = inntektRequest?.data
 
     if (!inntektRequestData) {
@@ -30,48 +27,42 @@ export function FrilanserInntektView({
         )
     }
 
-    if (inntektRequestData.type === 'AINNTEKT') {
+    if (inntektData?.inntektstype === 'FRILANSER_AINNTEKT') {
+        return <AinntektInntektDataView inntektData={inntektData} />
+    }
+
+    if (inntektRequestData.type == 'SKJONNSFASTSETTELSE') {
+        const { årsinntekt, årsak, begrunnelse } = inntektRequestData
+
         return (
             <>
-                <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
-                <pre className="text-sm">{JSON.stringify(inntektRequestData, null, 2)}</pre>
-                {inntektData && <pre className="text-sm">{JSON.stringify(inntektData, null, 2)}</pre>}
-                {sykepengegrunnlag?.næringsdel && (
-                    <pre className="text-sm">{JSON.stringify(sykepengegrunnlag.næringsdel, null, 2)}</pre>
+                {årsinntekt && (
+                    <VStack gap="1">
+                        <BodyShort weight="semibold">Årsinntekt</BodyShort>
+                        <HStack gap="2">
+                            <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
+                            <Tag variant="neutral" size="xsmall">
+                                skjønnsfastsatt
+                            </Tag>
+                        </HStack>
+                    </VStack>
+                )}
+
+                {årsak && (
+                    <VStack gap="1">
+                        <BodyShort weight="semibold">Årsak</BodyShort>
+                        <BodyShort>{frilanserSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
+                    </VStack>
+                )}
+
+                {begrunnelse && (
+                    <VStack gap="1">
+                        <BodyShort weight="semibold">Begrunnelse</BodyShort>
+                        <BodyShort>{begrunnelse}</BodyShort>
+                    </VStack>
                 )}
             </>
         )
     }
-
-    const { årsinntekt, årsak, begrunnelse } = inntektRequestData
-
-    return (
-        <>
-            {årsinntekt && (
-                <VStack gap="1">
-                    <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                    <HStack gap="2">
-                        <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
-                        <Tag variant="neutral" size="xsmall">
-                            skjønnsfastsatt
-                        </Tag>
-                    </HStack>
-                </VStack>
-            )}
-
-            {årsak && (
-                <VStack gap="1">
-                    <BodyShort weight="semibold">Årsak</BodyShort>
-                    <BodyShort>{frilanserSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
-                </VStack>
-            )}
-
-            {begrunnelse && (
-                <VStack gap="1">
-                    <BodyShort weight="semibold">Begrunnelse</BodyShort>
-                    <BodyShort>{begrunnelse}</BodyShort>
-                </VStack>
-            )}
-        </>
-    )
+    return <></>
 }

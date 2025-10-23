@@ -1,26 +1,22 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, VStack } from '@navikt/ds-react'
 
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { arbeidstakerSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektFormFields'
 import { ArbeidstakerInntektType, ArbeidstakerSkjønnsfastsettelseÅrsak, InntektRequest } from '@schemas/inntektRequest'
 import { InntektData } from '@schemas/inntektData'
-import { SykepengegrunnlagV2 } from '@schemas/sykepengegrunnlagV2'
 import { Maybe, notNull } from '@utils/tsUtils'
 import { getFormattedDateString } from '@utils/date-format'
+import { TagFor } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 
 type ArbeidstakerInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSTAKER'>
     inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<SykepengegrunnlagV2>
 }
 
-export function ArbeidstakerInntektView({
-    inntektRequest,
-    inntektData,
-    sykepengegrunnlag,
-}: ArbeidstakerInntektViewProps): ReactElement {
+export function ArbeidstakerInntektView({ inntektRequest, inntektData }: ArbeidstakerInntektViewProps): ReactElement {
     const inntektRequestData = inntektRequest?.data
 
     if (!inntektRequestData) {
@@ -32,15 +28,16 @@ export function ArbeidstakerInntektView({
         )
     }
 
-    if (inntektRequestData.type === 'INNTEKTSMELDING' || inntektRequestData.type === 'AINNTEKT') {
+    if (inntektData?.inntektstype === 'ARBEIDSTAKER_AINNTEKT') {
+        return <AinntektInntektDataView inntektData={inntektData} />
+    }
+
+    if (inntektRequestData.type === 'INNTEKTSMELDING') {
         return (
             <>
                 <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
                 <pre className="text-sm">{JSON.stringify(inntektRequestData, null, 2)}</pre>
                 {inntektData && <pre className="text-sm">{JSON.stringify(inntektData, null, 2)}</pre>}
-                {sykepengegrunnlag?.næringsdel && (
-                    <pre className="text-sm">{JSON.stringify(sykepengegrunnlag.næringsdel, null, 2)}</pre>
-                )}
             </>
         )
     }
@@ -101,27 +98,4 @@ function normalize(data: InntektRequest['data']) {
         refusjon: 'refusjon' in data ? data.refusjon : undefined,
         begrunnelse: 'begrunnelse' in data ? data.begrunnelse : undefined,
     }
-}
-
-const TagFor: Record<ArbeidstakerInntektType, ReactElement> = {
-    INNTEKTSMELDING: (
-        <Tag variant="neutral" size="xsmall">
-            IM
-        </Tag>
-    ),
-    AINNTEKT: (
-        <Tag variant="neutral" size="xsmall">
-            AO
-        </Tag>
-    ),
-    SKJONNSFASTSETTELSE: (
-        <Tag variant="neutral" size="xsmall">
-            skjønnsfastsatt
-        </Tag>
-    ),
-    MANUELT_BEREGNET: (
-        <Tag variant="neutral" size="xsmall">
-            manuelt beregnet
-        </Tag>
-    ),
 }
