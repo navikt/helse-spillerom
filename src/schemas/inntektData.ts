@@ -20,6 +20,7 @@ export const arbeidstakerInntektsmeldingSchema = z.object({
     inntektstype: z.literal('ARBEIDSTAKER_INNTEKTSMELDING'),
     inntektsmeldingId: z.string(),
     omregnetÅrsinntekt: z.number(),
+    inntektsmelding: z.any(),
     sporing: z.string(),
 })
 

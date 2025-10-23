@@ -342,6 +342,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
             inntektstype: 'ARBEIDSTAKER_INNTEKTSMELDING',
             omregnetÅrsinntekt: parseFloat(inntektsmelding.beregnetInntekt || '0') * 12,
             sporing: 'ARB_SPG_HOVEDREGEL',
+            inntektsmelding: inntektsmelding,
             inntektsmeldingId: inntektsmeldingId,
         }
     }
@@ -361,7 +362,7 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
             omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
-            sporing: 'NARING_SPG_HOVEDREGEL',
+            sporing: 'SN_SPG_HOVEDREGEL',
             pensjonsgivendeInntekt: {
                 omregnetÅrsinntekt: 795568,
                 pensjonsgivendeInntekt: [
