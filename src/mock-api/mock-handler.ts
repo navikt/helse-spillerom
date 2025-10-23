@@ -80,23 +80,19 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter': async ({ person, uuid }) =>
         handleDokumenter(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent-8-28': async ({
-        request,
-        person,
-        uuid,
-    }) => handleAinntektHent(request, await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent-8-30': async ({ person, uuid }) =>
+        handleAinntektHent('8-30', await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/arbeidsforhold/hent': async ({
-        request,
-        person,
-        uuid,
-    }) => handleArbeidsforholdHent(request, await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent-8-28': async ({ person, uuid }) =>
+        handleAinntektHent('8-28', await person, uuid!),
+
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/arbeidsforhold/hent': async ({ person, uuid }) =>
+        handleArbeidsforholdHent(await person, uuid!),
 
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/pensjonsgivendeinntekt/hent': async ({
-        request,
         person,
         uuid,
-    }) => handlePensjonsgivendeInntektHent(request, await person, uuid!),
+    }) => handlePensjonsgivendeInntektHent(await person, uuid!),
 
     'GET /v1/[personId]/arbeidsforhold': async ({ personId }) => handleGetArbeidsforhold(personId),
 

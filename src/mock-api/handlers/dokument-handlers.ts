@@ -26,21 +26,14 @@ export async function handleDokumenter(
     return NextResponse.json(dokumenter)
 }
 
-interface AInntektHentRequest {
-    fom: string // YearMonth format: "2024-01"
-    tom: string // YearMonth format: "2024-12"
-}
-
 export async function handleAinntektHent(
-    request: Request,
+    request: '8-28' | '8-30',
     person: Person | undefined,
     saksbehandlingsperiodeId: string,
 ): Promise<Response> {
     if (!person) {
         return NextResponse.json({ message: 'Person not found' }, { status: 404 })
     }
-
-    const body: AInntektHentRequest = await request.json()
 
     // Initialiser dokumenter hvis de ikke finnes
     if (!person.dokumenter) {
@@ -52,17 +45,16 @@ export async function handleAinntektHent(
 
     // Opprett nytt ainntekt-dokument
     const dokumentId = uuidv4()
+    const dokumentType: Dokumenttype = request === '8-28' ? 'ainntekt828' : 'ainntekt830'
     const nyttDokument: Dokument = {
         id: dokumentId,
-        dokumentType: 'ainntekt828' as Dokumenttype,
+        dokumentType,
         eksternId: null,
         innhold: ainntektData, // Bruk mock ainntekt-data
         opprettet: new Date().toISOString(),
         request: {
             kilde: 'A-inntekt',
             tidsstempel: new Date().toISOString(),
-            fom: body.fom,
-            tom: body.tom,
         },
     }
 
@@ -82,7 +74,6 @@ export async function handleAinntektHent(
 }
 
 export async function handleArbeidsforholdHent(
-    request: Request,
     person: Person | undefined,
     saksbehandlingsperiodeId: string,
 ): Promise<Response> {
@@ -128,7 +119,6 @@ export async function handleArbeidsforholdHent(
 }
 
 export async function handlePensjonsgivendeInntektHent(
-    request: Request,
     person: Person | undefined,
     saksbehandlingsperiodeId: string,
 ): Promise<Response> {

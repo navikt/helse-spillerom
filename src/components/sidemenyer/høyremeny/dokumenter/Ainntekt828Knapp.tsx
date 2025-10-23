@@ -32,7 +32,7 @@ export function Ainntekt828Knapp(): ReactElement | null {
                     hentAinntektDokument.mutate()
                 }}
                 loading={hentAinntektDokument.isPending}
-                aria-label="Last ned A-inntekt som dokument"
+                aria-label="Last ned A-inntekt 8-28 som dokument"
                 icon={<DownloadIcon aria-hidden />}
             >
                 A-inntekt 8-28

@@ -19,7 +19,7 @@ test.describe('Dokumentnedlasting fra høyremeny', () => {
         await viseDokumenterKnapp.click()
 
         // Fortsett med resten av testen...
-        const ainntektKnapp = page.getByRole('button', { name: 'Last ned A-inntekt som dokument' })
+        const ainntektKnapp = page.getByRole('button', { name: 'Last ned A-inntekt 8-28 som dokument' })
         await expect(ainntektKnapp).toBeVisible()
 
         // Test nedlasting av A-inntekt
@@ -35,6 +35,7 @@ test.describe('Dokumentnedlasting fra høyremeny', () => {
         await expect(ainntektDokument).toBeVisible()
         /*
 
+TODO dette bør reimplementeres
                      console.log(`✅ Fant ${buttonCount} nedlastingsknapper`)
 
                      // Fortsett med resten av testen...
