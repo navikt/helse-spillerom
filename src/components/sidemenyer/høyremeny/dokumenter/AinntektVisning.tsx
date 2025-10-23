@@ -95,9 +95,9 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
         inntektListe: {
             type: string
         }[],
-        opplysningspliktig: string,
+        underenhet: string,
     ) => {
-        const uniqueKeys = new Set(inntektListe.map((inntekt) => `${opplysningspliktig}_${inntekt.type}`))
+        const uniqueKeys = new Set(inntektListe.map((inntekt) => `${underenhet}_${inntekt.type}`))
         return uniqueKeys.size
     }
 
@@ -119,11 +119,11 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
         groupedByYear[year].sort((a, b) => b.maaned.localeCompare(a.maaned))
     })
 
-    // Gruppere data per arbeidsgiver
+    // Gruppere data per arbeidsgiver (underenhet)
     const groupedByEmployer: GroupedByEmployer = {}
 
     ainntekt.data.forEach((maaned) => {
-        const orgnummer = maaned.opplysningspliktig
+        const orgnummer = maaned.underenhet
         if (!groupedByEmployer[orgnummer]) {
             groupedByEmployer[orgnummer] = {
                 navn: '', // Navn hentes fra Organisasjonsnavn-komponenten
@@ -193,7 +193,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                     // Samle alle inntekter for året og tell unike kombinasjoner
                     const allYearInntekter = yearData.flatMap((maaned) => maaned.inntektListe)
                     const firstMaaned = yearData[0]
-                    const yearUniqueCount = getUniqueInntekterCount(allYearInntekter, firstMaaned.opplysningspliktig)
+                    const yearUniqueCount = getUniqueInntekterCount(allYearInntekter, firstMaaned.underenhet)
 
                     const isYearExpanded = expandedYears.has(year)
 
@@ -231,10 +231,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                         (sum, inntekt) => sum + inntekt.beloep,
                                         0,
                                     )
-                                    const uniqueCount = getUniqueInntekterCount(
-                                        maaned.inntektListe,
-                                        maaned.opplysningspliktig,
-                                    )
+                                    const uniqueCount = getUniqueInntekterCount(maaned.inntektListe, maaned.underenhet)
                                     const isMonthExpanded = expandedMonths.has(maaned.maaned)
 
                                     return (
@@ -306,16 +303,14 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                             </Detail>
                                                                             <BodyShort size="small">
                                                                                 <Organisasjonsnavn
-                                                                                    orgnummer={
-                                                                                        maaned.opplysningspliktig
-                                                                                    }
+                                                                                    orgnummer={maaned.underenhet}
                                                                                 />
                                                                             </BodyShort>
                                                                             <BodyShort
                                                                                 size="small"
                                                                                 className="text-gray-800"
                                                                             >
-                                                                                {maaned.opplysningspliktig}
+                                                                                {maaned.underenhet}
                                                                             </BodyShort>
                                                                         </VStack>
                                                                         <VStack gap="1">
