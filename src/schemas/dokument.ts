@@ -16,6 +16,7 @@ export const dokumenttypeSchema = z.enum([
     'SYKMELDING',
     'AAREG',
     'ainntekt828',
+    'ainntekt830',
     'arbeidsforhold',
     'pensjonsgivendeinntekt',
 ])

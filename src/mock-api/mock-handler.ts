@@ -80,8 +80,11 @@ const handlers: Record<string, HandlerFunction> = {
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter': async ({ person, uuid }) =>
         handleDokumenter(await person, uuid!),
 
-    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent': async ({ request, person, uuid }) =>
-        handleAinntektHent(request, await person, uuid!),
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/ainntekt/hent-8-28': async ({
+        request,
+        person,
+        uuid,
+    }) => handleAinntektHent(request, await person, uuid!),
 
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/dokumenter/arbeidsforhold/hent': async ({
         request,

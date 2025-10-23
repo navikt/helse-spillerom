@@ -9,12 +9,13 @@ import { useParams } from 'next/navigation'
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/dokumenter/Dokumenter'
 import { ArbeidsforholdKnapp } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdKnapp'
-import { AinntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/AinntektKnapp'
+import { Ainntekt828Knapp } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt828Knapp'
 import { PensjonsgivendeInntektKnapp } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektKnapp'
 import { cn } from '@utils/tw'
 import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
+import { Ainntekt830Knapp } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt830Knapp'
 
 type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 
@@ -134,7 +135,8 @@ const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {
         <>
             <Dokumenter />
             <VStack gap="2" className="mt-4">
-                <AinntektKnapp />
+                <Ainntekt828Knapp />
+                <Ainntekt830Knapp />
                 <ArbeidsforholdKnapp />
                 <PensjonsgivendeInntektKnapp />
             </VStack>

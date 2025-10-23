@@ -4,12 +4,12 @@ import { ReactElement } from 'react'
 import { Button } from '@navikt/ds-react'
 import { DownloadIcon } from '@navikt/aksel-icons'
 
-import { useHentAinntektDokument } from '@/hooks/mutations/useHentAinntektDokument'
+import { useHentAinntektDokument828 } from '@/hooks/mutations/useHentAinntektDokument'
 import { useDokumenter } from '@/hooks/queries/useDokumenter'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 
-export function AinntektKnapp(): ReactElement | null {
-    const hentAinntektDokument = useHentAinntektDokument()
+export function Ainntekt828Knapp(): ReactElement | null {
+    const hentAinntektDokument = useHentAinntektDokument828()
     const { data: dokumenter } = useDokumenter()
     const kanSaksbehandles = useKanSaksbehandles()
 
@@ -23,29 +23,19 @@ export function AinntektKnapp(): ReactElement | null {
         return null
     }
 
-    const handleHentAinntekt = () => {
-        // Hent A-inntekt for siste 12 måneder som default
-        const tom = new Date()
-        const fom = new Date()
-        fom.setFullYear(tom.getFullYear() - 1)
-
-        const fomString = `${fom.getFullYear()}-${String(fom.getMonth() + 1).padStart(2, '0')}`
-        const tomString = `${tom.getFullYear()}-${String(tom.getMonth() + 1).padStart(2, '0')}`
-
-        hentAinntektDokument.mutate({ fom: fomString, tom: tomString })
-    }
-
     return (
         <div className="inline-block">
             <Button
                 variant="tertiary"
                 size="small"
-                onClick={handleHentAinntekt}
+                onClick={() => {
+                    hentAinntektDokument.mutate()
+                }}
                 loading={hentAinntektDokument.isPending}
                 aria-label="Last ned A-inntekt som dokument"
                 icon={<DownloadIcon aria-hidden />}
             >
-                A-inntekt
+                A-inntekt 8-28
             </Button>
         </div>
     )

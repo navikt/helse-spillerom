@@ -7,18 +7,13 @@ import { Dokument, dokumentSchema } from '@/schemas/dokument'
 export function useHentPensjonsgivendeInntektDokument() {
     const params = useParams()
     const queryClient = useQueryClient()
-    const inntektsaar = new Date().getFullYear() - 1 // Default to last year
-    const antallAarBakover = 5 // Default to 5 years back
 
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter/pensjonsgivendeinntekt/hent`,
                 dokumentSchema,
-                {
-                    senesteÅrTom: inntektsaar,
-                    antallÅrBakover: antallAarBakover,
-                },
+                undefined,
             )
         },
         onSuccess: (nyttDokument: Dokument) => {

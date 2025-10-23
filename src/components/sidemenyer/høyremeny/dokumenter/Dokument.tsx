@@ -10,7 +10,7 @@ import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 import { Søknad } from '@schemas/søknad'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
-import { AinntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/AinntektVisning'
+import { Ainntekt828Visning } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt828Visning'
 import { ArbeidsforholdVisning } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdVisning'
 import { PensjonsgivendeInntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektVisning'
 import { Ainntekt } from '@schemas/ainntekt'
@@ -60,7 +60,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         {dokument.dokumentType === 'søknad' ? (
                             <Søknadsinnhold søknad={dokument.innhold as Søknad} />
                         ) : dokument.dokumentType === 'ainntekt828' ? (
-                            <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
+                            <Ainntekt828Visning ainntekt={dokument.innhold as Ainntekt} />
                         ) : dokument.dokumentType === 'arbeidsforhold' ? (
                             <ArbeidsforholdVisning arbeidsforhold={dokument.innhold as Arbeidsforhold[]} />
                         ) : dokument.dokumentType === 'pensjonsgivendeinntekt' ? (
@@ -85,6 +85,7 @@ const dokumentVisningstekst: Record<Dokumenttype, string> = {
     SYKMELDING: 'Sykmelding mottatt',
     AAREG: 'Aa-reg',
     ainntekt828: 'A-inntekt 8-28',
+    ainntekt830: 'A-inntekt 8-30',
     arbeidsforhold: 'Arbeidsforhold',
     pensjonsgivendeinntekt: 'Pensjonsgivende inntekt',
 }

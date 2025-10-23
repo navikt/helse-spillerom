@@ -18,7 +18,8 @@ const dokumentTag: Record<Dokumenttype, ComponentType> = {
     INNTEKTSMELDING: InntektsmeldingTag,
     SYKMELDING: SykmeldingTag,
     AAREG: AaregTag,
-    ainntekt828: () => <ExtendedTag variant="neutral">A8</ExtendedTag>,
+    ainntekt828: () => <ExtendedTag variant="neutral">8-28</ExtendedTag>,
+    ainntekt830: () => <ExtendedTag variant="neutral">8-30</ExtendedTag>,
     arbeidsforhold: () => <ExtendedTag variant="neutral">AF</ExtendedTag>,
     pensjonsgivendeinntekt: () => <ExtendedTag variant="neutral">PI</ExtendedTag>,
 }

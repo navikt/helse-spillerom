@@ -1,14 +1,11 @@
-import { ReactElement, useState, Fragment } from 'react'
-import { Table, BodyShort, Detail, VStack, HStack, Button, Switch } from '@navikt/ds-react'
-import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
+import { ReactElement } from 'react'
 
 import { Ainntekt } from '@schemas/ainntekt'
-import { Organisasjonsnavn } from '@/components/organisasjon/Organisasjonsnavn'
 
 interface AinntektVisningProps {
     ainntekt: Ainntekt
 }
-
+/*
 interface GroupedByYear {
     [year: string]: Ainntekt['arbeidsInntektMaaned']
 }
@@ -20,8 +17,13 @@ interface GroupedByEmployer {
         data: Ainntekt['arbeidsInntektMaaned']
     }
 }
+*/
 
-export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElement {
+export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactElement {
+    //TODO reimplementer ordentlig visning
+    return <span> {JSON.stringify(ainntekt, null, 2)}</span>
+
+    /*
     const [groupByEmployer, setGroupByEmployer] = useState<boolean>(false)
     const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set())
     const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set())
@@ -609,4 +611,6 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
             {groupByEmployer ? renderByEmployer() : renderByYear()}
         </VStack>
     )
+
+     */
 }
