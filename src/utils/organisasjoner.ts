@@ -13,6 +13,7 @@ export const organisasjonsnavnMap: Record<string, string> = {
     '907670201': 'Klonelabben',
     '999999991': 'Murstein AS',
     '999999992': 'Betongbygg AS',
+    '963743254': 'Veihjelpen AS',
 }
 
 export const organisasjonerForSelect = Object.entries(organisasjonsnavnMap).map(([orgnummer, navn]) => ({

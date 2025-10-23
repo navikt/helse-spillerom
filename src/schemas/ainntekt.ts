@@ -1,40 +1,27 @@
 import { z } from 'zod/v4'
 
-const aktoerSchema = z.object({
-    identifikator: z.string(),
-    aktoerType: z.enum(['NATURLIG_IDENT', 'ORGANISASJON']),
-})
-
 const inntektSchema = z.object({
-    inntektType: z.string(),
+    type: z.string(),
     beloep: z.number(),
     fordel: z.string(),
-    inntektskilde: z.string(),
-    inntektsperiodetype: z.string(),
-    inntektsstatus: z.string(),
-    utbetaltIMaaned: z.string(),
-    opplysningspliktig: aktoerSchema,
-    virksomhet: aktoerSchema,
-    inntektsmottaker: aktoerSchema,
+    beskrivelse: z.string(),
     inngaarIGrunnlagForTrekk: z.boolean(),
     utloeserArbeidsgiveravgift: z.boolean(),
-    informasjonsstatus: z.string(),
-    beskrivelse: z.string(),
-    antall: z.number().optional(),
 })
 
-const arbeidsInntektInformasjonSchema = z.object({
+const maanedSchema = z.object({
+    maaned: z.string(),
+    opplysningspliktig: z.string(),
+    underenhet: z.string(),
+    norskident: z.string(),
+    oppsummeringstidspunkt: z.string(),
     inntektListe: z.array(inntektSchema),
-})
-
-const arbeidsInntektMaanedSchema = z.object({
-    aarMaaned: z.string(),
-    arbeidsInntektInformasjon: arbeidsInntektInformasjonSchema,
+    forskuddstrekkListe: z.array(z.unknown()),
+    avvikListe: z.array(z.unknown()),
 })
 
 export const ainntektSchema = z.object({
-    arbeidsInntektMaaned: z.array(arbeidsInntektMaanedSchema),
-    ident: aktoerSchema,
+    data: z.array(maanedSchema),
 })
 
 export type Ainntekt = z.infer<typeof ainntektSchema>

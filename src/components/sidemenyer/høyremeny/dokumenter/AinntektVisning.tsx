@@ -1,29 +1,27 @@
-import { ReactElement } from 'react'
+import { BodyShort, Button, Detail, HStack, Switch, Table, VStack } from '@navikt/ds-react'
+import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
+import { Fragment, ReactElement, useState } from 'react'
 
 import { Ainntekt } from '@schemas/ainntekt'
+import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 
 interface AinntektVisningProps {
     ainntekt: Ainntekt
 }
-/*
+
 interface GroupedByYear {
-    [year: string]: Ainntekt['arbeidsInntektMaaned']
+    [year: string]: Ainntekt['data']
 }
 
 interface GroupedByEmployer {
     [employer: string]: {
         navn: string
         orgnummer: string
-        data: Ainntekt['arbeidsInntektMaaned']
+        data: Ainntekt['data']
     }
 }
-*/
 
-export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactElement {
-    //TODO reimplementer ordentlig visning
-    return <span> {JSON.stringify(ainntekt, null, 2)}</span>
-
-    /*
+export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElement {
     const [groupByEmployer, setGroupByEmployer] = useState<boolean>(false)
     const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set())
     const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set())
@@ -37,6 +35,18 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                 newSet.delete(year)
             } else {
                 newSet.add(year)
+            }
+            return newSet
+        })
+    }
+
+    const toggleMonth = (month: string) => {
+        setExpandedMonths((prev) => {
+            const newSet = new Set(prev)
+            if (newSet.has(month)) {
+                newSet.delete(month)
+            } else {
+                newSet.add(month)
             }
             return newSet
         })
@@ -66,18 +76,6 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
         })
     }
 
-    const toggleMonth = (month: string) => {
-        setExpandedMonths((prev) => {
-            const newSet = new Set(prev)
-            if (newSet.has(month)) {
-                newSet.delete(month)
-            } else {
-                newSet.add(month)
-            }
-            return newSet
-        })
-    }
-
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('nb-NO', {
             style: 'currency',
@@ -87,27 +85,25 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
         }).format(amount)
     }
 
-    const formatMonth = (aarMaaned: string) => {
-        const [year, month] = aarMaaned.split('-')
+    const formatMonth = (maaned: string) => {
+        const [year, month] = maaned.split('-')
         const date = new Date(parseInt(year), parseInt(month) - 1)
         return date.toLocaleDateString('nb-NO', { month: 'short' })
     }
 
     const getUniqueInntekterCount = (
         inntektListe: {
-            virksomhet: { identifikator: string }
-            inntektType: string
+            type: string
         }[],
+        opplysningspliktig: string,
     ) => {
-        const uniqueKeys = new Set(
-            inntektListe.map((inntekt) => `${inntekt.virksomhet.identifikator}_${inntekt.inntektType}`),
-        )
+        const uniqueKeys = new Set(inntektListe.map((inntekt) => `${opplysningspliktig}_${inntekt.type}`))
         return uniqueKeys.size
     }
 
     // Gruppere data per år
-    const groupedByYear: GroupedByYear = ainntekt.arbeidsInntektMaaned.reduce((acc, maaned) => {
-        const year = maaned.aarMaaned.split('-')[0]
+    const groupedByYear: GroupedByYear = ainntekt.data.reduce((acc, maaned) => {
+        const year = maaned.maaned.split('-')[0]
         if (!acc[year]) {
             acc[year] = []
         }
@@ -120,41 +116,22 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
 
     // Sortere måneder innenfor hvert år synkende (nyest måned først)
     sortedYears.forEach((year: string) => {
-        groupedByYear[year].sort((a, b) => b.aarMaaned.localeCompare(a.aarMaaned))
+        groupedByYear[year].sort((a, b) => b.maaned.localeCompare(a.maaned))
     })
 
     // Gruppere data per arbeidsgiver
     const groupedByEmployer: GroupedByEmployer = {}
 
-    ainntekt.arbeidsInntektMaaned.forEach((maaned) => {
-        maaned.arbeidsInntektInformasjon.inntektListe.forEach((inntekt) => {
-            const orgnummer = inntekt.virksomhet.identifikator
-            if (!groupedByEmployer[orgnummer]) {
-                groupedByEmployer[orgnummer] = {
-                    navn: '', // Navn hentes fra Organisasjonsnavn-komponenten
-                    orgnummer: orgnummer,
-                    data: [],
-                }
+    ainntekt.data.forEach((maaned) => {
+        const orgnummer = maaned.opplysningspliktig
+        if (!groupedByEmployer[orgnummer]) {
+            groupedByEmployer[orgnummer] = {
+                navn: '', // Navn hentes fra Organisasjonsnavn-komponenten
+                orgnummer: orgnummer,
+                data: [],
             }
-
-            // Sjekk om denne måneden allerede eksisterer for denne arbeidsgiveren
-            const existingMonth = groupedByEmployer[orgnummer].data.find(
-                (existingMaaned) => existingMaaned.aarMaaned === maaned.aarMaaned,
-            )
-
-            if (!existingMonth) {
-                // Lag en kopi av måneden med kun inntekter fra denne arbeidsgiveren
-                groupedByEmployer[orgnummer].data.push({
-                    ...maaned,
-                    arbeidsInntektInformasjon: {
-                        ...maaned.arbeidsInntektInformasjon,
-                        inntektListe: maaned.arbeidsInntektInformasjon.inntektListe.filter(
-                            (i) => i.virksomhet.identifikator === orgnummer,
-                        ),
-                    },
-                })
-            }
-        })
+        }
+        groupedByEmployer[orgnummer].data.push(maaned)
     })
 
     // Sortere arbeidsgivere alfabetisk
@@ -162,13 +139,13 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
 
     // Sortere måneder innenfor hver arbeidsgiver
     sortedEmployers.forEach((employer) => {
-        groupedByEmployer[employer].data.sort((a, b) => b.aarMaaned.localeCompare(a.aarMaaned))
+        groupedByEmployer[employer].data.sort((a, b) => b.maaned.localeCompare(a.maaned))
     })
 
     // Gruppere arbeidsgiver-data per år
-    const getEmployerYearGroups = (employerData: Ainntekt['arbeidsInntektMaaned']) => {
+    const getEmployerYearGroups = (employerData: Ainntekt['data']) => {
         const grouped: GroupedByYear = employerData.reduce((acc, maaned) => {
-            const year = maaned.aarMaaned.split('-')[0]
+            const year = maaned.maaned.split('-')[0]
             if (!acc[year]) {
                 acc[year] = []
             }
@@ -181,7 +158,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
 
         // Sortere måneder innenfor hvert år synkende
         sortedYears.forEach((year) => {
-            grouped[year].sort((a, b) => b.aarMaaned.localeCompare(a.aarMaaned))
+            grouped[year].sort((a, b) => b.maaned.localeCompare(a.maaned))
         })
 
         return { grouped, sortedYears }
@@ -209,16 +186,14 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                     const yearTotal = yearData.reduce(
                         (sum: number, maaned) =>
                             sum +
-                            maaned.arbeidsInntektInformasjon.inntektListe.reduce(
-                                (monthSum: number, inntekt) => monthSum + inntekt.beloep,
-                                0,
-                            ),
+                            maaned.inntektListe.reduce((monthSum: number, inntekt) => monthSum + inntekt.beloep, 0),
                         0,
                     )
 
                     // Samle alle inntekter for året og tell unike kombinasjoner
-                    const allYearInntekter = yearData.flatMap((maaned) => maaned.arbeidsInntektInformasjon.inntektListe)
-                    const yearUniqueCount = getUniqueInntekterCount(allYearInntekter)
+                    const allYearInntekter = yearData.flatMap((maaned) => maaned.inntektListe)
+                    const firstMaaned = yearData[0]
+                    const yearUniqueCount = getUniqueInntekterCount(allYearInntekter, firstMaaned.opplysningspliktig)
 
                     const isYearExpanded = expandedYears.has(year)
 
@@ -252,20 +227,21 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                             </Table.Row>
                             {isYearExpanded &&
                                 yearData.map((maaned) => {
-                                    const totalBeloep = maaned.arbeidsInntektInformasjon.inntektListe.reduce(
+                                    const totalBeloep = maaned.inntektListe.reduce(
                                         (sum, inntekt) => sum + inntekt.beloep,
                                         0,
                                     )
                                     const uniqueCount = getUniqueInntekterCount(
-                                        maaned.arbeidsInntektInformasjon.inntektListe,
+                                        maaned.inntektListe,
+                                        maaned.opplysningspliktig,
                                     )
-                                    const isMonthExpanded = expandedMonths.has(maaned.aarMaaned)
+                                    const isMonthExpanded = expandedMonths.has(maaned.maaned)
 
                                     return (
-                                        <Fragment key={maaned.aarMaaned}>
+                                        <Fragment key={maaned.maaned}>
                                             <Table.Row className="bg-gray-25">
                                                 <Table.DataCell className="pl-8">
-                                                    <BodyShort size="small">{formatMonth(maaned.aarMaaned)}</BodyShort>
+                                                    <BodyShort size="small">{formatMonth(maaned.maaned)}</BodyShort>
                                                 </Table.DataCell>
                                                 <Table.DataCell>
                                                     <BodyShort size="small">{uniqueCount}</BodyShort>
@@ -279,7 +255,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                     <Button
                                                         variant="tertiary"
                                                         size="xsmall"
-                                                        onClick={() => toggleMonth(maaned.aarMaaned)}
+                                                        onClick={() => toggleMonth(maaned.maaned)}
                                                         icon={isMonthExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                                                         iconPosition="right"
                                                     ></Button>
@@ -289,83 +265,70 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                 <Table.Row className="bg-gray-50">
                                                     <Table.DataCell colSpan={4}>
                                                         <VStack gap="2" className="p-2">
-                                                            {maaned.arbeidsInntektInformasjon.inntektListe.map(
-                                                                (inntekt, index) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        className="border-l-4 border-ax-border-info pl-3"
-                                                                    >
-                                                                        <HStack gap="4" className="mb-2">
-                                                                            <VStack gap="1">
-                                                                                <Detail className="text-gray-600 text-xs">
-                                                                                    Beløp
-                                                                                </Detail>
-                                                                                <BodyShort
-                                                                                    size="small"
-                                                                                    className="font-medium"
-                                                                                >
-                                                                                    {formatCurrency(inntekt.beloep)}
-                                                                                </BodyShort>
-                                                                            </VStack>
-                                                                            <VStack gap="1">
-                                                                                <Detail className="text-gray-600 text-xs">
-                                                                                    Type
-                                                                                </Detail>
-                                                                                <BodyShort size="small">
-                                                                                    {inntekt.inntektType}
-                                                                                </BodyShort>
-                                                                            </VStack>
-                                                                            <VStack gap="1">
-                                                                                <Detail className="text-gray-600 text-xs">
-                                                                                    Beskrivelse
-                                                                                </Detail>
-                                                                                <BodyShort size="small">
-                                                                                    {inntekt.beskrivelse}
-                                                                                </BodyShort>
-                                                                            </VStack>
-                                                                        </HStack>
-                                                                        <HStack gap="4">
-                                                                            <VStack gap="1">
-                                                                                <Detail className="text-gray-600 text-xs">
-                                                                                    Virksomhet
-                                                                                </Detail>
-                                                                                <BodyShort size="small">
-                                                                                    <Organisasjonsnavn
-                                                                                        orgnummer={
-                                                                                            inntekt.virksomhet
-                                                                                                .identifikator
-                                                                                        }
-                                                                                    />
-                                                                                </BodyShort>
-                                                                                <BodyShort
-                                                                                    size="small"
-                                                                                    className="text-gray-800"
-                                                                                >
-                                                                                    {inntekt.virksomhet.identifikator}
-                                                                                </BodyShort>
-                                                                            </VStack>
-                                                                            <VStack gap="1">
-                                                                                <Detail className="text-gray-600 text-xs">
-                                                                                    Status
-                                                                                </Detail>
-                                                                                <BodyShort size="small">
-                                                                                    {inntekt.inntektsstatus}
-                                                                                </BodyShort>
-                                                                            </VStack>
-                                                                            {inntekt.antall && (
-                                                                                <VStack gap="1">
-                                                                                    <Detail className="text-gray-600 text-xs">
-                                                                                        Antall
-                                                                                    </Detail>
-                                                                                    <BodyShort size="small">
-                                                                                        {inntekt.antall}
-                                                                                    </BodyShort>
-                                                                                </VStack>
-                                                                            )}
-                                                                        </HStack>
-                                                                    </div>
-                                                                ),
-                                                            )}
+                                                            {maaned.inntektListe.map((inntekt, index) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="border-l-4 border-ax-border-info pl-3"
+                                                                >
+                                                                    <HStack gap="4" className="mb-2">
+                                                                        <VStack gap="1">
+                                                                            <Detail className="text-gray-600 text-xs">
+                                                                                Beløp
+                                                                            </Detail>
+                                                                            <BodyShort
+                                                                                size="small"
+                                                                                className="font-medium"
+                                                                            >
+                                                                                {formatCurrency(inntekt.beloep)}
+                                                                            </BodyShort>
+                                                                        </VStack>
+                                                                        <VStack gap="1">
+                                                                            <Detail className="text-gray-600 text-xs">
+                                                                                Type
+                                                                            </Detail>
+                                                                            <BodyShort size="small">
+                                                                                {inntekt.type}
+                                                                            </BodyShort>
+                                                                        </VStack>
+                                                                        <VStack gap="1">
+                                                                            <Detail className="text-gray-600 text-xs">
+                                                                                Beskrivelse
+                                                                            </Detail>
+                                                                            <BodyShort size="small">
+                                                                                {inntekt.beskrivelse}
+                                                                            </BodyShort>
+                                                                        </VStack>
+                                                                    </HStack>
+                                                                    <HStack gap="4">
+                                                                        <VStack gap="1">
+                                                                            <Detail className="text-gray-600 text-xs">
+                                                                                Virksomhet
+                                                                            </Detail>
+                                                                            <BodyShort size="small">
+                                                                                <Organisasjonsnavn
+                                                                                    orgnummer={
+                                                                                        maaned.opplysningspliktig
+                                                                                    }
+                                                                                />
+                                                                            </BodyShort>
+                                                                            <BodyShort
+                                                                                size="small"
+                                                                                className="text-gray-800"
+                                                                            >
+                                                                                {maaned.opplysningspliktig}
+                                                                            </BodyShort>
+                                                                        </VStack>
+                                                                        <VStack gap="1">
+                                                                            <Detail className="text-gray-600 text-xs">
+                                                                                Fordel
+                                                                            </Detail>
+                                                                            <BodyShort size="small">
+                                                                                {inntekt.fordel}
+                                                                            </BodyShort>
+                                                                        </VStack>
+                                                                    </HStack>
+                                                                </div>
+                                                            ))}
                                                         </VStack>
                                                     </Table.DataCell>
                                                 </Table.Row>
@@ -431,7 +394,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                         const yearTotal = yearData.reduce(
                                             (sum: number, maaned) =>
                                                 sum +
-                                                maaned.arbeidsInntektInformasjon.inntektListe.reduce(
+                                                maaned.inntektListe.reduce(
                                                     (monthSum: number, inntekt) => monthSum + inntekt.beloep,
                                                     0,
                                                 ),
@@ -472,12 +435,11 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                 </Table.Row>
                                                 {isEmployerYearExpanded &&
                                                     yearData.map((maaned) => {
-                                                        const totalBeloep =
-                                                            maaned.arbeidsInntektInformasjon.inntektListe.reduce(
-                                                                (sum, inntekt) => sum + inntekt.beloep,
-                                                                0,
-                                                            )
-                                                        const monthKey = `${employer}-${maaned.aarMaaned}`
+                                                        const totalBeloep = maaned.inntektListe.reduce(
+                                                            (sum, inntekt) => sum + inntekt.beloep,
+                                                            0,
+                                                        )
+                                                        const monthKey = `${employer}-${maaned.maaned}`
                                                         const isMonthExpanded = expandedMonths.has(monthKey)
 
                                                         return (
@@ -485,7 +447,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                                 <Table.Row className="bg-gray-25">
                                                                     <Table.DataCell className="pl-16">
                                                                         <BodyShort size="small">
-                                                                            {formatMonth(maaned.aarMaaned)}
+                                                                            {formatMonth(maaned.maaned)}
                                                                         </BodyShort>
                                                                     </Table.DataCell>
                                                                     <Table.DataCell>
@@ -513,7 +475,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                                     <Table.Row className="bg-gray-50">
                                                                         <Table.DataCell colSpan={3}>
                                                                             <VStack gap="2" className="p-2">
-                                                                                {maaned.arbeidsInntektInformasjon.inntektListe.map(
+                                                                                {maaned.inntektListe.map(
                                                                                     (inntekt, index) => (
                                                                                         <div
                                                                                             key={index}
@@ -541,9 +503,7 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                                                                         Type
                                                                                                     </Detail>
                                                                                                     <BodyShort size="small">
-                                                                                                        {
-                                                                                                            inntekt.inntektType
-                                                                                                        }
+                                                                                                        {inntekt.type}
                                                                                                     </BodyShort>
                                                                                                 </VStack>
                                                                                                 <VStack gap="1">
@@ -560,26 +520,12 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
                                                                                             <HStack gap="4">
                                                                                                 <VStack gap="1">
                                                                                                     <Detail className="text-gray-600 text-xs">
-                                                                                                        Status
+                                                                                                        Fordel
                                                                                                     </Detail>
                                                                                                     <BodyShort size="small">
-                                                                                                        {
-                                                                                                            inntekt.inntektsstatus
-                                                                                                        }
+                                                                                                        {inntekt.fordel}
                                                                                                     </BodyShort>
                                                                                                 </VStack>
-                                                                                                {inntekt.antall && (
-                                                                                                    <VStack gap="1">
-                                                                                                        <Detail className="text-gray-600 text-xs">
-                                                                                                            Antall
-                                                                                                        </Detail>
-                                                                                                        <BodyShort size="small">
-                                                                                                            {
-                                                                                                                inntekt.antall
-                                                                                                            }
-                                                                                                        </BodyShort>
-                                                                                                    </VStack>
-                                                                                                )}
                                                                                             </HStack>
                                                                                         </div>
                                                                                     ),
@@ -611,6 +557,4 @@ export function Ainntekt828Visning({ ainntekt }: AinntektVisningProps): ReactEle
             {groupByEmployer ? renderByEmployer() : renderByYear()}
         </VStack>
     )
-
-     */
 }

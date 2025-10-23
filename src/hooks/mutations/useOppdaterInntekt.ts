@@ -21,10 +21,17 @@ export function useOppdaterInntekt() {
             )
         },
         onSuccess: () => {
+            //hvis requesten var ainntekt, inntektsmelding eller sigrun så kan det bære at vi må hente dokumenter på nytt
+            // TODO denne kan optimaliseres ved å se på hva slags inntekt som ble requestet
+            queryClient.invalidateQueries({
+                queryKey: ['dokumenter', params.personId, params.saksbehandlingsperiodeId],
+            })
+
             // Invalider yrkesaktivitet queries
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
             })
+
             // Invalider sykepengegrunnlag queries
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlagV2', params.personId, params.saksbehandlingsperiodeId],

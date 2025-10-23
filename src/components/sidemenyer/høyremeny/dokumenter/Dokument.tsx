@@ -10,7 +10,7 @@ import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 import { Søknad } from '@schemas/søknad'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
-import { Ainntekt828Visning } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt828Visning'
+import { AinntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/AinntektVisning'
 import { ArbeidsforholdVisning } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdVisning'
 import { PensjonsgivendeInntektVisning } from '@components/sidemenyer/høyremeny/dokumenter/PensjonsgivendeInntektVisning'
 import { Ainntekt } from '@schemas/ainntekt'
@@ -59,8 +59,8 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                     >
                         {dokument.dokumentType === 'søknad' ? (
                             <Søknadsinnhold søknad={dokument.innhold as Søknad} />
-                        ) : dokument.dokumentType === 'ainntekt828' ? (
-                            <Ainntekt828Visning ainntekt={dokument.innhold as Ainntekt} />
+                        ) : ['ainntekt828', 'ainntekt830'].includes(dokument.dokumentType) ? (
+                            <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
                         ) : dokument.dokumentType === 'arbeidsforhold' ? (
                             <ArbeidsforholdVisning arbeidsforhold={dokument.innhold as Arbeidsforhold[]} />
                         ) : dokument.dokumentType === 'pensjonsgivendeinntekt' ? (
