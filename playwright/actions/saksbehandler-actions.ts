@@ -470,22 +470,6 @@ export function navigerTilSykepengegrunnlagFane() {
     }
 }
 
-export function åpneSykepengegrunnlagSkjema() {
-    return async (page: Page) => {
-        await test.step('Åpne skjema for å redigere sykepengegrunnlag', async () => {
-            // Vent på at sykepengegrunnlag-fanen er lastet
-            await page.waitForSelector('[role="tabpanel"]:has-text("Sykepengegrunnlag")', { state: 'visible' })
-
-            // Finn rediger-knappen i inntekter-seksjonen
-            const redigerButton = page
-                .getByRole('tabpanel', { name: 'Sykepengegrunnlag' })
-                .getByRole('button', { name: 'Endre' })
-            await redigerButton.waitFor({ state: 'visible' })
-            await redigerButton.click()
-        })
-    }
-}
-
 export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = 'Test inntekt for sykepengegrunnlag') {
     return async (page: Page) => {
         await test.step(`Fyll ut sykepengegrunnlag med inntekt ${inntekt}`, async () => {
@@ -519,7 +503,6 @@ export function settSykepengegrunnlagNæringsdrivende(begrunnelse: string = 'Tes
     return async (page: Page) => {
         await test.step(`Forn næringsdrivende`, async () => {
             await navigerTilSykepengegrunnlagFane()(page)
-            await åpneSykepengegrunnlagSkjema()(page)
             const begrunnelseField = page.getByRole('textbox', { name: 'Begrunnelse' })
             await begrunnelseField.waitFor({ state: 'visible' })
             await begrunnelseField.fill(begrunnelse)
@@ -535,7 +518,6 @@ export function settSykepengegrunnlag(
     return async (page: Page) => {
         await test.step(`Sett sykepengegrunnlag med inntekt ${inntekt}`, async () => {
             await navigerTilSykepengegrunnlagFane()(page)
-            await åpneSykepengegrunnlagSkjema()(page)
             await fyllUtSykepengegrunnlag(inntekt, begrunnelse)(page)
             await lagreSykepengegrunnlag()(page)
         })

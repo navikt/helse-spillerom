@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Detail, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
@@ -42,6 +42,21 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     const kanSaksbehandles = useKanSaksbehandles()
 
+    const aktivYrkesaktivitet =
+        yrkesaktiviteter?.find((y) => y.id === selectedYrkesaktivitet?.id) ||
+        selectedYrkesaktivitet ||
+        yrkesaktiviteter?.[0]
+
+    const inntektData = aktivYrkesaktivitet?.inntektData
+    const harIkkeInntektData = !inntektData
+
+    // Åpne automatisk i redigeringsmodus hvis inntektData ikke er satt
+    useEffect(() => {
+        if (harIkkeInntektData && kanSaksbehandles) {
+            setErIRedigeringsmodus(true)
+        }
+    }, [aktivYrkesaktivitet?.id, harIkkeInntektData, kanSaksbehandles])
+
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (
             <SaksbildePanel value={value}>
@@ -69,14 +84,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         )
     }
 
-    const aktivYrkesaktivitet =
-        yrkesaktiviteter?.find((y) => y.id === selectedYrkesaktivitet?.id) ||
-        selectedYrkesaktivitet ||
-        yrkesaktiviteter?.[0]
-
-    const kategori = aktivYrkesaktivitet.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
-    const inntektRequest = aktivYrkesaktivitet.inntektRequest as InntektRequestFor<typeof kategori>
-    const inntektData = aktivYrkesaktivitet.inntektData
+    const kategori = aktivYrkesaktivitet?.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
+    const inntektRequest = aktivYrkesaktivitet?.inntektRequest as InntektRequestFor<typeof kategori>
 
     return (
         <SaksbildePanel value={value} className="mb-8 p-0">
@@ -110,7 +119,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         })}
                                         onClick={() => {
                                             setSelectedYrkesaktivitet(yrkesaktivitet)
-                                            setErIRedigeringsmodus(false)
+                                            // Åpne i redigeringsmodus hvis inntektData mangler
+                                            setErIRedigeringsmodus(!yrkesaktivitet.inntektData && kanSaksbehandles)
                                         }}
                                     >
                                         <TableDataCell className="pl-8 whitespace-nowrap">
@@ -174,7 +184,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                         gap="4"
                         className="w-[710px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
                     >
-                        {kanSaksbehandles && (
+                        {kanSaksbehandles && !harIkkeInntektData && (
                             <div className="-ml-[4px]">
                                 <Button
                                     size="xsmall"
@@ -237,6 +247,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
                                 avbryt={() => setErIRedigeringsmodus(false)}
+                                erFørstegangsRedigering={harIkkeInntektData}
                             />
                         )}
                     </VStack>
