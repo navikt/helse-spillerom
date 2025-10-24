@@ -1,6 +1,6 @@
 import React, { Dispatch, Fragment, ReactElement, SetStateAction, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
+import { Alert, BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import {
@@ -8,17 +8,25 @@ import {
     arbeidstakerInntektTypeSchema,
     ArbeidstakerSkjønnsfastsettelseÅrsak,
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
+    Inntektskategori,
 } from '@schemas/inntektRequest'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
+import { useAinntektYrkesaktivitet } from '@hooks/queries/useAinntektYrkesaktivitet'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 
-export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
+export function ArbeidstakerInntektFormFields({
+    yrkesaktivitetId,
+}: {
+    yrkesaktivitetId: string
+    kategori: Inntektskategori
+}): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const [visRefusjonsFelter, setVisRefusjonsFelter] = useState<boolean>(!!watch('data.refusjon')?.[0]?.fom)
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
@@ -55,6 +63,9 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                                         yrkesaktivitetId={yrkesaktivitetId}
                                         setVisRefusjonsFelter={setVisRefusjonsFelter}
                                     />
+                                )}
+                                {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (
+                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} />
                                 )}
                             </Fragment>
                         ))}
@@ -226,4 +237,54 @@ function refusjonFra(inntektsmelding: Inntektsmelding) {
     })
 
     return periods
+}
+
+interface VisAinntektProps {
+    yrkesaktivitetId: string
+}
+
+function VisAinntekt({ yrkesaktivitetId }: VisAinntektProps): ReactElement {
+    const { data, isLoading, isError } = useAinntektYrkesaktivitet(yrkesaktivitetId)
+
+    if (isLoading) {
+        return (
+            <VStack gap="2" className="m-4 ml-6">
+                <BodyShort>Laster a-inntekt...</BodyShort>
+            </VStack>
+        )
+    }
+
+    if (isError) {
+        return (
+            <VStack gap="2" className="m-4 ml-6">
+                <Alert variant="error" size="small">
+                    Kunne ikke hente a-inntekt
+                </Alert>
+            </VStack>
+        )
+    }
+
+    if (!data) {
+        return (
+            <VStack gap="2" className="m-4 ml-6">
+                <BodyShort>Ingen data tilgjengelig</BodyShort>
+            </VStack>
+        )
+    }
+
+    if (!data.success) {
+        return (
+            <VStack gap="2" className="m-4 ml-6">
+                <Alert variant="warning" size="small">
+                    {data.feilmelding}
+                </Alert>
+            </VStack>
+        )
+    }
+
+    return (
+        <VStack gap="4" className="m-4 ml-6">
+            <AinntektInntektDataView inntektData={data.data} />
+        </VStack>
+    )
 }

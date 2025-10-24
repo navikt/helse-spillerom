@@ -32,6 +32,8 @@ export const allowedAPIs = [
     'GET /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/ainntekt',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g

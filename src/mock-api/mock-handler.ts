@@ -41,8 +41,10 @@ import {
     handlePutInntekt,
 } from '@/mock-api/handlers/yrkesaktivitet-handlers'
 import { handleGetAinntekt } from '@/mock-api/handlers/ainntekt-handlers'
+import { handleGetAinntektForYrkesaktivitet } from '@/mock-api/handlers/ainntekt-yrkesaktivitet-handlers'
 import { handleGetArbeidsforhold } from '@/mock-api/handlers/arbeidsforhold-handlers'
 import { handleGetPensjonsgivendeInntekt } from '@/mock-api/handlers/pensjonsgivende-inntekt-handlers'
+import { handleGetPensjonsgivendeInntektForYrkesaktivitet } from '@/mock-api/handlers/pensjonsgivende-inntekt-yrkesaktivitet-handlers'
 import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
@@ -183,6 +185,13 @@ const handlers: Record<string, HandlerFunction> = {
 
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger': async () =>
         handleGetInntektsmeldinger(),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt': async ({
+        yrkesaktivitetId,
+    }) => handleGetPensjonsgivendeInntektForYrkesaktivitet(yrkesaktivitetId!),
+
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/ainntekt': async ({ yrkesaktivitetId }) =>
+        handleGetAinntektForYrkesaktivitet(yrkesaktivitetId!),
 }
 
 export async function mocketBakrommetData(request: Request, path: string): Promise<Response> {
@@ -221,6 +230,18 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
         }
 
         if (path.includes('/yrkesaktivitet/') && path.includes('/inntekt')) {
+            context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
+        }
+
+        if (path.includes('/yrkesaktivitet/') && path.includes('/inntektsmeldinger')) {
+            context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
+        }
+
+        if (path.includes('/yrkesaktivitet/') && path.includes('/pensjonsgivendeinntekt')) {
+            context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
+        }
+
+        if (path.includes('/yrkesaktivitet/') && path.includes('/ainntekt')) {
             context.yrkesaktivitetId = hentInntektsforholdUuidFraUrl(request.url)
         }
 
