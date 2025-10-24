@@ -158,6 +158,9 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 <TableRow>
                                     <TableDataCell className="border-0 pl-8 text-ax-text-neutral-subtle">
                                         Sammenlikningsgrunnlag
+                                        <span className="ml-2 text-xs">
+                                            (avvik: {sammenlikningsgrunnlag.avvikProsent.toFixed(1)}%)
+                                        </span>
                                     </TableDataCell>
                                     <TableDataCell className="border-0 pr-16 text-right text-ax-text-neutral-subtle">
                                         {formaterBeløpKroner(sammenlikningsgrunnlag.totaltSammenlikningsgrunnlag)}
