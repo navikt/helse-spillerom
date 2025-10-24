@@ -13,6 +13,7 @@ export type Dokumenttype = z.infer<typeof dokumenttypeSchema>
 export const dokumenttypeSchema = z.enum([
     'søknad',
     'INNTEKTSMELDING',
+    'inntektsmelding',
     'SYKMELDING',
     'AAREG',
     'ainntekt828',
