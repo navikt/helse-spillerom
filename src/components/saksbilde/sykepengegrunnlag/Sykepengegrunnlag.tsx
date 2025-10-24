@@ -31,11 +31,13 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         refetch: yrkesaktivitetRefetch,
     } = useYrkesaktivitet()
     const {
-        data: sykepengegrunnlag,
+        data: sykepengegrunnlagResponse,
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
         refetch,
     } = useSykepengegrunnlagV2()
+
+    const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
 
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)

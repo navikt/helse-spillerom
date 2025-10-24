@@ -5,7 +5,9 @@ import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 
 export function SykepengegrunnlagVisning(): ReactElement | null {
-    const { data: sykepengegrunnlag } = useSykepengegrunnlagV2()
+    const { data: sykepengegrunnlagResponse } = useSykepengegrunnlagV2()
+
+    const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
 
     // Vis ikke hvis det ikke er satt sykepengegrunnlag
     if (!sykepengegrunnlag) {

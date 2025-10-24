@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server'
 
 import { Person } from '@/mock-api/session'
-import { Næringsdel, SykepengegrunnlagV2 } from '@/schemas/sykepengegrunnlagV2'
+import {
+    Næringsdel,
+    SykepengegrunnlagV2,
+    SykepengegrunnlagResponse,
+    Sammenlikningsgrunnlag,
+} from '@/schemas/sykepengegrunnlagV2'
 import { beregn6G, beregnGrunnbeløp, finnGrunnbeløpVirkningstidspunkt } from '@/utils/grunnbelop'
 import { Yrkesaktivitet } from '@/schemas/yrkesaktivitet'
 
@@ -31,7 +36,15 @@ export async function handleGetSykepengegrunnlagV2(person: Person | undefined, u
     // Beregn sykepengegrunnlag v2
     const sykepengegrunnlag = beregnSykepengegrunnlagV2(yrkesaktiviteter, periode.skjæringstidspunkt!)
 
-    return NextResponse.json(sykepengegrunnlag)
+    // Generer mock sammenlikningsgrunnlag
+    const sammenlikningsgrunnlag = sykepengegrunnlag ? genererMockSammenlikningsgrunnlag(sykepengegrunnlag) : null
+
+    const response: SykepengegrunnlagResponse = {
+        sykepengegrunnlag,
+        sammenlikningsgrunnlag,
+    }
+
+    return NextResponse.json(response)
 }
 
 export function beregnSykepengegrunnlagV2(
@@ -107,5 +120,26 @@ export function beregnSykepengegrunnlagV2(
         begrensetTil6G,
         grunnbeløpVirkningstidspunkt,
         næringsdel,
+    }
+}
+
+function genererMockSammenlikningsgrunnlag(sykepengegrunnlag: SykepengegrunnlagV2): Sammenlikningsgrunnlag {
+    // Generer et sammenlikningsgrunnlag som er litt annerledes enn sykepengegrunnlaget
+    const variasjon = 0.05 // 5% variasjon
+    const sammenlikningsgrunnlag = Math.round(
+        sykepengegrunnlag.totaltInntektsgrunnlag * (1 + (Math.random() - 0.5) * variasjon),
+    )
+
+    const avvik = sammenlikningsgrunnlag - sykepengegrunnlag.totaltInntektsgrunnlag
+    const avvikProsent =
+        sykepengegrunnlag.totaltInntektsgrunnlag > 0
+            ? (Math.abs(avvik) / sykepengegrunnlag.totaltInntektsgrunnlag) * 100
+            : 0
+
+    return {
+        totaltSammenlikningsgrunnlag: sammenlikningsgrunnlag,
+        avvikProsent: Math.round(avvikProsent * 100) / 100, // Rund til 2 desimaler
+        avvikMotInntektsgrunnlag: avvik,
+        basertPåDokumentId: crypto.randomUUID(),
     }
 }
