@@ -38,6 +38,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     } = useSykepengegrunnlagV2()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
+    const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
 
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
@@ -153,6 +154,16 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                     {formaterBeløpKroner(sykepengegrunnlag?.totaltInntektsgrunnlag)}
                                 </TableDataCell>
                             </TableRow>
+                            {sammenlikningsgrunnlag && (
+                                <TableRow>
+                                    <TableDataCell className="border-0 pl-8 text-ax-text-neutral-subtle">
+                                        Sammenlikningsgrunnlag
+                                    </TableDataCell>
+                                    <TableDataCell className="border-0 pr-16 text-right text-ax-text-neutral-subtle">
+                                        {formaterBeløpKroner(sammenlikningsgrunnlag.totaltSammenlikningsgrunnlag)}
+                                    </TableDataCell>
+                                </TableRow>
+                            )}
                         </tfoot>
                     </Table>
                     <VStack gap="6" className="mt-6 pr-16 pl-8">
