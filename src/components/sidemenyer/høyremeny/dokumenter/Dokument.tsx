@@ -81,6 +81,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
 
 const dokumentVisningstekst: Record<Dokumenttype, string> = {
     søknad: 'Søknad mottatt',
+    inntektsmelding: 'Inntektsmelding mottatt',
     INNTEKTSMELDING: 'Inntektsmelding mottatt',
     SYKMELDING: 'Sykmelding mottatt',
     AAREG: 'Aa-reg',
