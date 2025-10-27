@@ -53,8 +53,8 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
-        sistEndretDato: '2025-10-09T06:16:09.864Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-23T07:38:13.854Z',
     },
     {
         kode: 'e40375fa-d0a5-4a68-a90a-9e145a0a63b4',
@@ -82,7 +82,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:04.434Z',
     },
     {
@@ -198,7 +198,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:16.637Z',
     },
     {
@@ -265,7 +265,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:23.876Z',
     },
     {
@@ -392,7 +392,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:33.071Z',
     },
     {
@@ -421,7 +421,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:42.002Z',
     },
     {
@@ -450,7 +450,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:48.754Z',
     },
     {
@@ -479,7 +479,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:16:54.639Z',
     },
     {
@@ -560,7 +560,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:00.972Z',
     },
     {
@@ -589,7 +589,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:07.920Z',
     },
     {
@@ -618,7 +618,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:17.175Z',
     },
     {
@@ -647,7 +647,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:23.473Z',
     },
     {
@@ -708,7 +708,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:29.816Z',
     },
     {
@@ -737,7 +737,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 ],
             },
         ],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:37.193Z',
     },
     {
@@ -746,7 +746,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
         kategori: 'særskilte_grupper',
         paragrafTag: '§ 8-47',
         underspørsmål: [],
-        sistEndretAv: 'Andersen, Håvard Stigen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-09T06:17:46.238Z',
     },
 ]

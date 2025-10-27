@@ -69,6 +69,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
+        sistEndretAv: 'Redacted Redactesen',
     },
     {
         vilkårshjemmel: {
@@ -162,7 +163,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-02T10:17:47.061Z',
     },
     {
@@ -329,6 +330,19 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     bokstav: 'j',
                 },
             },
+            {
+                kode: 'ARBUFOR_SKIP',
+                beskrivelse: 'Er arbeidsufør som arbeidstaker på skip, selv om vedkommende ikke ellers er arbeidsufør',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2021-06-01',
+                    kapittel: '8',
+                    paragraf: '44',
+                    ledd: '1',
+                    setning: null,
+                    bokstav: 'a',
+                },
+            },
         ],
         ikkeOppfylt: [
             {
@@ -358,8 +372,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
-        sistEndretDato: '2025-09-02T10:17:47.061Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-21T12:31:32.913Z',
     },
     {
         vilkårshjemmel: {
@@ -457,7 +471,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Netland, Morten Jonassen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-30T08:16:00.777Z',
     },
     {
@@ -466,7 +480,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             lovverksversjon: '2019-01-01',
             kapittel: '8',
             paragraf: '38',
-            ledd: '1',
+            ledd: '',
             setning: null,
             bokstav: null,
         },
@@ -488,8 +502,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
-        sistEndretDato: '2025-09-18T12:20:52.594Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-17T09:04:05.020Z',
     },
     {
         vilkårshjemmel: {
@@ -585,7 +599,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
@@ -630,7 +644,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
@@ -675,7 +689,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-18T12:37:12.807Z',
     },
     {
@@ -758,7 +772,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-18T12:20:52.594Z',
     },
     {
@@ -803,7 +817,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-09-22T10:38:59.472Z',
     },
     {
@@ -816,11 +830,11 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             setning: null,
             bokstav: '',
         },
-        vilkårskode: 'ARBUFOR_SKIP',
+        vilkårskode: 'ARB_SKIP',
         beskrivelse: 'Arbeidstaker på skip',
         oppfylt: [
             {
-                kode: 'ARBUFOR_SKIP_OPPFYLT',
+                kode: 'SKIP_UTENRIKSFART',
                 beskrivelse: 'Arbeidsufør som ansatt på et norsk skip i utenriksfart',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
@@ -829,7 +843,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     paragraf: '44',
                     ledd: '1',
                     setning: null,
-                    bokstav: 'a',
+                    bokstav: '',
                 },
             },
         ],
@@ -848,8 +862,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
-        sistEndretDato: '2025-10-08T10:59:32.459Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-22T07:16:46.564Z',
     },
     {
         vilkårshjemmel: {
@@ -1066,7 +1080,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1111,7 +1125,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1158,7 +1172,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1244,7 +1258,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1289,7 +1303,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1335,7 +1349,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1380,7 +1394,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
         ],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1424,7 +1438,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
     {
@@ -1443,7 +1457,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             {
                 kode: 'OPPTJENING_UNNTAK_FISKER',
                 beskrivelse:
-                    'Fisker som er tatt opp på blad B i fiskermanntallet har rett til sykepenger uten hensyn til bestemmelsene i § 8-2 om opptjeningstid',
+                    'Fisker som er tatt opp på blad B i fiskermanntallet har rett til sykepenger uten hensyn til vilkårene i § 8-2',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '1999-10-12',
@@ -1456,8 +1470,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
-        sistEndretDato: '2025-10-08T10:58:43.416Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-09T11:22:43.075Z',
     },
     {
         vilkårshjemmel: {
@@ -1475,7 +1489,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             {
                 kode: 'OPPTJENING_UNNTAK_MILITARTJENESTE',
                 beskrivelse:
-                    'Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten, har rett til sykepenger ved arbeidsuførhet uten hensyn til vilkårene i § 8-2 dersom arbeidsuførheten oppstår under tjenesten',
+                    'Utført militærtjeneste hvor arbeidsuførheten oppstod under tjenesten, har rett til sykepenger ved arbeidsuførhet uten hensyn til vilkårene i §§ 8-2 og 8-3 dersom arbeidsuførheten oppstår under tjenesten',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '2017-07-01',
@@ -1488,8 +1502,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
-        sistEndretDato: '2025-10-08T10:58:13.119Z',
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-10-09T11:23:23.330Z',
     },
     {
         vilkårshjemmel: {
@@ -1519,7 +1533,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         ikkeOppfylt: [],
-        sistEndretAv: 'Engesvold, Jørgen',
+        sistEndretAv: 'Redacted Redactesen',
         sistEndretDato: '2025-10-08T10:43:02.233Z',
     },
 ]
