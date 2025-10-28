@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, BoxNew, HStack, Table, VStack } from '@navikt/ds-react'
+import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
@@ -56,26 +57,35 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 </VStack>
             )}
 
+            {refusjon && refusjon.length > 0 && (
+                <Bleed marginInline="2" asChild>
+                    <BoxNew>
+                        <Table zebraStripes title="Refusjon" size="small">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHeaderCell>Fra og med dato</TableHeaderCell>
+                                    <TableHeaderCell>Til og med dato</TableHeaderCell>
+                                    <TableHeaderCell>Refusjonsbeløp</TableHeaderCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {refusjon.map((refusjon) => (
+                                    <TableRow key={refusjon.fom}>
+                                        <TableDataCell>{getFormattedDateString(refusjon.fom)}</TableDataCell>
+                                        <TableDataCell>{getFormattedDateString(refusjon.tom)}</TableDataCell>
+                                        <TableDataCell>{formaterBeløpKroner(refusjon.beløp)}</TableDataCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </BoxNew>
+                </Bleed>
+            )}
+
             {årsak && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Årsak</BodyShort>
                     <BodyShort>{arbeidstakerSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
-                </VStack>
-            )}
-
-            {refusjon && refusjon.length > 0 && (
-                <VStack gap="1">
-                    <BodyShort weight="semibold">Refusjon</BodyShort>
-                    {refusjon.map((refusjon) => (
-                        <HStack key={refusjon.fom} gap="12">
-                            <BodyShort>
-                                {refusjon.tom
-                                    ? `${getFormattedDateString(refusjon.fom)} - ${getFormattedDateString(refusjon.tom)}`
-                                    : `${getFormattedDateString(refusjon.fom)} - til nå`}
-                            </BodyShort>
-                            <BodyShort>{formaterBeløpKroner(refusjon.beløp)}</BodyShort>
-                        </HStack>
-                    ))}
                 </VStack>
             )}
 
