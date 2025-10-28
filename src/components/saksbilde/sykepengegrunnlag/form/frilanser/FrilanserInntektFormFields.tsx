@@ -7,18 +7,12 @@ import {
     frilanserInntektTypeSchema,
     FrilanserSkjønnsfastsettelseÅrsak,
     frilanserSkjønnsfastsettelseÅrsakSchema,
-    Inntektskategori,
 } from '@schemas/inntektRequest'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 
-export function FrilanserInntektFormFields({
-    yrkesaktivitetId,
-}: {
-    yrkesaktivitetId: string
-    kategori: Inntektskategori
-}): ReactElement {
+export function FrilanserInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
     const valgtType = watch('data.type')
 

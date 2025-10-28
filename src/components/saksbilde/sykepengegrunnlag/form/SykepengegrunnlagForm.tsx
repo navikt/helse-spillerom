@@ -86,12 +86,13 @@ export function SykepengegrunnlagForm({
     )
 }
 
-type FormFieldsProps = { yrkesaktivitetId: string; kategori: Inntektskategori }
-
-const FormFieldsFor: Record<Inntektskategori, React.ComponentType<FormFieldsProps>> = {
-    ARBEIDSTAKER: ArbeidstakerInntektFormFields as React.ComponentType<FormFieldsProps>,
+const FormFieldsFor: Record<
+    Inntektskategori,
+    React.ComponentType<{ yrkesaktivitetId: string; kategori: Inntektskategori }>
+> = {
+    ARBEIDSTAKER: ArbeidstakerInntektFormFields,
     SELVSTENDIG_NÆRINGSDRIVENDE: PensjonsgivendeInntektFormFields,
     INAKTIV: PensjonsgivendeInntektFormFields,
-    FRILANSER: FrilanserInntektFormFields as React.ComponentType<FormFieldsProps>,
-    ARBEIDSLEDIG: ArbeidsledigInntektFormFields as React.ComponentType<FormFieldsProps>,
+    FRILANSER: FrilanserInntektFormFields,
+    ARBEIDSLEDIG: ArbeidsledigInntektFormFields,
 }

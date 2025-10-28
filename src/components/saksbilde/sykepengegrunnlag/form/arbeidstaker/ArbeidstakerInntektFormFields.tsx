@@ -8,7 +8,6 @@ import {
     arbeidstakerInntektTypeSchema,
     ArbeidstakerSkjønnsfastsettelseÅrsak,
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
-    Inntektskategori,
 } from '@schemas/inntektRequest'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
@@ -20,12 +19,7 @@ import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 
-export function ArbeidstakerInntektFormFields({
-    yrkesaktivitetId,
-}: {
-    yrkesaktivitetId: string
-    kategori: Inntektskategori
-}): ReactElement {
+export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const [visRefusjonsFelter, setVisRefusjonsFelter] = useState<boolean>(!!watch('data.refusjon')?.[0]?.fom)
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()

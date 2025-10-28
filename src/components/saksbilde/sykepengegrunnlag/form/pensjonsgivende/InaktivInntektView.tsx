@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
-import { Maybe } from '@utils/tsUtils'
+import { Maybe, notNull } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
@@ -35,7 +35,7 @@ export function InaktivInntektView({ inntektRequest, inntektData }: InaktivInnte
 
         return (
             <>
-                {årsinntekt && (
+                {notNull(årsinntekt) && (
                     <VStack gap="1">
                         <BodyShort weight="semibold">Årsinntekt</BodyShort>
                         <HStack gap="2">
