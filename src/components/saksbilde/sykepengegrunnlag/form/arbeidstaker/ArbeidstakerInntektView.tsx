@@ -72,7 +72,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                                 {refusjon.map((refusjon) => (
                                     <TableRow key={refusjon.fom}>
                                         <TableDataCell>{getFormattedDateString(refusjon.fom)}</TableDataCell>
-                                        <TableDataCell>{getFormattedDateString(refusjon.tom)}</TableDataCell>
+                                        <TableDataCell>{getFormattedDateString(refusjon.tom) || '-'}</TableDataCell>
                                         <TableDataCell>{formaterBeløpKroner(refusjon.beløp)}</TableDataCell>
                                     </TableRow>
                                 ))}
