@@ -295,11 +295,11 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         function sporingsverdi(data: ArbeidstakerSkjønnsfastsettelseÅrsak): string {
             switch (data) {
                 case 'AVVIK_25_PROSENT':
-                    return 'ARB_SPG_SKJOENN_AVVIK'
+                    return 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_SKJOENN_AVVIK'
                 case 'MANGELFULL_RAPPORTERING':
-                    return 'ARB_SPG_SKJOENN_URIKTIG'
+                    return 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_SKJOENN_URIKTIG'
                 case 'TIDSAVGRENSET':
-                    return 'ARB_SPG_TIDSBEGRENSET_FOER_SLUTTDATO'
+                    return 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_TIDSBEGRENSET_FOER_SLUTTDATO'
             }
             throw Error('Ukjent årsak for skjønnsfastsettelse')
         }
@@ -315,7 +315,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_MANUELT_BEREGNET',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: 'MANUELT_BEREGNET_BEREGNINGSSPORINGVERDI',
+            sporing: 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_HOVEDREGEL',
         }
     }
 
@@ -323,7 +323,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_AINNTEKT',
             omregnetÅrsinntekt: 400000,
-            sporing: 'ARB_SPG_HOVEDREGEL',
+            sporing: 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_HOVEDREGEL',
             kildedata: {
                 '2024-01': 30000,
                 '2024-02': 30000,
@@ -346,7 +346,7 @@ function genererArbeidstakerInntektData(data: ArbeidstakerInntektRequest): Innte
         return {
             inntektstype: 'ARBEIDSTAKER_INNTEKTSMELDING',
             omregnetÅrsinntekt: parseFloat(inntektsmelding.beregnetInntekt || '0') * 12,
-            sporing: 'ARB_SPG_HOVEDREGEL',
+            sporing: 'ARBEIDSTAKER_SYKEPENGEGRUNNLAG_HOVEDREGEL',
             inntektsmelding: inntektsmelding,
             inntektsmeldingId: inntektsmeldingId,
         }
@@ -360,14 +360,14 @@ function genererSelvstendigNæringsdrivendeInntektData(data: PensjonsgivendeInnt
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_SKJØNNSFASTSATT',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'SELVSTENDIG_SYKEPENGEGRUNNLAG_SKJOENN_VARIG_ENDRING',
         }
     }
     if (data.type === 'PENSJONSGIVENDE_INNTEKT') {
         return {
             inntektstype: 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE',
             omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
-            sporing: 'SN_SPG_HOVEDREGEL',
+            sporing: 'SELVSTENDIG_SYKEPENGEGRUNNLAG_HOVEDREGEL',
             pensjonsgivendeInntekt: {
                 omregnetÅrsinntekt: 795568,
                 pensjonsgivendeInntekt: [
@@ -406,7 +406,7 @@ function genererInaktivInntektData(data: PensjonsgivendeInntektRequest): Inntekt
         return {
             inntektstype: 'INAKTIV_SKJØNNSFASTSATT',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'INAKTIV_SYKEPENGEGRUNNLAG_SKJOENN_VARIG_ENDRING',
         }
     }
 
@@ -414,7 +414,7 @@ function genererInaktivInntektData(data: PensjonsgivendeInntektRequest): Inntekt
         return {
             inntektstype: 'INAKTIV_PENSJONSGIVENDE',
             omregnetÅrsinntekt: 795568, // TODO: Hent ekte pensjonsgivende inntekt data
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'INAKTIV_SYKEPENGEGRUNNLAG_HOVEDREGEL',
             pensjonsgivendeInntekt: {
                 omregnetÅrsinntekt: 795568,
                 pensjonsgivendeInntekt: [
@@ -453,7 +453,7 @@ function genererFrilanserInntektData(data: FrilanserInntektRequest): InntektData
         return {
             inntektstype: 'FRILANSER_SKJØNNSFASTSATT',
             omregnetÅrsinntekt: data.årsinntekt,
-            sporing: 'BEREGNINGSSPORINGVERDI',
+            sporing: 'FRILANSER_SYKEPENGEGRUNNLAG_SKJOENN_AVVIK',
         }
     }
 
@@ -461,7 +461,7 @@ function genererFrilanserInntektData(data: FrilanserInntektRequest): InntektData
         return {
             inntektstype: 'FRILANSER_AINNTEKT',
             omregnetÅrsinntekt: 400000, // TODO: Hent ekte A-inntekt data
-            sporing: 'A-inntekt TODO',
+            sporing: 'FRILANSER_SYKEPENGEGRUNNLAG_HOVEDREGEL',
             kildedata: {
                 '2024-01': 30000,
                 '2024-02': 30000,
@@ -492,7 +492,7 @@ function genererArbeidsledigInntektData(data: ArbeidsledigInntektRequest): Innte
     return {
         inntektstype: 'ARBEIDSLEDIG',
         omregnetÅrsinntekt,
-        sporing: 'BEREGNINGSSPORINGVERDI',
+        sporing: 'DAGPENGEMOTTAKER_SYKEPENGEGRUNNLAG',
     }
 }
 
