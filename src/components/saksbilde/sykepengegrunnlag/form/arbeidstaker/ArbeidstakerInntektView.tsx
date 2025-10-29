@@ -60,7 +60,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
             {refusjon && refusjon.length > 0 && (
                 <Bleed marginInline="2" asChild>
                     <BoxNew>
-                        <Table zebraStripes title="Refusjon" size="small">
+                        <Table title="Refusjon" size="small">
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell>Fra og med dato</TableHeaderCell>
@@ -70,7 +70,10 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                             </TableHeader>
                             <TableBody>
                                 {refusjon.map((refusjon) => (
-                                    <TableRow key={refusjon.fom}>
+                                    <TableRow
+                                        key={refusjon.fom}
+                                        className="odd:bg-ax-bg-default even:bg-ax-bg-accent-soft"
+                                    >
                                         <TableDataCell>{getFormattedDateString(refusjon.fom)}</TableDataCell>
                                         <TableDataCell>{getFormattedDateString(refusjon.tom) || '-'}</TableDataCell>
                                         <TableDataCell>{formaterBeløpKroner(refusjon.beløp)}</TableDataCell>
