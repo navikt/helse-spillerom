@@ -4,7 +4,10 @@ import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from
 
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
-import { arbeidstakerSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektFormFields'
+import {
+    arbeidstakerSkjønnsfastsettelseÅrsakLabels,
+    InntektsmeldingVisning,
+} from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektFormFields'
 import { ArbeidstakerInntektType, ArbeidstakerSkjønnsfastsettelseÅrsak, InntektRequest } from '@schemas/inntektRequest'
 import { InntektData } from '@schemas/inntektData'
 import { Maybe, notNull } from '@utils/tsUtils'
@@ -33,20 +36,24 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
         return <AinntektInntektDataView inntektData={inntektData} />
     }
 
-    if (inntektRequestData.type === 'INNTEKTSMELDING') {
-        return (
-            <>
-                <BodyShort>Data fra inntektdata og inntektrequest</BodyShort>
-                <pre className="text-sm">{JSON.stringify(inntektRequestData, null, 2)}</pre>
-                {inntektData && <pre className="text-sm">{JSON.stringify(inntektData, null, 2)}</pre>}
-            </>
-        )
-    }
-
-    const { type, årsinntekt, årsak, refusjon, begrunnelse } = normalize(inntektRequestData)
+    const { type, årsinntekt, årsak, refusjon, begrunnelse, inntektsmelding } = normalize(
+        inntektRequestData,
+        inntektData,
+    )
 
     return (
         <>
+            {inntektsmelding && (
+                <VStack gap="1">
+                    <BodyShort weight="semibold">Valgt inntektsmelding</BodyShort>
+                    <Bleed marginInline="2" asChild>
+                        <BoxNew borderRadius="4" background="default" padding="2">
+                            <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
+                        </BoxNew>
+                    </Bleed>
+                </VStack>
+            )}
+
             {notNull(årsinntekt) && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
@@ -65,7 +72,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                                 <TableRow>
                                     <TableHeaderCell>Fra og med dato</TableHeaderCell>
                                     <TableHeaderCell>Til og med dato</TableHeaderCell>
-                                    <TableHeaderCell>Refusjonsbeløp</TableHeaderCell>
+                                    <TableHeaderCell className="max-w-14">Refusjonsbeløp</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -76,7 +83,9 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                                     >
                                         <TableDataCell>{getFormattedDateString(refusjon.fom)}</TableDataCell>
                                         <TableDataCell>{getFormattedDateString(refusjon.tom) || '-'}</TableDataCell>
-                                        <TableDataCell>{formaterBeløpKroner(refusjon.beløp)}</TableDataCell>
+                                        <TableDataCell className="text-right">
+                                            {formaterBeløpKroner(refusjon.beløp)}
+                                        </TableDataCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -102,11 +111,18 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
     )
 }
 
-function normalize(data: InntektRequest['data']) {
+function normalize(data: InntektRequest['data'], inntektData?: Maybe<InntektData>) {
     return {
         type: data.type as ArbeidstakerInntektType,
-        inntektsmeldingId: 'inntektsmeldingId' in data ? data.inntektsmeldingId : undefined,
-        årsinntekt: 'årsinntekt' in data ? data.årsinntekt : undefined,
+        inntektsmelding: inntektData && 'inntektsmelding' in inntektData ? inntektData.inntektsmelding : undefined,
+        årsinntekt:
+            data.type === 'INNTEKTSMELDING'
+                ? inntektData && 'omregnetÅrsinntekt' in inntektData
+                    ? inntektData.omregnetÅrsinntekt
+                    : undefined
+                : 'årsinntekt' in data
+                  ? data.årsinntekt
+                  : undefined,
         årsak: 'årsak' in data ? (data.årsak as ArbeidstakerSkjønnsfastsettelseÅrsak) : undefined,
         refusjon: 'refusjon' in data ? data.refusjon : undefined,
         begrunnelse: 'begrunnelse' in data ? data.begrunnelse : undefined,

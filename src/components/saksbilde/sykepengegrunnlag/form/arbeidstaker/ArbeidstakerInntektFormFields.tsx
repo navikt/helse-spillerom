@@ -154,52 +154,52 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                                 }}
                                 className="w-[400px] items-center rounded-lg border border-ax-bg-neutral-strong bg-ax-bg-neutral-soft p-4"
                             >
-                                <HGrid columns={2} gap="1 6">
-                                    <BodyShort weight="semibold" size="small">
-                                        Orgnummer:
-                                    </BodyShort>
-                                    <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
-
-                                    <BodyShort weight="semibold" size="small">
-                                        Mottatt:
-                                    </BodyShort>
-                                    <BodyShort size="small">
-                                        {getFormattedDatetimeString(inntektsmelding.mottattDato)}
-                                    </BodyShort>
-
-                                    <BodyShort weight="semibold" size="small">
-                                        Beregnet inntekt:
-                                    </BodyShort>
-                                    <BodyShort size="small">
-                                        {formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}
-                                    </BodyShort>
-
-                                    <BodyShort weight="semibold" size="small">
-                                        Første fraværsdag:
-                                    </BodyShort>
-                                    <BodyShort size="small">
-                                        {getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}
-                                    </BodyShort>
-
-                                    {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
-                                        <Fragment key={i + arbeidsgiverperiode.fom}>
-                                            <BodyShort weight="semibold" size="small">
-                                                Arbeidsgiverperiode:
-                                            </BodyShort>
-                                            <BodyShort size="small">
-                                                {getFormattedDateString(arbeidsgiverperiode.fom) +
-                                                    ' - ' +
-                                                    getFormattedDateString(arbeidsgiverperiode.tom)}
-                                            </BodyShort>
-                                        </Fragment>
-                                    ))}
-                                </HGrid>
+                                <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                             </Radio>
                         ))}
                     </VStack>
                 </RadioGroup>
             )}
         />
+    )
+}
+
+export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
+    return (
+        <HGrid columns={2} gap="1 6">
+            <BodyShort weight="semibold" size="small">
+                Orgnummer:
+            </BodyShort>
+            <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
+
+            <BodyShort weight="semibold" size="small">
+                Mottatt:
+            </BodyShort>
+            <BodyShort size="small">{getFormattedDatetimeString(inntektsmelding.mottattDato)}</BodyShort>
+
+            <BodyShort weight="semibold" size="small">
+                Beregnet inntekt:
+            </BodyShort>
+            <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
+
+            <BodyShort weight="semibold" size="small">
+                Første fraværsdag:
+            </BodyShort>
+            <BodyShort size="small">{getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}</BodyShort>
+
+            {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
+                <Fragment key={i + arbeidsgiverperiode.fom}>
+                    <BodyShort weight="semibold" size="small">
+                        Arbeidsgiverperiode:
+                    </BodyShort>
+                    <BodyShort size="small">
+                        {getFormattedDateString(arbeidsgiverperiode.fom) +
+                            ' - ' +
+                            getFormattedDateString(arbeidsgiverperiode.tom)}
+                    </BodyShort>
+                </Fragment>
+            ))}
+        </HGrid>
     )
 }
 
