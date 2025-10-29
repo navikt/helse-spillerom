@@ -152,7 +152,7 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                                     setValue('data.refusjon', refusjonFra(inntektsmelding))
                                     setVisRefusjonsFelter(true)
                                 }}
-                                className="w-[400px] items-center rounded-lg border border-ax-bg-neutral-strong bg-ax-bg-neutral-soft p-4"
+                                className="w-[400px] items-center rounded-lg bg-ax-bg-default p-4"
                             >
                                 <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                             </Radio>
