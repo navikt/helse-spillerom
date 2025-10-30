@@ -21,12 +21,13 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
 
     const commit = () => {
         const parsed = parse(display)
-        field.onChange(isNaN(parsed) ? null : parsed)
+        field.onChange(display.trim() === '' || isNaN(parsed) ? undefined : parsed)
     }
 
     return (
         <TextField
             value={display}
+            id={name.replaceAll('.', '-')}
             onMouseDown={(e) => {
                 if (document.activeElement !== e.target) {
                     e.preventDefault()
@@ -43,7 +44,7 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
             }}
             onKeyDown={(e) => e.key === 'Enter' && commit()}
             className={cn('[&_input]:text-right', className)}
-            error={fieldState.error?.message}
+            error={fieldState.error?.message != undefined}
             label={label}
             size="small"
         />

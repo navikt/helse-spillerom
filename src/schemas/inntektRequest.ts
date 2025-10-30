@@ -1,11 +1,29 @@
 import { z } from 'zod/v4'
+import dayjs from 'dayjs'
+
+import { getFormattedDateString } from '@utils/date-format'
 
 // Hjelpeklasser
-export const refusjonInfoSchema = z.object({
-    fom: z.string(), // LocalDate som string
-    tom: z.string().nullable(), // LocalDate som string
-    beløp: z.number(),
-})
+export const refusjonInfoSchema = z
+    .object({
+        fom: z.iso.date({ error: 'Fra og med dato må være fylt ut og være en gyldig dato' }),
+        tom: z.iso.date().nullable(), // LocalDate som string
+        beløp: z.number({ error: 'Refusjonsbeløp må være et tall' }),
+    })
+    .superRefine(({ fom, tom }, ctx) => {
+        const fomDate = dayjs(fom)
+
+        if (tom) {
+            const tomDate = dayjs(tom)
+            if (fomDate.isValid() && tomDate.isValid() && tomDate.isSameOrBefore(fomDate)) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['tom'],
+                    message: 'Til-dato må være etter fra-dato',
+                })
+            }
+        }
+    })
 
 export type RefusjonInfo = z.infer<typeof refusjonInfoSchema>
 
@@ -27,22 +45,61 @@ export const arbeidstakerInntektRequestSchema = z
     .discriminatedUnion('type', [
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['INNTEKTSMELDING']),
-            inntektsmeldingId: z.string(),
+            inntektsmeldingId: z.string().min(1, { message: 'Du må velge en inntektsmelding' }),
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['AINNTEKT']),
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
             årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
         }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
         }),
     ])
-    .and(z.object({ begrunnelse: z.string(), refusjon: z.array(refusjonInfoSchema).optional() }))
+    .and(
+        z
+            .object({
+                begrunnelse: z.string(),
+                refusjon: z.array(refusjonInfoSchema).optional(),
+            })
+            .superRefine(({ refusjon }, ctx) => {
+                if (!refusjon) return
+
+                const sorted = [...refusjon].sort((a, b) => dayjs(a.fom).diff(dayjs(b.fom)))
+
+                sorted.slice(0, -1).forEach((current, i) => {
+                    const next = sorted[i + 1]
+
+                    if (!current.tom) {
+                        ctx.addIssue({
+                            code: 'custom',
+                            path: ['refusjon', i, 'tom'],
+                            message: 'Du må fylle ut t.o.m dato når det finnes senere perioder',
+                        })
+                        return
+                    }
+
+                    const currentTom = dayjs(current.tom)
+                    const nextFom = dayjs(next.fom)
+
+                    // must start next day
+                    const expectedNextFom = currentTom.add(1, 'day')
+                    if (!nextFom.isSame(expectedNextFom, 'day')) {
+                        ctx.addIssue({
+                            code: 'custom',
+                            path: ['refusjon', i + 1, 'fom'],
+                            message: `Perioden må starte dagen etter forrige periodes t.o.m dato (${getFormattedDateString(
+                                current.tom,
+                            )})`,
+                        })
+                    }
+                })
+            }),
+    )
 
 // Pensjonsgivende inntekt typer (for selvstendig næringsdrivende og inaktiv)
 export const pensjonsgivendeSkjønnsfastsettelseÅrsakSchema = z.enum([
@@ -59,7 +116,7 @@ export const pensjonsgivendeInntektRequestSchema = z
         }),
         z.object({
             type: pensjonsgivendeInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
             årsak: pensjonsgivendeSkjønnsfastsettelseÅrsakSchema,
         }),
     ])
@@ -77,7 +134,7 @@ export const frilanserInntektRequestSchema = z
         }),
         z.object({
             type: frilanserInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
             årsak: frilanserSkjønnsfastsettelseÅrsakSchema,
         }),
     ])
@@ -90,15 +147,15 @@ export const arbeidsledigInntektRequestSchema = z
     .discriminatedUnion('type', [
         z.object({
             type: arbeidsledigInntektTypeSchema.extract(['DAGPENGER']),
-            dagbeløp: z.number(),
+            dagbeløp: z.number({ error: 'Dagbeløp må være et tall' }),
         }),
         z.object({
             type: arbeidsledigInntektTypeSchema.extract(['VENTELONN']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
         }),
         z.object({
             type: arbeidsledigInntektTypeSchema.extract(['VARTPENGER']),
-            årsinntekt: z.number(),
+            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
         }),
     ])
     .and(z.object({ begrunnelse: z.string() }))

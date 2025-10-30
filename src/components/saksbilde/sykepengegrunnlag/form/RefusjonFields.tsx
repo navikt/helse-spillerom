@@ -17,7 +17,7 @@ export function RefusjonFields(): ReactElement {
     return (
         <VStack gap="4">
             {refusjonFieldArray.fields.map((field, index) => (
-                <HStack key={field.id} gap="2" align="center" wrap={false}>
+                <HStack key={field.id} gap="2" align="start" wrap={false}>
                     <DateField name={`data.refusjon.${index}.fom`} label="F.o.m. dato" />
                     <DateField name={`data.refusjon.${index}.tom`} label="T.o.m. dato" />
                     <PengerField className="max-w-28" name={`data.refusjon.${index}.beløp`} label="Refusjonsbeløp" />

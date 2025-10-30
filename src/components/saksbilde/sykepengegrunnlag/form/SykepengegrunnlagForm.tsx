@@ -10,6 +10,7 @@ import { PensjonsgivendeInntektFormFields } from '@components/saksbilde/sykepeng
 import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
 import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektFormFields'
+import { Feiloppsummering } from '@components/saksbilde/sykepengegrunnlag/form/Feiloppsummering'
 
 type SykepengegrunnlagFormProps = {
     kategori: Inntektskategori
@@ -30,6 +31,7 @@ export function SykepengegrunnlagForm({
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
         defaultValues: getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
+        shouldFocusError: false,
     })
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
@@ -51,17 +53,18 @@ export function SykepengegrunnlagForm({
                     render={({ field, fieldState }) => (
                         <Textarea
                             {...field}
+                            id="data-begrunnelse"
                             value={field.value ?? ''}
                             className="w-[640px]"
                             size="small"
                             label="Begrunnelse"
                             description="Teksten vises ikke til den sykmeldte, med mindre hen ber om innsyn."
-                            maxLength={1000}
                             minRows={6}
-                            error={fieldState.error?.message}
+                            error={fieldState.error?.message != undefined}
                         />
                     )}
                 />
+                {Object.values(form.formState.errors).length > 0 && <Feiloppsummering errors={form.formState.errors} />}
                 <HStack gap="2" align="center" className="h-8" wrap={false}>
                     <Button type="submit" size="small" loading={form.formState.isSubmitting}>
                         Lagre

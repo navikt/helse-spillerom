@@ -140,12 +140,19 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
         <Controller
             control={control}
             name="data.inntektsmeldingId"
-            render={({ field }) => (
-                <RadioGroup {...field} legend="Velg inntektsmelding" hideLegend size="small">
+            render={({ field, fieldState }) => (
+                <RadioGroup
+                    {...field}
+                    legend="Velg inntektsmelding"
+                    hideLegend
+                    size="small"
+                    error={fieldState.error?.message != undefined}
+                >
                     <VStack gap="2" className="m-4 ml-6">
-                        {inntektsmeldinger.map((inntektsmelding) => (
+                        {inntektsmeldinger.map((inntektsmelding, i) => (
                             <Radio
                                 key={inntektsmelding.inntektsmeldingId}
+                                id={i === 0 ? 'data-inntektsmeldingId' : undefined}
                                 value={inntektsmelding.inntektsmeldingId}
                                 onChange={(value) => {
                                     field.onChange(value)
