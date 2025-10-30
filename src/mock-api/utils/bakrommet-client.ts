@@ -29,7 +29,7 @@ export async function kallBakrommetUtbetalingsberegning(
                 `Bakrommet API kallet feilet ${response.status} ${response.statusText} ${JSON.stringify(data)}`,
             )
         } catch (error) {
-            logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`, error)
+            logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`)
             throw new Error('Feil ved kall til bakrommet API: ${JSON.stringify(error)}')
         }
         if (data) {
