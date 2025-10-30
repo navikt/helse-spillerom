@@ -21,17 +21,14 @@ export async function POST(req: Request): Promise<Response> {
             body: await req.text(),
         })
 
-        if (!response.ok) {
-            logger.error(`Bakrommet API kallet feilet: ${response.status} ${response.statusText}`)
-            return Response.json({ message: 'Feil ved kall til bakrommet API' }, { status: response.status })
-        }
+
 
         const data = await response.json()
-        logger.info('Bakrommet API kallet var OK')
 
-        return Response.json(data)
+
+        return Response.json(data, { status: response.status  })
     } catch (error) {
-        logger.error(`Feil ved kall til bakrommet API: ${JSON.stringify(error)}`)
+        logger.error(`Feil ved kall til bakrommet API i beregning route: ${JSON.stringify(error)}`)
         return Response.json({ message: 'Feil ved kall til bakrommet API' }, { status: 500 })
     }
 }
