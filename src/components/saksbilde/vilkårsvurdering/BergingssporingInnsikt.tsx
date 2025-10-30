@@ -63,7 +63,8 @@ export function BergingssporingInnsikt(): ReactElement {
                             <Table.DataCell>
                                 {item.vilkårshjemmel ? (
                                     <div className="text-gray-500 text-xs">
-                                        {item.vilkårshjemmel.lovverk} §{item.vilkårshjemmel.paragraf}
+                                        {item.vilkårshjemmel.lovverk} §{item.vilkårshjemmel.kapittel}-§
+                                        {item.vilkårshjemmel.paragraf}
                                         {item.vilkårshjemmel.ledd && ` ledd ${item.vilkårshjemmel.ledd}`}
                                         {item.vilkårshjemmel.setning && ` setning ${item.vilkårshjemmel.setning}`}
                                         {item.vilkårshjemmel.bokstav && ` bokstav ${item.vilkårshjemmel.bokstav}`}
