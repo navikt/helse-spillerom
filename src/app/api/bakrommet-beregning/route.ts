@@ -1,34 +1,19 @@
 import { logger } from '@navikt/next-logger'
+import { proxyRouteHandler } from '@navikt/next-api-proxy'
 
-import { erDemo } from '@/env'
+import { erDemo, getServerEnv } from '@/env'
 
-export async function POST(req: Request): Promise<Response> {
+export async function POST(request: Request): Promise<Response> {
     // Kun tillatt i demo-versjonen
     if (!erDemo) {
         logger.warn('Bakrommet beregning API kun tillatt i demo-versjonen')
         return Response.json({ message: 'API kun tilgjengelig i demo-versjonen' }, { status: 403 })
     }
+    const serverEnv = getServerEnv()
 
-    try {
-        logger.info('Proxying beregning request til bakrommet')
-
-        // Proxy requesten til bakrommet
-        const response = await fetch('http://bakrommet/api/demo/utbetalingsberegning', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: await req.text(),
-        })
-
-
-
-        const data = await response.json()
-
-
-        return Response.json(data, { status: response.status  })
-    } catch (error) {
-        logger.error(`Feil ved kall til bakrommet API i beregning route: ${JSON.stringify(error)}`)
-        return Response.json({ message: 'Feil ved kall til bakrommet API' }, { status: 500 })
-    }
+    return await proxyRouteHandler(request, {
+        hostname: serverEnv.BAKROMMET_HOST,
+        path: '/api/demo/utbetalingsberegning',
+        https: false,
+    })
 }
