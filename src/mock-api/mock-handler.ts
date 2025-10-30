@@ -48,6 +48,7 @@ import { handleGetPensjonsgivendeInntektForYrkesaktivitet } from '@/mock-api/han
 import { handleGetSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 import { handleGetUtbetalingsberegning } from '@/mock-api/handlers/utbetalingsberegning-handlers'
 import { handleGetInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
+import { ProblemDetailsError } from '@/utils/ProblemDetailsError'
 
 interface HandlerContext {
     request: Request
@@ -261,6 +262,10 @@ export async function mocketBakrommetData(request: Request, path: string): Promi
 
         raise(new Error(`Unknown path: ${path}`))
     } catch (error) {
+        if (error instanceof ProblemDetailsError) {
+            return NextResponse.json(error.problem, { status: error.problem.status })
+        }
+
         /* eslint-disable-next-line no-console */
         console.error(error)
         return NextResponse.json(

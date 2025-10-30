@@ -23,6 +23,7 @@ import { type Kodeverk, type Årsak } from '@schemas/kodeverkV2'
 import { formatParagraf, getLovdataUrl } from '@utils/paragraf-formatering'
 import { erHelg } from '@utils/erHelg'
 import { Periodetype, Yrkesaktivitet, Periode } from '@schemas/yrkesaktivitet'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 
 interface DagoversiktProps {
     value: string
@@ -528,15 +529,14 @@ export const andreYtelserTypeText: Record<string, string> = {
     AndreYtelserSvangerskapspenger: 'Svangerskapspenger',
 }
 
-function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): ReactElement {
-    const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
-    const orgnummer = kategorisering['ORGNUMMER'] as string
-
+function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategorisering): ReactElement {
     let typeText: string
-    switch (inntektskategori) {
+    let orgnummer: string | undefined
+
+    switch (kategorisering.inntektskategori) {
         case 'ARBEIDSTAKER': {
-            const typeArbeidstaker = kategorisering['TYPE_ARBEIDSTAKER']
-            switch (typeArbeidstaker) {
+            orgnummer = kategorisering.orgnummer
+            switch (kategorisering.typeArbeidstaker) {
                 case 'ORDINÆRT_ARBEIDSFORHOLD':
                     typeText = 'Ordinært arbeidsforhold'
                     break
@@ -549,18 +549,20 @@ function getInntektsforholdDisplayText(kategorisering: Record<string, string | s
                 case 'VERNEPLIKTIG':
                     typeText = 'Vernepliktig'
                     break
+                case 'DAGMAMMA_BARNETS_HJEM':
+                    typeText = 'Dagmamma/dagpappa i barnets hjem'
+                    break
                 default:
                     typeText = 'Arbeidstaker'
             }
             break
         }
         case 'FRILANSER':
+            orgnummer = kategorisering.orgnummer
             typeText = 'Frilanser'
             break
         case 'SELVSTENDIG_NÆRINGSDRIVENDE': {
-            // TODO Her må det gjøres noe
-            const typeSelvstendig = kategorisering['TYPE_SELVSTENDIG_NÆRINGSDRIVENDE']
-            switch (typeSelvstendig) {
+            switch (kategorisering.typeSelvstendigNæringsdrivende.type) {
                 case 'FISKER':
                     typeText = 'Fisker (selvstendig)'
                     break
@@ -570,6 +572,9 @@ function getInntektsforholdDisplayText(kategorisering: Record<string, string | s
                 case 'REINDRIFT':
                     typeText = 'Reindrift'
                     break
+                case 'BARNEPASSER_EGET_HJEM':
+                    typeText = 'Barnepasser i eget hjem'
+                    break
                 default:
                     typeText = 'Selvstendig næringsdrivende'
             }
@@ -578,8 +583,11 @@ function getInntektsforholdDisplayText(kategorisering: Record<string, string | s
         case 'INAKTIV':
             typeText = 'Inaktiv'
             break
+        case 'ARBEIDSLEDIG':
+            typeText = 'Arbeidsledig'
+            break
         default:
-            typeText = inntektskategori || 'Ukjent'
+            typeText = 'Ukjent'
     }
 
     // Hvis det finnes orgnummer, vis organisasjonsnavn

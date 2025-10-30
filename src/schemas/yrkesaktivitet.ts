@@ -3,6 +3,7 @@ import { z } from 'zod/v4'
 import { dagoversiktSchema } from './dagoversikt'
 import { inntektRequestSchema } from './inntektRequest'
 import { inntektDataSchema } from './inntektData'
+import { yrkesaktivitetKategoriseringSchema } from './yrkesaktivitetKategorisering'
 
 export const periodetypeSchema = z.enum(['ARBEIDSGIVERPERIODE', 'VENTETID', 'VENTETID_INAKTIV'])
 
@@ -18,7 +19,7 @@ export const perioderSchema = z.object({
 
 export const yrkesaktivitetSchema = z.object({
     id: z.string(),
-    kategorisering: z.record(z.string(), z.union([z.string(), z.array(z.string())])),
+    kategorisering: yrkesaktivitetKategoriseringSchema,
     dagoversikt: dagoversiktSchema.nullable(),
     generertFraDokumenter: z.array(z.string()),
     perioder: perioderSchema.nullable(),

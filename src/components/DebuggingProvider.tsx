@@ -2,14 +2,13 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, BriefcaseIcon, SandboxIcon, PersonIcon, WalletIcon } from '@navikt/aksel-icons'
+import { ParagraphIcon, SandboxIcon, PersonIcon, WalletIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 import { erProd, erLokalEllerDemo } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
-import { YrkesaktivitetDebug } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetDebug'
 import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
 import { RolleModal } from '@components/header/brukermeny/RolleModal'
@@ -17,7 +16,7 @@ import { RolleModal } from '@components/header/brukermeny/RolleModal'
 import { BergingssporingInnsikt } from './saksbilde/vilkårsvurdering/BergingssporingInnsikt'
 import { OppdragDebug } from './saksbilde/utbetalingsberegning/OppdragDebug'
 
-type ModalType = 'vilkårsvurdering' | 'yrkesaktivitet' | 'testdata' | 'roller' | 'oppdrag' | null
+type ModalType = 'vilkårsvurdering' | 'testdata' | 'roller' | 'oppdrag' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
@@ -76,15 +75,6 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                             />
                         </Tooltip>
 
-                        <Tooltip content="Inntektsforhold">
-                            <Button
-                                type="button"
-                                onClick={() => setActiveModal('yrkesaktivitet')}
-                                icon={<BriefcaseIcon title="Åpne yrkesaktivitet debugging" aria-hidden />}
-                                variant="tertiary-neutral"
-                            />
-                        </Tooltip>
-
                         <Tooltip content="Oppdrag">
                             <Button
                                 type="button"
@@ -108,19 +98,6 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                     <ModalBody className="space-y-6">
                         <VilkårsvurderingInnsikt />
                         <BergingssporingInnsikt />
-                    </ModalBody>
-                </Modal>
-            )}
-
-            {activeModal === 'yrkesaktivitet' && (
-                <Modal
-                    open={true}
-                    onClose={closeModal}
-                    header={{ heading: 'yrkesaktivitet', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
-                >
-                    <ModalBody>
-                        <YrkesaktivitetDebug />
                     </ModalBody>
                 </Modal>
             )}

@@ -14,11 +14,7 @@ export const KATEGORI_SORTERING = [
 export type KategoriKode = (typeof KATEGORI_SORTERING)[number]
 
 export function getKategorierFraInntektsforhold(yrkesaktivitet: Yrkesaktivitet[]): Set<string> {
-    return new Set(
-        yrkesaktivitet
-            .map((forhold) => forhold.kategorisering['INNTEKTSKATEGORI'])
-            .filter((kat): kat is string => Boolean(kat)),
-    )
+    return new Set(yrkesaktivitet.map((forhold) => forhold.kategorisering.inntektskategori))
 }
 
 export function getKategoriNavn(kode: string): string {
@@ -69,11 +65,11 @@ export function beregnDekningsgradTiVenstremeny(
     yrkesaktivitet: YrkesaktivitetMedDekningsgrad[],
 ): { tekst: string; tall: number } | null {
     if (!yrkesaktivitet || yrkesaktivitet.length === 0) return null
-
     // Filtrer kun yrkesaktiviteter hvor personen er sykmeldt fra
-    const sykmeldteYrkesaktiviteter = yrkesaktivitet.filter(
-        (ya) => ya.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA',
-    )
+    const sykmeldteYrkesaktiviteter = yrkesaktivitet.filter((ya) => {
+        // Sjekk at sykmeldt er eksplisitt true (ikke bare truthy)
+        return ya.kategorisering.sykmeldt === true
+    })
 
     if (sykmeldteYrkesaktiviteter.length === 0) return null
 
@@ -82,14 +78,13 @@ export function beregnDekningsgradTiVenstremeny(
     // Vis bare dekningsgrad for næringsdrivende eller inaktive
     const harNæringsdrivende = kategorier.has('SELVSTENDIG_NÆRINGSDRIVENDE')
     const harInaktiv = kategorier.has('INAKTIV')
-
     if (!harNæringsdrivende && !harInaktiv) return null
 
     // Finn yrkesaktivitet med næringsdrivende eller inaktiv kategorisering
     const næringsdrivende = sykmeldteYrkesaktiviteter.find(
-        (ya) => ya.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE',
+        (ya) => ya.kategorisering.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE',
     )
-    const inaktiv = sykmeldteYrkesaktiviteter.find((ya) => ya.kategorisering['INNTEKTSKATEGORI'] === 'INAKTIV')
+    const inaktiv = sykmeldteYrkesaktiviteter.find((ya) => ya.kategorisering.inntektskategori === 'INAKTIV')
 
     // Prioriter næringsdrivende hvis den finnes
     if (næringsdrivende) {

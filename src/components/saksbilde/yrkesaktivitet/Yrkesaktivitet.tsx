@@ -27,6 +27,8 @@ import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { fromMap, toMap } from '@utils/yrkesaktivitetKategoriseringMapper'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -52,7 +54,7 @@ export function Yrkesaktivitet(): ReactElement {
     // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
     const yrkesaktivitetSomIkkeKanKombineres =
         yrkesaktivitet?.filter((forhold) => {
-            const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
+            const kategori = forhold.kategorisering.inntektskategori
             const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === kategori)
             return alternativ?.kanIkkeKombineresMedAndre === true
         }) || []
@@ -112,7 +114,10 @@ export function Yrkesaktivitet(): ReactElement {
             if (!bekreftet) return
         }
 
-        oppdaterMutation.mutate({ yrkesaktivitetId, kategorisering }, { onSuccess: () => setRedigererId(null) })
+        oppdaterMutation.mutate(
+            { yrkesaktivitetId, kategorisering: fromMap(kategorisering) },
+            { onSuccess: () => setRedigererId(null) },
+        )
     }
 
     const handleLeggTilYrkesaktivitet = async () => {
@@ -138,7 +143,7 @@ export function Yrkesaktivitet(): ReactElement {
                         <BodyShort>
                             {yrkesaktivitetSomIkkeKanKombineres
                                 .map((forhold) => {
-                                    const kategori = forhold.kategorisering['INNTEKTSKATEGORI'] as string
+                                    const kategori = forhold.kategorisering.inntektskategori
                                     const alternativ = yrkesaktivitetKodeverk.alternativer.find(
                                         (alt) => alt.kode === kategori,
                                     )
@@ -174,7 +179,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                     disabled={false}
                                                     initialValues={forhold.kategorisering}
                                                     onSubmit={(kategorisering) =>
-                                                        handleLagreRedigering(forhold.id, kategorisering)
+                                                        handleLagreRedigering(forhold.id, toMap(kategorisering))
                                                     }
                                                     isLoading={oppdaterMutation.isPending}
                                                     avbrytLabel="Avbryt"
@@ -226,21 +231,18 @@ export function Yrkesaktivitet(): ReactElement {
                                         </TableDataCell>
                                         <TableDataCell>
                                             <VStack gap="1">
-                                                {forhold.kategorisering['ORGNUMMER'] && (
+                                                {(forhold.kategorisering.inntektskategori === 'ARBEIDSTAKER' ||
+                                                    forhold.kategorisering.inntektskategori === 'FRILANSER') && (
                                                     <BodyShort className="text-sm">
                                                         <Organisasjonsnavn
-                                                            orgnummer={forhold.kategorisering['ORGNUMMER'] as string}
+                                                            orgnummer={forhold.kategorisering.orgnummer}
                                                         />
                                                     </BodyShort>
                                                 )}
                                             </VStack>
                                         </TableDataCell>
                                         <TableDataCell>
-                                            <BodyShort>
-                                                {forhold.kategorisering['ER_SYKMELDT'] === 'ER_SYKMELDT_JA'
-                                                    ? 'Ja'
-                                                    : 'Nei'}
-                                            </BodyShort>
+                                            <BodyShort>{forhold.kategorisering.sykmeldt ? 'Ja' : 'Nei'}</BodyShort>
                                         </TableDataCell>
                                     </TableExpandableRow>
                                 ))}
@@ -328,8 +330,8 @@ export function Yrkesaktivitet(): ReactElement {
     )
 }
 
-function getInntektsforholdDisplayText(kategorisering: Record<string, string | string[]>): string {
-    const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
+function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategorisering): string {
+    const inntektskategori = kategorisering.inntektskategori
 
     if (!inntektskategori) {
         return 'Ukjent'

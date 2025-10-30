@@ -1,10 +1,12 @@
 import { Søknad } from '@/schemas/søknad'
+import { fromMap } from '@/utils/yrkesaktivitetKategoriseringMapper'
+import { YrkesaktivitetKategorisering } from '@/schemas/yrkesaktivitetKategorisering'
 
 /**
  * Mapper arbeidssituasjon fra søknad til kategorisering som brukes i yrkesaktivitet
  * Matcher bakrommet sin logikk for kategorisering
  */
-export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<string, string> {
+function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<string, string> {
     switch (arbeidssituasjon) {
         case 'ARBEIDSTAKER':
             return {
@@ -16,18 +18,19 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
             return {
                 INNTEKTSKATEGORI: 'FRILANSER',
                 ER_SYKMELDT: 'ER_SYKMELDT_JA',
+                FRILANSER_FORSIKRING: 'INGEN_FORSIKRING',
             }
         case 'SELVSTENDIG_NARINGSDRIVENDE':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'ORDINÆR_SELVSTENDIG_NÆRINGSDRIVENDE',
                 ER_SYKMELDT: 'ER_SYKMELDT_JA',
+                SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING: 'INGEN_FORSIKRING',
             }
         case 'FISKER':
             return {
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'FISKER',
-                FISKER_BLAD: 'FISKER_BLAD_B',
                 ER_SYKMELDT: 'ER_SYKMELDT_JA',
             }
         case 'JORDBRUKER':
@@ -35,6 +38,7 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
                 INNTEKTSKATEGORI: 'SELVSTENDIG_NÆRINGSDRIVENDE',
                 TYPE_SELVSTENDIG_NÆRINGSDRIVENDE: 'JORDBRUKER',
                 ER_SYKMELDT: 'ER_SYKMELDT_JA',
+                SELVSTENDIG_NÆRINGSDRIVENDE_FORSIKRING: 'INGEN_FORSIKRING',
             }
         case 'ARBEIDSLEDIG':
             return {
@@ -56,14 +60,15 @@ export function mapArbeidssituasjonTilSvar(arbeidssituasjon: string): Record<str
  * Lager kategorisering for en søknad basert på arbeidssituasjon og arbeidsgiver
  * Matcher bakrommet sin kategorisering
  */
-export function lagKategorisering(søknad: Søknad): Record<string, string> {
-    const kategorisering = mapArbeidssituasjonTilSvar(søknad.arbeidssituasjon || 'ANNET')
+export function lagKategorisering(søknad: Søknad): YrkesaktivitetKategorisering {
+    const kategoriseringMap = mapArbeidssituasjonTilSvar(søknad.arbeidssituasjon || 'ANNET')
 
     const orgnummer = søknad.arbeidsgiver?.orgnummer
 
     if (orgnummer) {
-        kategorisering.ORGNUMMER = orgnummer
+        kategoriseringMap.ORGNUMMER = orgnummer
     }
 
-    return kategorisering
+    // Konverter fra Map til strukturert objekt
+    return fromMap(kategoriseringMap)
 }

@@ -19,10 +19,10 @@ import { kallBakrommetUtbetalingsberegning } from '@/mock-api/utils/bakrommet-cl
 import { UtbetalingsberegningInput } from '@/schemas/utbetalingsberegning'
 import { beregnSykepengegrunnlagV2 } from '@/mock-api/handlers/sykepengegrunnlagV2-handlers'
 import { mockInntektsmeldinger } from '@/mock-api/handlers/inntektsmeldinger'
+import { YrkesaktivitetKategorisering } from '@/schemas/yrkesaktivitetKategorisering'
 
-function skalHaDagoversikt(kategorisering: Record<string, string | string[]>): boolean {
-    const erSykmeldt = kategorisering['ER_SYKMELDT']
-    return erSykmeldt === 'ER_SYKMELDT_JA' || erSykmeldt === undefined || erSykmeldt === null
+function skalHaDagoversikt(kategorisering: YrkesaktivitetKategorisering): boolean {
+    return kategorisering.sykmeldt === true
 }
 
 export async function handleGetInntektsforhold(person: Person | undefined, uuid: string): Promise<Response> {

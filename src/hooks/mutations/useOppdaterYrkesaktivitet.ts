@@ -4,10 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Perioder } from '@/schemas/yrkesaktivitet'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 
 type KategoriseringMutationProps = {
     yrkesaktivitetId: string
-    kategorisering: Record<string, string | string[]>
+    kategorisering: YrkesaktivitetKategorisering
 }
 
 type OppdaterDagerMutationProps = {

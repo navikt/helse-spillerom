@@ -3,21 +3,16 @@ import { BodyShort, HStack } from '@navikt/ds-react'
 import { BriefcaseIcon } from '@navikt/aksel-icons'
 
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 
-function getKategoriseringTekst(
-    kategorisering: Record<string, string | string[]>,
-    medOrgnummer: boolean,
-): ReactElement {
-    const kategori = kategorisering['INNTEKTSKATEGORI']
-    const orgnummer = kategorisering['ORGNUMMER'] as string
-
-    switch (kategori) {
+function getKategoriseringTekst(kategorisering: YrkesaktivitetKategorisering, medOrgnummer: boolean): ReactElement {
+    switch (kategorisering.inntektskategori) {
         case 'ARBEIDSTAKER':
-            return <Organisasjonsnavn orgnummer={orgnummer} medOrgnummer={medOrgnummer} />
+            return <Organisasjonsnavn orgnummer={kategorisering.orgnummer} medOrgnummer={medOrgnummer} />
         case 'FRILANSER':
             return (
                 <>
-                    Frilanser hos <Organisasjonsnavn orgnummer={orgnummer} />
+                    Frilanser hos <Organisasjonsnavn orgnummer={kategorisering.orgnummer} />
                 </>
             )
         case 'SELVSTENDIG_NÆRINGSDRIVENDE':
@@ -36,7 +31,7 @@ export function NavnOgIkon({
     className,
     medOrgnummer = false,
 }: {
-    kategorisering: Record<string, string | string[]>
+    kategorisering: YrkesaktivitetKategorisering
     className?: string
     medOrgnummer?: boolean
 }): ReactElement {

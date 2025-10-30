@@ -18,6 +18,8 @@ import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { organisasjonerForSelect } from '@utils/organisasjoner'
 import { erDemo } from '@/env'
+import { YrkesaktivitetKategorisering } from '@/schemas/yrkesaktivitetKategorisering'
+import { fromMap, toMap } from '@/utils/yrkesaktivitetKategoriseringMapper'
 
 interface KodeverkAlternativ {
     kode: string
@@ -49,9 +51,9 @@ interface RåKodeverkSpørsmål {
 interface InntektsforholdFormProps {
     closeForm: () => void
     disabled?: boolean
-    initialValues?: Record<string, string | string[]>
+    initialValues?: YrkesaktivitetKategorisering
     title?: string
-    onSubmit?: (kategorisering: Record<string, string | string[]>) => void
+    onSubmit?: (kategorisering: YrkesaktivitetKategorisering) => void
     isLoading?: boolean
     avbrytLabel?: string
     lagreLabel?: string
@@ -60,21 +62,23 @@ interface InntektsforholdFormProps {
 export default function YrkesaktivitetForm({
     closeForm,
     disabled = false,
-    initialValues = {},
+    initialValues,
     title,
     onSubmit,
     isLoading = false,
     avbrytLabel = 'Avbryt',
     lagreLabel = 'Opprett',
 }: InntektsforholdFormProps): ReactElement {
-    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialValues)
+    // Konverter initialValues til Record-format for bruk i form
+    const initialRecordValues = initialValues ? toMap(initialValues) : {}
+    const [selectedValues, setSelectedValues] = useState<Record<string, string | string[]>>(initialRecordValues)
     const mutation = useOpprettYrkesaktivitet()
     const { data: existingInntektsforhold = [] } = useYrkesaktivitet()
     const kansaksbehandles = useKanSaksbehandles()
 
     useEffect(() => {
-        if (Object.keys(initialValues).length > 0) {
-            setSelectedValues(initialValues)
+        if (initialValues) {
+            setSelectedValues(toMap(initialValues))
         }
     }, [initialValues])
 
@@ -82,12 +86,12 @@ export default function YrkesaktivitetForm({
     const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some((forhold) => {
         // Skip checking the current relationship being edited
         if (
-            initialValues['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE' &&
-            forhold.kategorisering['INNTEKTSKATEGORI'] === initialValues['INNTEKTSKATEGORI']
+            initialValues?.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' &&
+            forhold.kategorisering.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE'
         ) {
             return false
         }
-        return forhold.kategorisering['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE'
+        return forhold.kategorisering.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE'
     })
 
     // Filtrer bort SELVSTENDIG_NÆRINGSDRIVENDE hvis det allerede finnes
@@ -198,12 +202,15 @@ export default function YrkesaktivitetForm({
             oppryddetKategorisering['ER_SYKMELDT'] = 'ER_SYKMELDT_JA'
         }
 
+        // Konverter fra Record til strukturert objekt
+        const strukturertKategorisering = fromMap(oppryddetKategorisering)
+
         if (onSubmit) {
-            onSubmit(oppryddetKategorisering)
+            onSubmit(strukturertKategorisering)
         } else {
             mutation.mutate(
                 {
-                    kategorisering: oppryddetKategorisering,
+                    kategorisering: strukturertKategorisering,
                 },
                 {
                     onSuccess: () => {

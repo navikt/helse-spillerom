@@ -3,9 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 
 type MutationProps = {
-    kategorisering: Record<string, string | string[]>
+    kategorisering: YrkesaktivitetKategorisering
 }
 
 export function useOpprettYrkesaktivitet() {

@@ -57,7 +57,7 @@ export function beregnSykepengegrunnlagV2(
 
     // Finn selvstendig næringsdrivende yrkesaktivitet
     const næringsdrivende = yrkesaktiviteter.find(
-        (ya) => ya.kategorisering?.['INNTEKTSKATEGORI'] === 'SELVSTENDIG_NÆRINGSDRIVENDE',
+        (ya) => ya.kategorisering?.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE',
     )
 
     const kombinert = næringsdrivende != null && yrkesaktiviteter.length > 1
@@ -97,7 +97,7 @@ export function beregnSykepengegrunnlagV2(
     } else if (kombinert && næringsdel) {
         // For kombinert: arbeidsinntekt + næringsdel
         const arbeidsinntekt = yrkesaktiviteter
-            .filter((ya) => ya.kategorisering?.['INNTEKTSKATEGORI'] !== 'SELVSTENDIG_NÆRINGSDRIVENDE')
+            .filter((ya) => ya.kategorisering?.inntektskategori !== 'SELVSTENDIG_NÆRINGSDRIVENDE')
             .reduce((sum, ya) => sum + (ya.inntektData?.omregnetÅrsinntekt || 0), 0)
         totaltInntektsgrunnlag = arbeidsinntekt + næringsdel.næringsdel
     } else {

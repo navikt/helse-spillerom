@@ -87,7 +87,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         )
     }
 
-    const kategori = aktivYrkesaktivitet?.kategorisering['INNTEKTSKATEGORI'] as Inntektskategori
+    const kategori = aktivYrkesaktivitet?.kategorisering.inntektskategori as Inntektskategori
     const inntektRequest = aktivYrkesaktivitet?.inntektRequest as InntektRequestFor<typeof kategori>
 
     return (
@@ -110,8 +110,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                             {yrkesaktiviteter.map((yrkesaktivitet) => {
                                 // Er næringsdrivende og er kombinert. Altså denne er næringsdelen og det finnes andre yrkesaktiviteter
                                 const erNæringsdrivendeOgKombinert =
-                                    yrkesaktivitet.kategorisering?.['INNTEKTSKATEGORI'] ===
-                                        'SELVSTENDIG_NÆRINGSDRIVENDE' && yrkesaktiviteter.length > 1
+                                    yrkesaktivitet.kategorisering?.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' &&
+                                    yrkesaktiviteter.length > 1
 
                                 return (
                                     <TableRow

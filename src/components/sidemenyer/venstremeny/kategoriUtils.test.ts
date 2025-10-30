@@ -21,21 +21,36 @@ describe('kategoriUtils', () => {
             const mockInntektsforhold: Yrkesaktivitet[] = [
                 {
                     id: '1',
-                    kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    kategorisering: {
+                        inntektskategori: 'ARBEIDSTAKER',
+                        sykmeldt: true,
+                        orgnummer: '123456789',
+                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
                 },
                 {
                     id: '2',
-                    kategorisering: { INNTEKTSKATEGORI: 'FRILANSER' },
+                    kategorisering: {
+                        inntektskategori: 'FRILANSER',
+                        sykmeldt: true,
+                        orgnummer: '987654321',
+                        forsikring: 'INGEN_FORSIKRING',
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
                 },
                 {
                     id: '3',
-                    kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' }, // Duplikat
+                    kategorisering: {
+                        inntektskategori: 'ARBEIDSTAKER',
+                        sykmeldt: true,
+                        orgnummer: '123456789',
+                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
@@ -46,25 +61,40 @@ describe('kategoriUtils', () => {
             expect(resultat).toEqual(new Set(['ARBEIDSTAKER', 'FRILANSER']))
         })
 
-        it('filtrerer ut manglende kategorier', () => {
+        it('håndterer flere yrkesaktiviteter med ulike kategorier', () => {
             const mockInntektsforhold: Yrkesaktivitet[] = [
                 {
                     id: '1',
-                    kategorisering: { INNTEKTSKATEGORI: 'ARBEIDSTAKER' },
+                    kategorisering: {
+                        inntektskategori: 'ARBEIDSTAKER',
+                        sykmeldt: true,
+                        orgnummer: '123456789',
+                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
                 },
                 {
                     id: '2',
-                    kategorisering: {}, // mangler INNTEKTSKATEGORI
+                    kategorisering: {
+                        inntektskategori: 'SELVSTENDIG_NÆRINGSDRIVENDE',
+                        sykmeldt: true,
+                        typeSelvstendigNæringsdrivende: {
+                            type: 'ORDINÆR',
+                            forsikring: 'INGEN_FORSIKRING',
+                        },
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
                 },
                 {
                     id: '3',
-                    kategorisering: {}, // mangler INNTEKTSKATEGORI
+                    kategorisering: {
+                        inntektskategori: 'ARBEIDSLEDIG',
+                        sykmeldt: true,
+                    },
                     dagoversikt: null,
                     perioder: null,
                     generertFraDokumenter: [],
@@ -72,7 +102,7 @@ describe('kategoriUtils', () => {
             ]
 
             const resultat = getKategorierFraInntektsforhold(mockInntektsforhold)
-            expect(resultat).toEqual(new Set(['ARBEIDSTAKER']))
+            expect(resultat).toEqual(new Set(['ARBEIDSTAKER', 'SELVSTENDIG_NÆRINGSDRIVENDE', 'ARBEIDSLEDIG']))
         })
     })
 

@@ -53,7 +53,13 @@ export function opprettSaksbehandlingsperiode(
         const valgteSøknader = søknader.filter((søknad) => søknadIder.includes(søknad.id))
 
         // Grupper søknader basert på kategorisering (matcher bakrommet sin logikk)
-        const kategorierOgSøknader = new Map<string, { kategorisering: Record<string, string>; søknader: Søknad[] }>()
+        const kategorierOgSøknader = new Map<
+            string,
+            {
+                kategorisering: import('@schemas/yrkesaktivitetKategorisering').YrkesaktivitetKategorisering
+                søknader: Søknad[]
+            }
+        >()
 
         valgteSøknader.forEach((søknad) => {
             const kategorisering = lagKategorisering(søknad)

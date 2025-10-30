@@ -10,6 +10,7 @@ import { z } from 'zod/v4'
 
 import { useOppdaterYrkesaktivitetPerioder } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 import { type Yrkesaktivitet, type Perioder, type Periodetype } from '@schemas/yrkesaktivitet'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 import { getFormattedDateString } from '@utils/date-format'
 
 // Schema for form validering
@@ -292,10 +293,8 @@ function PeriodeDatePicker({ label, value, onChange, error }: PeriodeDatePickerP
     )
 }
 
-function getPeriodeType(kategorisering: Record<string, string | string[]>): Periodetype {
-    const inntektskategori = kategorisering['INNTEKTSKATEGORI'] as string
-
-    switch (inntektskategori) {
+function getPeriodeType(kategorisering: YrkesaktivitetKategorisering): Periodetype {
+    switch (kategorisering.inntektskategori) {
         case 'ARBEIDSTAKER':
             return 'ARBEIDSGIVERPERIODE'
         case 'SELVSTENDIG_NÆRINGSDRIVENDE':
