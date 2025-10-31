@@ -25,6 +25,27 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
         return Response.json({ message: 'Not found' }, { status: 404 })
     }
 
+    if (process.env.LOKAL_BAKROMMET === 'true') {
+        function userSessionCookie() {
+            const cookieHeader = request.headers.get('cookie')
+            if (cookieHeader) {
+                const cookies = cookieHeader.split(';').map((c) => c.trim())
+                const userSessionCookie = cookies.find((c) => c.startsWith('user_session='))
+                if (userSessionCookie) {
+                    return userSessionCookie.split('=')[1]
+                }
+            }
+        }
+
+        return await proxyRouteHandler(request, {
+            hostname: 'localhost',
+            port: '8080',
+            path: proxyPath,
+            https: false,
+            bearerToken: userSessionCookie(),
+        })
+    }
+
     if (erLokalEllerDemo) {
         return await mocketBakrommetData(request, cleanPath(api))
     }
