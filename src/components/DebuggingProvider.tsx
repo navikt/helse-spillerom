@@ -1,7 +1,7 @@
 'use client'
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
-import { Button, Modal, Tooltip } from '@navikt/ds-react'
+import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
 import { ParagraphIcon, SandboxIcon, PersonIcon, WalletIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
@@ -92,12 +92,16 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                 <Modal
                     open={true}
                     onClose={closeModal}
-                    header={{ heading: 'Vurderte vilkår', closeButton: true }}
+                    header={{ heading: 'Vilkår og beregning', closeButton: true, icon: <ParagraphIcon /> }}
                     className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody className="space-y-6">
-                        <VilkårsvurderingInnsikt />
-                        <BergingssporingInnsikt />
+                        <Table>
+                            <Table.Body>
+                                <VilkårsvurderingInnsikt />
+                                <BergingssporingInnsikt />
+                            </Table.Body>
+                        </Table>
                     </ModalBody>
                 </Modal>
             )}

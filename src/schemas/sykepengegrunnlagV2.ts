@@ -26,6 +26,7 @@ export const sykepengegrunnlagV2Schema = z.object({
     begrensetTil6G: z.boolean(),
     grunnbeløpVirkningstidspunkt: z.string(), // ISO 8601 date string
     næringsdel: næringsdelSchema.nullable(),
+    kombinertBeregningskode: z.string().nullable(),
 })
 
 // Ny respons schema som inneholder både sykepengegrunnlag og sammenlikningsgrunnlag
