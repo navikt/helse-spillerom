@@ -2,10 +2,9 @@ import { proxyRouteHandler } from '@navikt/next-api-proxy'
 import { logger } from '@navikt/next-logger'
 import { getToken, requestOboToken, validateAzureToken } from '@navikt/oasis'
 
-import { erLokalEllerDemo, getServerEnv } from '@/env'
-import { mocketBakrommetData } from '@/mock-api/mock-handler'
+import { erDevLokalEllerDemo, erLokal, getServerEnv } from '@/env'
 
-import { allowedAPIs, cleanPath } from './config'
+import { allowedAPIs, allowedDemoAPIs, cleanPath } from './config'
 
 type RouteParams = {
     params: Promise<{ path?: string[] }>
@@ -21,11 +20,13 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
     const api = `${request.method} ${proxyPath}`
 
     if (!allowedAPIs.includes(cleanPath(api))) {
-        logger.warn(`404 Unknown API: ${api}, clean path: ${cleanPath(api)}`)
-        return Response.json({ message: 'Not found' }, { status: 404 })
+        if (erDevLokalEllerDemo && !allowedDemoAPIs.includes(cleanPath(api))) {
+            logger.warn(`404 Unknown API: ${api}, clean path: ${cleanPath(api)}`)
+            return Response.json({ message: 'Not found' }, { status: 404 })
+        }
     }
 
-    if (process.env.LOKAL_BAKROMMET === 'true') {
+    if (erDevLokalEllerDemo) {
         function userSessionCookie() {
             const cookieHeader = request.headers.get('cookie')
             if (cookieHeader) {
@@ -37,17 +38,23 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
             }
         }
 
-        return await proxyRouteHandler(request, {
-            hostname: 'localhost',
-            port: '8080',
-            path: proxyPath,
-            https: false,
-            bearerToken: userSessionCookie(),
-        })
-    }
+        const opts = erLokal
+            ? {
+                  hostname: 'localhost',
+                  https: false,
+                  port: '8080',
+              }
+            : {
+                  hostname: 'bakrommet-demo.ekstern.dev.nav.no',
+                  https: true,
+                  port: undefined,
+              }
 
-    if (erLokalEllerDemo) {
-        return await mocketBakrommetData(request, cleanPath(api))
+        return await proxyRouteHandler(request, {
+            bearerToken: userSessionCookie(),
+            path: proxyPath,
+            ...opts,
+        })
     }
 
     const accessToken = getToken(request)

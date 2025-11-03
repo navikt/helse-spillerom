@@ -7,7 +7,7 @@ import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
-import { erProd, erLokalEllerDemo } from '@/env'
+import { erProd, erDevLokalEllerDemo } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
 import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
@@ -25,8 +25,8 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
     useRegisterShortcutHandler('open_testdata', () => setActiveModal('testdata'))
 
     const showDebuggingButtons = !erProd && params.saksbehandlingsperiodeId
-    const showTestdataButton = erLokalEllerDemo
-    const showRolleButton = erLokalEllerDemo
+    const showTestdataButton = erDevLokalEllerDemo
+    const showRolleButton = erDevLokalEllerDemo
 
     const closeModal = () => setActiveModal(null)
 

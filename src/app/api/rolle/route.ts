@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { ErrorResponse } from '@/auth/beskyttetApi'
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 import { oppdaterAktivBruker } from '@/mock-api/session'
 
 export async function POST(request: NextRequest): Promise<NextResponse<{ success: boolean } | ErrorResponse>> {
-    if (erLokalEllerDemo) {
+    if (erDevLokalEllerDemo) {
         try {
             const { navIdent } = await request.json()
             await oppdaterAktivBruker(navIdent)

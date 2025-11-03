@@ -3,7 +3,7 @@
 import { type PropsWithChildren, type ReactElement } from 'react'
 import { Skeleton } from '@navikt/ds-react'
 
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 import { useBrukerinfo } from '@/hooks/queries/useBrukerinfo'
 
 export function MockSessionProvider({ children }: PropsWithChildren): ReactElement {
@@ -12,7 +12,7 @@ export function MockSessionProvider({ children }: PropsWithChildren): ReactEleme
 
     // Kun render children når session er initialisert (eller ikke mock API)
 
-    if (erLokalEllerDemo && (isLoading || error)) {
+    if (erDevLokalEllerDemo && (isLoading || error)) {
         return (
             <div style={{ height: '100vh', width: '100vw' }}>
                 <Skeleton variant="rectangle" className="h-full w-full" />

@@ -145,11 +145,15 @@ export function fyllUtNæringsdrivendeYrkesaktivitet(
     }
 }
 
-export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false) {
+export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false, orgnummer: string) {
     return async (page: Page) => {
         await test.step('Fyll ut frilanser yrkesaktivitet', async () => {
             const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
             await typeSelect.selectOption('FRILANSER')
+
+            const orgnummerField = page.getByRole('textbox', { name: 'Organisasjonsnummer' })
+            await orgnummerField.waitFor({ state: 'visible' })
+            await orgnummerField.fill(orgnummer)
 
             const sykmeldtRadio = page.getByRole('group', { name: 'Er sykmeldt fra yrkesaktiviteten' })
             await sykmeldtRadio.getByRole('radio', { name: erSykmeldt ? 'Ja' : 'Nei' }).check()
@@ -231,21 +235,6 @@ export function utvidYrkesaktivitetRad(radIndex: number = 0) {
             if (toggleText?.includes('Vis mer')) {
                 await toggle.click()
             }
-        })
-    }
-}
-
-export function redigerYrkesaktivitet(radIndex: number = 0) {
-    return async (page: Page) => {
-        await test.step(`Rediger yrkesaktivitet ${radIndex + 1}`, async () => {
-            await utvidYrkesaktivitetRad(radIndex)(page)
-
-            const yrkesaktivitetTabell = await verifiserYrkesaktivitetTabell()(page)
-            const redigerButton = yrkesaktivitetTabell.getByRole('button', {
-                name: new RegExp(`Rediger yrkesaktivitet ${radIndex + 1}`, 'i'),
-            })
-            await redigerButton.waitFor({ state: 'visible' })
-            await redigerButton.click()
         })
     }
 }

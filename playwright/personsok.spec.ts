@@ -34,7 +34,7 @@ test.describe('Førstesiden', () => {
         const header = page.getByRole('main')
         await expect(header).toBeVisible()
 
-        const navn = header.getByText('Martin Hansen')
+        const navn = header.getByText('Hanna Andrea Johansen')
         await expect(navn).toBeVisible()
 
         // Klikk på "Start behandling" knappen

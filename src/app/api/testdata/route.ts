@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
 import { ErrorResponse } from '@/auth/beskyttetApi'
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 import { getSession, Person } from '@/mock-api/session'
 
 export async function GET(): Promise<NextResponse<Person[] | ErrorResponse>> {
-    if (erLokalEllerDemo) {
+    if (erDevLokalEllerDemo) {
         const session = await getSession()
 
         const testPersoner = session.testpersoner

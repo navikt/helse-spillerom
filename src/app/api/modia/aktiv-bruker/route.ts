@@ -1,11 +1,11 @@
 import { getToken, validateAzureToken } from '@navikt/oasis'
 import { logger } from '@navikt/next-logger'
 
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 import { kallModia } from '@/app/api/modia/modia'
 
 export async function DELETE(request: Request): Promise<Response> {
-    const token = erLokalEllerDemo ? null : getToken(request)
+    const token = erDevLokalEllerDemo ? null : getToken(request)
     if (!token) {
         logger.error('No access token found in request')
         return new Response('Not logged in', { status: 401 })

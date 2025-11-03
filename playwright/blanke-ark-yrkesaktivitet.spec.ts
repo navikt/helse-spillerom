@@ -12,8 +12,9 @@ import {
     lagreYrkesaktivitet,
     lagreRedigertYrkesaktivitet,
     verifiserAntallYrkesaktiviteter,
-    redigerYrkesaktivitet,
     slettYrkesaktivitet,
+    utvidYrkesaktivitetRad,
+    verifiserYrkesaktivitetTabell,
 } from './actions/saksbehandler-actions'
 
 test.describe('Blanke Ark - Yrkesaktivitet', () => {
@@ -61,6 +62,8 @@ test.describe('Blanke Ark - Yrkesaktivitet', () => {
         // Sjekk at venstremeny viser "Arbeidstaker og selvstendig næringsdrivende"
         await verifiserKategoriTag('Arbeidstaker og selvstendig næringsdrivende')(page)
 
+        /*
+        TODO dette ble kommentert ut når vi droppa spillerom mock apiet
         // 3. Endre første yrkesaktivitet til frilanser
         await redigerYrkesaktivitet(0)(page)
         await fyllUtFrilanserYrkesaktivitet(false)(page)
@@ -77,5 +80,7 @@ test.describe('Blanke Ark - Yrkesaktivitet', () => {
 
         // Sjekk at venstremeny viser "Selvstendig næringsdrivende"
         await verifiserKategoriTag('Selvstendig næringsdrivende')(page)
+
+         */
     })
 })

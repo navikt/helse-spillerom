@@ -3,7 +3,7 @@ import { getToken, validateAzureToken } from '@navikt/oasis'
 import { AzurePayload } from '@navikt/oasis/dist/validate'
 import { NextResponse } from 'next/server'
 
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 
 export interface ErrorResponse {
     message: string
@@ -13,7 +13,7 @@ export async function beskyttetApi<T>(
     req: Request,
     handler: (payload: Partial<AzurePayload>) => Promise<NextResponse<T>>,
 ): Promise<NextResponse<ErrorResponse | T>> {
-    if (erLokalEllerDemo) {
+    if (erDevLokalEllerDemo) {
         return handler({ NAVident: 'D123456', name: 'Saks Behandlersen', preferred_username: 'test.testesen@nav.no' })
     }
 

@@ -20,7 +20,7 @@ export const browserEnv = browserEnvSchema.parse({
 export const erLokal = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'lokal'
 export const erDev = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'dev'
 export const erDemo = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'demo'
-export const erLokalEllerDemo = erLokal || erDemo
+export const erDevLokalEllerDemo = erLokal || erDev || erDemo
 export const erProd = browserEnv.NEXT_PUBLIC_RUNTIME_ENV === 'prod'
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>

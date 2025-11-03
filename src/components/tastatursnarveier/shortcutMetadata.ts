@@ -1,4 +1,4 @@
-import { erLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo } from '@/env'
 
 export type KeyCode =
     | 'F1'
@@ -162,7 +162,7 @@ export const shortcutMetadata: ShortcutMetadata[] = [
         externalLinkTekst: 'Modia Sykefraværsoppfølging',
         ignoreIfModifiers: false,
     },
-    ...(erLokalEllerDemo
+    ...(erDevLokalEllerDemo
         ? ([
               {
                   id: 'open_testdata',

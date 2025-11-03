@@ -3,7 +3,7 @@ import { logger } from '@navikt/next-logger'
 
 import { ProblemDetails } from '@/schemas/problemDetails'
 import { organisasjonsnavnMap } from '@/utils/organisasjoner'
-import { erLokalEllerDemo, getServerEnv } from '@/env'
+import { erDevLokalEllerDemo, getServerEnv } from '@/env'
 
 export async function GET(
     request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
     const { orgnummer } = await params
 
     // 1) I lokal/demo (mock) skal vi kun bruke lokalt map
-    if (erLokalEllerDemo) {
+    if (erDevLokalEllerDemo) {
         const navn = organisasjonsnavnMap[orgnummer]
         if (navn) return NextResponse.json(navn)
         const problemDetails: ProblemDetails = {

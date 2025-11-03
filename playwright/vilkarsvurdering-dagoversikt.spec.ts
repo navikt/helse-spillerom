@@ -10,7 +10,8 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
 
     test('Kan vurdere vilkår og endre dager til avslått', async ({ page }, testInfo) => {
         // Søk opp Kalle Kranfører
-        await page.goto('/person/8j4ns/607f8e85-aaaa-4240-9950-383f6d7eac22')
+        await page.goto('/person/8j4ns')
+        await page.getByRole('link', { name: '01.09.2025 - 20.09.2025' }).click()
 
         // Naviger til Vilkårsvurdering-fanen
         await test.step('Naviger til Vilkårsvurdering', async () => {
