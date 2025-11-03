@@ -1,5 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { Bruker, brukerSchema } from '@/schemas/bruker'
+import { postAndParse } from '@utils/fetch'
+
 interface OppdaterBrukerRequest {
     navIdent: string
 }
@@ -7,21 +10,9 @@ interface OppdaterBrukerRequest {
 export function useOppdaterBrukerRoller() {
     const queryClient = useQueryClient()
 
-    return useMutation({
+    return useMutation<Bruker, Error, OppdaterBrukerRequest>({
         mutationFn: async (request: OppdaterBrukerRequest) => {
-            const response = await fetch('/api/rolle', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(request),
-            })
-
-            if (!response.ok) {
-                throw new Error('Feil ved oppdatering av bruker')
-            }
-
-            return response.json()
+            return postAndParse('/api/bakrommet/v1/demo/bruker', brukerSchema, request)
         },
         onSuccess: () => {
             // Invalider aktiv bruker query slik at ny bruker hentes

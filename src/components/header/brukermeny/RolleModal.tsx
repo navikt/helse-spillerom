@@ -7,7 +7,7 @@ import { PersonIcon, CheckmarkIcon } from '@navikt/aksel-icons'
 
 import { useOppdaterBrukerRoller } from '@hooks/mutations/useOppdaterBrukerRoller'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
-import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
+import { useTilgjengeligeBrukere } from '@hooks/queries/useTilgjengeligeBrukere'
 
 interface RolleModalProps {
     open: boolean
@@ -16,6 +16,7 @@ interface RolleModalProps {
 
 export function RolleModal({ open, onClose }: RolleModalProps): React.ReactElement {
     const { data: aktivBruker } = useBrukerinfo()
+    const { data: tilgjengeligeBrukere = [] } = useTilgjengeligeBrukere()
     const oppdaterBruker = useOppdaterBrukerRoller()
 
     const handleBrukerValg = async (navIdent: string) => {
@@ -37,7 +38,7 @@ export function RolleModal({ open, onClose }: RolleModalProps): React.ReactEleme
                     </Alert>
 
                     <VStack gap="3">
-                        {predefinerteBrukere.map((bruker) => (
+                        {tilgjengeligeBrukere.map((bruker) => (
                             <Button
                                 key={bruker.navIdent}
                                 variant={aktivBruker?.navIdent === bruker.navIdent ? 'primary' : 'secondary'}
