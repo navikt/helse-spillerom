@@ -6,8 +6,8 @@ import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
 import { PersonIcon, CheckmarkIcon } from '@navikt/aksel-icons'
 
 import { useOppdaterBrukerRoller } from '@hooks/mutations/useOppdaterBrukerRoller'
-import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
+import { predefinerteBrukere } from '@/mock-api/predefinerte-brukere'
 
 interface RolleModalProps {
     open: boolean

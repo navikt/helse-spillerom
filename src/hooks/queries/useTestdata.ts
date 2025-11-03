@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { Person } from '@/mock-api/session'
+import { Personinfo } from '@schemas/personinfo'
 
 export function useTestdata() {
     return useQuery<Person[], Error>({
@@ -9,4 +9,9 @@ export function useTestdata() {
             return (await fetch(`/api/testdata`)).json()
         },
     })
+}
+export interface Person {
+    fnr: string
+    personId: string
+    personinfo: Personinfo
 }
