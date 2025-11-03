@@ -27,17 +27,6 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
     }
 
     if (erDevLokalEllerDemo) {
-        function userSessionCookie() {
-            const cookieHeader = request.headers.get('cookie')
-            if (cookieHeader) {
-                const cookies = cookieHeader.split(';').map((c) => c.trim())
-                const userSessionCookie = cookies.find((c) => c.startsWith('user_session='))
-                if (userSessionCookie) {
-                    return userSessionCookie.split('=')[1]
-                }
-            }
-        }
-
         const opts = erLokal
             ? {
                   hostname: 'localhost',
@@ -51,7 +40,7 @@ async function bakrommetProxy(request: Request, { params }: RouteParams): Promis
               }
 
         return await proxyRouteHandler(request, {
-            bearerToken: userSessionCookie(),
+            includeCookies: true,
             path: proxyPath,
             ...opts,
         })
