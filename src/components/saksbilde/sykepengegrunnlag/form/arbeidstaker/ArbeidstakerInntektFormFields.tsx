@@ -1,6 +1,6 @@
-import React, { Dispatch, Fragment, ReactElement, SetStateAction, useState } from 'react'
+import React, { Dispatch, Fragment, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { BodyShort, HGrid, Radio, RadioGroup, VStack } from '@navikt/ds-react'
+import { BodyShort, HGrid, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import {
@@ -8,6 +8,7 @@ import {
     arbeidstakerInntektTypeSchema,
     ArbeidstakerSkjønnsfastsettelseÅrsak,
     arbeidstakerSkjønnsfastsettelseÅrsakSchema,
+    RefusjonInfo,
 } from '@schemas/inntektRequest'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
@@ -27,66 +28,97 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
 
     return (
         <>
-            <Controller
-                control={control}
-                name="data.type"
-                render={({ field }) => (
-                    <RadioGroup
-                        {...field}
-                        legend="Velg kilde for inntektsdata"
-                        size="small"
-                        onChange={(value) => {
-                            field.onChange(value)
-                            if (value === 'SKJONNSFASTSETTELSE') {
-                                setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])
-                            }
-                            if (value === 'INNTEKTSMELDING') {
-                                setValue('data.inntektsmeldingId', '')
-                            }
-                            if (value === 'SKJONNSFASTSETTELSE' || value === 'MANUELT_BEREGNET') {
-                                setValue('data.årsinntekt', 0)
-                            }
-                        }}
-                    >
-                        {arbeidstakerInntektTypeSchema.options.map((option) => (
-                            <Fragment key={option}>
-                                <Radio value={option}>{typeLabels[option]}</Radio>
-                                {valgtType === 'INNTEKTSMELDING' && option === 'INNTEKTSMELDING' && (
-                                    <VelgInntektsmelding
-                                        yrkesaktivitetId={yrkesaktivitetId}
-                                        setVisRefusjonsFelter={setVisRefusjonsFelter}
-                                    />
-                                )}
-                                {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (
-                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} />
-                                )}
-                            </Fragment>
-                        ))}
-                    </RadioGroup>
-                )}
-            />
-            {(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (
-                <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />
+            <HStack gap="4">
+                <PengerField
+                    className="w-[120px]"
+                    name="data.årsinntekt"
+                    label="Årsinntekt"
+                    readOnly={['INNTEKTSMELDING', 'AINNTEKT', 'DEFAULT'].includes(valgtType)}
+                />
+                <Controller
+                    control={control}
+                    name="data.type"
+                    render={({ field, fieldState }) => (
+                        <Select
+                            {...field}
+                            label="Kilde"
+                            size="small"
+                            id="data-type"
+                            value={field.value}
+                            onChange={(value) => {
+                                const valg = value.target.value
+                                field.onChange(valg)
+
+                                if (valg === 'SKJONNSFASTSETTELSE') {
+                                    setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])
+                                }
+                                if (valg === 'INNTEKTSMELDING') {
+                                    setValue('data.inntektsmeldingId', '')
+                                    setValue('data.årsinntekt', 0)
+                                }
+                                if (valg === 'SKJONNSFASTSETTELSE' || valg === 'MANUELT_BEREGNET') {
+                                    setValue('data.årsinntekt', 0)
+                                }
+                            }}
+                            error={fieldState.error?.message != undefined}
+                        >
+                            {arbeidstakerInntektTypeSchema.options.map((option) => (
+                                <option key={option} value={option}>
+                                    {typeLabels[option]}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
+                />
+            </HStack>
+            {valgtType === 'INNTEKTSMELDING' && (
+                <VelgInntektsmelding
+                    yrkesaktivitetId={yrkesaktivitetId}
+                    setVisRefusjonsFelter={setVisRefusjonsFelter}
+                />
             )}
-            <RadioGroup
-                legend="Refusjon"
-                size="small"
-                onChange={(value: boolean) => {
-                    setVisRefusjonsFelter(value)
-                    if (value) {
-                        setValue('data.refusjon', [
-                            { fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '', tom: null, beløp: 0 },
-                        ])
-                    } else {
-                        setValue('data.refusjon', undefined)
-                    }
-                }}
-                value={visRefusjonsFelter}
-            >
-                <Radio value={true}>Ja</Radio>
-                <Radio value={false}>Nei</Radio>
-            </RadioGroup>
-            {visRefusjonsFelter && <RefusjonFields />}
+            {valgtType === 'AINNTEKT' && <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={setValue} />}
+            {/*<Controller*/}
+            {/*    control={control}*/}
+            {/*    name="data.type"*/}
+            {/*    render={({ field }) => (*/}
+            {/*        <RadioGroup*/}
+            {/*            {...field}*/}
+            {/*            legend="Velg kilde for inntektsdata"*/}
+            {/*            size="small"*/}
+            {/*            onChange={(value) => {*/}
+            {/*                field.onChange(value)*/}
+            {/*                if (value === 'SKJONNSFASTSETTELSE') {*/}
+            {/*                    setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])*/}
+            {/*                }*/}
+            {/*                if (value === 'INNTEKTSMELDING') {*/}
+            {/*                    setValue('data.inntektsmeldingId', '')*/}
+            {/*                }*/}
+            {/*                if (value === 'SKJONNSFASTSETTELSE' || value === 'MANUELT_BEREGNET') {*/}
+            {/*                    setValue('data.årsinntekt', 0)*/}
+            {/*                }*/}
+            {/*            }}*/}
+            {/*        >*/}
+            {/*            {arbeidstakerInntektTypeSchema.options.map((option) => (*/}
+            {/*                <Fragment key={option}>*/}
+            {/*                    <Radio value={option}>{typeLabels[option]}</Radio>*/}
+            {/*                    {valgtType === 'INNTEKTSMELDING' && option === 'INNTEKTSMELDING' && (*/}
+            {/*                        <VelgInntektsmelding*/}
+            {/*                            yrkesaktivitetId={yrkesaktivitetId}*/}
+            {/*                            setVisRefusjonsFelter={setVisRefusjonsFelter}*/}
+            {/*                        />*/}
+            {/*                    )}*/}
+            {/*                    {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (*/}
+            {/*                        <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} />*/}
+            {/*                    )}*/}
+            {/*                </Fragment>*/}
+            {/*            ))}*/}
+            {/*        </RadioGroup>*/}
+            {/*    )}*/}
+            {/*/>*/}
+            {/*{(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (*/}
+            {/*    <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />*/}
+            {/*)}*/}
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <Controller
                     control={control}
@@ -102,13 +134,35 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                     )}
                 />
             )}
+            {valgtType !== 'DEFAULT' && (
+                <RadioGroup
+                    legend="Refusjon"
+                    size="small"
+                    onChange={(value: boolean) => {
+                        setVisRefusjonsFelter(value)
+                        if (value) {
+                            setValue('data.refusjon', [
+                                { fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '', tom: null, beløp: 0 },
+                            ])
+                        } else {
+                            setValue('data.refusjon', undefined)
+                        }
+                    }}
+                    value={visRefusjonsFelter}
+                >
+                    <Radio value={true}>Ja</Radio>
+                    <Radio value={false}>Nei</Radio>
+                </RadioGroup>
+            )}
+            {visRefusjonsFelter && <RefusjonFields />}
         </>
     )
 }
 
 const typeLabels: Record<ArbeidstakerInntektType, string> = {
+    DEFAULT: 'Velg kilde',
     INNTEKTSMELDING: 'Inntektsmelding',
-    AINNTEKT: 'Hent fra A-inntekt',
+    AINNTEKT: 'A-inntekt',
     SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
     MANUELT_BEREGNET: 'Manuelt beregnet',
 }
@@ -125,8 +179,16 @@ interface VelgInntektsmeldingProps {
 }
 
 function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgInntektsmeldingProps): ReactElement {
-    const { control, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const { control, setValue, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
+    const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
+
+    useEffect(() => {
+        const valgtInntektsmelding = inntektsmeldinger?.find((m) => m.inntektsmeldingId === valgtInntektsmeldingId)
+        if (valgtInntektsmelding) {
+            setValue('data.årsinntekt', Number(valgtInntektsmelding.beregnetInntekt) * 12)
+        }
+    }, [valgtInntektsmeldingId, inntektsmeldinger, setValue])
 
     if (isLoading) {
         return <BodyShort className="m-4 ml-6">Laster...</BodyShort> // TODO lag skeleton her
@@ -143,12 +205,12 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
             render={({ field, fieldState }) => (
                 <RadioGroup
                     {...field}
-                    legend="Velg inntektsmelding"
+                    legend="Velg inntektsmeldingen som er lagt til grunn"
                     hideLegend
                     size="small"
                     error={fieldState.error?.message != undefined}
                 >
-                    <VStack gap="2" className="m-4 ml-6">
+                    <VStack gap="2">
                         {inntektsmeldinger.map((inntektsmelding, i) => (
                             <Radio
                                 key={inntektsmelding.inntektsmeldingId}
@@ -157,9 +219,9 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                                 onChange={(value) => {
                                     field.onChange(value)
                                     setValue('data.refusjon', refusjonFra(inntektsmelding))
+                                    setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
                                     setVisRefusjonsFelter(true)
                                 }}
-                                className="w-[400px] items-center rounded-lg bg-ax-bg-default p-4"
                             >
                                 <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                             </Radio>
@@ -173,30 +235,23 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
 
 export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
     return (
-        <HGrid columns={2} gap="1 6">
-            <BodyShort weight="semibold" size="small">
-                Orgnummer:
-            </BodyShort>
-            <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
-
-            <BodyShort weight="semibold" size="small">
-                Mottatt:
-            </BodyShort>
+        <HGrid columns={2} className="w-[380px]">
             <BodyShort size="small">{getFormattedDatetimeString(inntektsmelding.mottattDato)}</BodyShort>
+            <div />
 
-            <BodyShort weight="semibold" size="small">
+            <BodyShort size="small" textColor="subtle">
                 Beregnet inntekt:
             </BodyShort>
             <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
 
-            <BodyShort weight="semibold" size="small">
-                Første fraværsdag:
-            </BodyShort>
-            <BodyShort size="small">{getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}</BodyShort>
+            {/*<BodyShort weight="semibold" size="small">*/}
+            {/*    Første fraværsdag:*/}
+            {/*</BodyShort>*/}
+            {/*<BodyShort size="small">{getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}</BodyShort>*/}
 
             {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
                 <Fragment key={i + arbeidsgiverperiode.fom}>
-                    <BodyShort weight="semibold" size="small">
+                    <BodyShort size="small" textColor="subtle">
                         Arbeidsgiverperiode:
                     </BodyShort>
                     <BodyShort size="small">
@@ -206,11 +261,16 @@ export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: I
                     </BodyShort>
                 </Fragment>
             ))}
+
+            <BodyShort size="small" textColor="subtle">
+                Organisasjonsnummer:
+            </BodyShort>
+            <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
         </HGrid>
     )
 }
 
-function refusjonFra(inntektsmelding: Inntektsmelding) {
+export function refusjonFra(inntektsmelding: Inntektsmelding): RefusjonInfo[] {
     const { refusjon, endringIRefusjoner: endringer = [], foersteFravaersdag } = inntektsmelding
     const sortedEndringer = [...endringer].sort((a, b) => dayjs(a.endringsdato).diff(dayjs(b.endringsdato)))
 

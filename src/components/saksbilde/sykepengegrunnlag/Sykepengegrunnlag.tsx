@@ -197,7 +197,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 {/*høyrepanel*/}
                 {aktivYrkesaktivitet && (
                     <VStack
-                        gap="4"
+                        gap="6"
                         className="w-[710px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
                     >
                         {kanSaksbehandles && !harIkkeInntektData && (

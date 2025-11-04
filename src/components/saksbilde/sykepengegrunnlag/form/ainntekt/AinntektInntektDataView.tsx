@@ -1,10 +1,12 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, Detail, HStack, Table, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, BoxNew, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
+import { capitalize } from 'remeda'
 
 import { ArbeidstakerAinntekt, FrilanserAinntekt } from '@schemas/inntektData'
 import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 import { TagFor } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { getFormattedMonthYear } from '@utils/date-format'
 
 export function AinntektInntektDataView({
     inntektData,
@@ -12,34 +14,53 @@ export function AinntektInntektDataView({
     inntektData: FrilanserAinntekt | ArbeidstakerAinntekt
 }): ReactElement {
     return (
-        <VStack gap="4">
-            <Detail>Inntektene er hentet fra a-inntekt 8-28 siste 3 måneder</Detail>
-
-            <VStack gap="1">
-                <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                <HStack gap="2">
-                    <BodyShort className="w-[103px] text-right">
-                        {formaterBeløpKroner(inntektData.omregnetÅrsinntekt)}
-                    </BodyShort>
-                    {TagFor['AINNTEKT']}
-                </HStack>
-            </VStack>
-            <Table size="small">
-                <TableHeader>
-                    <TableRow>
-                        <TableHeaderCell className="text-sm">Måned</TableHeaderCell>
-                        <TableHeaderCell className="text-sm">Rapportert inntekt</TableHeaderCell>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {Object.entries(inntektData.kildedata).map((e) => (
-                        <TableRow key={e[0]} className="odd:bg-ax-bg-default even:bg-ax-bg-accent-soft">
-                            <TableDataCell className="text-sm">{e[0]}</TableDataCell>
-                            <TableDataCell className="text-sm">{formaterBeløpKroner(e[1])}</TableDataCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+        <VStack>
+            <HStack gap="2" align="center">
+                <BodyShort weight="semibold">Rapportert siste 3 måneder</BodyShort>
+                {TagFor['AINNTEKT']}
+            </HStack>
+            <Bleed marginInline="2" asChild>
+                <BoxNew>
+                    <Table size="small">
+                        <TableHeader>
+                            <TableRow>
+                                <TableHeaderCell className="w-80" />
+                                <TableHeaderCell className="w-24 text-ax-medium">§ 8-28</TableHeaderCell>
+                                <TableHeaderCell />
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow className="odd:bg-ax-bg-default even:bg-ax-bg-accent-soft">
+                                <TableDataCell className="text-ax-medium font-semibold">
+                                    Gjennomsnitt siste 3 måneder
+                                </TableDataCell>
+                                <TableDataCell className="text-right text-ax-medium">
+                                    {formaterBeløpKroner(gjennomsnitt(inntektData))}
+                                </TableDataCell>
+                                <TableDataCell />
+                            </TableRow>
+                            {Object.entries(inntektData.kildedata).map((e) => (
+                                <TableRow key={e[0]} className="odd:bg-ax-bg-default even:bg-ax-bg-accent-soft">
+                                    <TableDataCell className="text-ax-medium font-semibold">
+                                        {capitalize(getFormattedMonthYear(e[0]))}
+                                    </TableDataCell>
+                                    <TableDataCell className="text-right text-ax-medium">
+                                        {formaterBeløpKroner(e[1])}
+                                    </TableDataCell>
+                                    <TableDataCell />
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </BoxNew>
+            </Bleed>
         </VStack>
     )
+}
+
+function gjennomsnitt(inntektData: FrilanserAinntekt | ArbeidstakerAinntekt) {
+    const values = Object.values(inntektData.kildedata)
+    if (values.length === 0) return 0
+    const sum = values.reduce((acc, val) => acc + val, 0)
+    return sum / values.length
 }

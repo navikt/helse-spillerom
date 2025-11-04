@@ -39,10 +39,23 @@ export const arbeidstakerInntektTypeSchema = z.enum([
     'AINNTEKT',
     'SKJONNSFASTSETTELSE',
     'MANUELT_BEREGNET',
+    'DEFAULT',
 ])
 
 export const arbeidstakerInntektRequestSchema = z
     .discriminatedUnion('type', [
+        z
+            .object({
+                type: arbeidstakerInntektTypeSchema.extract(['DEFAULT']),
+                årsinntekt: z.number(),
+            })
+            .superRefine((_, ctx) => {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['type'],
+                    message: 'Du må velge en kilde',
+                })
+            }),
         z.object({
             type: arbeidstakerInntektTypeSchema.extract(['INNTEKTSMELDING']),
             inntektsmeldingId: z.string().min(1, { message: 'Du må velge en inntektsmelding' }),

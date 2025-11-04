@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useController } from 'react-hook-form'
 import { TextField } from '@navikt/ds-react'
 
@@ -8,14 +8,19 @@ import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
 interface PengerFieldProps {
     name: string
     label: string
+    readOnly?: boolean
     className: string
 }
 
-export function PengerField({ name, label, className }: PengerFieldProps): ReactElement {
+export function PengerField({ name, label, readOnly = false, className }: PengerFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
     const [display, setDisplay] = useState<string>(
         field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'),
     )
+
+    useEffect(() => {
+        setDisplay(field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'))
+    }, [field.value])
 
     const parse = (val: string) => Number(val.replace(/\s/g, '').replace(',', '.'))
 
@@ -26,6 +31,7 @@ export function PengerField({ name, label, className }: PengerFieldProps): React
 
     return (
         <TextField
+            readOnly={readOnly}
             value={display}
             id={name.replaceAll('.', '-')}
             onMouseDown={(e) => {

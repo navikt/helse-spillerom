@@ -1,11 +1,25 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { Alert, BodyShort, VStack } from '@navikt/ds-react'
+import { UseFormSetValue } from 'react-hook-form'
 
 import { useAinntektYrkesaktivitet } from '@hooks/queries/useAinntektYrkesaktivitet'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
+import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
-export function VisAinntekt({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
+export function VisAinntekt({
+    yrkesaktivitetId,
+    setValue,
+}: {
+    yrkesaktivitetId: string
+    setValue: UseFormSetValue<InntektRequestFor<'ARBEIDSTAKER'>>
+}): ReactElement {
     const { data, isLoading, isError } = useAinntektYrkesaktivitet(yrkesaktivitetId)
+
+    useEffect(() => {
+        if (!isLoading && data && data.success) {
+            setValue('data.årsinntekt', data.data.omregnetÅrsinntekt || 0)
+        }
+    }, [data, isLoading, setValue])
 
     if (isLoading) {
         return (
@@ -44,7 +58,7 @@ export function VisAinntekt({ yrkesaktivitetId }: { yrkesaktivitetId: string }):
     }
 
     return (
-        <VStack gap="4" className="m-4 ml-6">
+        <VStack gap="4">
             <AinntektInntektDataView inntektData={data.data} />
         </VStack>
     )

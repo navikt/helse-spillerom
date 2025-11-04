@@ -34,6 +34,7 @@ const arbeidstakerDefaults: Record<
     ArbeidstakerInntektType,
     Extract<ArbeidstakerInntektRequest, { type: ArbeidstakerInntektType }>
 > = {
+    DEFAULT: { type: 'DEFAULT', begrunnelse: '', refusjon: undefined, årsinntekt: 0 },
     INNTEKTSMELDING: {
         type: 'INNTEKTSMELDING',
         inntektsmeldingId: '',
@@ -101,7 +102,7 @@ const defaultValuesMap: {
     FRILANSER: FrilanserInntektRequest
     ARBEIDSLEDIG: ArbeidsledigInntektRequest
 } = {
-    ARBEIDSTAKER: arbeidstakerDefaults['MANUELT_BEREGNET'],
+    ARBEIDSTAKER: arbeidstakerDefaults['DEFAULT'],
     SELVSTENDIG_NÆRINGSDRIVENDE: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
     INAKTIV: pensjonsgivendeDefaults['PENSJONSGIVENDE_INNTEKT'],
     FRILANSER: frilanserDefaults['AINNTEKT'],
