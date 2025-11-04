@@ -57,10 +57,9 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
             <Table size="small" className="w-full">
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell scope="col">Type</Table.HeaderCell>
+                        <Table.HeaderCell scope="col"></Table.HeaderCell>
                         <Table.HeaderCell scope="col">Arbeidssted</Table.HeaderCell>
                         <Table.HeaderCell scope="col">Status</Table.HeaderCell>
-                        <Table.HeaderCell scope="col"></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -72,7 +71,13 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                             <Fragment key={forhold.id}>
                                 <Table.Row>
                                     <Table.DataCell>
-                                        <BodyShort size="small">{forhold.type.beskrivelse}</BodyShort>
+                                        <Button
+                                            variant="tertiary"
+                                            size="xsmall"
+                                            onClick={() => toggleForhold(forhold.id)}
+                                            icon={isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                                            iconPosition="right"
+                                        ></Button>
                                     </Table.DataCell>
                                     <Table.DataCell>
                                         <BodyShort size="small">
@@ -89,21 +94,13 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                             {aktivStatus.status}
                                         </Tag>
                                     </Table.DataCell>
-                                    <Table.DataCell>
-                                        <Button
-                                            variant="tertiary"
-                                            size="xsmall"
-                                            onClick={() => toggleForhold(forhold.id)}
-                                            icon={isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                                            iconPosition="right"
-                                        ></Button>
-                                    </Table.DataCell>
                                 </Table.Row>
                                 {isExpanded && (
                                     <Table.Row className="bg-gray-50">
                                         <Table.DataCell colSpan={4}>
                                             <VStack gap="3" className="p-3">
                                                 {/* Ansettelsesperiode */}
+                                                {forhold.type.beskrivelse}
                                                 <div className="border-l-4 border-ax-border-info pl-3">
                                                     <Detail className="text-gray-600 mb-1 text-xs">
                                                         Ansettelsesperiode
