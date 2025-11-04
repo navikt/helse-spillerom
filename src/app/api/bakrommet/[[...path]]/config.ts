@@ -44,12 +44,38 @@ export const allowedDemoAPIs = [
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
-const PERSONID = /\b[a-z0-9]{5}\b/g
+// Kjente path-segmenter som ikke skal matche som person-ID
+const KNOWN_PATH_SEGMENTS = [
+    'demo',
+    'bruker',
+    'brukere',
+    'saksbehandlingsperioder',
+    'personsok',
+    'scenarioer',
+    'testpersoner',
+]
+// Matcher person-ID kun når den er i riktig kontekst: etter /v1/ eller /v2/, og ikke et kjent path-segment
+const PERSONID = /(\/v[12]\/)([a-z0-9-]{5,50})(\/|$|\s)/g
 
 export function cleanPath(value: string): string {
     if (!value) return value
 
-    let cleanedPath = value.replace(UUID, '[uuid]').replace(PERSONID, '[personId]')
+    // Sjekk først om det er et direkte treff i allowedAPIs eller allowedDemoAPIs
+    const allAllowedAPIs = [...allowedAPIs, ...allowedDemoAPIs]
+    if (allAllowedAPIs.includes(value)) {
+        return value
+    }
+
+    // Erstatter UUID først
+    let cleanedPath = value.replace(UUID, '[uuid]')
+    // Deretter erstatter person-ID kun i riktig kontekst (etter /v1/ eller /v2/), men ikke kjente segmenter
+    cleanedPath = cleanedPath.replace(PERSONID, (match, prefix, personId, suffix) => {
+        // Sjekk om det matchede segmentet allerede er en placeholder eller et kjent path-segment
+        if (personId.startsWith('[') || KNOWN_PATH_SEGMENTS.includes(personId)) {
+            return match // Returner uendret hvis det er en placeholder eller kjent segment
+        }
+        return `${prefix}[personId]${suffix}`
+    })
 
     const parts = cleanedPath.split('/')
     const isVilkaarModification = cleanedPath.startsWith('PUT') || cleanedPath.startsWith('DELETE')
