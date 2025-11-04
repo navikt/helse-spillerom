@@ -16,8 +16,6 @@ import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/Yrk
 import { useOpprettYrkesaktivitet } from '@hooks/mutations/useOpprettYrkesaktivitet'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
-import { organisasjonerForSelect } from '@utils/organisasjoner'
-import { erDemo } from '@/env'
 import { YrkesaktivitetKategorisering } from '@/schemas/yrkesaktivitetKategorisering'
 import { fromMap, toMap } from '@/utils/yrkesaktivitetKategoriseringMapper'
 
@@ -287,26 +285,6 @@ export default function YrkesaktivitetForm({
                     </RadioGroup>
                 )
             case 'TEXTFIELD':
-                // Sjekk om dette er organisasjonsnummer-feltet
-                if (erDemo && spørsmål.kode === 'ORGNUMMER') {
-                    return (
-                        <Select
-                            className="max-w-96"
-                            label={spørsmål.navn}
-                            value={(selectedValues[spørsmål.kode] as string) || ''}
-                            onChange={(e) => handleTextFieldChange(spørsmål.kode, e.target.value)}
-                            size="small"
-                            disabled={disabled}
-                        >
-                            <option value="">Velg organisasjon...</option>
-                            {organisasjonerForSelect.map((org) => (
-                                <option key={org.value} value={org.value}>
-                                    {org.label}
-                                </option>
-                            ))}
-                        </Select>
-                    )
-                }
                 // Standard textfield for andre felt
                 return (
                     <TextField
