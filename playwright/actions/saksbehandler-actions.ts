@@ -459,14 +459,37 @@ export function navigerTilSykepengegrunnlagFane() {
     }
 }
 
+export function velgSykepengegrunnlagKilde(
+    kilde: 'Inntektsmelding' | 'A-inntekt' | 'Skjønnsfastsatt' | 'Manuelt beregnet',
+) {
+    return async (page: Page) => {
+        await test.step(`Velg sykepengegrunnlag kilde: ${kilde}`, async () => {
+            // Vent på at skjemaet er åpent
+            await page.waitForSelector('form', { state: 'visible' })
+
+            const kildeSelect = page.getByRole('combobox', { name: 'Kilde' })
+            await kildeSelect.waitFor({ state: 'visible' })
+            await kildeSelect.selectOption({ label: kilde })
+        })
+    }
+}
+
 export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = 'Test inntekt for sykepengegrunnlag') {
     return async (page: Page) => {
         await test.step(`Fyll ut sykepengegrunnlag med inntekt ${inntekt}`, async () => {
             // Vent på at skjemaet er åpent
             await page.waitForSelector('form', { state: 'visible' })
 
+            // Velg kilde først for å gjøre årsinntekt-feltet redigerbart
+            // For manuell inntekt må vi velge "Manuelt beregnet" eller "Skjønnsfastsatt"
+            await velgSykepengegrunnlagKilde('Manuelt beregnet')(page)
+
+            // Vent på at årsinntekt-feltet blir redigerbart
             const inntektField = page.getByRole('textbox', { name: 'Årsinntekt' })
             await inntektField.waitFor({ state: 'visible' })
+            await inntektField.waitFor({ state: 'attached' })
+            // Sjekk at feltet ikke lenger er readonly
+            await expect(inntektField).not.toHaveAttribute('readonly', '')
             await inntektField.fill(inntekt)
 
             const begrunnelseField = page.getByRole('textbox', { name: 'Begrunnelse' })
