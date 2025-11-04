@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation'
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 import { erProd, erDevLokalEllerDemo } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
-import { TestpersonTabell } from '@components/debugging/TestpersonTabell'
+import { TestpersonTabell } from '@components/testdata/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
 import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
@@ -114,7 +114,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                     className="left-auto m-0 h-screen max-h-max max-w-[369px] rounded-none p-0"
                 >
                     <ModalBody>
-                        <TestpersonTabell />
+                        <TestpersonTabell onClose={closeModal} />
                     </ModalBody>
                 </Modal>
             )}
