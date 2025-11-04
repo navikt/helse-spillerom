@@ -77,13 +77,13 @@ export function useOrganisasjonsnavn(orgnummer: string) {
                 return cached
             }
 
-            const response = await fetch(`/api/organisasjon/${orgnummer}`)
+            const response = await fetch(`/api/bakrommet/v1/organisasjon/${orgnummer}`)
 
             if (!response.ok) {
                 throw new Error(`Feil ved henting av organisasjonsnavn: ${response.status}`)
             }
 
-            const navn = await response.json()
+            const navn = await response.text()
 
             // Lagre i localStorage for fremtidige kall
             setCachedOrganisasjonsnavn(orgnummer, navn)

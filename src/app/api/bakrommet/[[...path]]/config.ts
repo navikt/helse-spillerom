@@ -4,6 +4,7 @@ export const allowedAPIs = [
     'GET /v1/[personId]/personinfo',
     'GET /v1/[personId]/soknader',
     'POST /v1/personsok',
+    'GET /v1/organisasjon/[orgnummer]',
     'GET /v1/[personId]/saksbehandlingsperioder',
     'POST /v1/[personId]/saksbehandlingsperioder',
     'GET /v1/[personId]/inntektsmeldinger',
@@ -44,6 +45,8 @@ export const allowedDemoAPIs = [
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
+// Matcher 9-sifret orgnummer i organisasjon-endepunkt
+const ORGNUMMER = /\/v1\/organisasjon\/(\d{9})/g
 // Kjente path-segmenter som ikke skal matche som person-ID
 const KNOWN_PATH_SEGMENTS = [
     'demo',
@@ -51,6 +54,7 @@ const KNOWN_PATH_SEGMENTS = [
     'brukere',
     'saksbehandlingsperioder',
     'personsok',
+    'organisasjon',
     'scenarioer',
     'testpersoner',
 ]
@@ -68,6 +72,8 @@ export function cleanPath(value: string): string {
 
     // Erstatter UUID først
     let cleanedPath = value.replace(UUID, '[uuid]')
+    // Deretter erstatter orgnummer (9 siffer) i organisasjon-endepunkt
+    cleanedPath = cleanedPath.replace(ORGNUMMER, '/v1/organisasjon/[orgnummer]')
     // Deretter erstatter person-ID kun i riktig kontekst (etter /v1/ eller /v2/), men ikke kjente segmenter
     cleanedPath = cleanedPath.replace(PERSONID, (match, prefix, personId, suffix) => {
         // Sjekk om det matchede segmentet allerede er en placeholder eller et kjent path-segment
