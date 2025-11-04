@@ -28,7 +28,6 @@ import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/Yrk
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
-import { fromMap, toMap } from '@utils/yrkesaktivitetKategoriseringMapper'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -99,10 +98,7 @@ export function Yrkesaktivitet(): ReactElement {
         setRedigererId(null)
     }
 
-    const handleLagreRedigering = async (
-        yrkesaktivitetId: string,
-        kategorisering: Record<string, string | string[]>,
-    ) => {
+    const handleLagreRedigering = async (yrkesaktivitetId: string, kategorisering: YrkesaktivitetKategorisering) => {
         // Sjekk om sykepengegrunnlag eksisterer
         if (sykepengegrunnlag) {
             const bekreftet = await visBekreftelsesmodal({
@@ -114,10 +110,7 @@ export function Yrkesaktivitet(): ReactElement {
             if (!bekreftet) return
         }
 
-        oppdaterMutation.mutate(
-            { yrkesaktivitetId, kategorisering: fromMap(kategorisering) },
-            { onSuccess: () => setRedigererId(null) },
-        )
+        oppdaterMutation.mutate({ yrkesaktivitetId, kategorisering }, { onSuccess: () => setRedigererId(null) })
     }
 
     const handleLeggTilYrkesaktivitet = async () => {
@@ -179,7 +172,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                     disabled={false}
                                                     initialValues={forhold.kategorisering}
                                                     onSubmit={(kategorisering) =>
-                                                        handleLagreRedigering(forhold.id, toMap(kategorisering))
+                                                        handleLagreRedigering(forhold.id, kategorisering)
                                                     }
                                                     isLoading={oppdaterMutation.isPending}
                                                     avbrytLabel="Avbryt"

@@ -3,6 +3,7 @@
 import { ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Heading, VStack, BodyShort } from '@navikt/ds-react'
+import { ChevronRightDoubleIcon } from '@navikt/aksel-icons'
 
 import { Testscenario } from '@/schemas/testscenario'
 
@@ -45,9 +46,6 @@ export function TestscenarioDetaljer({ scenario }: TestscenarioDetaljerProps): R
                     <BodyShort>
                         <strong>Alder:</strong> {scenario.testperson.alder}
                     </BodyShort>
-                    <BodyShort>
-                        <strong>Spillerom ID:</strong> {scenario.testperson.spilleromId}
-                    </BodyShort>
                 </VStack>
             </div>
 
@@ -57,8 +55,9 @@ export function TestscenarioDetaljer({ scenario }: TestscenarioDetaljerProps): R
                     onClick={() => {
                         router.push(`/person/${scenario.testperson.spilleromId}`)
                     }}
+                    icon={<ChevronRightDoubleIcon />}
                 >
-                    Gå til personens startside
+                    Åpne i spillerom
                 </Button>
             </div>
         </VStack>
