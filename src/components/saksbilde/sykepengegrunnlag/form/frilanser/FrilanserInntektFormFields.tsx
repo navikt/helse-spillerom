@@ -16,6 +16,9 @@ export function FrilanserInntektFormFields({ yrkesaktivitetId }: { yrkesaktivite
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
     const valgtType = watch('data.type')
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const anySetValue = setValue as any
+    //TODO : Fix the any above
     return (
         <>
             <Controller
@@ -38,7 +41,7 @@ export function FrilanserInntektFormFields({ yrkesaktivitetId }: { yrkesaktivite
                             <Fragment key={option}>
                                 <Radio value={option}>{typeLabels[option]}</Radio>
                                 {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (
-                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={setValue as any}/>
+                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={anySetValue} />
                                 )}
                             </Fragment>
                         ))}
