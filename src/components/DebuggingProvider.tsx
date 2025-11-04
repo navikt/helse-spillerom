@@ -2,7 +2,7 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, SandboxIcon, PersonIcon, WalletIcon } from '@navikt/aksel-icons'
+import { ParagraphIcon, PersonPencilIcon, WalletIcon, PersonGroupIcon } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
@@ -42,7 +42,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                         <Button
                             type="button"
                             onClick={() => setActiveModal('testdata')}
-                            icon={<SandboxIcon title="Åpne testdataverktøy" aria-hidden />}
+                            icon={<PersonGroupIcon title="Åpne testdataverktøy" aria-hidden />}
                             variant="tertiary-neutral"
                         />
                     </Tooltip>
@@ -54,7 +54,7 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
                         <Button
                             type="button"
                             onClick={() => setActiveModal('roller')}
-                            icon={<PersonIcon title="Endre brukerroller" aria-hidden />}
+                            icon={<PersonPencilIcon title="Endre brukerroller" aria-hidden />}
                             variant="tertiary-neutral"
                         />
                     </Tooltip>
