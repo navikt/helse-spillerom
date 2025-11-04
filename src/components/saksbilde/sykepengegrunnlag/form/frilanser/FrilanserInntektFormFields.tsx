@@ -38,7 +38,7 @@ export function FrilanserInntektFormFields({ yrkesaktivitetId }: { yrkesaktivite
                             <Fragment key={option}>
                                 <Radio value={option}>{typeLabels[option]}</Radio>
                                 {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (
-                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} />
+                                    <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={setValue as any}/>
                                 )}
                             </Fragment>
                         ))}

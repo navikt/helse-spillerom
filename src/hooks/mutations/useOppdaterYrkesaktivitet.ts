@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Perioder } from '@/schemas/yrkesaktivitet'
-import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { YrkesaktivitetKategorisering, yrkesaktivitetKategoriseringSchema } from '@schemas/yrkesaktivitetKategorisering'
 
 type KategoriseringMutationProps = {
     yrkesaktivitetId: string
@@ -28,9 +28,11 @@ export function useOppdaterYrkesaktivitetKategorisering() {
 
     return useMutation<void, Error, KategoriseringMutationProps>({
         mutationFn: async ({ yrkesaktivitetId, kategorisering }) => {
+            // Valider kategorisering mot schema før sending
+            const validertKategorisering = yrkesaktivitetKategoriseringSchema.parse(kategorisering)
             return await putNoContent(
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
-                kategorisering,
+                validertKategorisering,
             )
         },
         onSuccess: () => {
