@@ -23,6 +23,7 @@ import { FrilanserInntektView } from '@components/saksbilde/sykepengegrunnlag/fo
 import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektView'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { FrihåndSykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/FrihåndSykepengegrunnlag'
+import { notNull } from '@utils/tsUtils'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -115,6 +116,9 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
                                     <Detail textColor="subtle">Omregnet årsinntekt</Detail>
                                 </TableHeaderCell>
+                                <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
+                                    <Detail textColor="subtle">Refusjon</Detail>
+                                </TableHeaderCell>
                             </TableRow>
                         </TableHeader>
                         <TableBody className="border-b-1 border-b-ax-bg-neutral-strong">
@@ -154,6 +158,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                                 )
                                             })()}
                                         </TableDataCell>
+                                        <TableDataCell>{resolveRefusjonSpørsmål(yrkesaktivitet)}</TableDataCell>
                                     </TableRow>
                                 )
                             })}
@@ -287,4 +292,13 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
             </div>
         </SaksbildePanel>
     )
+}
+
+function resolveRefusjonSpørsmål(yrkesaktivitet: Yrkesaktivitet): string {
+    if (yrkesaktivitet.kategorisering?.inntektskategori !== 'ARBEIDSTAKER') return 'Ikke aktuelt'
+
+    const inntektRequest = yrkesaktivitet.inntektRequest as InntektRequestFor<'ARBEIDSTAKER'>
+    if (!inntektRequest) return '-'
+    if (notNull(inntektRequest.data.refusjon) && inntektRequest.data.refusjon.length > 0) return 'Ja'
+    return 'Nei'
 }

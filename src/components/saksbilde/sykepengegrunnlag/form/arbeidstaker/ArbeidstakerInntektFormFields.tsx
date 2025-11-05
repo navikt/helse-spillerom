@@ -210,11 +210,6 @@ export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: I
             </BodyShort>
             <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
 
-            {/*<BodyShort weight="semibold" size="small">*/}
-            {/*    Første fraværsdag:*/}
-            {/*</BodyShort>*/}
-            {/*<BodyShort size="small">{getFormattedDateString(inntektsmelding.foersteFravaersdag ?? null)}</BodyShort>*/}
-
             {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
                 <Fragment key={i + arbeidsgiverperiode.fom}>
                     <BodyShort size="small" textColor="subtle">

@@ -14,10 +14,10 @@ export function VisAinntekt({
     const { data, isLoading, isError } = useAinntektYrkesaktivitet(yrkesaktivitetId)
 
     useEffect(() => {
-        if (!isLoading && data && data.success) {
+        if (data && data.success) {
             setValue('data.årsinntekt', data.data.omregnetÅrsinntekt || 0)
         }
-    }, [data, isLoading, setValue])
+    }, [data, setValue])
 
     if (isLoading) {
         return (
