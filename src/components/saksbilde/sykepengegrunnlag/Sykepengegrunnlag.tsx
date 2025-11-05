@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Detail, HStack, Table, VStack } from '@navikt/ds-react'
+import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
@@ -113,11 +113,11 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 <TableHeaderCell>
                                     <span className="sr-only">Yrkesaktivitet</span>
                                 </TableHeaderCell>
-                                <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
-                                    <Detail textColor="subtle">Omregnet årsinntekt</Detail>
+                                <TableHeaderCell className="pr-16 text-right text-ax-medium whitespace-nowrap">
+                                    Omregnet årsinntekt
                                 </TableHeaderCell>
-                                <TableHeaderCell className="pr-16 text-right whitespace-nowrap">
-                                    <Detail textColor="subtle">Refusjon</Detail>
+                                <TableHeaderCell className="pr-16 text-right text-ax-medium whitespace-nowrap">
+                                    Refusjon
                                 </TableHeaderCell>
                             </TableRow>
                         </TableHeader>
