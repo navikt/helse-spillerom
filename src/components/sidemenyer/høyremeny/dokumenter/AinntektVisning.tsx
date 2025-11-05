@@ -335,7 +335,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
     return (
         <VStack gap="4" className="mt-2">
             <Switch checked={groupByEmployer} onChange={(event) => setGroupByEmployer(event.target.checked)}>
-                Gruppér på arbeidsgiver
+                Gruppering per arbeidsgiver
             </Switch>
 
             {groupByEmployer ? renderByEmployer() : renderByYear()}
