@@ -22,6 +22,7 @@ import { InaktivInntektView } from '@components/saksbilde/sykepengegrunnlag/form
 import { FrilanserInntektView } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektView'
 import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektView'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
+import { FrihåndSykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/FrihåndSykepengegrunnlag'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -42,6 +43,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
+    const [erIFrihåndsmodus, setErIFrihåndsmodus] = useState(false)
 
     const kanSaksbehandles = useKanSaksbehandles()
 
@@ -89,6 +91,15 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     const kategori = aktivYrkesaktivitet?.kategorisering.inntektskategori as Inntektskategori
     const inntektRequest = aktivYrkesaktivitet?.inntektRequest as InntektRequestFor<typeof kategori>
+
+    // Vis frihåndsvisning hvis aktiv
+    if (erIFrihåndsmodus) {
+        return (
+            <SaksbildePanel value={value} className="mb-8 p-0">
+                <FrihåndSykepengegrunnlag onAvbryt={() => setErIFrihåndsmodus(false)} />
+            </SaksbildePanel>
+        )
+    }
 
     return (
         <SaksbildePanel value={value} className="mb-8 p-0">
@@ -269,6 +280,11 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                     </VStack>
                 )}
             </HStack>
+            <div className="border-t border-ax-bg-neutral-moderate p-8">
+                <Button variant="tertiary" onClick={() => setErIFrihåndsmodus(true)}>
+                    Frihånd sykepengegrunnlag
+                </Button>
+            </div>
         </SaksbildePanel>
     )
 }
