@@ -45,7 +45,7 @@ export function SykepengegrunnlagForm({
 
     return (
         <FormProvider {...form}>
-            <VStack as="form" role="form" gap="4" onSubmit={form.handleSubmit(onSubmit)}>
+            <VStack as="form" role="form" gap="6" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormFields yrkesaktivitetId={yrkesaktivitetId} kategori={kategori} />
                 <Controller
                     control={form.control}

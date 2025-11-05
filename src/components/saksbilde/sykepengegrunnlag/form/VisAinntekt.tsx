@@ -1,17 +1,15 @@
 import React, { ReactElement, useEffect } from 'react'
 import { Alert, BodyShort, VStack } from '@navikt/ds-react'
-import { UseFormSetValue } from 'react-hook-form'
 
 import { useAinntektYrkesaktivitet } from '@hooks/queries/useAinntektYrkesaktivitet'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
-import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 
 export function VisAinntekt({
     yrkesaktivitetId,
     setValue,
 }: {
     yrkesaktivitetId: string
-    setValue: UseFormSetValue<InntektRequestFor<'ARBEIDSTAKER'>>
+    setValue: (name: 'data.årsinntekt', value: number) => void
 }): ReactElement {
     const { data, isLoading, isError } = useAinntektYrkesaktivitet(yrkesaktivitetId)
 

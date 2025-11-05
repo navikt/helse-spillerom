@@ -71,54 +71,18 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                     )}
                 />
             </HStack>
+
             {valgtType === 'INNTEKTSMELDING' && (
                 <VelgInntektsmelding
                     yrkesaktivitetId={yrkesaktivitetId}
                     setVisRefusjonsFelter={setVisRefusjonsFelter}
                 />
             )}
-            {valgtType === 'AINNTEKT' && <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={setValue} />}
-            {/*<Controller*/}
-            {/*    control={control}*/}
-            {/*    name="data.type"*/}
-            {/*    render={({ field }) => (*/}
-            {/*        <RadioGroup*/}
-            {/*            {...field}*/}
-            {/*            legend="Velg kilde for inntektsdata"*/}
-            {/*            size="small"*/}
-            {/*            onChange={(value) => {*/}
-            {/*                field.onChange(value)*/}
-            {/*                if (value === 'SKJONNSFASTSETTELSE') {*/}
-            {/*                    setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])*/}
-            {/*                }*/}
-            {/*                if (value === 'INNTEKTSMELDING') {*/}
-            {/*                    setValue('data.inntektsmeldingId', '')*/}
-            {/*                }*/}
-            {/*                if (value === 'SKJONNSFASTSETTELSE' || value === 'MANUELT_BEREGNET') {*/}
-            {/*                    setValue('data.årsinntekt', 0)*/}
-            {/*                }*/}
-            {/*            }}*/}
-            {/*        >*/}
-            {/*            {arbeidstakerInntektTypeSchema.options.map((option) => (*/}
-            {/*                <Fragment key={option}>*/}
-            {/*                    <Radio value={option}>{typeLabels[option]}</Radio>*/}
-            {/*                    {valgtType === 'INNTEKTSMELDING' && option === 'INNTEKTSMELDING' && (*/}
-            {/*                        <VelgInntektsmelding*/}
-            {/*                            yrkesaktivitetId={yrkesaktivitetId}*/}
-            {/*                            setVisRefusjonsFelter={setVisRefusjonsFelter}*/}
-            {/*                        />*/}
-            {/*                    )}*/}
-            {/*                    {valgtType === 'AINNTEKT' && option === 'AINNTEKT' && (*/}
-            {/*                        <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} />*/}
-            {/*                    )}*/}
-            {/*                </Fragment>*/}
-            {/*            ))}*/}
-            {/*        </RadioGroup>*/}
-            {/*    )}*/}
-            {/*/>*/}
-            {/*{(valgtType === 'SKJONNSFASTSETTELSE' || valgtType === 'MANUELT_BEREGNET') && (*/}
-            {/*    <PengerField className="w-[212px]" name="data.årsinntekt" label="Årsinntekt" />*/}
-            {/*)}*/}
+
+            {valgtType === 'AINNTEKT' && (
+                <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={(field, val) => setValue(field, val)} />
+            )}
+
             {valgtType === 'SKJONNSFASTSETTELSE' && (
                 <Controller
                     control={control}
@@ -134,6 +98,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                     )}
                 />
             )}
+
             {valgtType !== 'DEFAULT' && (
                 <RadioGroup
                     legend="Refusjon"
@@ -154,6 +119,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                     <Radio value={false}>Nei</Radio>
                 </RadioGroup>
             )}
+
             {visRefusjonsFelter && <RefusjonFields />}
         </>
     )
