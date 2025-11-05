@@ -1,6 +1,13 @@
 import { expect } from '@playwright/test'
 import { validerAxe } from './uuvalidering'
 import { test } from './fixtures'
+import {
+    fyllUtArbeidstakerYrkesaktivitet,
+    lagreYrkesaktivitet,
+    navigerTilPerson,
+    opprettManuellBehandling,
+    åpneYrkesaktivitetSkjema,
+} from './actions/saksbehandler-actions'
 
 test.describe('Vilkårsvurdering og Dagoversikt', () => {
     test.beforeEach(async ({ page }) => {
@@ -9,9 +16,24 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
     })
 
     test('Kan vurdere vilkår og endre dager til avslått', async ({ page }, testInfo) => {
-        // Søk opp Kalle Kranfører
-        await page.goto('/person/8j4ns')
-        await page.getByRole('link', { name: '01.09.2025 - 20.09.2025' }).click()
+        const personIdent = '15454587654'
+        const periodeFra = '01.09.2025'
+        const periodeTil = '20.09.2025'
+
+        // 1. Naviger til person
+        await test.step('Naviger til person', async () => {
+            await navigerTilPerson(personIdent)(page)
+        })
+
+        // 2. Opprett manuell behandling
+        await test.step('Opprett manuell behandling', async () => {
+            await opprettManuellBehandling(periodeFra, periodeTil)(page)
+            await page.waitForURL('**/person/*/*')
+        })
+
+        await åpneYrkesaktivitetSkjema()(page)
+        await fyllUtArbeidstakerYrkesaktivitet('874372637', true)(page)
+        await lagreYrkesaktivitet()(page)
 
         // Naviger til Vilkårsvurdering-fanen
         await test.step('Naviger til Vilkårsvurdering', async () => {
@@ -74,7 +96,7 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
         // Velg dag som skal endres
         await test.step('Velg dag som skal endres', async () => {
             // Velg 01.09.2025
-            await page.getByRole('row', { name: 'Velg dag 01.09.2025 Syk 100' }).getByLabel('Velg dag').click()
+            await page.getByRole('row', { name: 'Velg dag 01.09.2025 Arbeid' }).getByLabel('Velg dag').click()
 
             // Verifiser at skjemaet for endring vises
             await expect(
