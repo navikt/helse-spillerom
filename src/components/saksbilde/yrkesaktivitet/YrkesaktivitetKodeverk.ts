@@ -33,11 +33,6 @@ export const yrkesaktivitetKodeverk = {
             navn: 'Arbeidstaker',
             underspørsmål: [
                 {
-                    kode: 'ORGNUMMER',
-                    navn: 'Organisasjonsnummer',
-                    variant: 'TEXTFIELD',
-                },
-                {
                     kode: 'ER_SYKMELDT',
                     navn: 'Er sykmeldt fra yrkesaktiviteten',
                     variant: 'RADIO',
@@ -52,24 +47,63 @@ export const yrkesaktivitetKodeverk = {
                     variant: 'RADIO',
                     alternativer: [
                         {
-                            kode: 'ORDINÆRT_ARBEIDSFORHOLD',
+                            kode: 'ORDINÆR',
                             navn: 'Ordinært arbeidsforhold',
+                            underspørsmål: [
+                                {
+                                    kode: 'ORGNUMMER',
+                                    navn: 'Organisasjonsnummer',
+                                    variant: 'TEXTFIELD',
+                                },
+                            ],
                         },
                         {
-                            kode: 'MARITIMT_ARBEIDSFORHOLD',
+                            kode: 'MARITIM',
                             navn: 'Maritimt arbeidsforhold på norsk skip i utenlandsfart',
+                            underspørsmål: [
+                                {
+                                    kode: 'ORGNUMMER',
+                                    navn: 'Organisasjonsnummer',
+                                    variant: 'TEXTFIELD',
+                                },
+                            ],
                         },
                         {
                             kode: 'FISKER',
                             navn: 'Fisker på blad B',
+                            underspørsmål: [
+                                {
+                                    kode: 'ORGNUMMER',
+                                    navn: 'Organisasjonsnummer',
+                                    variant: 'TEXTFIELD',
+                                },
+                            ],
                         },
                         {
-                            kode: 'VERNEPLIKTIG',
+                            kode: 'DIMMITERT_VERNEPLIKTIG',
                             navn: 'Vernepliktig',
                         },
                         {
-                            kode: 'DAGMAMMA_BARNETS_HJEM',
-                            navn: 'Dagmamma/dagpappa i barnets hjem)',
+                            kode: 'BARNEPASSER_BARNETS_HJEM',
+                            navn: 'Dagmamma/dagpappa i barnets hjem',
+                            underspørsmål: [
+                                {
+                                    kode: 'ARBEIDSGIVER_FNR',
+                                    navn: 'Arbeidsgiver fødselsnummer',
+                                    variant: 'TEXTFIELD',
+                                },
+                            ],
+                        },
+                        {
+                            kode: 'PRIVAT_ARBEIDSGIVER',
+                            navn: 'Privat arbeidsgiver',
+                            underspørsmål: [
+                                {
+                                    kode: 'ARBEIDSGIVER_FNR',
+                                    navn: 'Arbeidsgiver fødselsnummer',
+                                    variant: 'TEXTFIELD',
+                                },
+                            ],
                         },
                     ],
                 },

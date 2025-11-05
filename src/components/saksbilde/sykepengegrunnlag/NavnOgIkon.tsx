@@ -3,18 +3,28 @@ import { BodyShort, HStack } from '@navikt/ds-react'
 import { BriefcaseIcon } from '@navikt/aksel-icons'
 
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
-import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { YrkesaktivitetKategorisering, maybeOrgnummer } from '@schemas/yrkesaktivitetKategorisering'
 
 function getKategoriseringTekst(kategorisering: YrkesaktivitetKategorisering, medOrgnummer: boolean): ReactElement {
     switch (kategorisering.inntektskategori) {
-        case 'ARBEIDSTAKER':
-            return <Organisasjonsnavn orgnummer={kategorisering.orgnummer} medOrgnummer={medOrgnummer} />
-        case 'FRILANSER':
+        case 'ARBEIDSTAKER': {
+            const orgNr = maybeOrgnummer(kategorisering)
+            if (!orgNr) {
+                return <>Arbeidstaker</>
+            }
+            return <Organisasjonsnavn orgnummer={orgNr} medOrgnummer={medOrgnummer} />
+        }
+        case 'FRILANSER': {
+            const orgNr = maybeOrgnummer(kategorisering)
+            if (!orgNr) {
+                return <>Frilanser</>
+            }
             return (
                 <>
-                    Frilanser hos <Organisasjonsnavn orgnummer={kategorisering.orgnummer} />
+                    Frilanser hos <Organisasjonsnavn orgnummer={orgNr} />
                 </>
             )
+        }
         case 'SELVSTENDIG_NÆRINGSDRIVENDE':
             return <>Selvstendig næringsdrivende</>
         case 'ARBEIDSLEDIG':

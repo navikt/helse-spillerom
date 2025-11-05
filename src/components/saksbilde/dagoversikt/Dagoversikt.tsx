@@ -535,22 +535,26 @@ function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategoriser
 
     switch (kategorisering.inntektskategori) {
         case 'ARBEIDSTAKER': {
-            orgnummer = kategorisering.orgnummer
-            switch (kategorisering.typeArbeidstaker) {
-                case 'ORDINÆRT_ARBEIDSFORHOLD':
+            const type = kategorisering.typeArbeidstaker
+            orgnummer = 'orgnummer' in type ? type.orgnummer : undefined
+            switch (type.type) {
+                case 'ORDINÆR':
                     typeText = 'Ordinært arbeidsforhold'
                     break
-                case 'MARITIMT_ARBEIDSFORHOLD':
+                case 'MARITIM':
                     typeText = 'Maritimt arbeidsforhold'
                     break
                 case 'FISKER':
                     typeText = 'Fisker (arbeidstaker)'
                     break
-                case 'VERNEPLIKTIG':
+                case 'DIMMITERT_VERNEPLIKTIG':
                     typeText = 'Vernepliktig'
                     break
-                case 'DAGMAMMA_BARNETS_HJEM':
+                case 'BARNEPASSER_BARNETS_HJEM':
                     typeText = 'Dagmamma/dagpappa i barnets hjem'
+                    break
+                case 'PRIVAT_ARBEIDSGIVER':
+                    typeText = 'Privat arbeidsgiver'
                     break
                 default:
                     typeText = 'Arbeidstaker'

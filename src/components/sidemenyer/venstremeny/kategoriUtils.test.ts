@@ -24,8 +24,10 @@ describe('kategoriUtils', () => {
                     kategorisering: {
                         inntektskategori: 'ARBEIDSTAKER',
                         sykmeldt: true,
-                        orgnummer: '123456789',
-                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                        typeArbeidstaker: {
+                            type: 'ORDINÆR',
+                            orgnummer: '123456789',
+                        },
                     },
                     dagoversikt: null,
                     perioder: null,
@@ -48,8 +50,10 @@ describe('kategoriUtils', () => {
                     kategorisering: {
                         inntektskategori: 'ARBEIDSTAKER',
                         sykmeldt: true,
-                        orgnummer: '123456789',
-                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                        typeArbeidstaker: {
+                            type: 'ORDINÆR',
+                            orgnummer: '123456789',
+                        },
                     },
                     dagoversikt: null,
                     perioder: null,
@@ -68,8 +72,10 @@ describe('kategoriUtils', () => {
                     kategorisering: {
                         inntektskategori: 'ARBEIDSTAKER',
                         sykmeldt: true,
-                        orgnummer: '123456789',
-                        typeArbeidstaker: 'ORDINÆRT_ARBEIDSFORHOLD',
+                        typeArbeidstaker: {
+                            type: 'ORDINÆR',
+                            orgnummer: '123456789',
+                        },
                     },
                     dagoversikt: null,
                     perioder: null,

@@ -41,11 +41,6 @@ export function fromMap(map: Record<string, string | string[]>): YrkesaktivitetK
 }
 
 function mapArbeidstaker(map: Record<string, string | string[]>): YrkesaktivitetKategorisering {
-    const orgnummer = map['ORGNUMMER']
-    if (!orgnummer || typeof orgnummer !== 'string') {
-        throw new InputValideringException('ORGNUMMER mangler for ARBEIDSTAKER')
-    }
-
     const sykmeldt = mapSykmeldt(map, 'ARBEIDSTAKER')
 
     const typeArbeidstaker = map['TYPE_ARBEIDSTAKER']
@@ -53,27 +48,90 @@ function mapArbeidstaker(map: Record<string, string | string[]>): Yrkesaktivitet
         throw new InputValideringException('TYPE_ARBEIDSTAKER mangler for ARBEIDSTAKER')
     }
 
-    const validTypes = [
-        'ORDINÆRT_ARBEIDSFORHOLD',
-        'MARITIMT_ARBEIDSFORHOLD',
-        'FISKER',
-        'VERNEPLIKTIG',
-        'DAGMAMMA_BARNETS_HJEM',
-    ]
-    if (!validTypes.includes(typeArbeidstaker)) {
-        throw new InputValideringException(`Ugyldig TYPE_ARBEIDSTAKER: ${typeArbeidstaker}`)
+    // Map fra gamle navn til nye navn og struktur
+    let typeArbeidstakerObj: { type: string; orgnummer?: string; arbeidsgiverFnr?: string }
+
+    switch (typeArbeidstaker) {
+        case 'ORDINÆRT_ARBEIDSFORHOLD': {
+            const orgnummer = map['ORGNUMMER']
+            if (!orgnummer || typeof orgnummer !== 'string') {
+                throw new InputValideringException('ORGNUMMER mangler for ORDINÆRT_ARBEIDSFORHOLD')
+            }
+            typeArbeidstakerObj = { type: 'ORDINÆR', orgnummer }
+            break
+        }
+        case 'MARITIMT_ARBEIDSFORHOLD': {
+            const orgnummer = map['ORGNUMMER']
+            if (!orgnummer || typeof orgnummer !== 'string') {
+                throw new InputValideringException('ORGNUMMER mangler for MARITIMT_ARBEIDSFORHOLD')
+            }
+            typeArbeidstakerObj = { type: 'MARITIM', orgnummer }
+            break
+        }
+        case 'FISKER': {
+            const orgnummer = map['ORGNUMMER']
+            if (!orgnummer || typeof orgnummer !== 'string') {
+                throw new InputValideringException('ORGNUMMER mangler for FISKER')
+            }
+            typeArbeidstakerObj = { type: 'FISKER', orgnummer }
+            break
+        }
+        case 'VERNEPLIKTIG':
+            typeArbeidstakerObj = { type: 'DIMMITERT_VERNEPLIKTIG' }
+            break
+        case 'DAGMAMMA_BARNETS_HJEM': {
+            const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
+            if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
+                throw new InputValideringException('ARBEIDSGIVER_FNR mangler for DAGMAMMA_BARNETS_HJEM')
+            }
+            typeArbeidstakerObj = { type: 'BARNEPASSER_BARNETS_HJEM', arbeidsgiverFnr }
+            break
+        }
+        // Støtt også nye navn direkte
+        case 'ORDINÆR': {
+            const orgnummer = map['ORGNUMMER']
+            if (!orgnummer || typeof orgnummer !== 'string') {
+                throw new InputValideringException('ORGNUMMER mangler for ORDINÆR')
+            }
+            typeArbeidstakerObj = { type: 'ORDINÆR', orgnummer }
+            break
+        }
+        case 'MARITIM': {
+            const orgnummer = map['ORGNUMMER']
+            if (!orgnummer || typeof orgnummer !== 'string') {
+                throw new InputValideringException('ORGNUMMER mangler for MARITIM')
+            }
+            typeArbeidstakerObj = { type: 'MARITIM', orgnummer }
+            break
+        }
+        case 'DIMMITERT_VERNEPLIKTIG':
+            typeArbeidstakerObj = { type: 'DIMMITERT_VERNEPLIKTIG' }
+            break
+        case 'BARNEPASSER_BARNETS_HJEM': {
+            const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
+            if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
+                throw new InputValideringException('ARBEIDSGIVER_FNR mangler for BARNEPASSER_BARNETS_HJEM')
+            }
+            typeArbeidstakerObj = { type: 'BARNEPASSER_BARNETS_HJEM', arbeidsgiverFnr }
+            break
+        }
+        case 'PRIVAT_ARBEIDSGIVER': {
+            const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
+            if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
+                throw new InputValideringException('ARBEIDSGIVER_FNR mangler for PRIVAT_ARBEIDSGIVER')
+            }
+            typeArbeidstakerObj = { type: 'PRIVAT_ARBEIDSGIVER', arbeidsgiverFnr }
+            break
+        }
+        default:
+            throw new InputValideringException(`Ugyldig TYPE_ARBEIDSTAKER: ${typeArbeidstaker}`)
     }
 
     return {
         inntektskategori: 'ARBEIDSTAKER',
         sykmeldt,
-        orgnummer,
-        typeArbeidstaker: typeArbeidstaker as
-            | 'ORDINÆRT_ARBEIDSFORHOLD'
-            | 'MARITIMT_ARBEIDSFORHOLD'
-            | 'FISKER'
-            | 'VERNEPLIKTIG'
-            | 'DAGMAMMA_BARNETS_HJEM',
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        typeArbeidstaker: typeArbeidstakerObj as any,
     }
 }
 
@@ -226,10 +284,32 @@ export function toMap(kategorisering: YrkesaktivitetKategorisering): Record<stri
     }
 
     switch (kategorisering.inntektskategori) {
-        case 'ARBEIDSTAKER':
-            map['ORGNUMMER'] = kategorisering.orgnummer
-            map['TYPE_ARBEIDSTAKER'] = kategorisering.typeArbeidstaker
+        case 'ARBEIDSTAKER': {
+            const type = kategorisering.typeArbeidstaker
+            map['TYPE_ARBEIDSTAKER'] = (() => {
+                switch (type.type) {
+                    case 'ORDINÆR':
+                        return 'ORDINÆR'
+                    case 'MARITIM':
+                        return 'MARITIM'
+                    case 'FISKER':
+                        return 'FISKER'
+                    case 'DIMMITERT_VERNEPLIKTIG':
+                        return 'DIMMITERT_VERNEPLIKTIG'
+                    case 'BARNEPASSER_BARNETS_HJEM':
+                        return 'BARNEPASSER_BARNETS_HJEM'
+                    case 'PRIVAT_ARBEIDSGIVER':
+                        return 'PRIVAT_ARBEIDSGIVER'
+                }
+            })()
+            if ('orgnummer' in type && type.orgnummer) {
+                map['ORGNUMMER'] = type.orgnummer
+            }
+            if ('arbeidsgiverFnr' in type && type.arbeidsgiverFnr) {
+                map['ARBEIDSGIVER_FNR'] = type.arbeidsgiverFnr
+            }
             break
+        }
         case 'FRILANSER':
             map['ORGNUMMER'] = kategorisering.orgnummer
             map['FRILANSER_FORSIKRING'] = kategorisering.forsikring

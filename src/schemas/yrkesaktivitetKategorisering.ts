@@ -1,12 +1,30 @@
 import { z } from 'zod/v4'
 
-// Enums
-export const typeArbeidstakerSchema = z.enum([
-    'ORDINÆRT_ARBEIDSFORHOLD',
-    'MARITIMT_ARBEIDSFORHOLD',
-    'FISKER',
-    'VERNEPLIKTIG',
-    'DAGMAMMA_BARNETS_HJEM',
+// TypeArbeidstaker
+export const typeArbeidstakerSchema = z.discriminatedUnion('type', [
+    z.object({
+        type: z.literal('ORDINÆR'),
+        orgnummer: z.string(),
+    }),
+    z.object({
+        type: z.literal('MARITIM'),
+        orgnummer: z.string(),
+    }),
+    z.object({
+        type: z.literal('FISKER'),
+        orgnummer: z.string(),
+    }),
+    z.object({
+        type: z.literal('DIMMITERT_VERNEPLIKTIG'),
+    }),
+    z.object({
+        type: z.literal('BARNEPASSER_BARNETS_HJEM'),
+        arbeidsgiverFnr: z.string(),
+    }),
+    z.object({
+        type: z.literal('PRIVAT_ARBEIDSGIVER'),
+        arbeidsgiverFnr: z.string(),
+    }),
 ])
 
 export const frilanserForsikringSchema = z.enum(['FORSIKRING_100_PROSENT_FRA_FØRSTE_SYKEDAG', 'INGEN_FORSIKRING'])
@@ -49,7 +67,6 @@ export const yrkesaktivitetKategoriseringSchema = z.discriminatedUnion('inntekts
     z.object({
         inntektskategori: z.literal('ARBEIDSTAKER'),
         sykmeldt: z.boolean(),
-        orgnummer: z.string(),
         typeArbeidstaker: typeArbeidstakerSchema,
     }),
     z.object({
@@ -80,3 +97,34 @@ export type FrilanserForsikring = z.infer<typeof frilanserForsikringSchema>
 export type SelvstendigForsikring = z.infer<typeof selvstendigForsikringSchema>
 export type TypeSelvstendigNæringsdrivende = z.infer<typeof typeSelvstendigNæringsdrivendeSchema>
 export type VariantAvInaktiv = z.infer<typeof variantAvInaktivSchema>
+
+/**
+ * Henter orgnummer fra YrkesaktivitetKategorisering hvis det finnes
+ * Tilsvarer maybeOrgnummer() i Kotlin
+ */
+export function maybeOrgnummer(kategorisering: YrkesaktivitetKategorisering): string | null {
+    if (kategorisering.inntektskategori === 'ARBEIDSTAKER') {
+        const type = kategorisering.typeArbeidstaker
+        if (type.type === 'ORDINÆR' || type.type === 'MARITIM' || type.type === 'FISKER') {
+            return type.orgnummer
+        }
+        return null
+    }
+    if (kategorisering.inntektskategori === 'FRILANSER') {
+        return kategorisering.orgnummer
+    }
+    return null
+}
+
+/**
+ * Henter orgnummer fra YrkesaktivitetKategorisering
+ * Kaster feil hvis orgnummer ikke finnes
+ * Tilsvarer orgnummer() i Kotlin
+ */
+export function orgnummer(kategorisering: YrkesaktivitetKategorisering): string {
+    const maybe = maybeOrgnummer(kategorisering)
+    if (maybe === null) {
+        throw new Error(`YrkesaktivitetKategorisering har ikke orgnummer. ${kategorisering.inntektskategori}`)
+    }
+    return maybe
+}

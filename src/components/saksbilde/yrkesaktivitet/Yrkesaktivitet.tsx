@@ -27,7 +27,7 @@ import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
-import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { YrkesaktivitetKategorisering, maybeOrgnummer } from '@schemas/yrkesaktivitetKategorisering'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -224,11 +224,10 @@ export function Yrkesaktivitet(): ReactElement {
                                         </TableDataCell>
                                         <TableDataCell>
                                             <VStack gap="1">
-                                                {(forhold.kategorisering.inntektskategori === 'ARBEIDSTAKER' ||
-                                                    forhold.kategorisering.inntektskategori === 'FRILANSER') && (
+                                                {maybeOrgnummer(forhold.kategorisering) && (
                                                     <BodyShort className="text-sm">
                                                         <Organisasjonsnavn
-                                                            orgnummer={forhold.kategorisering.orgnummer}
+                                                            orgnummer={maybeOrgnummer(forhold.kategorisering)!}
                                                         />
                                                     </BodyShort>
                                                 )}
