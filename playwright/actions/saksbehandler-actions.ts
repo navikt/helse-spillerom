@@ -104,10 +104,6 @@ export function fyllUtArbeidstakerYrkesaktivitet(orgnummer: string, erSykmeldt: 
             await typeSelect.waitFor({ state: 'visible' })
             await typeSelect.selectOption('ARBEIDSTAKER')
 
-            const orgnummerField = page.getByRole('textbox', { name: 'Organisasjonsnummer' })
-            await orgnummerField.waitFor({ state: 'visible' })
-            await orgnummerField.fill(orgnummer)
-
             const sykmeldtRadio = page.getByRole('group', { name: 'Er sykmeldt fra yrkesaktiviteten' })
             await sykmeldtRadio.waitFor({ state: 'visible' })
             await sykmeldtRadio.getByRole('radio', { name: erSykmeldt ? 'Ja' : 'Nei' }).check()
@@ -115,6 +111,10 @@ export function fyllUtArbeidstakerYrkesaktivitet(orgnummer: string, erSykmeldt: 
             const typeArbeidstakerRadio = page.getByRole('group', { name: 'Type arbeidstaker' })
             await typeArbeidstakerRadio.waitFor({ state: 'visible' })
             await typeArbeidstakerRadio.getByRole('radio', { name: 'Ordinært arbeidsforhold' }).check()
+
+            const orgnummerField = page.getByRole('textbox', { name: 'Organisasjonsnummer' })
+            await orgnummerField.waitFor({ state: 'visible' })
+            await orgnummerField.fill(orgnummer)
         })
     }
 }
