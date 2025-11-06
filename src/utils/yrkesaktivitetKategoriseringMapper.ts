@@ -79,14 +79,6 @@ function mapArbeidstaker(map: Record<string, string | string[]>): Yrkesaktivitet
         case 'VERNEPLIKTIG':
             typeArbeidstakerObj = { type: 'DIMMITERT_VERNEPLIKTIG' }
             break
-        case 'DAGMAMMA_BARNETS_HJEM': {
-            const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
-            if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
-                throw new InputValideringException('ARBEIDSGIVER_FNR mangler for DAGMAMMA_BARNETS_HJEM')
-            }
-            typeArbeidstakerObj = { type: 'BARNEPASSER_BARNETS_HJEM', arbeidsgiverFnr }
-            break
-        }
         // Støtt også nye navn direkte
         case 'ORDINÆR': {
             const orgnummer = map['ORGNUMMER']
@@ -107,14 +99,6 @@ function mapArbeidstaker(map: Record<string, string | string[]>): Yrkesaktivitet
         case 'DIMMITERT_VERNEPLIKTIG':
             typeArbeidstakerObj = { type: 'DIMMITERT_VERNEPLIKTIG' }
             break
-        case 'BARNEPASSER_BARNETS_HJEM': {
-            const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
-            if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
-                throw new InputValideringException('ARBEIDSGIVER_FNR mangler for BARNEPASSER_BARNETS_HJEM')
-            }
-            typeArbeidstakerObj = { type: 'BARNEPASSER_BARNETS_HJEM', arbeidsgiverFnr }
-            break
-        }
         case 'PRIVAT_ARBEIDSGIVER': {
             const arbeidsgiverFnr = map['ARBEIDSGIVER_FNR']
             if (!arbeidsgiverFnr || typeof arbeidsgiverFnr !== 'string') {
@@ -296,8 +280,6 @@ export function toMap(kategorisering: YrkesaktivitetKategorisering): Record<stri
                         return 'FISKER'
                     case 'DIMMITERT_VERNEPLIKTIG':
                         return 'DIMMITERT_VERNEPLIKTIG'
-                    case 'BARNEPASSER_BARNETS_HJEM':
-                        return 'BARNEPASSER_BARNETS_HJEM'
                     case 'PRIVAT_ARBEIDSGIVER':
                         return 'PRIVAT_ARBEIDSGIVER'
                 }

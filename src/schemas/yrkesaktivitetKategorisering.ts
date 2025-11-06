@@ -18,10 +18,6 @@ export const typeArbeidstakerSchema = z.discriminatedUnion('type', [
         type: z.literal('DIMMITERT_VERNEPLIKTIG'),
     }),
     z.object({
-        type: z.literal('BARNEPASSER_BARNETS_HJEM'),
-        arbeidsgiverFnr: z.string(),
-    }),
-    z.object({
         type: z.literal('PRIVAT_ARBEIDSGIVER'),
         arbeidsgiverFnr: z.string(),
     }),

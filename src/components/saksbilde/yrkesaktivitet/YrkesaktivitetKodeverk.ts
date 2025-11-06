@@ -84,17 +84,6 @@ export const yrkesaktivitetKodeverk = {
                             navn: 'Vernepliktig',
                         },
                         {
-                            kode: 'BARNEPASSER_BARNETS_HJEM',
-                            navn: 'Dagmamma/dagpappa i barnets hjem',
-                            underspørsmål: [
-                                {
-                                    kode: 'ARBEIDSGIVER_FNR',
-                                    navn: 'Arbeidsgiver fødselsnummer',
-                                    variant: 'TEXTFIELD',
-                                },
-                            ],
-                        },
-                        {
                             kode: 'PRIVAT_ARBEIDSGIVER',
                             navn: 'Privat arbeidsgiver',
                             underspørsmål: [

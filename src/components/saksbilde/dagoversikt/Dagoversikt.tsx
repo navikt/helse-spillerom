@@ -550,9 +550,6 @@ function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategoriser
                 case 'DIMMITERT_VERNEPLIKTIG':
                     typeText = 'Vernepliktig'
                     break
-                case 'BARNEPASSER_BARNETS_HJEM':
-                    typeText = 'Dagmamma/dagpappa i barnets hjem'
-                    break
                 case 'PRIVAT_ARBEIDSGIVER':
                     typeText = 'Privat arbeidsgiver'
                     break
