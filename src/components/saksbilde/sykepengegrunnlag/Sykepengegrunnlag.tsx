@@ -24,6 +24,7 @@ import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { FrihåndSykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/FrihåndSykepengegrunnlag'
 import { notNull } from '@utils/tsUtils'
+import {useYrkesaktivitetForSykepengegrunnlag} from "@hooks/queries/useYrkesaktivitetForSykepengegrunnlag";
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -31,7 +32,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         isLoading: yrkesaktivitetLoading,
         isError: yrkesaktivitetError,
         refetch: yrkesaktivitetRefetch,
-    } = useYrkesaktivitet()
+    } = useYrkesaktivitetForSykepengegrunnlag()
     const {
         data: sykepengegrunnlagResponse,
         isLoading: sykepengegrunnlagLoading,

@@ -33,6 +33,7 @@ export const sykepengegrunnlagV2Schema = z.object({
 export const sykepengegrunnlagResponseSchema = z.object({
     sykepengegrunnlag: sykepengegrunnlagV2Schema.nullable(),
     sammenlikningsgrunnlag: sammenlikningsgrunnlagSchema.nullable(),
+    opprettetForBehandling: z.string(), // UUID som string
 })
 
 export type SykepengegrunnlagV2 = z.infer<typeof sykepengegrunnlagV2Schema>
