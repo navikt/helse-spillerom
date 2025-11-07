@@ -1,18 +1,18 @@
-import {useParams, useRouter} from 'next/navigation'
-import {useQuery} from '@tanstack/react-query'
-import {useEffect} from 'react'
-import {z} from 'zod/v4'
+import { useParams, useRouter } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { z } from 'zod/v4'
 
-import {fetchAndParse} from '@utils/fetch'
-import {ProblemDetailsError} from '@utils/ProblemDetailsError'
-import {Yrkesaktivitet, yrkesaktivitetSchema} from '@schemas/yrkesaktivitet'
-import {useAktivSaksbehandlingsperiodeMedLoading} from "@hooks/queries/useAktivSaksbehandlingsperiode";
-import {SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema} from "@schemas/sykepengegrunnlagV2";
+import { fetchAndParse } from '@utils/fetch'
+import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
+import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlagV2'
 
 export function useYrkesaktivitetForSykepengegrunnlag() {
     const params = useParams()
     const router = useRouter()
-    const {aktivSaksbehandlingsperiode} = useAktivSaksbehandlingsperiodeMedLoading()
+    const { aktivSaksbehandlingsperiode } = useAktivSaksbehandlingsperiodeMedLoading()
 
     const personId = params?.personId as string
 
@@ -32,9 +32,20 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
         staleTime: 5 * 60 * 1000, // 5 minutter
     })
 
+    const harOpprettetForBehandlingFraSykepengegrunnlag = sykepengegrunnlag.data?.opprettetForBehandling
+    const saksbehandlingsperiodeIdFraUrl = params.saksbehandlingsperiodeId as string
+    const saksbehandlingsperiodeIdForYrkesaktivitet =
+        harOpprettetForBehandlingFraSykepengegrunnlag ?? saksbehandlingsperiodeIdFraUrl
 
+    const harPersonId = !!params.personId
+    const harSaksbehandlingsperiodeId = !!saksbehandlingsperiodeIdForYrkesaktivitet
+    const sykepengegrunnlagErFerdigLastet = !sykepengegrunnlag.isLoading
+    const sykepengegrunnlagHarData = sykepengegrunnlag.isSuccess
+        ? sykepengegrunnlag.data?.sykepengegrunnlag !== null
+        : true
 
-    const saksbehandlingsperiodeIdForYrkesaktivitet = sykepengegrunnlag.data?.opprettetForBehandling ?? (params.saksbehandlingsperiodeId as string)
+    const yrkesaktivitetFetchEnabled =
+        harPersonId && harSaksbehandlingsperiodeId && sykepengegrunnlagErFerdigLastet && sykepengegrunnlagHarData
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
         queryKey: [params.personId, 'yrkesaktivitet', saksbehandlingsperiodeIdForYrkesaktivitet],
@@ -43,13 +54,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
                 `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeIdForYrkesaktivitet}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
-        enabled: !!params.personId && !!saksbehandlingsperiodeIdForYrkesaktivitet && (
-            !sykepengegrunnlag.isLoading && (
-                sykepengegrunnlag.isSuccess 
-                    ? (sykepengegrunnlag.data?.sykepengegrunnlag !== null)
-                    : true
-            )
-        ),
+        enabled: yrkesaktivitetFetchEnabled,
     })
 
     useEffect(() => {

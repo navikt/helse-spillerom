@@ -4,7 +4,6 @@ import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from
 import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
-import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
@@ -24,7 +23,7 @@ import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { FrihåndSykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/FrihåndSykepengegrunnlag'
 import { notNull } from '@utils/tsUtils'
-import {useYrkesaktivitetForSykepengegrunnlag} from "@hooks/queries/useYrkesaktivitetForSykepengegrunnlag";
+import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
