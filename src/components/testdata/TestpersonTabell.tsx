@@ -2,10 +2,11 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Table, Link } from '@navikt/ds-react'
+import { Table, Link, Button } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableRow } from '@navikt/ds-react/Table'
 
 import { useTestpersoner } from '@hooks/queries/useTestpersoner'
+import { useNullstillSession } from '@hooks/mutations/useNullstillSession'
 
 interface TestpersonTabellProps {
     onClose?: () => void
@@ -14,6 +15,7 @@ interface TestpersonTabellProps {
 export function TestpersonTabell({ onClose }: TestpersonTabellProps): React.ReactNode {
     const router = useRouter()
     const testpersoner = useTestpersoner()
+    const nullstillSession = useNullstillSession()
 
     const handleTestscenarioerClick = (e: React.MouseEvent) => {
         e.preventDefault()
@@ -39,10 +41,18 @@ export function TestpersonTabell({ onClose }: TestpersonTabellProps): React.Reac
 
         return (
             <>
-                <div className="mb-4">
+                <div className="mb-4 flex gap-4">
                     <Link href="#" onClick={handleTestscenarioerClick}>
                         Se testscenarier
                     </Link>
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        onClick={() => nullstillSession.mutate()}
+                        loading={nullstillSession.isPending}
+                    >
+                        Nullstill session
+                    </Button>
                 </div>
                 <Table className="w-full">
                     <TableBody>

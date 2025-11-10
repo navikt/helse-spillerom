@@ -2,15 +2,17 @@
 
 import { ReactElement, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Heading } from '@navikt/ds-react'
+import { Heading, Button } from '@navikt/ds-react'
 
 import { erDevLokalEllerDemo } from '@/env'
 import { useScenarioer } from '@/hooks/queries/useScenarioer'
 import { TestscenarioListe } from '@/components/testdata/TestscenarioListe'
+import { useNullstillSession } from '@/hooks/mutations/useNullstillSession'
 
 export default function TestscenarioerPage(): ReactElement {
     const router = useRouter()
     const { data: scenarioer, isLoading, isError } = useScenarioer()
+    const nullstillSession = useNullstillSession()
 
     useEffect(() => {
         if (!erDevLokalEllerDemo) {
@@ -50,6 +52,15 @@ export default function TestscenarioerPage(): ReactElement {
 
     return (
         <section className="flex-auto p-8">
+            <div className="mb-4">
+                <Button
+                    variant="secondary"
+                    onClick={() => nullstillSession.mutate()}
+                    loading={nullstillSession.isPending}
+                >
+                    Nullstill session
+                </Button>
+            </div>
             <TestscenarioListe scenarioer={scenarioer} />
         </section>
     )

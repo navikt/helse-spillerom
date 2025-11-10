@@ -95,3 +95,28 @@ export async function putNoContent(url: string, body: unknown): Promise<void> {
         })
     }
 }
+
+export async function postNoContent(url: string, body?: unknown): Promise<void> {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+    })
+
+    if (!res.ok) {
+        const isJson = (res.headers.get('content-type') ?? '').includes('json')
+        const payload: unknown = isJson ? await res.json() : await res.text()
+
+        const maybeProblem = problemDetailsSchema.safeParse(payload)
+        if (maybeProblem.success) {
+            throw new ProblemDetailsError(maybeProblem.data)
+        }
+
+        throw new ProblemDetailsError({
+            title: 'Ukjent feil',
+            status: res.status,
+            detail: `Failed to post ${url}: ${res.status}`,
+            type: 'about:blank',
+        })
+    }
+}

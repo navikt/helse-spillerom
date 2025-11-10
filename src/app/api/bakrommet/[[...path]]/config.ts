@@ -42,6 +42,7 @@ export const allowedDemoAPIs = [
     'POST /v1/demo/bruker',
     'GET /v1/demo/scenarioer',
     'GET /v1/demo/testpersoner',
+    'POST /v1/demo/session/nullstill',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
