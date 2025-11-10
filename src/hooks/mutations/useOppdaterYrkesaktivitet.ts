@@ -45,6 +45,10 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
             })
+            // Invalider historikk siden kategorisering endring kan legge til ny historikkinnslag
+            queryClient.invalidateQueries({
+                queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
+            })
         },
     })
 }

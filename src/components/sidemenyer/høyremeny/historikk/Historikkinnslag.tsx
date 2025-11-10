@@ -37,6 +37,9 @@ const historikkinnslagVisningstekst: Record<string, string> = {
     TATT_TIL_BESLUTNING: 'Tatt til beslutning',
     SENDT_I_RETUR: 'Sendt i retur',
     GODKJENT: 'Godkjent',
+    OPPDATERT_INDIVIDUELL_BEGRUNNELSE: 'Oppdatert individuell begrunnelse',
+    OPPDATERT_SKJÆRINGSTIDSPUNKT: 'Oppdatert skjæringstidspunkt',
+    OPPDATERT_YRKESAKTIVITET_KATEGORISERING: 'Oppdatert yrkesaktivitet kategorisering',
 }
 
 export function HistorikkinnslagSkeleton(): ReactElement {

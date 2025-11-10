@@ -13,6 +13,9 @@ export const saksbehandlingsperiodeEndringTypeSchema = z.enum([
     'TATT_TIL_BESLUTNING',
     'SENDT_I_RETUR',
     'GODKJENT',
+    'OPPDATERT_INDIVIDUELL_BEGRUNNELSE',
+    'OPPDATERT_SKJÆRINGSTIDSPUNKT',
+    'OPPDATERT_YRKESAKTIVITET_KATEGORISERING',
 ])
 
 export const saksbehandlingsperiodeEndringSchema = z.object({
