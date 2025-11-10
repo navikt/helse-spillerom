@@ -43,6 +43,7 @@ export const allowedDemoAPIs = [
     'GET /v1/demo/scenarioer',
     'GET /v1/demo/testpersoner',
     'POST /v1/demo/session/nullstill',
+    'GET /v1/demo/kafkaoutbox',
 ]
 
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g

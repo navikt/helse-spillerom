@@ -113,18 +113,7 @@ export function Yrkesaktivitet(): ReactElement {
         oppdaterMutation.mutate({ yrkesaktivitetId, kategorisering }, { onSuccess: () => setRedigererId(null) })
     }
 
-    const handleLeggTilYrkesaktivitet = async () => {
-        // Sjekk om sykepengegrunnlag eksisterer
-        if (sykepengegrunnlag) {
-            const bekreftet = await visBekreftelsesmodal({
-                tittel: 'Legg til yrkesaktivitet',
-                melding:
-                    'Dette vil føre til at sykepengegrunnlaget slettes og må registreres på nytt. Er du sikker på at du vil fortsette?',
-            })
-
-            if (!bekreftet) return
-        }
-
+    const handleLeggTilYrkesaktivitet = () => {
         setVisOpprettForm(true)
     }
 

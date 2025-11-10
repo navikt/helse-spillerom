@@ -2,12 +2,19 @@
 
 import React, { PropsWithChildren, ReactElement, useState } from 'react'
 import { Button, Modal, Table, Tooltip } from '@navikt/ds-react'
-import { ParagraphIcon, PersonPencilIcon, WalletIcon, PersonGroupIcon } from '@navikt/aksel-icons'
+import {
+    ChatIcon,
+    InboxUpIcon,
+    ParagraphIcon,
+    PersonGroupIcon,
+    PersonPencilIcon,
+    WalletIcon,
+} from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { useParams } from 'next/navigation'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
-import { erProd, erDevLokalEllerDemo } from '@/env'
+import { erDevLokalEllerDemo, erProd } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
 import { TestpersonTabell } from '@components/testdata/TestpersonTabell'
 import { RetroTemaToggle } from '@components/RetroTemaToggle'
@@ -15,8 +22,9 @@ import { RolleModal } from '@components/header/brukermeny/RolleModal'
 
 import { BergingssporingInnsikt } from './saksbilde/vilkårsvurdering/BergingssporingInnsikt'
 import { OppdragDebug } from './saksbilde/utbetalingsberegning/OppdragDebug'
+import { KafkaOutboxTabell } from './saksbilde/kafka/KafkaOutboxTabell'
 
-type ModalType = 'vilkårsvurdering' | 'testdata' | 'roller' | 'oppdrag' | null
+type ModalType = 'vilkårsvurdering' | 'testdata' | 'roller' | 'oppdrag' | 'kafkaoutbox' | null
 
 export function DebuggingProvider({ children }: PropsWithChildren): ReactElement {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
@@ -62,6 +70,18 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
 
                 {/* Retro tema knapp */}
                 <RetroTemaToggle />
+
+                {/* Kafka outbox knapp */}
+                {showTestdataButton && (
+                    <Tooltip content="Kafka outbox">
+                        <Button
+                            type="button"
+                            onClick={() => setActiveModal('kafkaoutbox')}
+                            icon={<InboxUpIcon title="Åpne Kafka outbox" aria-hidden />}
+                            variant="tertiary-neutral"
+                        />
+                    </Tooltip>
+                )}
 
                 {/* Debugging knapper for saksbehandlingsperiode */}
                 {showDebuggingButtons && (
@@ -133,6 +153,19 @@ export function DebuggingProvider({ children }: PropsWithChildren): ReactElement
             )}
 
             {activeModal === 'roller' && <RolleModal open={true} onClose={closeModal} />}
+
+            {activeModal === 'kafkaoutbox' && (
+                <Modal
+                    open={true}
+                    onClose={closeModal}
+                    header={{ heading: 'Kafka Outbox', closeButton: true, icon: <ChatIcon /> }}
+                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                >
+                    <ModalBody>
+                        <KafkaOutboxTabell />
+                    </ModalBody>
+                </Modal>
+            )}
         </div>
     )
 }
