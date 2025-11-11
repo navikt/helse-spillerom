@@ -30,6 +30,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         data: yrkesaktiviteter,
         isLoading: yrkesaktivitetLoading,
         isError: yrkesaktivitetError,
+        isSuccess: yrkesaktivitetSuccess,
         refetch: yrkesaktivitetRefetch,
     } = useYrkesaktivitetForSykepengegrunnlag()
     const {
@@ -58,10 +59,10 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     // Åpne automatisk i redigeringsmodus hvis inntektData ikke er satt
     useEffect(() => {
-        if (harIkkeInntektData && kanSaksbehandles) {
+        if (yrkesaktivitetSuccess && harIkkeInntektData && kanSaksbehandles) {
             setErIRedigeringsmodus(true)
         }
-    }, [aktivYrkesaktivitet?.id, harIkkeInntektData, kanSaksbehandles])
+    }, [aktivYrkesaktivitet?.id, harIkkeInntektData, kanSaksbehandles, yrkesaktivitetSuccess])
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (

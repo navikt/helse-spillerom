@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useMemo } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
@@ -28,11 +28,21 @@ export function SykepengegrunnlagForm({
     erFørstegangsRedigering = false,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
+    const defaultValues = useMemo(
+        () => getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
+        [kategori, inntektRequest],
+    )
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
-        defaultValues: getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
+        defaultValues,
         shouldFocusError: false,
     })
+
+    useEffect(() => {
+        if (erFørstegangsRedigering) {
+            form.reset(defaultValues)
+        }
+    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form])
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
         await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {
