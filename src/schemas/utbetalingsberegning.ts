@@ -203,9 +203,29 @@ export const oppdragSchema = z.object({
     simuleringsResultat: z.any().nullable(),
 })
 
+// SpilleromOppdragDto schemas
+export const utbetalingslinjeDtoSchema = z.object({
+    fom: z.string(), // LocalDate som string
+    tom: z.string(), // LocalDate som string
+    beløp: z.number(), // Int
+    grad: z.number(), // Int
+    klassekode: z.string(),
+})
+
+export const oppdragDtoSchema = z.object({
+    mottaker: z.string(),
+    fagområde: z.string(), // String i stedet for discriminated union
+    linjer: z.array(utbetalingslinjeDtoSchema),
+})
+
+export const spilleromOppdragDtoSchema = z.object({
+    spilleromUtbetalingId: z.string(),
+    oppdragDto: z.array(oppdragDtoSchema),
+})
+
 export const utbetalingsberegningDataSchema = z.object({
     yrkesaktiviteter: z.array(yrkesaktivitetUtbetalingsberegningSchema),
-    oppdrag: z.array(oppdragSchema).optional(),
+    spilleromOppdrag: spilleromOppdragDtoSchema,
 })
 
 export const utbetalingsberegningInputSchema = z.object({
@@ -244,6 +264,9 @@ export type DekningsgradMedSporing = z.infer<typeof dekningsgradMedSporingSchema
 export type YrkesaktivitetUtbetalingsberegning = z.infer<typeof yrkesaktivitetUtbetalingsberegningSchema>
 export type Oppdrag = z.infer<typeof oppdragSchema>
 export type OppdragLinje = z.infer<typeof oppdragLinjeSchema>
+export type UtbetalingslinjeDto = z.infer<typeof utbetalingslinjeDtoSchema>
+export type OppdragDto = z.infer<typeof oppdragDtoSchema>
+export type SpilleromOppdragDto = z.infer<typeof spilleromOppdragDtoSchema>
 export type UtbetalingsberegningData = z.infer<typeof utbetalingsberegningDataSchema>
 export type UtbetalingsberegningInput = z.infer<typeof utbetalingsberegningInputSchema>
 export type BeregningResponse = z.infer<typeof beregningResponseSchema>
