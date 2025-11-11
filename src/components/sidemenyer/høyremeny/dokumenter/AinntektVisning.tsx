@@ -120,7 +120,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                     const isMonthExpanded = expandedMonths.has(maaned.maaned)
 
                     return (
-                        <Fragment key={maaned.maaned}>
+                        <Fragment key={maaned.maaned + maaned.underenhet}>
                             <Table.Row className="bg-gray-25">
                                 <Table.DataCell>
                                     <BodyShort size="small">{formatMonth(maaned.maaned)}</BodyShort>
