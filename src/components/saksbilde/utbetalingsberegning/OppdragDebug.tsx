@@ -7,7 +7,7 @@ import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 export function OppdragDebug(): ReactElement {
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
 
-    const oppdrag = utbetalingsberegning?.beregningData?.spilleromOppdrag?.oppdragDto
+    const oppdrag = utbetalingsberegning?.beregningData?.spilleromOppdrag?.oppdrag
 
     if (!oppdrag || oppdrag.length === 0) {
         return (

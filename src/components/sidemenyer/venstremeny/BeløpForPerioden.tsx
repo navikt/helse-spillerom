@@ -6,7 +6,6 @@ import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
 import { formaterBeløpØre } from '@/schemas/sykepengegrunnlag'
-import { erHelg } from '@utils/erHelg'
 
 interface ArbeidsgiverRadProps {
     orgnummer: string
@@ -27,49 +26,20 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
     )
 }
 
-/**
- * Teller antall dager som ikke er helg (lørdag eller søndag) mellom to datoer (inklusive begge endepunktene)
- */
-function antallIkkeHelgedager(fom: string, tom: string): number {
-    const startDato = new Date(fom)
-    const sluttDato = new Date(tom)
-    let antallDager = 0
-
-    const currentDate = new Date(startDato)
-    while (currentDate <= sluttDato) {
-        if (!erHelg(currentDate)) {
-            antallDager++
-        }
-        currentDate.setDate(currentDate.getDate() + 1)
-    }
-
-    return antallDager
-}
-
 export function BeløpForPerioden(): ReactElement {
     const { data: utbetalingsberegning } = useUtbetalingsberegning()
     const { data: personinfo } = usePersoninfo()
 
     // Hent oppdrag fra spilleromOppdrag
-    const oppdrag = utbetalingsberegning?.beregningData?.spilleromOppdrag?.oppdragDto || []
+    const oppdrag = utbetalingsberegning?.beregningData?.spilleromOppdrag?.oppdrag || []
 
-    // Beregn nettoBeløp fra linjer for hvert oppdrag
-    // beløp er per dag, så vi må telle antall ikke-helgedager og multiplisere med beløpet
-    const oppdragMedNettoBeløp = oppdrag.map((oppdrag) => {
-        const nettoBeløp = oppdrag.linjer.reduce((sum, linje) => {
-            const antallDager = antallIkkeHelgedager(linje.fom, linje.tom)
-            return sum + linje.beløp * antallDager
-        }, 0)
-        return { ...oppdrag, nettoBeløp }
-    })
+    // Filtrer oppdrag basert på fagområde
+    const personUtbetalinger = oppdrag.filter((oppdrag) => oppdrag.fagområde === 'SP')
+    const arbeidsgiverUtbetalinger = oppdrag.filter((oppdrag) => oppdrag.fagområde === 'SPREF')
 
-    // Filtrer oppdrag basert på fagområde (nå en string i stedet for discriminated union)
-    const personUtbetalinger = oppdragMedNettoBeløp.filter((oppdrag) => oppdrag.fagområde === 'SP')
-    const arbeidsgiverUtbetalinger = oppdragMedNettoBeløp.filter((oppdrag) => oppdrag.fagområde === 'SPREF')
-
-    // Beregn total beløp
-    const totalPersonUtbetaling = personUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.nettoBeløp, 0)
-    const totalArbeidsgiverUtbetaling = arbeidsgiverUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.nettoBeløp, 0)
+    // Beregn total beløp ved å bruke totalbeløp direkte fra oppdragene
+    const totalPersonUtbetaling = personUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.totalbeløp, 0)
+    const totalArbeidsgiverUtbetaling = arbeidsgiverUtbetalinger.reduce((sum, oppdrag) => sum + oppdrag.totalbeløp, 0)
     const totalUtbetaling = totalPersonUtbetaling + totalArbeidsgiverUtbetaling
 
     if (totalUtbetaling === 0) {
@@ -94,7 +64,7 @@ export function BeløpForPerioden(): ReactElement {
                     <ArbeidsgiverRad
                         key={oppdrag.mottaker}
                         orgnummer={oppdrag.mottaker}
-                        refusjon={formaterBeløpØre(oppdrag.nettoBeløp * 100)}
+                        refusjon={formaterBeløpØre(oppdrag.totalbeløp * 100)}
                     />
                 ))}
 

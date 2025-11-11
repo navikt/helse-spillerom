@@ -216,11 +216,12 @@ export const oppdragDtoSchema = z.object({
     mottaker: z.string(),
     fagområde: z.string(), // String i stedet for discriminated union
     linjer: z.array(utbetalingslinjeDtoSchema),
+    totalbeløp: z.number(), // Int
 })
 
 export const spilleromOppdragDtoSchema = z.object({
     spilleromUtbetalingId: z.string(),
-    oppdragDto: z.array(oppdragDtoSchema),
+    oppdrag: z.array(oppdragDtoSchema),
 })
 
 export const utbetalingsberegningDataSchema = z.object({
@@ -265,7 +266,7 @@ export type YrkesaktivitetUtbetalingsberegning = z.infer<typeof yrkesaktivitetUt
 export type Oppdrag = z.infer<typeof oppdragSchema>
 export type OppdragLinje = z.infer<typeof oppdragLinjeSchema>
 export type UtbetalingslinjeDto = z.infer<typeof utbetalingslinjeDtoSchema>
-export type OppdragDto = z.infer<typeof oppdragDtoSchema>
+export type OppdragDto = z.infer<typeof oppdragSchema>
 export type SpilleromOppdragDto = z.infer<typeof spilleromOppdragDtoSchema>
 export type UtbetalingsberegningData = z.infer<typeof utbetalingsberegningDataSchema>
 export type UtbetalingsberegningInput = z.infer<typeof utbetalingsberegningInputSchema>
