@@ -65,7 +65,7 @@ export function SykepengegrunnlagForm({
                             {...field}
                             id="data-begrunnelse"
                             value={field.value ?? ''}
-                            className="w-[640px]"
+                            className="w-[620px]"
                             size="small"
                             label="Begrunnelse"
                             description="Teksten vises ikke til den sykmeldte, med mindre hen ber om innsyn."
