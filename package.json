@@ -31,7 +31,7 @@
         "@navikt/ds-tokens": "^7.33.2",
         "@navikt/next-api-proxy": "^5.0.0",
         "@navikt/next-logger": "^4.4.1",
-        "@navikt/oasis": "^3.8.0",
+        "@navikt/oasis": "^4.1.0",
         "@tanstack/react-query": "^5.90.7",
         "clsx": "^2.1.1",
         "dayjs": "^1.11.19",
