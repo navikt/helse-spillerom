@@ -184,9 +184,13 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                                 value={inntektsmelding.inntektsmeldingId}
                                 onChange={(value) => {
                                     field.onChange(value)
-                                    setValue('data.refusjon', refusjonFra(inntektsmelding))
                                     setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
-                                    setVisRefusjonsFelter(true)
+
+                                    const refusjon = refusjonFra(inntektsmelding)
+                                    const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
+
+                                    setValue('data.refusjon', harRefusjon ? refusjon : undefined)
+                                    setVisRefusjonsFelter(harRefusjon)
                                 }}
                             >
                                 <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
