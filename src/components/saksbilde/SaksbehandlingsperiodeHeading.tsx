@@ -14,19 +14,32 @@ interface SaksbehandlingsperiodeHeadingProps {
 
 export function SaksbehandlingsperiodeHeading({ className }: SaksbehandlingsperiodeHeadingProps) {
     const router = useRouter()
-    const { saksbehandlingsperiodeId } = useParams() as { saksbehandlingsperiodeId: string }
+    const { personId, saksbehandlingsperiodeId } = useParams() as { personId: string; saksbehandlingsperiodeId: string }
     const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
-    const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
+    const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()
 
     const aktivPeriode = useMemo(() => {
-        if (!saksbehandlingsperioder || !saksbehandlingsperiodeId) return null
+        if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
+        if (!saksbehandlingsperiodeId) return null
 
         const periode = saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
         if (periode) return periode
 
         return saksbehandlingsperioder.reduce((latest, p) => (dayjs(p.tom).isAfter(dayjs(latest.tom)) ? p : latest))
     }, [saksbehandlingsperioder, saksbehandlingsperiodeId])
+
+    // Naviger til person-siden hvis det ikke finnes noen saksbehandlingsperioder
+    useEffect(() => {
+        if (
+            saksbehandlingsperioderLoaded &&
+            personId &&
+            saksbehandlingsperioder &&
+            saksbehandlingsperioder.length === 0
+        ) {
+            router.replace(`/person/${personId}`)
+        }
+    }, [personId, saksbehandlingsperioder, saksbehandlingsperioderLoaded, router])
 
     useEffect(() => {
         if (!aktivPeriode || !saksbehandlingsperiodeId) return
