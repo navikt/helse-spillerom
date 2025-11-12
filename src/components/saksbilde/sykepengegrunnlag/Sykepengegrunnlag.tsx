@@ -107,7 +107,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         <SaksbildePanel value={value} className="mb-8 p-0">
             <HStack wrap={false}>
                 {/*tabell*/}
-                <VStack gap="4" className="min-w-[500px] pt-8">
+                <VStack gap="4" className="min-w-[500px] shrink-0 pt-8 pb-6">
                     <Table className="[&_td]:border-0 [&_th]:border-0">
                         <TableHeader>
                             <TableRow>
