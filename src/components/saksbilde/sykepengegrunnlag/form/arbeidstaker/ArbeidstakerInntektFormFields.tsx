@@ -206,13 +206,22 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
 export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
     return (
         <HGrid columns={2} className="w-[380px]">
+            <BodyShort size="small" textColor="subtle">
+                Mottatt:
+            </BodyShort>
             <BodyShort size="small">{getFormattedDatetimeString(inntektsmelding.mottattDato)}</BodyShort>
-            <div />
 
             <BodyShort size="small" textColor="subtle">
                 Beregnet inntekt:
             </BodyShort>
             <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
+
+            <BodyShort size="small" textColor="subtle">
+                Første fraværsdag:
+            </BodyShort>
+            <BodyShort size="small">
+                {inntektsmelding.foersteFravaersdag ? getFormattedDateString(inntektsmelding.foersteFravaersdag) : '-'}
+            </BodyShort>
 
             {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
                 <Fragment key={i + arbeidsgiverperiode.fom}>
