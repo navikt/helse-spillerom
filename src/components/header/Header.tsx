@@ -6,6 +6,7 @@ import { InternalHeaderTitle } from '@navikt/ds-react/InternalHeader'
 import { BrukerMeny } from '@components/header/brukermeny/BrukerMeny'
 import { SystemMeny } from '@components/header/systemmeny/SystemMeny'
 import { Personsøk } from '@components/personsøk/Personsøk'
+import { UtviklingMeny } from '@components/header/debuggingmeny/UtviklingMeny'
 
 export function Header(): ReactElement {
     return (
@@ -15,6 +16,7 @@ export function Header(): ReactElement {
             </InternalHeaderTitle>
             <Personsøk />
             <Spacer />
+            <UtviklingMeny />
             <SystemMeny />
             <BrukerMeny />
         </InternalHeader>
