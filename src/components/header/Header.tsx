@@ -6,7 +6,7 @@ import { InternalHeaderTitle } from '@navikt/ds-react/InternalHeader'
 import { BrukerMeny } from '@components/header/brukermeny/BrukerMeny'
 import { SystemMeny } from '@components/header/systemmeny/SystemMeny'
 import { Personsøk } from '@components/personsøk/Personsøk'
-import { UtviklingMeny } from '@components/header/debuggingmeny/UtviklingMeny'
+import { UtviklingMeny } from '@components/header/utvikling/UtviklingMeny'
 
 export function Header(): ReactElement {
     return (

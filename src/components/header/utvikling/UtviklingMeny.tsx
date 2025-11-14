@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, useState, useEffect, useCallback } from 'react'
+import React, { ReactElement, useState, useEffect, useCallback, useRef } from 'react'
 import { BodyShort, Detail, Modal, Table, Tooltip } from '@navikt/ds-react'
 import {
     ChatIcon,
@@ -14,7 +14,7 @@ import {
 } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { InternalHeaderButton } from '@navikt/ds-react/InternalHeader'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import {
     Dropdown,
@@ -22,21 +22,23 @@ import {
     DropdownMenuList,
     DropdownMenuListItem,
     DropdownToggle,
+    DropdownMenuDivider,
 } from '@navikt/ds-react/Dropdown'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 import { erDevLokalEllerDemo, erProd } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
-import { TestpersonTabell } from '@components/testdata/TestpersonTabell'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { useTilgjengeligeBrukere } from '@hooks/queries/useTilgjengeligeBrukere'
 import { useOppdaterBrukerRoller } from '@hooks/mutations/useOppdaterBrukerRoller'
+import { useTestpersoner } from '@hooks/queries/useTestpersoner'
+import { useNullstillSession } from '@hooks/mutations/useNullstillSession'
 
 import { BergingssporingInnsikt } from '../../saksbilde/vilkårsvurdering/BergingssporingInnsikt'
 import { OppdragDebug } from '../../saksbilde/utbetalingsberegning/OppdragDebug'
 import { KafkaOutboxTabell } from '../../saksbilde/kafka/KafkaOutboxTabell'
 
-type ModalType = 'vilkårsvurdering' | 'testdata' | 'oppdrag' | 'kafkaoutbox' | null
+type ModalType = 'vilkårsvurdering' | 'oppdrag' | 'kafkaoutbox' | null
 
 function RetroTemaToggleHeader(): ReactElement {
     const [isRetroTema, setIsRetroTema] = useState(false)
@@ -91,52 +93,34 @@ function RetroTemaToggleHeader(): ReactElement {
 export function UtviklingMeny(): ReactElement | null {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
     const params = useParams()
+    const testdataMenyRef = useRef<{ åpne: () => void }>(null)
 
-    useRegisterShortcutHandler('open_testdata', () => setActiveModal('testdata'))
+    useRegisterShortcutHandler('open_testdata', () => {
+        testdataMenyRef.current?.åpne()
+    })
 
     if (!erDevLokalEllerDemo) {
         return null
     }
 
     const showUtviklingButtons = !erProd && params.saksbehandlingsperiodeId
-    const showTestdataButton = erDevLokalEllerDemo
-    const showRolleButton = erDevLokalEllerDemo
 
     const closeModal = () => setActiveModal(null)
 
     return (
         <>
-            {/* Testdata knapp */}
-            {showTestdataButton && (
-                <Tooltip content="Testpersoner">
-                    <InternalHeaderButton
-                        type="button"
-                        onClick={() => setActiveModal('testdata')}
-                        aria-label="Åpne testdataverktøy"
-                    >
-                        <PersonGroupIcon title="Åpne testdataverktøy" fontSize="1.5rem" />
-                    </InternalHeaderButton>
-                </Tooltip>
-            )}
-
-            {/* Rolle knapp */}
-            {showRolleButton && <BrukerVelgerMeny />}
-
-            {/* Retro tema knapp */}
+            <TestdataMeny />
+            <BrukerVelgerMeny />
             <RetroTemaToggleHeader />
-
-            {/* Kafka outbox knapp */}
-            {showTestdataButton && (
-                <Tooltip content="Kafka outbox">
-                    <InternalHeaderButton
-                        type="button"
-                        onClick={() => setActiveModal('kafkaoutbox')}
-                        aria-label="Åpne Kafka outbox"
-                    >
-                        <InboxUpIcon title="Åpne Kafka outbox" fontSize="1.5rem" />
-                    </InternalHeaderButton>
-                </Tooltip>
-            )}
+            <Tooltip content="Kafka outbox">
+                <InternalHeaderButton
+                    type="button"
+                    onClick={() => setActiveModal('kafkaoutbox')}
+                    aria-label="Åpne Kafka outbox"
+                >
+                    <InboxUpIcon title="Åpne Kafka outbox" fontSize="1.5rem" />
+                </InternalHeaderButton>
+            </Tooltip>
 
             {/* Utvikling knapper for saksbehandlingsperiode */}
             {showUtviklingButtons && (
@@ -182,19 +166,6 @@ export function UtviklingMeny(): ReactElement | null {
                 </Modal>
             )}
 
-            {activeModal === 'testdata' && (
-                <Modal
-                    open={true}
-                    onClose={closeModal}
-                    header={{ heading: 'Testdata', closeButton: true }}
-                    className="left-auto m-0 h-screen max-h-max max-w-[369px] rounded-none p-0"
-                >
-                    <ModalBody>
-                        <TestpersonTabell onClose={closeModal} />
-                    </ModalBody>
-                </Modal>
-            )}
-
             {activeModal === 'oppdrag' && (
                 <Modal
                     open={true}
@@ -223,6 +194,92 @@ export function UtviklingMeny(): ReactElement | null {
         </>
     )
 }
+
+const TestdataMeny = React.forwardRef<{ åpne: () => void }, Record<string, never>>((_, ref) => {
+    const [open, setOpen] = useState(false)
+    const router = useRouter()
+    const testpersoner = useTestpersoner()
+    const nullstillSession = useNullstillSession()
+
+    React.useImperativeHandle(ref, () => ({
+        åpne: () => setOpen(true),
+    }))
+
+    const handleTestpersonClick = (personId: string) => {
+        setOpen(false)
+        window.location.href = `/person/${personId}`
+    }
+
+    const handleTestscenarioerClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        setOpen(false)
+        setTimeout(() => {
+            router.push('/testscenarioer')
+        }, 0)
+    }
+
+    const handleNullstillSession = () => {
+        nullstillSession.mutate()
+    }
+
+    const testpersonerMedPersonId = testpersoner.data?.filter((person) => person.spilleromId !== null) || []
+
+    return (
+        <Dropdown open={open} onOpenChange={setOpen}>
+            <Tooltip content="Testpersoner">
+                <InternalHeaderButton as={DropdownToggle} aria-label="Åpne testdataverktøy">
+                    <PersonGroupIcon title="Åpne testdataverktøy" fontSize="1.5rem" />
+                </InternalHeaderButton>
+            </Tooltip>
+            <DropdownMenu className="max-h-[600px] min-w-[320px] overflow-y-auto">
+                <DropdownMenuList>
+                    <DropdownMenuListItem as="div" onClick={handleTestscenarioerClick}>
+                        Se testscenarier
+                    </DropdownMenuListItem>
+                    <DropdownMenuListItem onClick={handleNullstillSession}>Nullstill sesjon</DropdownMenuListItem>
+                    {testpersoner.isLoading && (
+                        <DropdownMenuListItem as="div" className="p-3">
+                            <BodyShort size="small">Laster...</BodyShort>
+                        </DropdownMenuListItem>
+                    )}
+                    {testpersoner.isError && (
+                        <DropdownMenuListItem as="div" className="p-3">
+                            <BodyShort size="small" className="text-red-600">
+                                Feil: {testpersoner.error?.message || 'Ukjent feil'}
+                            </BodyShort>
+                        </DropdownMenuListItem>
+                    )}
+                    {testpersoner.isSuccess && testpersonerMedPersonId.length === 0 && (
+                        <DropdownMenuListItem as="div" className="p-3">
+                            <BodyShort size="small">Ingen testpersoner tilgjengelig</BodyShort>
+                        </DropdownMenuListItem>
+                    )}
+                    {testpersoner.isSuccess && testpersonerMedPersonId.length > 0 && (
+                        <>
+                            <DropdownMenuDivider />
+                            {testpersonerMedPersonId.map((person) => (
+                                <DropdownMenuListItem
+                                    key={person.fnr}
+                                    as="button"
+                                    type="button"
+                                    onClick={() => handleTestpersonClick(person.spilleromId!)}
+                                    className="flex flex-col items-start gap-1"
+                                >
+                                    <BodyShort size="small" as="span" className="font-semibold">
+                                        {person.navn}
+                                    </BodyShort>
+                                    <Detail size="small">{person.fnr}</Detail>
+                                </DropdownMenuListItem>
+                            ))}
+                        </>
+                    )}
+                </DropdownMenuList>
+            </DropdownMenu>
+        </Dropdown>
+    )
+})
+
+TestdataMeny.displayName = 'TestdataMeny'
 
 function BrukerVelgerMeny(): ReactElement {
     const [open, setOpen] = useState(false)
