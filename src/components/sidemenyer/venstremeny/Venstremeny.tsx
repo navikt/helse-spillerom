@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
@@ -9,10 +9,14 @@ import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useErBeslutter } from '@hooks/queries/useErBeslutter'
+import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
+import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
+import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
 import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
+import { useRevurder } from '@hooks/mutations/useRevurder'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
 import { Skjæringstidspunkt } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/Skjæringstidspunkt'
@@ -34,6 +38,9 @@ export function Venstremeny(): ReactElement {
     const { aktivSaksbehandlingsperiode, isLoading } = useAktivSaksbehandlingsperiodeMedLoading()
     const kanSaksbehandles = useKanSaksbehandles()
     const erBeslutter = useErBeslutter()
+    const { data: brukerRoller } = useBrukerRoller()
+    const { data: brukerinfo } = useBrukerinfo()
+    const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
 
@@ -49,6 +56,23 @@ export function Venstremeny(): ReactElement {
     const taTilBeslutning = useTaTilBeslutning()
     const godkjenn = useGodkjenn()
     const sendTilbake = useSendTilbake()
+    const revurder = useRevurder()
+
+    const kanRevurderes = useMemo(() => {
+        if (!aktivSaksbehandlingsperiode || !saksbehandlingsperioder) return false
+
+        // Sjekk om perioden er godkjent
+        if (aktivSaksbehandlingsperiode.status !== 'GODKJENT') return false
+
+        // Sjekk om noen andre perioder har revurdererSaksbehandlingsperiodeId som peker på denne periodens id
+        const harEksisterendeRevurdering = saksbehandlingsperioder.some(
+            (periode) =>
+                periode.id !== aktivSaksbehandlingsperiode.id &&
+                periode.revurdererSaksbehandlingsperiodeId === aktivSaksbehandlingsperiode.id,
+        )
+
+        return !harEksisterendeRevurdering
+    }, [aktivSaksbehandlingsperiode, saksbehandlingsperioder])
 
     if (isLoading) return <VenstremenySkeleton />
 
@@ -108,6 +132,13 @@ export function Venstremeny(): ReactElement {
                 },
             },
         )
+    }
+
+    const håndterRevurder = () => {
+        if (!aktivSaksbehandlingsperiode) return
+        revurder.mutate({
+            saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+        })
     }
 
     return (
@@ -174,7 +205,10 @@ export function Venstremeny(): ReactElement {
 
                         {erBeslutter && (
                             <>
-                                {aktivSaksbehandlingsperiode?.status === 'TIL_BESLUTNING' && (
+                                {(aktivSaksbehandlingsperiode?.status === 'TIL_BESLUTNING' ||
+                                    (aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' &&
+                                        aktivSaksbehandlingsperiode.beslutterNavIdent &&
+                                        aktivSaksbehandlingsperiode.beslutterNavIdent !== brukerinfo?.navIdent)) && (
                                     <Button
                                         variant="primary"
                                         size="small"
@@ -187,32 +221,47 @@ export function Venstremeny(): ReactElement {
                                     </Button>
                                 )}
 
-                                {aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' && (
-                                    <>
-                                        <Button
-                                            variant="primary"
-                                            size="small"
-                                            className="w-fit"
-                                            onClick={håndterGodkjenn}
-                                            loading={godkjenn.isPending}
-                                            disabled={godkjenn.isPending}
-                                        >
-                                            Godkjenn og fatt vedtak
-                                        </Button>
+                                {aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' &&
+                                    aktivSaksbehandlingsperiode.beslutterNavIdent &&
+                                    aktivSaksbehandlingsperiode.beslutterNavIdent === brukerinfo?.navIdent && (
+                                        <>
+                                            <Button
+                                                variant="primary"
+                                                size="small"
+                                                className="w-fit"
+                                                onClick={håndterGodkjenn}
+                                                loading={godkjenn.isPending}
+                                                disabled={godkjenn.isPending}
+                                            >
+                                                Godkjenn og fatt vedtak
+                                            </Button>
 
-                                        <Button
-                                            variant="secondary"
-                                            size="small"
-                                            className="w-fit"
-                                            onClick={håndterSendTilbake}
-                                            loading={sendTilbake.isPending}
-                                            disabled={sendTilbake.isPending}
-                                        >
-                                            Returner
-                                        </Button>
-                                    </>
-                                )}
+                                            <Button
+                                                variant="secondary"
+                                                size="small"
+                                                className="w-fit"
+                                                onClick={håndterSendTilbake}
+                                                loading={sendTilbake.isPending}
+                                                disabled={sendTilbake.isPending}
+                                            >
+                                                Returner
+                                            </Button>
+                                        </>
+                                    )}
                             </>
+                        )}
+
+                        {brukerRoller.saksbehandler && kanRevurderes && (
+                            <Button
+                                variant="primary"
+                                size="small"
+                                className="w-fit"
+                                onClick={håndterRevurder}
+                                loading={revurder.isPending}
+                                disabled={revurder.isPending}
+                            >
+                                Revurder periode
+                            </Button>
                         )}
                     </>
                 )}

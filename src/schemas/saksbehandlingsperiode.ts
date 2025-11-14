@@ -16,6 +16,7 @@ export const saksbehandlingsperiodeEndringTypeSchema = z.enum([
     'OPPDATERT_INDIVIDUELL_BEGRUNNELSE',
     'OPPDATERT_SKJÆRINGSTIDSPUNKT',
     'OPPDATERT_YRKESAKTIVITET_KATEGORISERING',
+    'REVURDERING_STARTET',
 ])
 
 export const saksbehandlingsperiodeEndringSchema = z.object({
@@ -37,9 +38,10 @@ export const saksbehandlingsperiodeSchema = z.object({
     fom: z.string(), // ISO 8601 date string
     tom: z.string(), // ISO 8601 date string
     status: saksbehandlingsperiodeStatusSchema,
-    beslutter: z.string().optional(),
+    beslutterNavIdent: z.string().optional(),
     skjæringstidspunkt: z.string().optional(), // ISO 8601 date string
     individuellBegrunnelse: z.string().optional(),
+    revurdererSaksbehandlingsperiodeId: z.uuid().nullable().optional(),
 })
 
 export const oppdaterBegrunnelseSchema = z.object({
