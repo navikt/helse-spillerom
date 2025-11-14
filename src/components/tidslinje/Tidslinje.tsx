@@ -116,10 +116,10 @@ function SaksbehandlingsperiodePopover({ periode }: { periode: Saksbehandlingspe
 
             <BodyShort size="small">Status:</BodyShort>
             <BodyShort size="small">{statusTilTekst[periode.status]}</BodyShort>
-            {periode.beslutter && (
+            {periode.beslutterNavIdent && (
                 <>
                     <BodyShort size="small">Beslutter:</BodyShort>
-                    <BodyShort size="small">{periode.beslutter}</BodyShort>
+                    <BodyShort size="small">{periode.beslutterNavIdent}</BodyShort>
                 </>
             )}
         </PopoverContentWrapper>

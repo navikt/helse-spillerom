@@ -131,7 +131,7 @@ function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[],
     return (saksbehandlingsperioder as Saksbehandlingsperiode[]).reduce(
         (acc, periode) => {
             if (
-                (periode.status === 'TIL_BESLUTNING' && periode.beslutter === aktivBruker?.navIdent) ||
+                (periode.status === 'TIL_BESLUTNING' && periode.beslutterNavIdent === aktivBruker?.navIdent) ||
                 periode.opprettetAvNavIdent === aktivBruker?.navIdent
             ) {
                 acc.mine.push(periode)
@@ -218,7 +218,7 @@ function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): Re
                             {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}
                         </TableDataCell>
                         <TableDataCell>{getFormattedDatetimeString(periode.opprettet)}</TableDataCell>
-                        <TableDataCell>{periode.beslutter || '-'}</TableDataCell>
+                        <TableDataCell>{periode.beslutterNavIdent || '-'}</TableDataCell>
                     </TableRow>
                 ))}
             </TableBody>
