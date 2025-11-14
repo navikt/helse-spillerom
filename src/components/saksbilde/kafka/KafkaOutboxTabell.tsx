@@ -6,6 +6,40 @@ import { TableBody, TableDataCell } from '@navikt/ds-react/Table'
 
 import { useKafkaOutbox } from '@hooks/queries/useKafkaOutbox'
 
+type PayloadRecord = Record<string, unknown>
+
+function asPayloadRecord(payload: unknown): PayloadRecord | null {
+    if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+        return payload as PayloadRecord
+    }
+
+    return null
+}
+
+function hentMetadataFraPayload(payload: unknown): { fnr?: string; fom?: string; tom?: string } {
+    const record = asPayloadRecord(payload)
+
+    if (!record) {
+        return {}
+    }
+
+    const plukkString = (key: string): string | undefined => {
+        const value = record[key]
+
+        if (typeof value === 'string' || typeof value === 'number') {
+            return String(value)
+        }
+
+        return undefined
+    }
+
+    return {
+        fnr: plukkString('fnr'),
+        fom: plukkString('fom'),
+        tom: plukkString('tom'),
+    }
+}
+
 export function KafkaOutboxTabell(): ReactElement {
     const { data: entries, isLoading, isError, error } = useKafkaOutbox()
 
@@ -46,29 +80,41 @@ export function KafkaOutboxTabell(): ReactElement {
                         <Table.HeaderCell scope="col">ID</Table.HeaderCell>
                         <Table.HeaderCell scope="col">Topic</Table.HeaderCell>
                         <Table.HeaderCell scope="col">Opprettet</Table.HeaderCell>
-                        <Table.HeaderCell scope="col">Key</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">FNR</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">FOM</Table.HeaderCell>
+                        <Table.HeaderCell scope="col">TOM</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <TableBody>
-                    {sortedEntries.map((entry) => (
-                        <Table.ExpandableRow
-                            key={entry.id}
-                            content={
-                                <pre className="bg-gray-50 overflow-auto rounded p-2 text-xs">
-                                    {JSON.stringify(entry.payload, null, 2)}
-                                </pre>
-                            }
-                        >
-                            <TableDataCell>{entry.id}</TableDataCell>
-                            <TableDataCell>{entry.topic}</TableDataCell>
-                            <TableDataCell className="text-xs">
-                                {new Date(entry.opprettet).toLocaleString('no-NO')}
-                            </TableDataCell>
-                            <TableDataCell className="text-xs">{entry.kafkaKey}</TableDataCell>
+                    {sortedEntries.map((entry) => {
+                        const { fnr, fom, tom } = hentMetadataFraPayload(entry.payload)
 
-                            <TableDataCell></TableDataCell>
-                        </Table.ExpandableRow>
-                    ))}
+                        return (
+                            <Table.ExpandableRow
+                                key={entry.id}
+                                content={
+                                    <div className="space-y-2">
+                                        <BodyShort size="small" className="break-words">
+                                            <span className="font-semibold">Kafka key: </span>
+                                            {entry.kafkaKey}
+                                        </BodyShort>
+                                        <pre className="bg-gray-50 overflow-auto rounded p-2 text-xs">
+                                            {JSON.stringify(entry.payload, null, 2)}
+                                        </pre>
+                                    </div>
+                                }
+                            >
+                                <TableDataCell>{entry.id}</TableDataCell>
+                                <TableDataCell>{entry.topic}</TableDataCell>
+                                <TableDataCell className="text-xs">
+                                    {new Date(entry.opprettet).toLocaleString('no-NO')}
+                                </TableDataCell>
+                                <TableDataCell className="text-xs">{fnr ?? '-'}</TableDataCell>
+                                <TableDataCell className="text-xs">{fom ?? '-'}</TableDataCell>
+                                <TableDataCell className="text-xs">{tom ?? '-'}</TableDataCell>
+                            </Table.ExpandableRow>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </div>
