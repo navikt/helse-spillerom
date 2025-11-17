@@ -1,6 +1,6 @@
 'use client'
 
-import { BodyShort, Button, Heading, HStack, Table, Tabs, Tag, VStack } from '@navikt/ds-react'
+import { BodyShort, Button, Heading, HStack, Table, Tabs, VStack } from '@navikt/ds-react'
 import { Dispatch, ReactElement, SetStateAction, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
@@ -9,7 +9,7 @@ import { motion } from 'motion/react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { useAlleSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
-import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@/schemas/saksbehandlingsperiode'
+import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
 import { getFormattedDateString, getFormattedDatetimeString } from '@/utils/date-format'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
@@ -18,6 +18,7 @@ import { Bruker } from '@schemas/bruker'
 import { Filter, filterList, FilterStatus, filtrer } from '@components/oppgaveliste/filter'
 import { OppgavelisteSkeleton } from '@components/oppgaveliste/OppgavelisteSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
+import { StatusTag } from '@components/statustag/StatusTag'
 
 type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
@@ -105,28 +106,6 @@ export function Oppgaveliste(): ReactElement {
     )
 }
 
-export const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
-    UNDER_BEHANDLING: 'Under behandling',
-    TIL_BESLUTNING: 'Til beslutning',
-    UNDER_BESLUTNING: 'Under beslutning',
-    GODKJENT: 'Godkjent',
-}
-
-const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'warning' | 'success' => {
-    switch (status) {
-        case 'UNDER_BEHANDLING':
-            return 'info'
-        case 'TIL_BESLUTNING':
-            return 'warning'
-        case 'UNDER_BESLUTNING':
-            return 'warning'
-        case 'GODKJENT':
-            return 'success'
-        default:
-            return 'info'
-    }
-}
-
 function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[], aktivBruker?: Bruker) {
     return (saksbehandlingsperioder as Saksbehandlingsperiode[]).reduce(
         (acc, periode) => {
@@ -212,7 +191,7 @@ function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): Re
                     >
                         <TableDataCell>{periode.opprettetAvNavn}</TableDataCell>
                         <TableDataCell>
-                            <Tag variant={statusTilTagVariant(periode.status)}>{statusTilTekst[periode.status]}</Tag>
+                            <StatusTag size="small" periode={periode}></StatusTag>
                         </TableDataCell>
                         <TableDataCell>
                             {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}

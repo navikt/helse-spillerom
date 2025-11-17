@@ -15,8 +15,8 @@ import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
-import { statusTilTekst } from '@components/oppgaveliste/Oppgaveliste'
 import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { statusTilTekst } from '@components/statustag/StatusTag'
 
 export function Tidslinje(): ReactElement {
     // const [activeSoknadId, setActiveSoknadId] = useState<string>('')
@@ -168,6 +168,7 @@ export const statusTilIkon: Record<SaksbehandlingsperiodeStatus, ReactElement> =
     TIL_BESLUTNING: <PencilFillIcon />,
     UNDER_BESLUTNING: <PencilFillIcon />,
     GODKJENT: <CheckmarkCircleFillIcon />,
+    REVURDERT: <PencilFillIcon />,
 }
 
 function TimelineSkeleton(): ReactElement {

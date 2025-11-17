@@ -5,6 +5,7 @@ export const saksbehandlingsperiodeStatusSchema = z.enum([
     'TIL_BESLUTNING',
     'UNDER_BESLUTNING',
     'GODKJENT',
+    'REVURDERT',
 ])
 
 export const saksbehandlingsperiodeEndringTypeSchema = z.enum([

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
 import { getFormattedDateString } from '@utils/date-format'
+import { StatusTag } from '@components/statustag/StatusTag'
 
 export function SaksbehandlingsperioderTabell(): ReactElement {
     const router = useRouter()
@@ -19,6 +20,7 @@ export function SaksbehandlingsperioderTabell(): ReactElement {
         <Table>
             <Table.Header>
                 <Table.Row>
+                    <Table.HeaderCell>Status</Table.HeaderCell>
                     <Table.HeaderCell>Periode</Table.HeaderCell>
                     <Table.HeaderCell>Opprettet</Table.HeaderCell>
                     <Table.HeaderCell>Opprettet av</Table.HeaderCell>
@@ -27,6 +29,10 @@ export function SaksbehandlingsperioderTabell(): ReactElement {
             <Table.Body>
                 {perioder.map((periode) => (
                     <Table.Row key={periode.id}>
+                        <Table.DataCell>
+                            <StatusTag periode={periode} size="medium" />
+                        </Table.DataCell>
+
                         <Table.DataCell>
                             <Link
                                 href="#"

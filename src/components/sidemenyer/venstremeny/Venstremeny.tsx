@@ -21,10 +21,10 @@ import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
 import { Skjæringstidspunkt } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/Skjæringstidspunkt'
 import { VenstremenySkeleton } from '@components/sidemenyer/venstremeny/VenstremenySkeleton'
+import { StatusTag } from '@components/statustag/StatusTag'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
-import { StatusTag } from './StatusTag'
 import { SendTilbakeModal } from './SendTilbakeModal'
 import { BeløpForPerioden } from './BeløpForPerioden'
 import { SykepengegrunnlagVisning } from './SykepengegrunnlagVisning'
@@ -146,7 +146,7 @@ export function Venstremeny(): ReactElement {
             <VStack gap="4" className="pb-24">
                 <HStack gap="2" wrap role="region" aria-label="Saksinformasjon">
                     <KategoriTag />
-                    <StatusTag />
+                    <StatusTag periode={aktivSaksbehandlingsperiode} size="small" />
                 </HStack>
 
                 {aktivSaksbehandlingsperiode && (
