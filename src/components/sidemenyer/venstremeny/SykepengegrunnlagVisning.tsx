@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
 import { BodyShort, HStack } from '@navikt/ds-react'
 
-import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/øreUtils'
 
 export function SykepengegrunnlagVisning(): ReactElement | null {
-    const { data: sykepengegrunnlagResponse } = useSykepengegrunnlagV2()
+    const { data: sykepengegrunnlagResponse } = useSykepengegrunnlag()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
 

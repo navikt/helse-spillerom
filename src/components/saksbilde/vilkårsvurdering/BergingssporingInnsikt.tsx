@@ -6,13 +6,13 @@ import { Table } from '@navikt/ds-react'
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { useBeregningsregler } from '@/hooks/queries/useBeregningsregler'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
-import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 
 export function BergingssporingInnsikt(): ReactElement {
     const { data: beregning } = useUtbetalingsberegning()
     const { data: beregningsregler } = useBeregningsregler()
     const { data: yrkesaktiviteter } = useYrkesaktivitet()
-    const { data: sykepengegrunnlag } = useSykepengegrunnlagV2()
+    const { data: sykepengegrunnlag } = useSykepengegrunnlag()
 
     const regelkoder: string[] = []
 

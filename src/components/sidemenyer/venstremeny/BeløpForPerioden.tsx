@@ -5,7 +5,7 @@ import { BriefcaseIcon, PersonIcon } from '@navikt/aksel-icons'
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
-import { formaterBeløpØre } from '@/schemas/sykepengegrunnlag'
+import { formaterBeløpØre } from '@schemas/øreUtils'
 
 interface ArbeidsgiverRadProps {
     orgnummer: string

@@ -34,7 +34,7 @@ export function useOppdaterInntekt() {
 
             // Invalider sykepengegrunnlag queries
             queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlagV2', params.personId, params.saksbehandlingsperiodeId],
+                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
             })
             // Invalider utbetalingsberegning queries
             queryClient.invalidateQueries({

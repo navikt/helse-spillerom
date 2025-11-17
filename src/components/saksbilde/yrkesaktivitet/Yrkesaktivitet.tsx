@@ -26,7 +26,7 @@ import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { YrkesaktivitetKategorisering, maybeOrgnummer } from '@schemas/yrkesaktivitetKategorisering'
 
 export function Yrkesaktivitet(): ReactElement {
@@ -35,7 +35,7 @@ export function Yrkesaktivitet(): ReactElement {
     const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
     const { data: yrkesaktivitet, isLoading, isError, refetch } = useYrkesaktivitet()
-    const { data: sykepengegrunnlag } = useSykepengegrunnlagV2()
+    const { data: sykepengegrunnlag } = useSykepengegrunnlag()
     const slettMutation = useSlettYrkesaktivitet()
     const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
     const kanSaksbehandles = useKanSaksbehandles()

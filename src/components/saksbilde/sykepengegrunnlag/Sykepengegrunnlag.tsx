@@ -7,14 +7,14 @@ import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { SykepengegrunnlagSkeleton } from '@components/saksbilde/sykepengegrunnlag/SykepengegrunnlagSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { cn } from '@utils/tw'
 import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { SykepengegrunnlagForm } from '@components/saksbilde/sykepengegrunnlag/form/SykepengegrunnlagForm'
 import { Inntektskategori } from '@schemas/inntektRequest'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
-import { useSykepengegrunnlagV2 } from '@hooks/queries/useSykepengegrunnlagV2'
+import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { ArbeidstakerInntektView } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektView'
 import { SelvstendigNæringsdrivendeInntektView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/SelvstendigNæringsdrivendeInntektView'
 import { InaktivInntektView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/InaktivInntektView'
@@ -38,7 +38,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         isLoading: sykepengegrunnlagLoading,
         isError: sykepengegrunnlagError,
         refetch,
-    } = useSykepengegrunnlagV2()
+    } = useSykepengegrunnlag()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag

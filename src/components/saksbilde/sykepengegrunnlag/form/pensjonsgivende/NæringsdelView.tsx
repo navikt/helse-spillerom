@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Label } from '@navikt/ds-react'
 
-import { Næringsdel } from '@schemas/sykepengegrunnlagV2'
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { Næringsdel } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/øreUtils'
 
 type NæringsdelViewProps = {
     næringsdel?: Næringsdel | null

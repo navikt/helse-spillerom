@@ -1,36 +1,42 @@
-// Utility functions for converting between kroner and øre
-export function kronerTilØrer(kroner: number | string): number {
-    return Math.round(Number(String(kroner).replace(',', '.')) * 100)
-}
+import { z } from 'zod/v4'
 
-export function ørerTilKroner(ører: number): number {
-    return ører / 100
-}
+// Næringsdel schema basert på bakrommet Domene.kt
+export const næringsdelSchema = z.object({
+    pensjonsgivendeÅrsinntekt: z.number(), // Årsinntekt i øre
+    pensjonsgivendeÅrsinntekt6GBegrenset: z.number(), // 6G begrenset årsinntekt i øre
+    pensjonsgivendeÅrsinntektBegrensetTil6G: z.boolean(),
+    næringsdel: z.number(), // Næringsdel i øre
+    sumAvArbeidsinntekt: z.number(), // Sum av arbeidsinntekt i øre
+})
 
-export function øreTilDisplay(øre?: number): string {
-    return øre == null ? '' : String(øre / 100).replace('.', ',')
-}
+// Sammenlikningsgrunnlag schema basert på bakrommet Domene.kt
+export const sammenlikningsgrunnlagSchema = z.object({
+    totaltSammenlikningsgrunnlag: z.number(), // Totalt sammenlikningsgrunnlag i øre
+    avvikProsent: z.number(), // Avvik i prosent
+    avvikMotInntektsgrunnlag: z.number(), // Avvik mot inntektsgrunnlag i øre
+    basertPåDokumentId: z.string(), // UUID som string
+})
 
-export function formaterBeløpØre(ører: number | undefined, desimaler: number = 2): string {
-    if (ører === undefined) return '-'
-    return new Intl.NumberFormat('nb-NO', {
-        style: 'currency',
-        currency: 'NOK',
-        minimumFractionDigits: desimaler,
-        maximumFractionDigits: desimaler,
-    }).format(ørerTilKroner(ører))
-}
+// Sykepengegrunnlag v2 schema basert på bakrommet Domene.kt
+export const sykepengegrunnlagSchema = z.object({
+    grunnbeløp: z.number(), // 1G i øre
+    totaltInntektsgrunnlag: z.number(), // Totalt inntektsgrunnlag i øre
+    sykepengegrunnlag: z.number(), // Endelig sykepengegrunnlag i øre
+    seksG: z.number(), // 6G i øre
+    begrensetTil6G: z.boolean(),
+    grunnbeløpVirkningstidspunkt: z.string(), // ISO 8601 date string
+    næringsdel: næringsdelSchema.nullable(),
+    kombinertBeregningskode: z.string().nullable(),
+})
 
-export function formaterBeløpKroner(
-    kroner: number | undefined,
-    desimaler: number = 2,
-    style: 'currency' | 'decimal' = 'currency',
-): string {
-    if (kroner === undefined || kroner === null) return '-'
-    return new Intl.NumberFormat('nb-NO', {
-        style: style,
-        currency: 'NOK',
-        minimumFractionDigits: desimaler,
-        maximumFractionDigits: desimaler,
-    }).format(kroner)
-}
+// Ny respons schema som inneholder både sykepengegrunnlag og sammenlikningsgrunnlag
+export const sykepengegrunnlagResponseSchema = z.object({
+    sykepengegrunnlag: sykepengegrunnlagSchema.nullable(),
+    sammenlikningsgrunnlag: sammenlikningsgrunnlagSchema.nullable(),
+    opprettetForBehandling: z.string(), // UUID som string
+})
+
+export type Sykepengegrunnlag = z.infer<typeof sykepengegrunnlagSchema>
+export type Næringsdel = z.infer<typeof næringsdelSchema>
+export type Sammenlikningsgrunnlag = z.infer<typeof sammenlikningsgrunnlagSchema>
+export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponseSchema>

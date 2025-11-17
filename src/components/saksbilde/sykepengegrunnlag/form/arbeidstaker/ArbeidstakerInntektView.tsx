@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Bleed, BodyShort, BoxNew, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import {
     arbeidstakerSkjønnsfastsettelseÅrsakLabels,

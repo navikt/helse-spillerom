@@ -2,16 +2,16 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 
 import { fetchAndParse } from '@utils/fetch'
-import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@/schemas/sykepengegrunnlagV2'
+import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@/schemas/sykepengegrunnlag'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 
-export function useSykepengegrunnlagV2() {
+export function useSykepengegrunnlag() {
     const params = useParams()
     const personId = params?.personId as string
     const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
 
     return useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: ['sykepengegrunnlagV2', personId, saksbehandlingsperiodeId],
+        queryKey: ['sykepengegrunnlag', personId, saksbehandlingsperiodeId],
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
             if (!personId || !saksbehandlingsperiodeId) {
                 throw new Error('PersonId og saksbehandlingsperiodeId må være tilstede')

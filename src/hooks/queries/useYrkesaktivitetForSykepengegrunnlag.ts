@@ -7,7 +7,7 @@ import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
 import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
-import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlagV2'
+import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlag'
 
 export function useYrkesaktivitetForSykepengegrunnlag() {
     const params = useParams()
@@ -17,7 +17,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
     const personId = params?.personId as string
 
     const sykepengegrunnlag = useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: ['sykepengegrunnlagV2', personId, aktivSaksbehandlingsperiode?.id],
+        queryKey: ['sykepengegrunnlag', personId, aktivSaksbehandlingsperiode?.id],
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
             if (!personId || !aktivSaksbehandlingsperiode?.id) {
                 throw new Error('PersonId og saksbehandlingsperiodeId må være tilstede')

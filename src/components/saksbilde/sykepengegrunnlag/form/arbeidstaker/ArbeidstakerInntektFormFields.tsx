@@ -17,7 +17,7 @@ import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
-import { formaterBeløpKroner } from '@schemas/sykepengegrunnlag'
+import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
