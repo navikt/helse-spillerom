@@ -215,7 +215,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 {aktivYrkesaktivitet && (
                     <VStack
                         gap="6"
-                        className="w-[686px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
+                        className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
                     >
                         {kanSaksbehandles && !harIkkeInntektData && (
                             <div className="-ml-[4px]">

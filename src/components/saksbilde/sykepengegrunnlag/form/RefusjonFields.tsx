@@ -22,7 +22,7 @@ export function RefusjonFields(): ReactElement {
                     <DateField name={`data.refusjon.${index}.tom`} label="T.o.m. dato" />
                     <PengerField className="max-w-28" name={`data.refusjon.${index}.beløp`} label="Refusjonsbeløp" />
                     <Button
-                        className={cn('mt-7 mr-5', { invisible: index === 0 })}
+                        className={cn('mb-1 self-end', { invisible: index === 0 })}
                         size="xsmall"
                         variant="tertiary"
                         type="button"

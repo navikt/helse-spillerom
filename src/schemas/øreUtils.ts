@@ -22,7 +22,7 @@ export function formaterBeløpØre(ører: number | undefined, desimaler: number 
 }
 
 export function formaterBeløpKroner(
-    kroner: number | undefined,
+    kroner: number | string | null | undefined,
     desimaler: number = 2,
     style: 'currency' | 'decimal' = 'currency',
 ): string {
@@ -32,5 +32,5 @@ export function formaterBeløpKroner(
         currency: 'NOK',
         minimumFractionDigits: desimaler,
         maximumFractionDigits: desimaler,
-    }).format(kroner)
+    }).format(Number(kroner))
 }

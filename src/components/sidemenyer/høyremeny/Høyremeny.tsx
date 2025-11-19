@@ -16,10 +16,16 @@ import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Ainntekt830Knapp } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt830Knapp'
+import { TagFor } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { getFormattedDatetimeString } from '@utils/date-format'
+import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
 
 type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 
 export function Høyremeny(): ReactElement {
+    const { dokumenter, setDokumenter } = useDokumentVisningContext()
+
     const params = useParams()
     const erISaksbehandlingsperiode = Boolean(params?.saksbehandlingsperiodeId)
 
@@ -66,6 +72,55 @@ export function Høyremeny(): ReactElement {
 
     return (
         <HStack wrap={false} aria-label="Høyremeny kontroller">
+            <AnimatePresenceWrapper initial={false}>
+                {dokumenter.length > 0 &&
+                    dokumenter.map((dokument) => (
+                        <motion.div
+                            key={dokument.inntektsmeldingId}
+                            transition={getTestSafeTransition({
+                                type: 'tween',
+                                duration: 0.2,
+                                ease: 'easeInOut',
+                            })}
+                            initial={{ width: 0 }}
+                            animate={{ width: 'auto' }}
+                            exit={{ width: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <Sidemeny
+                                side="right"
+                                className="h-full w-64 min-w-64 xl:w-64 xl:min-w-64 lg:w-64 lg:min-w-64"
+                            >
+                                <VStack gap="4">
+                                    <HStack justify="space-between">
+                                        <HStack gap="2" align="center">
+                                            <span className="px-0.5">{TagFor['INNTEKTSMELDING']}</span>
+                                            <Heading level="1" size="xsmall" className="text-gray-600 font-medium">
+                                                {getFormattedDatetimeString(dokument.mottattDato)}
+                                            </Heading>
+                                        </HStack>
+                                        <Button
+                                            variant="tertiary-neutral"
+                                            size="xsmall"
+                                            type="button"
+                                            icon={<XMarkIcon aria-hidden />}
+                                            onClick={() =>
+                                                setDokumenter((prev) =>
+                                                    prev.filter(
+                                                        (prevDok) =>
+                                                            prevDok.inntektsmeldingId !== dokument.inntektsmeldingId,
+                                                    ),
+                                                )
+                                            }
+                                            aria-label="Lukk høyremeny"
+                                        />
+                                    </HStack>
+                                    <InntektsmeldingInnhold inntektsmelding={dokument} />
+                                </VStack>
+                            </Sidemeny>
+                        </motion.div>
+                    ))}
+            </AnimatePresenceWrapper>
             <AnimatePresenceWrapper initial={false}>
                 {showSidemeny && (
                     <motion.div

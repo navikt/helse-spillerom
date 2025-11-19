@@ -67,7 +67,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
             {inntektsmelding && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Inntektsmelding</BodyShort>
-                    <HStack gap="3" align="start">
+                    <HStack gap="3" align="start" wrap={false}>
                         <BodyShort className="leading-[18px]">&bull;</BodyShort>
                         <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                     </HStack>
@@ -88,7 +88,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 <>
                     <VStack gap="1">
                         <BodyShort weight="semibold">Refusjon</BodyShort>
-                        <HStack gap="3" align="start">
+                        <HStack gap="3" align="start" wrap={false}>
                             <BodyShort className="leading-[18px]">&bull;</BodyShort>
                             <BodyShort size="small">Ja</BodyShort>
                         </HStack>
