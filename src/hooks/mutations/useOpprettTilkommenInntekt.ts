@@ -33,6 +33,10 @@ export function useOpprettTilkommenInntekt() {
             queryClient.invalidateQueries({
                 queryKey: ['history', personId, saksbehandlingsperiodeId],
             })
+            // Invalider utbetalingsberegning queries
+            queryClient.invalidateQueries({
+                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+            })
 
             // Naviger til visningssiden
             router.push(`/person/${personId}/${saksbehandlingsperiodeId}/tilkommen-inntekt/${data.id}`)
