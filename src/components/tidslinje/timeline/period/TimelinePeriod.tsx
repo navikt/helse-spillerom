@@ -48,6 +48,8 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
                         'border-ax-border-accent-strong inset-ring-1 inset-ring-ax-border-accent-strong': isActive,
+                        'bg-ax-bg-info-subtle text-ax-icon-accent border-ax-border-info':
+                            status === 'TILKOMMEN_INNTEKT',
                     },
                 )}
                 style={{ left: placement, width }}
@@ -73,6 +75,7 @@ export const statusTilDataColor: Record<string, string> = {
     UNDER_BESLUTNING: 'warning',
     GODKJENT: 'success',
     SØKNAD: 'info',
+    TILKOMMEN_INNTEKT: 'secondary', // Bruker ny type, kobles på css under
 }
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {

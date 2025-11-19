@@ -36,6 +36,10 @@ export const allowedAPIs = [
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/ainntekt',
+    'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt',
+    'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt',
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt/[uuid]',
+    'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt/[uuid]',
 ]
 
 export const allowedDemoAPIs = [
@@ -60,6 +64,7 @@ const KNOWN_PATH_SEGMENTS = [
     'organisasjon',
     'scenarioer',
     'testpersoner',
+    'tilkommeninntekt',
 ]
 // Matcher person-ID kun når den er i riktig kontekst: etter /v1/ eller /v2/, og ikke et kjent path-segment
 const PERSONID = /(\/v[12]\/)([a-z0-9-]{5,50})(\/|$|\s)/g

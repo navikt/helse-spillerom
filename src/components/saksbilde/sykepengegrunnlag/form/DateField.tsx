@@ -9,9 +9,18 @@ interface DateFieldProps {
     label: string
     hideLabel?: boolean
     showErrorMessage?: boolean
+    fromDate?: Date
+    toDate?: Date
 }
 
-export function DateField({ name, label, hideLabel = false, showErrorMessage = false }: DateFieldProps): ReactElement {
+export function DateField({
+    name,
+    label,
+    hideLabel = false,
+    showErrorMessage = false,
+    fromDate,
+    toDate,
+}: DateFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
 
     const { datepickerProps, inputProps } = useDatepicker({
@@ -26,7 +35,7 @@ export function DateField({ name, label, hideLabel = false, showErrorMessage = f
     })
 
     return (
-        <DatePicker {...datepickerProps}>
+        <DatePicker {...datepickerProps} fromDate={fromDate} toDate={toDate}>
             <DatePicker.Input
                 {...inputProps}
                 id={name.replaceAll('.', '-')}
