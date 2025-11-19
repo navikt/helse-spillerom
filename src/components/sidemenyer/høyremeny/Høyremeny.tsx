@@ -89,7 +89,8 @@ export function Høyremeny(): ReactElement {
                         >
                             <Sidemeny
                                 side="right"
-                                className="h-full w-64 min-w-64 xl:w-64 xl:min-w-64 lg:w-64 lg:min-w-64"
+                                /* eslint-disable-next-line prettier/prettier */
+                                className="h-full w-64 min-w-64 lg:w-64 lg:min-w-64 xl:w-64 xl:min-w-64"
                             >
                                 <VStack gap="4">
                                     <HStack justify="space-between">
