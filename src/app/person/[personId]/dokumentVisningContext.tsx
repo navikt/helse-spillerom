@@ -18,6 +18,8 @@ import { Maybe } from '@utils/tsUtils'
 type DokumentVisningContextType = {
     dokumenter: Inntektsmelding[]
     setDokumenter: Dispatch<SetStateAction<Inntektsmelding[]>>
+    handleSelectMap?: Record<string, () => void>
+    setHandleSelectMap: Dispatch<SetStateAction<Record<string, () => void> | undefined>>
 }
 
 export const DokumentVisningContext = createContext<Maybe<DokumentVisningContextType>>(null)
@@ -32,6 +34,7 @@ export function useDokumentVisningContext(): DokumentVisningContextType {
 
 export function DokumentVisningProvider({ children }: PropsWithChildren): ReactElement {
     const [dokumenter, setDokumenterInternal] = useState<Inntektsmelding[]>([])
+    const [handleSelectMap, setHandleSelectMap] = useState<Record<string, () => void> | undefined>(undefined)
 
     const setDokumenter = useCallback(
         (update: Inntektsmelding[] | ((prev: Inntektsmelding[]) => Inntektsmelding[])) => {
@@ -44,7 +47,7 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
     )
 
     return (
-        <DokumentVisningContext.Provider value={{ dokumenter, setDokumenter }}>
+        <DokumentVisningContext.Provider value={{ dokumenter, setDokumenter, handleSelectMap, setHandleSelectMap }}>
             {children}
         </DokumentVisningContext.Provider>
     )

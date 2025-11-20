@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement } from 'react'
-import { BodyShort, HStack, VStack } from '@navikt/ds-react'
+import { BodyShort, Button, HStack, VStack } from '@navikt/ds-react'
 import { BriefcaseIcon } from '@navikt/aksel-icons'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
@@ -7,7 +7,13 @@ import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { getFormattedDateString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 
-export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
+export function InntektsmeldingInnhold({
+    inntektsmelding,
+    handleSelect,
+}: {
+    inntektsmelding: Inntektsmelding
+    handleSelect?: () => void
+}): ReactElement {
     return (
         <VStack gap="4" role="region" aria-label={`InntektsmeldingId=${inntektsmelding.inntektsmeldingId} innhold`}>
             <HStack gap="2" wrap={false}>
@@ -33,6 +39,11 @@ export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: I
             <Details label="Innsender fullt navn">{inntektsmelding.innsenderFulltNavn}</Details>
             <Details label="Innsender telefon">{inntektsmelding.innsenderTelefon}</Details>
             <Details label="Avsendersystem">{inntektsmelding.avsenderSystem?.navn}</Details>
+            {handleSelect && (
+                <Button type="button" size="small" onClick={handleSelect}>
+                    Velg
+                </Button>
+            )}
         </VStack>
     )
 }

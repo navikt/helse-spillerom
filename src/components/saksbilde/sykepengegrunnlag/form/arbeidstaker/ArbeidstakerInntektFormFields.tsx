@@ -181,28 +181,35 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                     <VStack gap="2">
                         {inntektsmeldinger
                             .sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
-                            .map((inntektsmelding, i) => (
-                                <HStack gap="2" key={inntektsmelding.inntektsmeldingId}>
-                                    <Radio
-                                        key={inntektsmelding.inntektsmeldingId}
-                                        id={i === 0 ? 'data-inntektsmeldingId' : undefined}
-                                        value={inntektsmelding.inntektsmeldingId}
-                                        onChange={(value) => {
-                                            field.onChange(value)
-                                            setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
+                            .map((inntektsmelding, i) => {
+                                function handleSelect(id: string) {
+                                    field.onChange(id)
+                                    setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
 
-                                            const refusjon = refusjonFra(inntektsmelding)
-                                            const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
+                                    const refusjon = refusjonFra(inntektsmelding)
+                                    const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
 
-                                            setValue('data.refusjon', harRefusjon ? refusjon : undefined)
-                                            setVisRefusjonsFelter(harRefusjon)
-                                        }}
-                                    >
-                                        Mottatt: {getFormattedDatetimeString(inntektsmelding.mottattDato)}
-                                    </Radio>
-                                    <VisInntektsmeldingButton inntektsmelding={inntektsmelding} />
-                                </HStack>
-                            ))}
+                                    setValue('data.refusjon', harRefusjon ? refusjon : undefined)
+                                    setVisRefusjonsFelter(harRefusjon)
+                                }
+
+                                return (
+                                    <HStack gap="2" key={inntektsmelding.inntektsmeldingId}>
+                                        <Radio
+                                            key={inntektsmelding.inntektsmeldingId}
+                                            id={i === 0 ? 'data-inntektsmeldingId' : undefined}
+                                            value={inntektsmelding.inntektsmeldingId}
+                                            onChange={() => handleSelect(inntektsmelding.inntektsmeldingId)}
+                                        >
+                                            Mottatt: {getFormattedDatetimeString(inntektsmelding.mottattDato)}
+                                        </Radio>
+                                        <VisInntektsmeldingButton
+                                            inntektsmelding={inntektsmelding}
+                                            handleSelect={() => handleSelect(inntektsmelding.inntektsmeldingId)}
+                                        />
+                                    </HStack>
+                                )
+                            })}
                     </VStack>
                 </RadioGroup>
             )}
@@ -280,8 +287,14 @@ export function refusjonFra(inntektsmelding: Inntektsmelding): RefusjonInfo[] {
     return periods
 }
 
-function VisInntektsmeldingButton({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
-    const { dokumenter, setDokumenter } = useDokumentVisningContext()
+function VisInntektsmeldingButton({
+    inntektsmelding,
+    handleSelect,
+}: {
+    inntektsmelding: Inntektsmelding
+    handleSelect: () => void
+}): ReactElement {
+    const { dokumenter, setDokumenter, setHandleSelectMap } = useDokumentVisningContext()
     return (
         <Button
             size="xsmall"
@@ -296,6 +309,10 @@ function VisInntektsmeldingButton({ inntektsmelding }: { inntektsmelding: Inntek
             }
             iconPosition="right"
             onClick={() => {
+                setHandleSelectMap((prev) => ({
+                    ...prev,
+                    [inntektsmelding.inntektsmeldingId]: handleSelect,
+                }))
                 setDokumenter((prev) => {
                     if (prev.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId)) {
                         return prev.filter((d) => d.inntektsmeldingId !== inntektsmelding.inntektsmeldingId)
