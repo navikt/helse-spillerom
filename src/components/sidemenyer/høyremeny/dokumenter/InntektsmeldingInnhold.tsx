@@ -6,13 +6,14 @@ import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { getFormattedDateString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { SelectHandler } from '@/app/person/[personId]/dokumentVisningContext'
 
 export function InntektsmeldingInnhold({
     inntektsmelding,
-    handleSelect,
+    selectHandler,
 }: {
     inntektsmelding: Inntektsmelding
-    handleSelect?: () => void
+    selectHandler?: SelectHandler
 }): ReactElement {
     return (
         <VStack gap="4" role="region" aria-label={`InntektsmeldingId=${inntektsmelding.inntektsmeldingId} innhold`}>
@@ -39,8 +40,8 @@ export function InntektsmeldingInnhold({
             <Details label="Innsender fullt navn">{inntektsmelding.innsenderFulltNavn}</Details>
             <Details label="Innsender telefon">{inntektsmelding.innsenderTelefon}</Details>
             <Details label="Avsendersystem">{inntektsmelding.avsenderSystem?.navn}</Details>
-            {handleSelect && (
-                <Button type="button" variant="secondary" size="small" onClick={handleSelect}>
+            {selectHandler && selectHandler.active && (
+                <Button type="button" variant="secondary" size="small" onClick={selectHandler.handler}>
                     Velg
                 </Button>
             )}

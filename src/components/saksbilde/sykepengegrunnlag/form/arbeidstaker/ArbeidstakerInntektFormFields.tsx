@@ -20,10 +20,15 @@ import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehan
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
-import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import {
+    activateHandlersForIds,
+    deactivateHandlers,
+    useDokumentVisningContext,
+} from '@/app/person/[personId]/dokumentVisningContext'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const { setSelectHandlerMap } = useDokumentVisningContext()
     const visRefusjonsFelter = !!watch('data.refusjon')?.[0]?.fom
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const valgtType = watch('data.type')
@@ -50,6 +55,10 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                             onChange={(value) => {
                                 const valg = value.target.value
                                 field.onChange(valg)
+
+                                if (valg !== 'INNTEKTSMELDING') {
+                                    setSelectHandlerMap((prev) => (prev ? deactivateHandlers(prev) : prev))
+                                }
 
                                 if (valg === 'SKJONNSFASTSETTELSE') {
                                     setValue('data.årsak', arbeidstakerSkjønnsfastsettelseÅrsakSchema.options[0])
@@ -138,7 +147,21 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
 function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
+    const { setSelectHandlerMap } = useDokumentVisningContext()
     const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
+
+    useEffect(() => {
+        if (!inntektsmeldinger) return
+
+        setSelectHandlerMap((prev) =>
+            prev
+                ? activateHandlersForIds(
+                      inntektsmeldinger.map((m) => m.inntektsmeldingId),
+                      prev,
+                  )
+                : prev,
+        )
+    }, [inntektsmeldinger, setSelectHandlerMap])
 
     useEffect(() => {
         const valgtInntektsmelding = inntektsmeldinger?.find((m) => m.inntektsmeldingId === valgtInntektsmeldingId)
@@ -282,7 +305,7 @@ function VisInntektsmeldingButton({
     inntektsmelding: Inntektsmelding
     handleSelect: () => void
 }): ReactElement {
-    const { dokumenter, setDokumenter, setHandleSelectMap } = useDokumentVisningContext()
+    const { dokumenter, setDokumenter, setSelectHandlerMap } = useDokumentVisningContext()
     return (
         <Button
             size="xsmall"
@@ -297,9 +320,9 @@ function VisInntektsmeldingButton({
             }
             iconPosition="right"
             onClick={() => {
-                setHandleSelectMap((prev) => ({
+                setSelectHandlerMap((prev) => ({
                     ...prev,
-                    [inntektsmelding.inntektsmeldingId]: handleSelect,
+                    [inntektsmelding.inntektsmeldingId]: { active: true, handler: handleSelect },
                 }))
                 setDokumenter((prev) => {
                     if (prev.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId)) {

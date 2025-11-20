@@ -15,12 +15,23 @@ import dayjs from 'dayjs'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Maybe } from '@utils/tsUtils'
 
+export type SelectHandler = {
+    active: boolean
+    handler: () => void
+}
+
 type DokumentVisningContextType = {
     dokumenter: Inntektsmelding[]
     setDokumenter: Dispatch<SetStateAction<Inntektsmelding[]>>
-    handleSelectMap?: Record<string, () => void>
-    setHandleSelectMap: Dispatch<SetStateAction<Record<string, () => void> | undefined>>
+    selectHandlerMap?: Record<string, SelectHandler>
+    setSelectHandlerMap: Dispatch<SetStateAction<Record<string, SelectHandler> | undefined>>
 }
+
+export const deactivateHandlers = (map: Record<string, SelectHandler>) =>
+    Object.fromEntries(Object.entries(map).map(([k, v]) => [k, { ...v, active: false }]))
+
+export const activateHandlersForIds = (ids: string[], map: Record<string, SelectHandler>) =>
+    Object.fromEntries(Object.entries(map).map(([k, v]) => [k, ids.includes(k) ? { ...v, active: true } : v]))
 
 export const DokumentVisningContext = createContext<Maybe<DokumentVisningContextType>>(null)
 
@@ -34,7 +45,7 @@ export function useDokumentVisningContext(): DokumentVisningContextType {
 
 export function DokumentVisningProvider({ children }: PropsWithChildren): ReactElement {
     const [dokumenter, setDokumenterInternal] = useState<Inntektsmelding[]>([])
-    const [handleSelectMap, setHandleSelectMap] = useState<Record<string, () => void> | undefined>(undefined)
+    const [selectHandlerMap, setSelectHandlerMap] = useState<Record<string, SelectHandler> | undefined>(undefined)
 
     const setDokumenter = useCallback(
         (update: Inntektsmelding[] | ((prev: Inntektsmelding[]) => Inntektsmelding[])) => {
@@ -47,7 +58,7 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
     )
 
     return (
-        <DokumentVisningContext.Provider value={{ dokumenter, setDokumenter, handleSelectMap, setHandleSelectMap }}>
+        <DokumentVisningContext.Provider value={{ dokumenter, setDokumenter, selectHandlerMap, setSelectHandlerMap }}>
             {children}
         </DokumentVisningContext.Provider>
     )
