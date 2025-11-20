@@ -190,7 +190,7 @@ function TilkommenInntektKnapp(): ReactElement {
         <div className="border-b-1 border-ax-border-neutral-subtle px-8 py-4">
             <HStack gap="4" align="center" justify="space-between">
                 <Button variant="tertiary" size="small" onClick={handleLeggTilTilkommenInntekt}>
-                    + Legg til tilkommen inntekt/periode
+                    + Legg til tilkommen inntekt
                 </Button>
             </HStack>
         </div>
