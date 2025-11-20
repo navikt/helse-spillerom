@@ -27,7 +27,7 @@ import { useTidslinje } from '@hooks/queries/useTidslinje'
 import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingsperiode'
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
 
-export function Tidslinje(): ReactElement {
+function Tidslinje(): ReactElement {
     const router = useRouter()
     const params = useParams()
 
@@ -79,24 +79,27 @@ export function Tidslinje(): ReactElement {
                             label={rad.navn}
                             icon={<BriefcaseIcon aria-hidden fontSize="1.5rem" />}
                         >
-                            {rad.tidslinjeElementer.map((periode) => (
-                                <TimelinePeriod
-                                    key={rad.id + periode.fom + periode.tom}
-                                    startDate={dayjs(periode.fom)}
-                                    endDate={dayjs(periode.tom)}
-                                    skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
-                                    onSelectPeriod={() => {
-                                        router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
-                                    }}
-                                    activePeriod={
-                                        params.saksbehandlingsperiodeId === periode.behandlingId && !params.tilkommenId
-                                    }
-                                    icon={statusTilIkon[periode.status]}
-                                    variant={periode.status}
-                                >
-                                    <BehandlingPopover behandlingId={periode.behandlingId} />
-                                </TimelinePeriod>
-                            ))}
+                            {rad.tidslinjeElementer.map((periode) => {
+                                return (
+                                    <TimelinePeriod
+                                        key={rad.id + periode.fom + periode.tom}
+                                        startDate={dayjs(periode.fom)}
+                                        endDate={dayjs(periode.tom)}
+                                        skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
+                                        onSelectPeriod={() => {
+                                            router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
+                                        }}
+                                        activePeriod={
+                                            params.saksbehandlingsperiodeId === periode.behandlingId &&
+                                            !params.tilkommenId
+                                        }
+                                        icon={statusTilIkon[periode.status]}
+                                        variant={periode.ghost ? 'GHOST' : periode.status}
+                                    >
+                                        <BehandlingPopover behandlingId={periode.behandlingId} />
+                                    </TimelinePeriod>
+                                )
+                            })}
                         </TimelineRow>
                     ))}
                 {tidslinjeRader
@@ -138,6 +141,8 @@ export function Tidslinje(): ReactElement {
         </>
     )
 }
+
+export default Tidslinje
 
 function TilkommenInntektPopover({
     behandlingId,

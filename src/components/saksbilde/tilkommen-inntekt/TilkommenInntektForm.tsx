@@ -79,13 +79,26 @@ export function TilkommenInntektForm(): ReactElement {
     const harGyldigOrgnummer = ident && ident.length === 9
     const { data: organisasjonsnavn } = useOrganisasjonsnavn(harGyldigOrgnummer ? ident : '')
 
-    // Beregn antall dager mellom fom og tom (inkludert begge ender)
+    // Beregn antall virkedager mellom fom og tom (inkludert begge ender)
     const antallDager = useMemo(() => {
         if (!fom || !tom) return 0
         const fomDate = dayjs(fom)
         const tomDate = dayjs(tom)
         if (!fomDate.isValid() || !tomDate.isValid()) return 0
-        return tomDate.diff(fomDate, 'day') + 1
+        const sluttDato = tomDate.endOf('day')
+        let gjeldendeDato = fomDate.startOf('day')
+        let virkedager = 0
+
+        while (gjeldendeDato.isBefore(sluttDato) || gjeldendeDato.isSame(sluttDato, 'day')) {
+            const ukedag = gjeldendeDato.day()
+            const erHelg = ukedag === 0 || ukedag === 6
+            if (!erHelg) {
+                virkedager += 1
+            }
+            gjeldendeDato = gjeldendeDato.add(1, 'day')
+        }
+
+        return virkedager
     }, [fom, tom])
 
     // Beregn inntekt per dag
@@ -193,7 +206,7 @@ export function TilkommenInntektForm(): ReactElement {
                                 size="small"
                                 className="[&_input]:text-right"
                             />
-                            <div className="absolute top-8 right-2">
+                            <div className="absolute top-8 left-2">
                                 <PadlockLockedIcon aria-hidden className="text-ax-text-neutral-subtle" />
                             </div>
                         </div>

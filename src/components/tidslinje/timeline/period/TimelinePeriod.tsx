@@ -76,7 +76,7 @@ export const statusTilDataColor: Record<TidslinjeVariant, string> = {
     UNDER_BESLUTNING: 'warning',
     GODKJENT: 'success',
     REVURDERT: 'error',
-    GHOST: 'info',
+    GHOST: 'neutral',
     TILKOMMEN_INNTEKT: 'info',
 }
 
