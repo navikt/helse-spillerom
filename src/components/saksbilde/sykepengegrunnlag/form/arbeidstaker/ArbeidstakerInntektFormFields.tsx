@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, ReactElement, SetStateAction, useEffect, useState } from 'react'
+import React, { Fragment, ReactElement, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { BodyShort, Button, HGrid, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
@@ -24,7 +24,7 @@ import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisni
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
-    const [visRefusjonsFelter, setVisRefusjonsFelter] = useState<boolean>(!!watch('data.refusjon')?.[0]?.fom)
+    const visRefusjonsFelter = !!watch('data.refusjon')?.[0]?.fom
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const valgtType = watch('data.type')
 
@@ -74,12 +74,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                 />
             </HStack>
 
-            {valgtType === 'INNTEKTSMELDING' && (
-                <VelgInntektsmelding
-                    yrkesaktivitetId={yrkesaktivitetId}
-                    setVisRefusjonsFelter={setVisRefusjonsFelter}
-                />
-            )}
+            {valgtType === 'INNTEKTSMELDING' && <VelgInntektsmelding yrkesaktivitetId={yrkesaktivitetId} />}
 
             {valgtType === 'AINNTEKT' && (
                 <VisAinntekt yrkesaktivitetId={yrkesaktivitetId} setValue={(field, val) => setValue(field, val)} />
@@ -106,7 +101,6 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                     legend="Refusjon"
                     size="small"
                     onChange={(value: boolean) => {
-                        setVisRefusjonsFelter(value)
                         if (value) {
                             setValue('data.refusjon', [
                                 { fom: aktivSaksbehandlingsperiode?.skjæringstidspunkt ?? '', tom: null, beløp: 0 },
@@ -141,12 +135,7 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
     TIDSAVGRENSET: 'Skjønnsfastsettelse ved tidsbegrenset arbeidsforhold under 6 måneder (§ 8-30 fjerde ledd)',
 }
 
-interface VelgInntektsmeldingProps {
-    yrkesaktivitetId: string
-    setVisRefusjonsFelter: Dispatch<SetStateAction<boolean>>
-}
-
-function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgInntektsmeldingProps): ReactElement {
+function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
     const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
@@ -190,7 +179,6 @@ function VelgInntektsmelding({ yrkesaktivitetId, setVisRefusjonsFelter }: VelgIn
                                     const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
 
                                     setValue('data.refusjon', harRefusjon ? refusjon : undefined)
-                                    setVisRefusjonsFelter(harRefusjon)
                                 }
 
                                 return (
