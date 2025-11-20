@@ -168,7 +168,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                             <TableRow>
                                 <TableDataCell className="border-0 pl-8 font-semibold">Totalt</TableDataCell>
                                 <TableDataCell className="border-0 pr-16 text-right font-semibold">
-                                    {formaterBeløpKroner(sykepengegrunnlag?.totaltInntektsgrunnlag)}
+                                    {formaterBeløpKroner(sykepengegrunnlag?.beregningsgrunnlag)}
                                 </TableDataCell>
                             </TableRow>
                             {sammenlikningsgrunnlag && (

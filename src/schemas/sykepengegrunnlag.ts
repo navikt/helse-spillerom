@@ -20,7 +20,7 @@ export const sammenlikningsgrunnlagSchema = z.object({
 // Sykepengegrunnlag v2 schema basert på bakrommet Domene.kt
 export const sykepengegrunnlagSchema = z.object({
     grunnbeløp: z.number(), // 1G i øre
-    totaltInntektsgrunnlag: z.number(), // Totalt inntektsgrunnlag i øre
+    beregningsgrunnlag: z.number(), // Totalt inntektsgrunnlag i øre
     sykepengegrunnlag: z.number(), // Endelig sykepengegrunnlag i øre
     seksG: z.number(), // 6G i øre
     begrensetTil6G: z.boolean(),
