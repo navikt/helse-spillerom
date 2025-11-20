@@ -40,7 +40,7 @@ export function InntektsmeldingInnhold({
             <Details label="Innsender telefon">{inntektsmelding.innsenderTelefon}</Details>
             <Details label="Avsendersystem">{inntektsmelding.avsenderSystem?.navn}</Details>
             {handleSelect && (
-                <Button type="button" size="small" onClick={handleSelect}>
+                <Button type="button" variant="secondary" size="small" onClick={handleSelect}>
                     Velg
                 </Button>
             )}
