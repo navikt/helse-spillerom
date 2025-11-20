@@ -37,6 +37,10 @@ export function useOpprettTilkommenInntekt() {
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
             })
+            // Invalider tidslinje queries
+            queryClient.invalidateQueries({
+                queryKey: ['tidslinje', personId],
+            })
 
             // Naviger til visningssiden
             router.push(`/person/${personId}/${saksbehandlingsperiodeId}/tilkommen-inntekt/${data.id}`)

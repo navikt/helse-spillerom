@@ -40,6 +40,7 @@ export const allowedAPIs = [
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt/[uuid]',
     'DELETE /v1/[personId]/saksbehandlingsperioder/[uuid]/tilkommeninntekt/[uuid]',
+    'GET /v1/[personId]/tidslinje',
 ]
 
 export const allowedDemoAPIs = [

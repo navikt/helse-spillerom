@@ -49,6 +49,9 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             queryClient.invalidateQueries({
                 queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: ['tidslinje', params.personId],
+            })
         },
     })
 }
@@ -75,6 +78,9 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: ['tidslinje', params.personId],
+            })
         },
     })
 }
@@ -99,6 +105,9 @@ export function useOppdaterYrkesaktivitetPerioder() {
             })
             queryClient.invalidateQueries({
                 queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ['tidslinje', params.personId],
             })
         },
     })

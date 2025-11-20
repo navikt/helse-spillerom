@@ -5,26 +5,17 @@ import { useRouter } from 'next/navigation'
 import { Button, Skeleton } from '@navikt/ds-react'
 import { ArrowLeftIcon } from '@navikt/aksel-icons'
 
-import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
+import { useTilkommenInntektByParamId } from '@hooks/queries/useTilkommenInntektByParamId'
 import { TilkommenInntektView } from '@components/saksbilde/tilkommen-inntekt/TilkommenInntektView'
-import { FetchError } from '@components/saksbilde/FetchError'
 
 export default function TilkommenInntektPage(): ReactElement {
     const router = useRouter()
-    const { data: tilkommenInntekt, isLoading, isError, refetch } = useTilkommenInntektById()
+    const { tilkommenInntekt, isLoading } = useTilkommenInntektByParamId()
 
-    if (isLoading) {
+    if (isLoading || !tilkommenInntekt) {
         return (
             <section className="flex-auto p-8">
                 <Skeleton variant="rectangle" height={400} />
-            </section>
-        )
-    }
-
-    if (isError || !tilkommenInntekt) {
-        return (
-            <section className="flex-auto p-8">
-                <FetchError refetch={() => void refetch()} message="Kunne ikke laste tilkommen inntekt." />
             </section>
         )
     }

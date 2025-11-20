@@ -9,6 +9,7 @@ import { PeriodContext } from '@components/tidslinje/timeline/period/context'
 
 export interface TimelineRowProps extends PropsWithChildren {
     label: string
+    icon: ReactElement
 }
 
 export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement => {
@@ -29,7 +30,7 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
                         endDate={period.endDate}
                         skjæringstidspunkt={period.skjæringstidspunkt}
                         icon={period.icon}
-                        status={period.status}
+                        variant={period.variant}
                     />
                 </PeriodContext.Provider>
             ))}

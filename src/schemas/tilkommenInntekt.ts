@@ -7,7 +7,7 @@ export type TilkommenInntektYrkesaktivitetType = z.infer<typeof tilkommenInntekt
 
 export const opprettTilkommenInntektRequestSchema = z
     .object({
-        ident: z.string().min(1, { message: 'Ident må være fylt ut' }),
+        ident: z.string().regex(/^\d{9}$/, { message: 'Organisasjonsnummer må være 9 siffer' }),
         yrkesaktivitetType: tilkommenInntektYrkesaktivitetTypeSchema,
         fom: z.iso.date({ error: 'Fra og med dato må være fylt ut og være en gyldig dato' }),
         tom: z.iso.date({ error: 'Til og med dato må være fylt ut og være en gyldig dato' }),

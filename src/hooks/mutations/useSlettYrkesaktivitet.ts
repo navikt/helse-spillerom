@@ -21,6 +21,9 @@ export function useSlettYrkesaktivitet() {
             queryClient.invalidateQueries({
                 queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
             })
+            queryClient.invalidateQueries({
+                queryKey: ['tidslinje', params.personId],
+            })
         },
     })
 }

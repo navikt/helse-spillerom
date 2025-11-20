@@ -10,6 +10,9 @@ import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
 import { Maybe } from '@/utils/tsUtils'
+import { SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+
+export type TidslinjeVariant = SaksbehandlingsperiodeStatus | 'GHOST' | 'TILKOMMEN_INNTEKT'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
@@ -18,7 +21,7 @@ export interface TimelinePeriodProps extends PropsWithChildren {
     activePeriod?: boolean
     onSelectPeriod?: () => void
     icon?: ReactElement
-    status: string
+    variant: TidslinjeVariant
 }
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
@@ -31,7 +34,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
     const period = periods.find((p) => p.id === periodId)
     if (!period) return <></>
-    const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, icon, status, children } = period
+    const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, icon, variant, children } = period
 
     // TODO ordne bredde og plassering et annet sted
     const width = getNumberOfDays(startDate, endDate) * dayLength
@@ -41,15 +44,13 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
     return (
         <>
             <button
-                data-color={statusTilDataColor[status]}
+                data-color={statusTilDataColor[variant]}
                 className={cn(
                     'aksel-timeline__period--clickable aksel-timeline__period absolute h-[24px] rounded-full',
                     {
                         'rounded-l-none': cropLeft,
                         'rounded-r-none': cropRight,
                         'border-ax-border-accent-strong inset-ring-1 inset-ring-ax-border-accent-strong': isActive,
-                        'bg-ax-bg-info-subtle text-ax-icon-accent border-ax-border-info':
-                            status === 'TILKOMMEN_INNTEKT',
                     },
                 )}
                 style={{ left: placement, width }}
@@ -69,13 +70,14 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
 TimelinePeriod.componentType = 'TimelinePeriod'
 
-export const statusTilDataColor: Record<string, string> = {
+export const statusTilDataColor: Record<TidslinjeVariant, string> = {
     UNDER_BEHANDLING: 'warning',
     TIL_BESLUTNING: 'warning',
     UNDER_BESLUTNING: 'warning',
     GODKJENT: 'success',
-    SØKNAD: 'info',
-    TILKOMMEN_INNTEKT: 'secondary', // Bruker ny type, kobles på css under
+    REVURDERT: 'error',
+    GHOST: 'info',
+    TILKOMMEN_INNTEKT: 'info',
 }
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {

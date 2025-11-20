@@ -46,7 +46,7 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
                                     periods: row.periods,
                                 }}
                             >
-                                <TimelineRow label={row.label} />
+                                <TimelineRow label={row.label} icon={row.icon} />
                             </RowContext.Provider>
                         ))}
                     </TimelineScrollableRows>

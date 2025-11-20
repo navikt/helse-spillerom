@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import React, { ReactElement, ReactNode, useMemo } from 'react'
 
 import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
-import { TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
+import { TimelinePeriodProps, TidslinjeVariant } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineZoomProps } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 
 export interface ComponentWithType<P = unknown> extends React.FC<P> {
@@ -18,13 +18,13 @@ type Period = {
     endDate: Dayjs
     skjæringstidspunkt?: Dayjs
     icon?: ReactElement
-    status: string // finne ut hvilke statuser vi skal ha på behandlinger
+    variant: TidslinjeVariant
     cropLeft: boolean
     cropRight: boolean
 }
 
 type ParsedRowsResult = {
-    rowLabels: string[]
+    rowLabels: { label: string; icon: ReactElement }[]
     earliestDate: Dayjs
     latestDate: Dayjs
     parsedRows: ParsedRow[]
@@ -46,7 +46,9 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
         return parseRows(rowChildren)
     }, [rowChildren])
 
-    const rowLabels = parsedRows.map((row) => row.label)
+    const rowLabels = parsedRows.map((row) => {
+        return { label: row.label, icon: row.icon }
+    })
     const allPeriods = parsedRows.map((row) => row.periods).flat()
 
     const earliestDate = useEarliestDate(allPeriods) ?? dayjs().subtract(1, 'year')
@@ -57,6 +59,7 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
 
 export type ParsedRow = {
     label: string
+    icon: ReactElement
     periods: Period[]
 }
 
@@ -82,13 +85,13 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
                 const cropLeft = Boolean(
                     nextPeriodStartDate &&
                         dayjs(endDate).add(1, 'day').isSame(nextPeriodStartDate, 'day') &&
-                        shouldCrop(period.props.status, skjæringstidspunkt, nextPeriodSkjæringstidspunkt),
+                        shouldCrop(period.props.variant, skjæringstidspunkt, nextPeriodSkjæringstidspunkt),
                 )
 
                 const cropRight = Boolean(
                     prevPeriodEndDate &&
                         dayjs(prevPeriodEndDate).add(1, 'day').isSame(startDate, 'day') &&
-                        shouldCrop(period.props.status, skjæringstidspunkt, prevPeriodSkjæringstidspunkt),
+                        shouldCrop(period.props.variant, skjæringstidspunkt, prevPeriodSkjæringstidspunkt),
                 )
 
                 periods.push({
@@ -97,7 +100,7 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
                     isActive: period.props.activePeriod,
                     onSelectPeriod: period.props.onSelectPeriod,
                     icon: period.props.icon,
-                    status: period.props.status,
+                    variant: period.props.variant,
                     startDate,
                     endDate,
                     skjæringstidspunkt,
@@ -108,6 +111,7 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
 
         parsedRow.push({
             label: row.props?.label,
+            icon: row.props?.icon,
             periods,
         })
     })

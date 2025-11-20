@@ -1,142 +1,137 @@
 'use client'
 
-import { PropsWithChildren, ReactElement } from 'react'
+import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, ClipboardFillIcon, PencilFillIcon, PlusIcon } from '@navikt/aksel-icons'
+import {
+    BriefcaseIcon,
+    CheckmarkCircleFillIcon,
+    PencilFillIcon,
+    PencilLineIcon,
+    PlusIcon,
+    SackKronerIcon,
+} from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
-import { useSoknader } from '@hooks/queries/useSoknader'
-import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
-import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
-import { useSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
-import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
 import { statusTilTekst } from '@components/statustag/StatusTag'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
-import { useTilkommenInntekt } from '@hooks/queries/useTilkommenInntekt'
-import { TilkommenInntektResponse } from '@schemas/tilkommenInntekt'
+import { useTidslinje } from '@hooks/queries/useTidslinje'
+import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingsperiode'
+import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
 
 export function Tidslinje(): ReactElement {
-    // const [activeSoknadId, setActiveSoknadId] = useState<string>('')
     const router = useRouter()
     const params = useParams()
+
     const {
-        data: søknader,
-        isLoading: søknaderLoading,
-        isError: søknaderError,
-        refetch: refetchSøknader,
-    } = useSoknader(dayjs('2020-01-01'))
-    const {
-        data: saksbehandlingsperioder,
+        data: tidslinjeRader,
         isLoading: saksbehandlingsperioderLoading,
         isError: saksbehandlingsperioderError,
         refetch: refetchSaksbehandlingsperioder,
-    } = useSaksbehandlingsperioder()
-    const {
-        data: tilkomneInntekter,
-        isLoading: tilkomneInntekterLoading,
-        isError: tilkomneInntekterError,
-    } = useTilkommenInntekt()
+    } = useTidslinje()
 
-    if (søknaderLoading || saksbehandlingsperioderLoading || tilkomneInntekterLoading) return <TimelineSkeleton />
-    if (søknaderError || saksbehandlingsperioderError || tilkomneInntekterError)
-        return <TimelineError refetch={() => Promise.all([refetchSøknader(), refetchSaksbehandlingsperioder()])} />
-    if (søknader?.length === 0 && saksbehandlingsperioder?.length === 0 && tilkomneInntekter?.length === 0)
-        return <TimelineEmpty />
-
-    const søknaderGruppert = (søknader || []).reduce((acc: Record<string, Søknad[]>, soknad) => {
-        const key = soknad.arbeidsgiver?.navn || formaterArbeidssituasjon(soknad.arbeidssituasjon) || soknad.type
-
-        ;(acc[key] ||= []).push(soknad)
-        return acc
-    }, {})
-
-    // Grupper tilkomne inntekter etter ident (organisasjonsnummer)
-    const tilkomneInntekterGruppert = (tilkomneInntekter || []).reduce(
-        (acc: Record<string, TilkommenInntektResponse[]>, ti) => {
-            const key = ti.ident
-            ;(acc[key] ||= []).push(ti)
-            return acc
-        },
-        {},
-    )
+    if (saksbehandlingsperioderLoading) return <TimelineSkeleton />
+    if (saksbehandlingsperioderError)
+        return <TimelineError refetch={() => Promise.all([refetchSaksbehandlingsperioder()])} />
+    if (tidslinjeRader?.length === 0) return <TimelineEmpty />
 
     return (
         <>
             <Timeline>
-                {saksbehandlingsperioder && saksbehandlingsperioder.length > 0 && (
-                    <TimelineRow label="Behandlinger">
-                        {saksbehandlingsperioder.map((periode) => (
-                            <TimelinePeriod
-                                key={periode.id}
-                                startDate={dayjs(periode.fom)}
-                                endDate={dayjs(periode.tom)}
-                                skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
-                                onSelectPeriod={() => {
-                                    // Hvis vi er på en tilkommen inntekt-side, naviger tilbake til behandlingen
-                                    if (params.tilkommenId) {
-                                        router.push(`/person/${params.personId as string}/${periode.id}`)
-                                    } else if (params.saksbehandlingsperiodeId !== periode.id) {
-                                        router.push(`/person/${params.personId as string}/${periode.id}`)
-                                    }
-                                }}
-                                activePeriod={params.saksbehandlingsperiodeId === periode.id && !params.tilkommenId}
-                                icon={statusTilIkon[periode.status]}
-                                status={periode.status}
-                            >
-                                <SaksbehandlingsperiodePopover periode={periode} />
-                            </TimelinePeriod>
-                        ))}
-                    </TimelineRow>
-                )}
-                {Object.entries(søknaderGruppert || {}).map(([label, søknader], i) => (
-                    <TimelineRow key={i} label={label}>
-                        {søknader.map((søknad) => (
-                            <TimelinePeriod
-                                key={søknad.id}
-                                startDate={dayjs(søknad.fom!)}
-                                endDate={dayjs(søknad.tom!)}
-                                // onSelectPeriod={() => setActiveSoknadId(søknad.id)}
-                                // activePeriod={activeSoknadId === søknad.id}
-                                icon={<ClipboardFillIcon />}
-                                status="SØKNAD"
-                            >
-                                <SøknadPopover søknad={søknad} />
-                            </TimelinePeriod>
-                        ))}
-                    </TimelineRow>
-                ))}
-                {Object.entries(tilkomneInntekterGruppert || {}).map(([ident, inntekter]) => {
-                    return (
-                        <TimelineRow label={ident} key={ident}>
-                            {inntekter.map((ti) => (
+                {tidslinjeRader
+                    ?.filter((t) => t.tidslinjeRadType == 'OpprettetBehandling')
+                    .map((rad) => (
+                        <TimelineRow
+                            key={rad.id}
+                            label={rad.navn}
+                            icon={<PencilLineIcon aria-hidden fontSize="1.5rem" />}
+                        >
+                            {rad.tidslinjeElementer.map((periode) => (
                                 <TimelinePeriod
-                                    key={ti.id}
-                                    startDate={dayjs(ti.fom)}
-                                    endDate={dayjs(ti.tom)}
+                                    key={rad.id + periode.fom + periode.tom}
+                                    startDate={dayjs(periode.fom)}
+                                    endDate={dayjs(periode.tom)}
                                     onSelectPeriod={() => {
-                                        router.push(
-                                            `/person/${params.personId}/${params.saksbehandlingsperiodeId}/tilkommen-inntekt/${ti.id}`,
-                                        )
+                                        router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
                                     }}
-                                    activePeriod={params.tilkommenId === ti.id}
-                                    icon={<PlusIcon />}
-                                    status="TI"
+                                    activePeriod={params.saksbehandlingsperiodeId === periode.behandlingId}
+                                    icon={statusTilIkon[periode.status]}
+                                    variant={periode.status}
                                 >
-                                    <TilkommenInntektPopover tilkommenInntekt={ti} />
+                                    <BehandlingPopover behandlingId={periode.behandlingId} />
                                 </TimelinePeriod>
                             ))}
                         </TimelineRow>
-                    )
-                })}
-
+                    ))}
+                {tidslinjeRader
+                    ?.filter((t) => t.tidslinjeRadType == 'SykmeldtYrkesaktivitet')
+                    .map((rad) => (
+                        <TimelineRow
+                            key={rad.id}
+                            label={rad.navn}
+                            icon={<BriefcaseIcon aria-hidden fontSize="1.5rem" />}
+                        >
+                            {rad.tidslinjeElementer.map((periode) => (
+                                <TimelinePeriod
+                                    key={rad.id + periode.fom + periode.tom}
+                                    startDate={dayjs(periode.fom)}
+                                    endDate={dayjs(periode.tom)}
+                                    skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
+                                    onSelectPeriod={() => {
+                                        router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
+                                    }}
+                                    activePeriod={
+                                        params.saksbehandlingsperiodeId === periode.behandlingId && !params.tilkommenId
+                                    }
+                                    icon={statusTilIkon[periode.status]}
+                                    variant={periode.status}
+                                >
+                                    <BehandlingPopover behandlingId={periode.behandlingId} />
+                                </TimelinePeriod>
+                            ))}
+                        </TimelineRow>
+                    ))}
+                {tidslinjeRader
+                    ?.filter((t) => t.tidslinjeRadType == 'TilkommenInntekt')
+                    .map((rad) => (
+                        <TimelineRow
+                            key={rad.id}
+                            label={rad.navn}
+                            icon={<SackKronerIcon aria-hidden fontSize="1.5rem" />}
+                        >
+                            {rad.tidslinjeElementer.map((periode) => (
+                                <TimelinePeriod
+                                    key={rad.id + periode.fom + periode.tom}
+                                    startDate={dayjs(periode.fom)}
+                                    endDate={dayjs(periode.tom)}
+                                    onSelectPeriod={() => {
+                                        router.push(
+                                            `/person/${params.personId as string}/${periode.behandlingId}/tilkommen-inntekt/${periode.tilkommenInntektId}`,
+                                        )
+                                    }}
+                                    activePeriod={
+                                        params.saksbehandlingsperiodeId === periode.behandlingId &&
+                                        params.tilkommenId === periode.tilkommenInntektId
+                                    }
+                                    icon={<PlusIcon />}
+                                    variant="TILKOMMEN_INNTEKT"
+                                >
+                                    <TilkommenInntektPopover
+                                        behandlingId={periode.behandlingId}
+                                        tilkommenInntektId={periode.tilkommenInntektId}
+                                    />
+                                </TimelinePeriod>
+                            ))}
+                        </TimelineRow>
+                    ))}
                 <TimelineZoom />
             </Timeline>
             <TilkommenInntektKnapp />
@@ -144,7 +139,18 @@ export function Tidslinje(): ReactElement {
     )
 }
 
-function TilkommenInntektPopover({ tilkommenInntekt }: { tilkommenInntekt: TilkommenInntektResponse }): ReactElement {
+function TilkommenInntektPopover({
+    behandlingId,
+    tilkommenInntektId,
+}: {
+    behandlingId: string
+    tilkommenInntektId: string
+}): ReactElement {
+    const { tilkommenInntekt, isLoading } = useTilkommenInntektById(behandlingId, tilkommenInntektId)
+    if (!tilkommenInntekt || isLoading) {
+        return <></>
+    }
+
     return (
         <PopoverContentWrapper heading="Tilkommen inntekt">
             <BodyShort size="small">Organisasjonsnummer:</BodyShort>
@@ -191,39 +197,45 @@ function TilkommenInntektKnapp(): ReactElement {
     )
 }
 
-function SaksbehandlingsperiodePopover({ periode }: { periode: Saksbehandlingsperiode }): ReactElement {
+function BehandlingPopover({ behandlingId }: { behandlingId: string }): ReactElement {
+    const { behandling, isLoading } = useBehandlingsperiodeMedLoading(behandlingId)
+    if (!behandling || isLoading) {
+        return <></>
+    }
+
     return (
-        <PopoverContentWrapper heading="Saksbehandlingsperiode">
+        <PopoverContentWrapper heading="Behandling">
             <BodyShort size="small">Periode:</BodyShort>
             <BodyShort size="small">
-                {getFormattedDateString(periode.fom) + ' - ' + getFormattedDateString(periode.tom)}
+                {getFormattedDateString(behandling.fom) + ' - ' + getFormattedDateString(behandling.tom)}
             </BodyShort>
 
-            {periode.skjæringstidspunkt && (
+            {behandling.skjæringstidspunkt && (
                 <>
                     <BodyShort size="small">Skjæringstidspunkt:</BodyShort>
-                    <BodyShort size="small">{getFormattedDateString(periode.skjæringstidspunkt)}</BodyShort>
+                    <BodyShort size="small">{getFormattedDateString(behandling.skjæringstidspunkt)}</BodyShort>
                 </>
             )}
 
             <BodyShort size="small">Opprettet:</BodyShort>
-            <BodyShort size="small">{getFormattedDatetimeString(periode.opprettet)}</BodyShort>
+            <BodyShort size="small">{getFormattedDatetimeString(behandling.opprettet)}</BodyShort>
 
             <BodyShort size="small">Opprettet av:</BodyShort>
-            <BodyShort size="small">{periode.opprettetAvNavIdent}</BodyShort>
+            <BodyShort size="small">{behandling.opprettetAvNavIdent}</BodyShort>
 
             <BodyShort size="small">Status:</BodyShort>
-            <BodyShort size="small">{statusTilTekst[periode.status]}</BodyShort>
-            {periode.beslutterNavIdent && (
+            <BodyShort size="small">{statusTilTekst[behandling.status]}</BodyShort>
+            {behandling.beslutterNavIdent && (
                 <>
                     <BodyShort size="small">Beslutter:</BodyShort>
-                    <BodyShort size="small">{periode.beslutterNavIdent}</BodyShort>
+                    <BodyShort size="small">{behandling.beslutterNavIdent}</BodyShort>
                 </>
             )}
         </PopoverContentWrapper>
     )
 }
 
+/*
 function SøknadPopover({ søknad }: { søknad: Søknad }): ReactElement {
     return (
         <PopoverContentWrapper heading="Søknad">
@@ -247,6 +259,7 @@ function SøknadPopover({ søknad }: { søknad: Søknad }): ReactElement {
         </PopoverContentWrapper>
     )
 }
+*/
 
 function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ heading: string }>): ReactElement {
     return (

@@ -32,6 +32,9 @@ export function useOpprettSaksbehandlingsperiode() {
             await queryClient.invalidateQueries({
                 queryKey: ['saksbehandlingsperiode-historikk', params.personId, periode.id],
             })
+            await queryClient.invalidateQueries({
+                queryKey: ['tidslinje', params.personId],
+            })
             r.callback(periode)
         },
     })
