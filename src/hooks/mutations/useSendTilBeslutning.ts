@@ -37,6 +37,9 @@ export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = 
                 await queryClient.invalidateQueries({
                     queryKey: ['saksbehandlingsperiode-historikk', personId, params.saksbehandlingsperiodeId],
                 })
+                await queryClient.invalidateQueries({
+                    queryKey: ['tidslinje', params.personId],
+                })
             }
 
             // Kjør callback etter at cache invalidation er ferdig

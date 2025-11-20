@@ -37,6 +37,9 @@ export function useRevurder() {
                 await queryClient.invalidateQueries({
                     queryKey: ['saksbehandlingsperiode-historikk', personId, nyPeriode.id],
                 })
+                queryClient.invalidateQueries({
+                    queryKey: ['tidslinje', params.personId],
+                })
             }
 
             // Naviger til den nye perioden
