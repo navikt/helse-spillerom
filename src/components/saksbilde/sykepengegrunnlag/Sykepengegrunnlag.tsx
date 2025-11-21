@@ -24,6 +24,7 @@ import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { FrihåndSykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/FrihåndSykepengegrunnlag'
 import { notNull } from '@utils/tsUtils'
 import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
+import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -39,6 +40,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         isError: sykepengegrunnlagError,
         refetch,
     } = useSykepengegrunnlag()
+    const { deactivateHandlers } = useDokumentVisningContext()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
@@ -215,7 +217,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 {aktivYrkesaktivitet && (
                     <VStack
                         gap="6"
-                        className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 py-4"
+                        className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 pt-4 pb-8"
                     >
                         {kanSaksbehandles && !harIkkeInntektData && (
                             <div className="-ml-[4px]">
@@ -230,7 +232,10 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                             <PersonPencilIcon aria-hidden />
                                         )
                                     }
-                                    onClick={() => setErIRedigeringsmodus(!erIRedigeringsmodus)}
+                                    onClick={() => {
+                                        if (erIRedigeringsmodus) deactivateHandlers()
+                                        setErIRedigeringsmodus(!erIRedigeringsmodus)
+                                    }}
                                 >
                                     {erIRedigeringsmodus ? 'Avbryt' : 'Endre'}
                                 </Button>
@@ -279,7 +284,10 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 kategori={kategori}
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
-                                avbryt={() => setErIRedigeringsmodus(false)}
+                                avbryt={() => {
+                                    setErIRedigeringsmodus(false)
+                                    deactivateHandlers()
+                                }}
                                 erFørstegangsRedigering={harIkkeInntektData}
                             />
                         )}

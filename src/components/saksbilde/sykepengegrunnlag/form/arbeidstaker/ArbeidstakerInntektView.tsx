@@ -1,12 +1,11 @@
-import React, { ReactElement } from 'react'
-import { Bleed, BodyShort, BoxNew, HStack, Table, VStack } from '@navikt/ds-react'
+import React, { Fragment, ReactElement } from 'react'
+import { Bleed, BodyShort, BoxNew, HGrid, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import {
     arbeidstakerSkjønnsfastsettelseÅrsakLabels,
-    InntektsmeldingVisning,
     refusjonFra,
 } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/ArbeidstakerInntektFormFields'
 import {
@@ -17,7 +16,7 @@ import {
 } from '@schemas/inntektRequest'
 import { InntektData } from '@schemas/inntektData'
 import { Maybe, notNull } from '@utils/tsUtils'
-import { getFormattedDateString } from '@utils/date-format'
+import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import {
     InntektsmeldingKildeTag,
     SaksbehandlerKildeTag,
@@ -25,6 +24,7 @@ import {
 } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
+import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
 
 type ArbeidstakerInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSTAKER'>
@@ -66,11 +66,11 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
 
             {inntektsmelding && (
                 <VStack gap="1">
-                    <BodyShort weight="semibold">Inntektsmelding</BodyShort>
                     <HStack gap="3" align="start" wrap={false}>
-                        <BodyShort className="leading-[18px]">&bull;</BodyShort>
-                        <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
+                        <BodyShort weight="semibold">Inntektsmelding</BodyShort>
+                        <VisInntektsmeldingButton inntektsmelding={inntektsmelding} />
                     </HStack>
+                    <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                 </VStack>
             )}
 
@@ -172,4 +172,35 @@ function resolveKildeTag(refusjon: RefusjonInfo, index: number, inntektsmelding?
         refusjon.tom === periodeFraIM.tom
 
     return same ? <InntektsmeldingKildeTag /> : <SaksbehandlerKildeTag />
+}
+
+function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
+    return (
+        <HGrid columns={2} className="w-[380px]">
+            <BodyShort size="small">Mottatt:</BodyShort>
+            <BodyShort size="small">{getFormattedDatetimeString(inntektsmelding.mottattDato)}</BodyShort>
+
+            <BodyShort size="small">Beregnet inntekt:</BodyShort>
+            <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
+
+            <BodyShort size="small">Første fraværsdag:</BodyShort>
+            <BodyShort size="small">
+                {inntektsmelding.foersteFravaersdag ? getFormattedDateString(inntektsmelding.foersteFravaersdag) : '-'}
+            </BodyShort>
+
+            {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
+                <Fragment key={i + arbeidsgiverperiode.fom}>
+                    <BodyShort size="small">Arbeidsgiverperiode:</BodyShort>
+                    <BodyShort size="small">
+                        {getFormattedDateString(arbeidsgiverperiode.fom) +
+                            ' - ' +
+                            getFormattedDateString(arbeidsgiverperiode.tom)}
+                    </BodyShort>
+                </Fragment>
+            ))}
+
+            <BodyShort size="small">Organisasjonsnummer:</BodyShort>
+            <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
+        </HGrid>
+    )
 }

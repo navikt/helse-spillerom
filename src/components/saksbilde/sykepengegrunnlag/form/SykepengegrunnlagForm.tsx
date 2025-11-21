@@ -11,7 +11,7 @@ import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunn
 import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektFormFields'
 import { Feiloppsummering } from '@components/saksbilde/sykepengegrunnlag/form/Feiloppsummering'
-import { deactivateHandlers, useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 
 type SykepengegrunnlagFormProps = {
     kategori: Inntektskategori
@@ -29,7 +29,7 @@ export function SykepengegrunnlagForm({
     erFørstegangsRedigering = false,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
-    const { setSelectHandlerMap } = useDokumentVisningContext()
+    const { deactivateHandlers } = useDokumentVisningContext()
     const defaultValues = useMemo(
         () => getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
         [kategori, inntektRequest],
@@ -41,11 +41,10 @@ export function SykepengegrunnlagForm({
     })
 
     useEffect(() => {
-        if (erFørstegangsRedigering) {
-            form.reset(defaultValues)
-            setSelectHandlerMap((prev) => (prev ? deactivateHandlers(prev) : prev))
-        }
-    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form, setSelectHandlerMap])
+        if (!erFørstegangsRedigering) return
+        form.reset(defaultValues)
+        deactivateHandlers()
+    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form, deactivateHandlers])
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
         await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {

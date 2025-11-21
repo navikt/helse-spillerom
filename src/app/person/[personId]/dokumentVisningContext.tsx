@@ -16,22 +16,20 @@ import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Maybe } from '@utils/tsUtils'
 
 export type SelectHandler = {
-    active: boolean
+    selected: boolean
+    show: boolean
     handler: () => void
 }
 
 type DokumentVisningContextType = {
     dokumenter: Inntektsmelding[]
     setDokumenter: Dispatch<SetStateAction<Inntektsmelding[]>>
+    removeDokument: (id: string) => void
     selectHandlerMap?: Record<string, SelectHandler>
     setSelectHandlerMap: Dispatch<SetStateAction<Record<string, SelectHandler> | undefined>>
+    deactivateHandlers: () => void
+    activateHandlersForIds: (ids: string[]) => void
 }
-
-export const deactivateHandlers = (map: Record<string, SelectHandler>) =>
-    Object.fromEntries(Object.entries(map).map(([k, v]) => [k, { ...v, active: false }]))
-
-export const activateHandlersForIds = (ids: string[], map: Record<string, SelectHandler>) =>
-    Object.fromEntries(Object.entries(map).map(([k, v]) => [k, ids.includes(k) ? { ...v, active: true } : v]))
 
 export const DokumentVisningContext = createContext<Maybe<DokumentVisningContextType>>(null)
 
@@ -57,8 +55,41 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
         [],
     )
 
+    const removeDokument = useCallback((id: string) => {
+        setDokumenterInternal((prev) => prev.filter((d) => d.inntektsmeldingId !== id))
+        setSelectHandlerMap((prev) => (prev ? { ...prev, [id]: { ...prev[id], show: false } } : undefined))
+    }, [])
+
+    const deactivateHandlers = useCallback(() => {
+        setSelectHandlerMap(
+            (prev) => prev && Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, { ...v, show: false }])),
+        )
+    }, [])
+
+    const activateHandlersForIds = useCallback(
+        (ids: string[]) =>
+            setSelectHandlerMap((prev) =>
+                prev
+                    ? Object.fromEntries(
+                          Object.entries(prev).map(([k, v]) => [k, ids.includes(k) ? { ...v, show: true } : v]),
+                      )
+                    : prev,
+            ),
+        [],
+    )
+
     return (
-        <DokumentVisningContext.Provider value={{ dokumenter, setDokumenter, selectHandlerMap, setSelectHandlerMap }}>
+        <DokumentVisningContext.Provider
+            value={{
+                dokumenter,
+                setDokumenter,
+                removeDokument,
+                selectHandlerMap,
+                setSelectHandlerMap,
+                deactivateHandlers,
+                activateHandlersForIds,
+            }}
+        >
             {children}
         </DokumentVisningContext.Provider>
     )

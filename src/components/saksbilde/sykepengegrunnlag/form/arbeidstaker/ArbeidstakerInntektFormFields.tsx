@@ -1,8 +1,7 @@
 import React, { Fragment, ReactElement, useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { BodyShort, Button, HGrid, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 
 import {
     ArbeidstakerInntektType,
@@ -14,21 +13,17 @@ import {
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
-import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
+import { getFormattedDatetimeString } from '@utils/date-format'
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
-import {
-    activateHandlersForIds,
-    deactivateHandlers,
-    useDokumentVisningContext,
-} from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
-    const { setSelectHandlerMap } = useDokumentVisningContext()
+    const { deactivateHandlers } = useDokumentVisningContext()
     const visRefusjonsFelter = !!watch('data.refusjon')?.[0]?.fom
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const valgtType = watch('data.type')
@@ -57,7 +52,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                                 field.onChange(valg)
 
                                 if (valg !== 'INNTEKTSMELDING') {
-                                    setSelectHandlerMap((prev) => (prev ? deactivateHandlers(prev) : prev))
+                                    deactivateHandlers()
                                 }
 
                                 if (valg === 'SKJONNSFASTSETTELSE') {
@@ -147,21 +142,13 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
 function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
-    const { setSelectHandlerMap } = useDokumentVisningContext()
+    const { activateHandlersForIds } = useDokumentVisningContext()
     const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
 
     useEffect(() => {
         if (!inntektsmeldinger) return
-
-        setSelectHandlerMap((prev) =>
-            prev
-                ? activateHandlersForIds(
-                      inntektsmeldinger.map((m) => m.inntektsmeldingId),
-                      prev,
-                  )
-                : prev,
-        )
-    }, [inntektsmeldinger, setSelectHandlerMap])
+        activateHandlersForIds(inntektsmeldinger.map((m) => m.inntektsmeldingId))
+    }, [inntektsmeldinger, activateHandlersForIds])
 
     useEffect(() => {
         const valgtInntektsmelding = inntektsmeldinger?.find((m) => m.inntektsmeldingId === valgtInntektsmeldingId)
@@ -216,7 +203,7 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                                         </Radio>
                                         <VisInntektsmeldingButton
                                             inntektsmelding={inntektsmelding}
-                                            handleSelect={() => handleSelect(inntektsmelding.inntektsmeldingId)}
+                                            selectHandler={() => handleSelect(inntektsmelding.inntektsmeldingId)}
                                         />
                                     </HStack>
                                 )
@@ -225,47 +212,6 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                 </RadioGroup>
             )}
         />
-    )
-}
-
-export function InntektsmeldingVisning({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
-    return (
-        <HGrid columns={2} className="w-[380px]">
-            <BodyShort size="small" textColor="subtle">
-                Mottatt:
-            </BodyShort>
-            <BodyShort size="small">{getFormattedDatetimeString(inntektsmelding.mottattDato)}</BodyShort>
-
-            <BodyShort size="small" textColor="subtle">
-                Beregnet inntekt:
-            </BodyShort>
-            <BodyShort size="small">{formaterBeløpKroner(Number(inntektsmelding.beregnetInntekt))}</BodyShort>
-
-            <BodyShort size="small" textColor="subtle">
-                Første fraværsdag:
-            </BodyShort>
-            <BodyShort size="small">
-                {inntektsmelding.foersteFravaersdag ? getFormattedDateString(inntektsmelding.foersteFravaersdag) : '-'}
-            </BodyShort>
-
-            {inntektsmelding.arbeidsgiverperioder.map((arbeidsgiverperiode, i) => (
-                <Fragment key={i + arbeidsgiverperiode.fom}>
-                    <BodyShort size="small" textColor="subtle">
-                        Arbeidsgiverperiode:
-                    </BodyShort>
-                    <BodyShort size="small">
-                        {getFormattedDateString(arbeidsgiverperiode.fom) +
-                            ' - ' +
-                            getFormattedDateString(arbeidsgiverperiode.tom)}
-                    </BodyShort>
-                </Fragment>
-            ))}
-
-            <BodyShort size="small" textColor="subtle">
-                Organisasjonsnummer:
-            </BodyShort>
-            <BodyShort size="small">{inntektsmelding.virksomhetsnummer}</BodyShort>
-        </HGrid>
     )
 }
 
@@ -296,43 +242,4 @@ export function refusjonFra(inntektsmelding: Inntektsmelding): RefusjonInfo[] {
     })
 
     return periods
-}
-
-function VisInntektsmeldingButton({
-    inntektsmelding,
-    handleSelect,
-}: {
-    inntektsmelding: Inntektsmelding
-    handleSelect: () => void
-}): ReactElement {
-    const { dokumenter, setDokumenter, setSelectHandlerMap } = useDokumentVisningContext()
-    return (
-        <Button
-            size="xsmall"
-            type="button"
-            variant="tertiary"
-            icon={
-                dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? (
-                    <ArrowLeftIcon />
-                ) : (
-                    <ArrowRightIcon />
-                )
-            }
-            iconPosition="right"
-            onClick={() => {
-                setSelectHandlerMap((prev) => ({
-                    ...prev,
-                    [inntektsmelding.inntektsmeldingId]: { active: true, handler: handleSelect },
-                }))
-                setDokumenter((prev) => {
-                    if (prev.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId)) {
-                        return prev.filter((d) => d.inntektsmeldingId !== inntektsmelding.inntektsmeldingId)
-                    }
-                    return [...prev, inntektsmelding]
-                })
-            }}
-        >
-            {dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? 'Skjul' : 'Vis'}
-        </Button>
-    )
 }
