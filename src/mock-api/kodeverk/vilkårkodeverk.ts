@@ -12,7 +12,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             bokstav: null,
         },
         vilkårskode: 'KRAV_RETTIDIG_FRAMSATT',
-        beskrivelse: 'Frist for framsetting av krav',
+        beskrivelse: 'Krav fremsatt innen frist',
         oppfylt: [
             {
                 kode: 'KRAV_FRAMSATT_INNEN_TRE_MAANEDER',
@@ -70,6 +70,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-11-18T13:13:20.931Z',
     },
     {
         vilkårshjemmel: {
@@ -1047,7 +1048,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '1997-05-01',
                     kapittel: '8',
-                    paragraf: '8-47',
+                    paragraf: '47',
                     ledd: '',
                     setning: null,
                     bokstav: null,
@@ -1081,14 +1082,14 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-08T10:43:02.233Z',
+        sistEndretDato: '2025-11-19T08:14:34.984Z',
     },
     {
         vilkårshjemmel: {
             lovverk: 'Folketrygdloven',
             lovverksversjon: '1997-05-01',
             kapittel: '2',
-            paragraf: '',
+            paragraf: '1',
             ledd: null,
             setning: null,
             bokstav: null,
@@ -1103,7 +1104,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '1997-05-01',
                     kapittel: '2',
-                    paragraf: '',
+                    paragraf: '1',
                     ledd: null,
                     setning: null,
                     bokstav: null,
@@ -1118,7 +1119,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     lovverk: 'Folketrygdloven',
                     lovverksversjon: '1997-05-01',
                     kapittel: '2',
-                    paragraf: '',
+                    paragraf: '1',
                     ledd: null,
                     setning: null,
                     bokstav: null,
@@ -1126,7 +1127,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-08T10:43:02.233Z',
+        sistEndretDato: '2025-11-18T13:27:15.804Z',
     },
     {
         vilkårshjemmel: {
@@ -1362,8 +1363,8 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             setning: '',
             bokstav: null,
         },
-        vilkårskode: 'GRADERTE_SYKEPENGER',
-        beskrivelse: 'Graderte sykepenger',
+        vilkårskode: 'DELVIS_UFOER',
+        beskrivelse: 'Arbeidsufør nok',
         oppfylt: [
             {
                 kode: 'ARBEIDSUFOR_20_ELLER_MER',
@@ -1395,51 +1396,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-08T10:43:02.233Z',
-    },
-    {
-        vilkårshjemmel: {
-            lovverk: 'Folketrygdloven',
-            lovverksversjon: '2006-07-01',
-            kapittel: '8',
-            paragraf: '5',
-            ledd: null,
-            setning: null,
-            bokstav: null,
-        },
-        vilkårskode: 'FRISKMELDING_ARBFORMIDLING',
-        beskrivelse: 'Friskmelding til arbeidsformidling',
-        oppfylt: [
-            {
-                kode: 'HAR_SAGT_OPP',
-                beskrivelse: 'Arbeidsforhold har opphørt i samsvar med arbeidsmiljølovens bestemmelser',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2006-07-01',
-                    kapittel: '8',
-                    paragraf: '5',
-                    ledd: '2',
-                    setning: '1',
-                    bokstav: null,
-                },
-            },
-            {
-                kode: 'ER_ARBEIDSSOEKER',
-                beskrivelse: 'Den sykmeldte har meldt seg som arbeidssøker hos Arbeids- og velferdsetaten',
-                vilkårshjemmel: {
-                    lovverk: 'Folketrygdloven',
-                    lovverksversjon: '2006-07-01',
-                    kapittel: '8',
-                    paragraf: '5',
-                    ledd: '2',
-                    setning: '1',
-                    bokstav: null,
-                },
-            },
-        ],
-        ikkeOppfylt: [],
-        sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-08T10:43:02.233Z',
+        sistEndretDato: '2025-11-18T12:53:33.864Z',
     },
     {
         vilkårshjemmel: {
@@ -1471,7 +1428,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         ],
         ikkeOppfylt: [],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-09T11:22:43.075Z',
+        sistEndretDato: '2025-11-18T10:48:13.597Z',
     },
     {
         vilkårshjemmel: {
@@ -1503,7 +1460,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         ],
         ikkeOppfylt: [],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-09T11:23:23.330Z',
+        sistEndretDato: '2025-11-18T10:48:13.597Z',
     },
     {
         vilkårshjemmel: {
@@ -1534,6 +1491,51 @@ export const lokalUtviklingKodeverk: Kodeverk = [
         ],
         ikkeOppfylt: [],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-08T10:43:02.233Z',
+        sistEndretDato: '2025-11-18T10:48:13.597Z',
+    },
+    {
+        vilkårshjemmel: {
+            lovverk: 'Folketrygdloven ',
+            lovverksversjon: '2011-01-01',
+            kapittel: '8',
+            paragraf: '51',
+            ledd: '',
+            setning: null,
+            bokstav: null,
+        },
+        vilkårskode: 'SYKGRUNN_67_70_AAR_2G',
+        beskrivelse: 'Til et medlem mellom 67 og 70 år ytes det sykepenger dersom inntektsgrunnlaget overstiger 2G',
+        oppfylt: [
+            {
+                kode: 'OVER_2G',
+                beskrivelse: 'Inntektsgrunnlaget overstiger 2G',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven ',
+                    lovverksversjon: '2011-01-01',
+                    kapittel: '8',
+                    paragraf: '51',
+                    ledd: '2',
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
+        ikkeOppfylt: [
+            {
+                kode: 'UNDER_2G',
+                beskrivelse: 'Inntektsgrunnlaget under 2G',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven ',
+                    lovverksversjon: '2011-01-01',
+                    kapittel: '8',
+                    paragraf: '51',
+                    ledd: '2',
+                    setning: null,
+                    bokstav: null,
+                },
+            },
+        ],
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-11-18T13:26:23.405Z',
     },
 ]

@@ -24,7 +24,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                 alternativer: [
                                     {
                                         kode: 'KRAV_FRAMSATT_INNEN_TRE_MAANEDER',
-                                        navn: 'Søkt innen tre måneder',
+                                        navn: 'Søkt innen tre måneder forut for måneden før ....todo',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
                                     },
@@ -745,8 +745,153 @@ export const saksbehandlerUi: HovedspørsmålArray = [
         beskrivelse: 'Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
         kategori: 'særskilte_grupper',
         paragrafTag: '§ 8-47',
-        underspørsmål: [],
+        underspørsmål: [
+            {
+                kode: 'ee2f0eb8-c647-412c-8e69-794e02926938',
+                navn: 'Har personen på sykmeldingstidspunktet midlertidig har vært ute av inntektsgivende arbeid i mindre enn en måned?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: '985bb19b-f5f2-490c-a2a2-70fd2922ace2',
+                        navn: 'Ja, har vært i inntektsgivende arbeid i mindre enn en måned siden sykmeldingstidspunktet',
+                        harUnderspørsmål: true,
+                        underspørsmål: [
+                            {
+                                kode: '4c924415-569e-4db2-a7f1-9ddd15448dac',
+                                navn: null,
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: 'f68841bd-3042-4821-a65f-c0005d29ac4c',
+                                        navn: '(Todo)Har tidligere vært i arbeid i minst fire uker (tidligere oppfylt sykepengerett etter § 8-2)',
+                                        harUnderspørsmål: true,
+                                        underspørsmål: [
+                                            {
+                                                kode: '9b47c46f-e4e8-4c1c-bc42-142ec8219c0d',
+                                                navn: null,
+                                                variant: 'RADIO',
+                                                alternativer: [
+                                                    {
+                                                        kode: '6a212ca5-9798-47b4-93dd-e894e251c0e0',
+                                                        navn: 'Ja',
+                                                        harUnderspørsmål: true,
+                                                        underspørsmål: [
+                                                            {
+                                                                kode: '9ad8dbfa-3e36-41f9-a06f-06832c0ab516',
+                                                                navn: null,
+                                                                variant: 'RADIO',
+                                                                alternativer: [
+                                                                    {
+                                                                        kode: 'I_ARBEID_UTEN_OPPTJENNING',
+                                                                        navn: 'Personen er i arbeid uten å fylle vilkåret i § 8-2 om fire ukers opptjeningstid',
+                                                                        harUnderspørsmål: false,
+                                                                        underspørsmål: [],
+                                                                    },
+                                                                    {
+                                                                        kode: 'UTE_AV_ARBEID_SISTE_JOBB',
+                                                                        navn: 'Personen er fremdeles ute av inntektsgivende arbeid på sykmeldingstidspunktet',
+                                                                        harUnderspørsmål: false,
+                                                                        underspørsmål: [],
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        kode: 'UTE_AV_ARBEID_FOR_LENGE',
+                                                        navn: 'Nei (todo finne riktig kode)',
+                                                        harUnderspørsmål: false,
+                                                        underspørsmål: [],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        kode: '9db27a74-5b58-491d-9c6a-b08f34209808',
+                        navn: 'Ja, vært i likestilt med arbeid',
+                        harUnderspørsmål: true,
+                        underspørsmål: [
+                            {
+                                kode: '23160507-f0ec-4729-bf4c-26af3a6f4c9d',
+                                navn: null,
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: 'UTE_AV_ARBEID_MLTJ',
+                                        navn: 'Utført militærtjeneste',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'UTE_AV_ARBEID_SKIP_FRITID',
+                                        navn: 'Arbeidstaker på skip i utenriksfart avspaserer opparbeidet fritid',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'UTE_AV_ARBEID_FERIE',
+                                        navn: 'Har lovbestemt ferie',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                    {
+                                        kode: 'UTE_AV_ARBEID_PERMISJON_AVTALE',
+                                        navn: 'Har lovbestemt permisjon etter arbeidsmiljøloven §§ 12-1 til 12-5 og har avtale om å gjenoppta arbeidet etter permisjonen',
+                                        harUnderspørsmål: false,
+                                        underspørsmål: [],
+                                    },
+                                ],
+                            },
+                            {
+                                kode: '907bbd93-7188-4aa2-b619-e9709b2b932c',
+                                navn: '(Todo)Har tidligere vært i arbeid i minst fire uker (tidligere oppfylt sykepengerett etter § 8-2)',
+                                variant: 'RADIO',
+                                alternativer: [
+                                    {
+                                        kode: '3ded7100-1ef2-46de-8fc2-ef2d1e6c4bda',
+                                        navn: 'Ja',
+                                        harUnderspørsmål: true,
+                                        underspørsmål: [
+                                            {
+                                                kode: 'ccc4e012-eb92-40ba-a008-e37e89d84973',
+                                                navn: null,
+                                                variant: 'RADIO',
+                                                alternativer: [
+                                                    {
+                                                        kode: 'I_ARBEID_UTEN_OPPTJENNING',
+                                                        navn: 'Personen er i arbeid uten å fylle vilkåret i § 8-2 om fire ukers opptjeningstid',
+                                                        harUnderspørsmål: false,
+                                                        underspørsmål: [],
+                                                    },
+                                                    {
+                                                        kode: 'UTE_AV_ARBEID_SISTE_JOBB',
+                                                        navn: 'Personen er fremdeles ute av inntektsgivende arbeid på sykmeldingstidspunktet',
+                                                        harUnderspørsmål: false,
+                                                        underspørsmål: [],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        kode: 'cec64a43-a269-4313-8a1f-d769f783531a',
+                                        navn: 'Nei',
+                                        harUnderspørsmål: true,
+                                        underspørsmål: [],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-09T06:17:46.238Z',
+        sistEndretDato: '2025-11-20T12:42:35.522Z',
     },
 ]
