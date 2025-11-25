@@ -24,6 +24,7 @@ export const allowedAPIs = [
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/dagoversikt',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/perioder',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntekt',
+    'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/fri-inntekt',
     'GET /v1/[personId]/soknader/[uuid]',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/sendtilbeslutning',
     'POST /v1/[personId]/saksbehandlingsperioder/[uuid]/tatilbeslutning',
