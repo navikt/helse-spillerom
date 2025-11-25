@@ -11,6 +11,7 @@ interface DateFieldProps {
     showErrorMessage?: boolean
     fromDate?: Date
     toDate?: Date
+    defaultSelected?: Date
 }
 
 export function DateField({
@@ -20,11 +21,12 @@ export function DateField({
     showErrorMessage = false,
     fromDate,
     toDate,
+    defaultSelected,
 }: DateFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
 
     const { datepickerProps, inputProps } = useDatepicker({
-        defaultSelected: field.value,
+        defaultSelected: field.value && field.value !== '' ? field.value : defaultSelected,
         onDateChange: (date) => {
             if (!date) {
                 field.onChange(null)

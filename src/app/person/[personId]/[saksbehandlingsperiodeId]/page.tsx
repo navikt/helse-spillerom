@@ -12,6 +12,7 @@ import { YrkesaktivitetTab } from '@components/saksbilde/yrkesaktivitet/Yrkesakt
 import { useHash } from '@hooks/useHash'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { InntekterTilFordelingTab } from '@components/saksbilde/inntekter-til-fordeling/InntekterTilFordelingTab'
+import { RefusjonTab } from '@components/saksbilde/refusjon/RefusjonTab'
 
 const VALID_TABS = [
     'yrkesaktivitet',
@@ -20,6 +21,7 @@ const VALID_TABS = [
     'vilkar',
     'dagoversikt',
     'inntekter-fordeling',
+    'refusjon',
 ] as const
 const DEFAULT_TAB = 'yrkesaktivitet'
 
@@ -62,6 +64,13 @@ export default function PersonPage(): ReactElement {
                                 >
                                     Inntekter til fordeling
                                 </ActionMenu.Item>
+                                <ActionMenu.Item
+                                    onSelect={() => {
+                                        handleTabChange('refusjon')
+                                    }}
+                                >
+                                    Refusjon
+                                </ActionMenu.Item>
                             </ActionMenu.Group>
                         </ActionMenu.Content>
                     </ActionMenu>
@@ -71,6 +80,7 @@ export default function PersonPage(): ReactElement {
                 <VilkårsvurderingTab value="vilkar" />
                 <Dagoversikt value="dagoversikt" />
                 <InntekterTilFordelingTab value="inntekter-fordeling" />
+                <RefusjonTab value="refusjon" />
             </Tabs>
         </section>
     )

@@ -1,7 +1,7 @@
 import { z } from 'zod/v4'
 
 import { dagoversiktSchema } from './dagoversikt'
-import { inntektRequestSchema } from './inntektRequest'
+import { inntektRequestSchema, refusjonInfoSchema } from './inntektRequest'
 import { inntektDataSchema } from './inntektData'
 import { yrkesaktivitetKategoriseringSchema } from './yrkesaktivitetKategorisering'
 
@@ -26,6 +26,7 @@ export const yrkesaktivitetSchema = z.object({
     inntektRequest: inntektRequestSchema.nullable().optional(),
     inntektData: inntektDataSchema.nullable().optional(),
     inntekt: z.number().nullable().optional(),
+    refusjon: z.array(refusjonInfoSchema).nullable().optional(),
 })
 
 export type Yrkesaktivitet = z.infer<typeof yrkesaktivitetSchema>
