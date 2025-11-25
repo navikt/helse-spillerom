@@ -40,11 +40,13 @@ export default function PersonPage(): ReactElement {
         <section className="flex-auto">
             <SaksbehandlingsperiodeHeading />
             <Tabs value={activeTab} onChange={handleTabChange}>
-                <TabsList>
-                    <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
-                    <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
-                    <TabsTab value="vilkar" label="Vilkårsvurdering" />
-                    <TabsTab value="dagoversikt" label="Dagoversikt" />
+                <div className="flex">
+                    <TabsList>
+                        <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
+                        <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
+                        <TabsTab value="vilkar" label="Vilkårsvurdering" />
+                        <TabsTab value="dagoversikt" label="Dagoversikt" />
+                    </TabsList>
                     <ActionMenu>
                         <ActionMenu.Trigger className="ml-8">
                             <Button variant="secondary" icon={<ChevronDownIcon aria-hidden />} iconPosition="right">
@@ -63,7 +65,7 @@ export default function PersonPage(): ReactElement {
                             </ActionMenu.Group>
                         </ActionMenu.Content>
                     </ActionMenu>
-                </TabsList>
+                </div>
                 <YrkesaktivitetTab value="yrkesaktivitet" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTab value="vilkar" />
