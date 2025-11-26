@@ -3,17 +3,7 @@
 import React, { ReactElement, useMemo } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-    Button,
-    Chips,
-    ErrorSummary,
-    Heading,
-    Radio,
-    RadioGroup,
-    Textarea,
-    UNSAFE_Combobox as Combobox,
-    VStack,
-} from '@navikt/ds-react'
+import { Button, Chips, ErrorSummary, Heading, Textarea, UNSAFE_Combobox as Combobox, VStack } from '@navikt/ds-react'
 import { ErrorSummaryItem } from '@navikt/ds-react/ErrorSummary'
 import { z } from 'zod/v4'
 
@@ -21,18 +11,14 @@ import { useBeregningsregler } from '@hooks/queries/useBeregningsregler'
 import { useOpprettSykepengegrunnlag } from '@hooks/mutations/useOpprettSykepengegrunnlag'
 import { OpprettSykepengegrunnlagRequest } from '@schemas/sykepengegrunnlag'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
-import { kronerTilØrer } from '@schemas/øreUtils'
-
-type ÅrsakTilFrihånd = 'MANGLER_STØTTE_I_SPILLEROM' | 'OVERTATT_SAK_FRA_SPEIL' | 'OVERTATT_SAK_FRA_INFOTRYGD'
+import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateField'
 
 const frihåndSykepengegrunnlagFormSchema = z
     .object({
-        årsakTilFrihånd: z
-            .enum(['MANGLER_STØTTE_I_SPILLEROM', 'OVERTATT_SAK_FRA_SPEIL', 'OVERTATT_SAK_FRA_INFOTRYGD'])
-            .or(z.literal('')),
         beregningsgrunnlag: z.number().optional(),
         begrunnelse: z.string(),
         valgteÅrsaker: z.array(z.object({ kode: z.string(), beskrivelse: z.string() })),
+        datoForGBegrensning: z.string().nullable().optional(),
     })
     .superRefine((values, ctx) => {
         if (!values.beregningsgrunnlag || values.beregningsgrunnlag <= 0) {
@@ -49,11 +35,11 @@ const frihåndSykepengegrunnlagFormSchema = z
                 message: 'Begrunnelse er påkrevd',
             })
         }
-        if (values.årsakTilFrihånd === 'MANGLER_STØTTE_I_SPILLEROM' && values.valgteÅrsaker.length === 0) {
+        if (values.valgteÅrsaker.length === 0) {
             ctx.addIssue({
                 code: 'custom',
                 path: ['valgteÅrsaker'],
-                message: 'Minst én beregningskode må velges når årsak er "Mangler støtte i spillerom"',
+                message: 'Minst én beregningskode må velges',
             })
         }
     })
@@ -67,15 +53,14 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
     const form = useForm<FrihåndSykepengegrunnlagFormData>({
         resolver: zodResolver(frihåndSykepengegrunnlagFormSchema),
         defaultValues: {
-            årsakTilFrihånd: '',
             beregningsgrunnlag: undefined,
             begrunnelse: '',
             valgteÅrsaker: [],
+            datoForGBegrensning: null,
         },
         shouldFocusError: false,
     })
 
-    const årsakTilFrihånd = form.watch('årsakTilFrihånd')
     const valgteÅrsaker = form.watch('valgteÅrsaker')
 
     // Filtrer beregningsregler som har SYKEPENGEGRUNNLAG i kodeverdien
@@ -95,8 +80,6 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
             beskrivelse: regel.beskrivelse,
         }))
     }, [beregningsregler])
-
-    const visÅrsakerCombobox = årsakTilFrihånd === 'MANGLER_STØTTE_I_SPILLEROM'
 
     const handleLeggTilÅrsak = (kode: string) => {
         const regel = sykepengegrunnlagKoder.find((r) => r.value === kode)
@@ -118,9 +101,10 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
         }
 
         const request: OpprettSykepengegrunnlagRequest = {
-            beregningsgrunnlag: kronerTilØrer(data.beregningsgrunnlag),
+            beregningsgrunnlag: data.beregningsgrunnlag,
             begrunnelse: data.begrunnelse,
             beregningskoder: data.valgteÅrsaker.map((årsak) => årsak.kode),
+            datoForGBegrensning: data.datoForGBegrensning ?? null,
         }
 
         await mutation.mutateAsync(request)
@@ -134,55 +118,26 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
                 </Heading>
 
                 <VStack as="form" role="form" gap="6" onSubmit={form.handleSubmit(onSubmit)}>
-                    <Controller
-                        control={form.control}
-                        name="årsakTilFrihånd"
-                        render={({ field, fieldState }) => (
-                            <RadioGroup
-                                legend="Årsak til frihånd"
-                                value={field.value || ''}
-                                onChange={(value) => {
-                                    field.onChange((value || '') as ÅrsakTilFrihånd | '')
-                                    // Nullstill valgte årsaker og begrunnelse når årsak endres
-                                    if (value !== 'MANGLER_STØTTE_I_SPILLEROM') {
-                                        form.setValue('valgteÅrsaker', [])
-                                        form.setValue('begrunnelse', '')
-                                    }
-                                }}
-                                error={fieldState.error?.message}
-                            >
-                                <Radio value="MANGLER_STØTTE_I_SPILLEROM">Mangler støtte i spillerom</Radio>
-                                <Radio value="OVERTATT_SAK_FRA_SPEIL">Overtatt sak fra speil</Radio>
-                                <Radio value="OVERTATT_SAK_FRA_INFOTRYGD">Overtatt sak fra infotrygd</Radio>
-                            </RadioGroup>
+                    <VStack gap="4">
+                        <Combobox
+                            label="Beregningskoder"
+                            options={sykepengegrunnlagKoder}
+                            onToggleSelected={(option) => {
+                                handleLeggTilÅrsak(option)
+                            }}
+                        />
+                        {valgteÅrsaker.length > 0 && (
+                            <VStack gap="2">
+                                <Chips>
+                                    {valgteÅrsaker.map((årsak) => (
+                                        <Chips.Removable key={årsak.kode} onDelete={() => handleFjernÅrsak(årsak.kode)}>
+                                            {årsak.beskrivelse}
+                                        </Chips.Removable>
+                                    ))}
+                                </Chips>
+                            </VStack>
                         )}
-                    />
-
-                    {visÅrsakerCombobox && (
-                        <VStack gap="4">
-                            <Combobox
-                                label="Beregningskoder"
-                                options={sykepengegrunnlagKoder}
-                                onToggleSelected={(option) => {
-                                    handleLeggTilÅrsak(option)
-                                }}
-                            />
-                            {valgteÅrsaker.length > 0 && (
-                                <VStack gap="2">
-                                    <Chips>
-                                        {valgteÅrsaker.map((årsak) => (
-                                            <Chips.Removable
-                                                key={årsak.kode}
-                                                onDelete={() => handleFjernÅrsak(årsak.kode)}
-                                            >
-                                                {årsak.beskrivelse}
-                                            </Chips.Removable>
-                                        ))}
-                                    </Chips>
-                                </VStack>
-                            )}
-                        </VStack>
-                    )}
+                    </VStack>
 
                     <PengerField
                         name="beregningsgrunnlag"
@@ -190,6 +145,8 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
                         readOnly={false}
                         className="w-[200px]"
                     />
+
+                    <DateField name="datoForGBegrensning" label="Dato for G-begrensning (valgfritt)" />
 
                     <Controller
                         control={form.control}
