@@ -4,19 +4,20 @@ import { BriefcaseIcon } from '@navikt/aksel-icons'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
-import { getFormattedDateString } from '@utils/date-format'
+import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
-import { SelectHandler } from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 
-export function InntektsmeldingInnhold({
-    inntektsmelding,
-    selectHandler,
-}: {
-    inntektsmelding: Inntektsmelding
-    selectHandler?: SelectHandler
-}): ReactElement {
+export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
+    const { dokumentStateMap, selectDokument } = useDokumentVisningContext()
+    const { isSelected = false, showSelectButton = false } = dokumentStateMap[inntektsmelding.inntektsmeldingId]
+
     return (
-        <VStack gap="4" role="region" aria-label={`InntektsmeldingId=${inntektsmelding.inntektsmeldingId} innhold`}>
+        <VStack
+            gap="4"
+            role="region"
+            aria-label={`Innhold for inntektsmelding mottat: ${getFormattedDatetimeString(inntektsmelding.mottattDato)}`}
+        >
             <HStack gap="2" wrap={false}>
                 <BriefcaseIcon aria-hidden fontSize="1.5rem" />
                 {inntektsmelding.virksomhetsnummer ? (
@@ -40,9 +41,15 @@ export function InntektsmeldingInnhold({
             <Details label="Innsender fullt navn">{inntektsmelding.innsenderFulltNavn}</Details>
             <Details label="Innsender telefon">{inntektsmelding.innsenderTelefon}</Details>
             <Details label="Avsendersystem">{inntektsmelding.avsenderSystem?.navn}</Details>
-            {selectHandler && selectHandler.show && (
-                <Button type="button" variant="secondary" size="small" onClick={selectHandler.handler}>
-                    Velg
+            {showSelectButton && (
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="small"
+                    onClick={() => selectDokument(inntektsmelding.inntektsmeldingId)}
+                    disabled={isSelected}
+                >
+                    {isSelected ? 'Valgt' : 'Velg'}
                 </Button>
             )}
         </VStack>

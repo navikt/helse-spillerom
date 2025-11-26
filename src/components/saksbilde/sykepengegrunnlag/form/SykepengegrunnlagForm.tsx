@@ -29,7 +29,7 @@ export function SykepengegrunnlagForm({
     erFørstegangsRedigering = false,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
-    const { deactivateHandlers } = useDokumentVisningContext()
+    const { hideSelectButtonForAll } = useDokumentVisningContext()
     const defaultValues = useMemo(
         () => getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
         [kategori, inntektRequest],
@@ -43,8 +43,8 @@ export function SykepengegrunnlagForm({
     useEffect(() => {
         if (!erFørstegangsRedigering) return
         form.reset(defaultValues)
-        deactivateHandlers()
-    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form, deactivateHandlers])
+        hideSelectButtonForAll()
+    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form, hideSelectButtonForAll])
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
         await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {

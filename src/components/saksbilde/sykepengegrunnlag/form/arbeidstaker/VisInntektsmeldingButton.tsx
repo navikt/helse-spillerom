@@ -7,14 +7,14 @@ import { Inntektsmelding } from '@schemas/inntektsmelding'
 
 interface VisInntektsmeldingButtonProps {
     inntektsmelding: Inntektsmelding
-    selectHandler?: () => void
+    showSelectButton?: boolean
 }
 
 export function VisInntektsmeldingButton({
     inntektsmelding,
-    selectHandler,
+    showSelectButton = false,
 }: VisInntektsmeldingButtonProps): ReactElement {
-    const { dokumenter, setDokumenter, setSelectHandlerMap } = useDokumentVisningContext()
+    const { dokumenter, updateDokumenter, updateDokumentState } = useDokumentVisningContext()
     return (
         <Button
             size="xsmall"
@@ -29,18 +29,8 @@ export function VisInntektsmeldingButton({
             }
             iconPosition="right"
             onClick={() => {
-                if (selectHandler) {
-                    setSelectHandlerMap((prev) => ({
-                        ...prev,
-                        [inntektsmelding.inntektsmeldingId]: { show: true, handler: selectHandler, selected: false },
-                    }))
-                }
-                setDokumenter((prev) => {
-                    if (prev.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId)) {
-                        return prev.filter((d) => d.inntektsmeldingId !== inntektsmelding.inntektsmeldingId)
-                    }
-                    return [...prev, inntektsmelding]
-                })
+                updateDokumentState(inntektsmelding.inntektsmeldingId, { showSelectButton })
+                updateDokumenter(inntektsmelding)
             }}
         >
             {dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? 'Skjul' : 'Vis'}

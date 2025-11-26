@@ -39,7 +39,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         isError: sykepengegrunnlagError,
         refetch,
     } = useSykepengegrunnlag()
-    const { deactivateHandlers } = useDokumentVisningContext()
+    const { hideSelectButtonForAll } = useDokumentVisningContext()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
@@ -224,7 +224,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         )
                                     }
                                     onClick={() => {
-                                        if (erIRedigeringsmodus) deactivateHandlers()
+                                        if (erIRedigeringsmodus) hideSelectButtonForAll()
                                         setErIRedigeringsmodus(!erIRedigeringsmodus)
                                     }}
                                 >
@@ -277,7 +277,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
                                 avbryt={() => {
                                     setErIRedigeringsmodus(false)
-                                    deactivateHandlers()
+                                    hideSelectButtonForAll()
                                 }}
                                 erFørstegangsRedigering={harIkkeInntektData}
                             />

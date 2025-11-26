@@ -1,34 +1,24 @@
 'use client'
 
-import {
-    createContext,
-    Dispatch,
-    PropsWithChildren,
-    ReactElement,
-    SetStateAction,
-    useCallback,
-    useContext,
-    useState,
-} from 'react'
+import { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useState } from 'react'
 import dayjs from 'dayjs'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Maybe } from '@utils/tsUtils'
 
-export type SelectHandler = {
-    selected: boolean
-    show: boolean
-    handler: () => void
+export type DokumentState = {
+    isSelected: boolean
+    showSelectButton: boolean
 }
 
 type DokumentVisningContextType = {
     dokumenter: Inntektsmelding[]
-    setDokumenter: Dispatch<SetStateAction<Inntektsmelding[]>>
-    removeDokument: (id: string) => void
-    selectHandlerMap?: Record<string, SelectHandler>
-    setSelectHandlerMap: Dispatch<SetStateAction<Record<string, SelectHandler> | undefined>>
-    deactivateHandlers: () => void
-    activateHandlersForIds: (ids: string[]) => void
+    updateDokumenter: (dokument: Inntektsmelding) => void
+    dokumentStateMap: Record<string, DokumentState>
+    selectDokument: (id: string) => void
+    updateDokumentState: (id: string, changes: Partial<DokumentState>) => void
+    hideSelectButtonForAll: () => void
+    syncDokumentStateWithForm: (ids: string[], selectedId: string) => void
 }
 
 export const DokumentVisningContext = createContext<Maybe<DokumentVisningContextType>>(null)
@@ -36,58 +26,86 @@ export const DokumentVisningContext = createContext<Maybe<DokumentVisningContext
 export function useDokumentVisningContext(): DokumentVisningContextType {
     const context = useContext(DokumentVisningContext)
     if (!context) {
-        throw new Error('useDokumentVisningContext must be used within a RowContext.Provider')
+        throw new Error('useDokumentVisningContext must be used within a DokumentVisningProvider')
     }
     return context
 }
 
 export function DokumentVisningProvider({ children }: PropsWithChildren): ReactElement {
-    const [dokumenter, setDokumenterInternal] = useState<Inntektsmelding[]>([])
-    const [selectHandlerMap, setSelectHandlerMap] = useState<Record<string, SelectHandler> | undefined>(undefined)
+    const [dokumenter, setDokumenter] = useState<Inntektsmelding[]>([])
+    const [dokumentStateMap, setDokumentStateMap] = useState<Record<string, DokumentState>>({})
 
-    const setDokumenter = useCallback(
-        (update: Inntektsmelding[] | ((prev: Inntektsmelding[]) => Inntektsmelding[])) => {
-            setDokumenterInternal((prev) => {
-                const newDokumenter = typeof update === 'function' ? update(prev) : update
-                return [...newDokumenter].sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
-            })
-        },
-        [],
-    )
+    const updateDokumenter = useCallback((dokument: Inntektsmelding) => {
+        setDokumenter((prev) => {
+            const exists = prev.some((d) => d.inntektsmeldingId === dokument.inntektsmeldingId)
+            const newList = exists
+                ? prev.filter((d) => d.inntektsmeldingId !== dokument.inntektsmeldingId)
+                : [...prev, dokument]
 
-    const removeDokument = useCallback((id: string) => {
-        setDokumenterInternal((prev) => prev.filter((d) => d.inntektsmeldingId !== id))
-        setSelectHandlerMap((prev) => (prev ? { ...prev, [id]: { ...prev[id], show: false } } : undefined))
+            return newList.sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
+        })
     }, [])
 
-    const deactivateHandlers = useCallback(() => {
-        setSelectHandlerMap(
-            (prev) => prev && Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, { ...v, show: false }])),
+    const updateDokumentState = useCallback((id: string, changes: Partial<DokumentState>) => {
+        setDokumentStateMap((prev) => {
+            const current = prev[id]
+
+            // Skip update if nothing changed
+            if (
+                current &&
+                Object.keys(changes).every(
+                    (key) => current[key as keyof DokumentState] === changes[key as keyof DokumentState],
+                )
+            ) {
+                return prev
+            }
+
+            return {
+                ...prev,
+                [id]: current ? { ...current, ...changes } : { isSelected: false, showSelectButton: false, ...changes },
+            }
+        })
+    }, [])
+
+    const selectDokument = useCallback((id: string) => {
+        setDokumentStateMap((prev) =>
+            Object.fromEntries(
+                Object.entries({ ...prev, [id]: prev[id] ?? { isSelected: false, showSelectButton: false } }).map(
+                    ([k, v]) => [k, { ...v, isSelected: k === id }],
+                ),
+            ),
         )
     }, [])
 
-    const activateHandlersForIds = useCallback(
-        (ids: string[]) =>
-            setSelectHandlerMap((prev) =>
-                prev
-                    ? Object.fromEntries(
-                          Object.entries(prev).map(([k, v]) => [k, ids.includes(k) ? { ...v, show: true } : v]),
-                      )
-                    : prev,
+    const hideSelectButtonForAll = useCallback(() => {
+        setDokumentStateMap((prev) =>
+            Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, { ...v, showSelectButton: false }])),
+        )
+    }, [])
+
+    const syncDokumentStateWithForm = useCallback((ids: string[], selectedId: string) => {
+        setDokumentStateMap((prev) =>
+            Object.fromEntries(
+                Object.entries(prev).map(([k, v]) => [
+                    k,
+                    ids.includes(k)
+                        ? { ...v, showSelectButton: true, isSelected: k === selectedId }
+                        : { ...v, isSelected: false },
+                ]),
             ),
-        [],
-    )
+        )
+    }, [])
 
     return (
         <DokumentVisningContext.Provider
             value={{
                 dokumenter,
-                setDokumenter,
-                removeDokument,
-                selectHandlerMap,
-                setSelectHandlerMap,
-                deactivateHandlers,
-                activateHandlersForIds,
+                updateDokumenter,
+                dokumentStateMap,
+                updateDokumentState,
+                selectDokument,
+                hideSelectButtonForAll,
+                syncDokumentStateWithForm,
             }}
         >
             {children}

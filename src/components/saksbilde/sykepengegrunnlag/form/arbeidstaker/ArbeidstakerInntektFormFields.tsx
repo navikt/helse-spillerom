@@ -1,5 +1,5 @@
-import React, { Fragment, ReactElement, useEffect } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import React, { Fragment, ReactElement, useEffect, useRef } from 'react'
+import { Controller, useFormContext, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
 import { BodyShort, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
@@ -23,7 +23,7 @@ import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnla
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
-    const { deactivateHandlers } = useDokumentVisningContext()
+    const { hideSelectButtonForAll } = useDokumentVisningContext()
     const visRefusjonsFelter = !!watch('data.refusjon')?.[0]?.fom
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const valgtType = watch('data.type')
@@ -52,7 +52,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                                 field.onChange(valg)
 
                                 if (valg !== 'INNTEKTSMELDING') {
-                                    deactivateHandlers()
+                                    hideSelectButtonForAll()
                                 }
 
                                 if (valg === 'SKJONNSFASTSETTELSE') {
@@ -140,22 +140,12 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
 }
 
 function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
-    const { control, setValue, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const { control, setValue, getValues, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
-    const { activateHandlersForIds } = useDokumentVisningContext()
+    const { selectDokument } = useDokumentVisningContext()
     const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
 
-    useEffect(() => {
-        if (!inntektsmeldinger) return
-        activateHandlersForIds(inntektsmeldinger.map((m) => m.inntektsmeldingId))
-    }, [inntektsmeldinger, activateHandlersForIds])
-
-    useEffect(() => {
-        const valgtInntektsmelding = inntektsmeldinger?.find((m) => m.inntektsmeldingId === valgtInntektsmeldingId)
-        if (valgtInntektsmelding) {
-            setValue('data.årsinntekt', Number(valgtInntektsmelding.beregnetInntekt) * 12)
-        }
-    }, [valgtInntektsmeldingId, inntektsmeldinger, setValue])
+    useSyncInntektsmelding(valgtInntektsmeldingId, setValue, getValues, inntektsmeldinger)
 
     if (isLoading) {
         return <BodyShort className="m-4 ml-6">Laster...</BodyShort> // TODO lag skeleton her
@@ -180,34 +170,28 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                     <VStack gap="2">
                         {inntektsmeldinger
                             .sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
-                            .map((inntektsmelding, i) => {
-                                function handleSelect(id: string) {
-                                    field.onChange(id)
-                                    setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
+                            .map((inntektsmelding, i) => (
+                                <HStack gap="2" key={inntektsmelding.inntektsmeldingId}>
+                                    <Radio
+                                        key={inntektsmelding.inntektsmeldingId}
+                                        id={i === 0 ? 'data-inntektsmeldingId' : undefined}
+                                        value={inntektsmelding.inntektsmeldingId}
+                                        onChange={(e) => {
+                                            field.onChange(e.target.value)
 
-                                    const refusjon = refusjonFra(inntektsmelding)
-                                    const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
+                                            const refusjon = refusjonFra(inntektsmelding)
+                                            const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
 
-                                    setValue('data.refusjon', harRefusjon ? refusjon : undefined)
-                                }
-
-                                return (
-                                    <HStack gap="2" key={inntektsmelding.inntektsmeldingId}>
-                                        <Radio
-                                            key={inntektsmelding.inntektsmeldingId}
-                                            id={i === 0 ? 'data-inntektsmeldingId' : undefined}
-                                            value={inntektsmelding.inntektsmeldingId}
-                                            onChange={() => handleSelect(inntektsmelding.inntektsmeldingId)}
-                                        >
-                                            Mottatt: {getFormattedDatetimeString(inntektsmelding.mottattDato)}
-                                        </Radio>
-                                        <VisInntektsmeldingButton
-                                            inntektsmelding={inntektsmelding}
-                                            selectHandler={() => handleSelect(inntektsmelding.inntektsmeldingId)}
-                                        />
-                                    </HStack>
-                                )
-                            })}
+                                            setValue('data.årsinntekt', Number(inntektsmelding.beregnetInntekt) * 12)
+                                            setValue('data.refusjon', harRefusjon ? refusjon : undefined)
+                                            selectDokument(e.target.value)
+                                        }}
+                                    >
+                                        Mottatt: {getFormattedDatetimeString(inntektsmelding.mottattDato)}
+                                    </Radio>
+                                    <VisInntektsmeldingButton inntektsmelding={inntektsmelding} showSelectButton />
+                                </HStack>
+                            ))}
                     </VStack>
                 </RadioGroup>
             )}
@@ -234,7 +218,6 @@ export function refusjonFra(inntektsmelding: Inntektsmelding): RefusjonInfo[] {
         currentBeløp = Number(next.beloep) ?? 0
     }
 
-    // Last period
     periods.push({
         fom: currentFom,
         tom: refusjon?.opphoersdato ?? null,
@@ -242,4 +225,52 @@ export function refusjonFra(inntektsmelding: Inntektsmelding): RefusjonInfo[] {
     })
 
     return periods
+}
+
+function useSyncInntektsmelding(
+    valgtId: string,
+    setValue: UseFormSetValue<InntektRequestFor<'ARBEIDSTAKER'>>,
+    getValues: UseFormGetValues<InntektRequestFor<'ARBEIDSTAKER'>>,
+    inntektsmeldinger?: Inntektsmelding[],
+) {
+    const { dokumentStateMap, syncDokumentStateWithForm } = useDokumentVisningContext()
+    const didRun = useRef(false)
+
+    // Setter årsinntekt avhengig av persistert valg av inntektsmelding og oppdaterer dokument-state.
+    // Skal bare kjøre én gang - etter inntektsmeldinger er fetchet
+    useEffect(() => {
+        if (!inntektsmeldinger || didRun.current) return
+
+        didRun.current = true
+
+        syncDokumentStateWithForm(
+            inntektsmeldinger.map((m) => m.inntektsmeldingId),
+            valgtId,
+        )
+
+        const valgt = inntektsmeldinger.find((im) => im.inntektsmeldingId === valgtId)
+        if (valgt) {
+            setValue('data.årsinntekt', Number(valgt.beregnetInntekt) * 12)
+        }
+    }, [inntektsmeldinger, valgtId, syncDokumentStateWithForm, setValue])
+
+    // Oppdaterer state i form når inntektsmelding velges fra dokumentvisningen
+    useEffect(() => {
+        const selectedId = Object.keys(dokumentStateMap).find((key) => dokumentStateMap[key].isSelected)
+
+        if (!inntektsmeldinger || !selectedId || getValues('data.inntektsmeldingId') === selectedId) {
+            return
+        }
+
+        const valgt = inntektsmeldinger.find((im) => im.inntektsmeldingId === selectedId)
+
+        if (!valgt) return
+
+        const refusjon = refusjonFra(valgt)
+        const harRefusjon = refusjon.length > 1 || refusjon[0].beløp !== 0
+
+        setValue('data.inntektsmeldingId', valgt.inntektsmeldingId)
+        setValue('data.årsinntekt', Number(valgt.beregnetInntekt) * 12)
+        setValue('data.refusjon', harRefusjon ? refusjon : undefined)
+    }, [dokumentStateMap, inntektsmeldinger, setValue, getValues])
 }

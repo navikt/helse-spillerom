@@ -24,7 +24,7 @@ import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokume
 type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 
 export function Høyremeny(): ReactElement {
-    const { dokumenter, removeDokument, selectHandlerMap } = useDokumentVisningContext()
+    const { dokumenter, updateDokumenter } = useDokumentVisningContext()
 
     const params = useParams()
     const erISaksbehandlingsperiode = Boolean(params?.saksbehandlingsperiodeId)
@@ -105,16 +105,11 @@ export function Høyremeny(): ReactElement {
                                             size="xsmall"
                                             type="button"
                                             icon={<XMarkIcon aria-hidden />}
-                                            onClick={() => removeDokument(dokument.inntektsmeldingId)}
+                                            onClick={() => updateDokumenter(dokument)}
                                             aria-label="Lukk høyremeny"
                                         />
                                     </HStack>
-                                    <InntektsmeldingInnhold
-                                        inntektsmelding={dokument}
-                                        selectHandler={
-                                            selectHandlerMap ? selectHandlerMap[dokument.inntektsmeldingId] : undefined
-                                        }
-                                    />
+                                    <InntektsmeldingInnhold inntektsmelding={dokument} />
                                 </VStack>
                             </Sidemeny>
                         </motion.div>
