@@ -13,6 +13,7 @@ import { useHash } from '@hooks/useHash'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { InntekterTilFordelingTab } from '@components/saksbilde/inntekter-til-fordeling/InntekterTilFordelingTab'
 import { RefusjonTab } from '@components/saksbilde/refusjon/RefusjonTab'
+import { FrihåndSykepengegrunnlagTab } from '@components/saksbilde/frihand-sykepengegrunnlag/FrihåndSykepengegrunnlagTab'
 
 const VALID_TABS = [
     'yrkesaktivitet',
@@ -22,6 +23,7 @@ const VALID_TABS = [
     'dagoversikt',
     'inntekter-fordeling',
     'refusjon',
+    'frihand-sykepengegrunnlag',
 ] as const
 const DEFAULT_TAB = 'yrkesaktivitet'
 
@@ -59,6 +61,13 @@ export default function PersonPage(): ReactElement {
                             <ActionMenu.Group label="Spesialverktøy">
                                 <ActionMenu.Item
                                     onSelect={() => {
+                                        handleTabChange('frihand-sykepengegrunnlag')
+                                    }}
+                                >
+                                    Opprett frihånd sykepengegrunnlag
+                                </ActionMenu.Item>
+                                <ActionMenu.Item
+                                    onSelect={() => {
                                         handleTabChange('inntekter-fordeling')
                                     }}
                                 >
@@ -81,6 +90,7 @@ export default function PersonPage(): ReactElement {
                 <Dagoversikt value="dagoversikt" />
                 <InntekterTilFordelingTab value="inntekter-fordeling" />
                 <RefusjonTab value="refusjon" />
+                <FrihåndSykepengegrunnlagTab value="frihand-sykepengegrunnlag" />
             </Tabs>
         </section>
     )
