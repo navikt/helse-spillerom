@@ -35,6 +35,7 @@ export const allowedAPIs = [
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/historikk',
     'GET /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
     'POST /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
+    'DELETE /v2/[personId]/saksbehandlingsperioder/[uuid]/sykepengegrunnlag',
     'PUT /v1/[personId]/saksbehandlingsperioder/[uuid]/skjaeringstidspunkt',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
     'GET /v1/[personId]/saksbehandlingsperioder/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
