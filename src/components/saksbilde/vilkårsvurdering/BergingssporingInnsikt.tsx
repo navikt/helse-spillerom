@@ -32,8 +32,15 @@ export function BergingssporingInnsikt(): ReactElement {
         }
     })
 
-    if (sykepengegrunnlag?.sykepengegrunnlag?.kombinertBeregningskode) {
-        regelkoder.push(sykepengegrunnlag?.sykepengegrunnlag?.kombinertBeregningskode)
+    if (
+        sykepengegrunnlag?.sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG' &&
+        sykepengegrunnlag.sykepengegrunnlag.kombinertBeregningskode
+    ) {
+        regelkoder.push(sykepengegrunnlag.sykepengegrunnlag.kombinertBeregningskode)
+    }
+    // Håndter beregningskoder fra FrihåndSykepengegrunnlag
+    if (sykepengegrunnlag?.sykepengegrunnlag?.type === 'FRIHÅND_SYKEPENGEGRUNNLAG') {
+        sykepengegrunnlag.sykepengegrunnlag.beregningskoder.forEach((kode) => regelkoder.push(kode))
     }
 
     // Finn beskrivelse og lovreferanse for hver regelkode

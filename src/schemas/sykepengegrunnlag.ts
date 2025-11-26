@@ -17,26 +17,55 @@ export const sammenlikningsgrunnlagSchema = z.object({
     basertPåDokumentId: z.string(), // UUID som string
 })
 
-// Sykepengegrunnlag v2 schema basert på bakrommet Domene.kt
-export const sykepengegrunnlagSchema = z.object({
+// Base schema for SykepengegrunnlagBase (felles felter)
+const sykepengegrunnlagBaseSchema = z.object({
     grunnbeløp: z.number(), // 1G i øre
     beregningsgrunnlag: z.number(), // Totalt inntektsgrunnlag i øre
     sykepengegrunnlag: z.number(), // Endelig sykepengegrunnlag i øre
     seksG: z.number(), // 6G i øre
     begrensetTil6G: z.boolean(),
     grunnbeløpVirkningstidspunkt: z.string(), // ISO 8601 date string
+})
+
+// Sykepengegrunnlag schema (type: "SYKEPENGEGRUNNLAG")
+export const sykepengegrunnlagSchema = sykepengegrunnlagBaseSchema.extend({
+    type: z.literal('SYKEPENGEGRUNNLAG'),
     næringsdel: næringsdelSchema.nullable(),
     kombinertBeregningskode: z.string().nullable(),
 })
 
+// FrihåndSykepengegrunnlag schema (type: "FRIHÅND_SYKEPENGEGRUNNLAG")
+export const frihåndSykepengegrunnlagSchema = sykepengegrunnlagBaseSchema.extend({
+    type: z.literal('FRIHÅND_SYKEPENGEGRUNNLAG'),
+    begrunnelse: z.string(),
+    beregningskoder: z.array(z.string()), // List<BeregningskoderSykepengegrunnlag>
+})
+
+// Discriminated union for SykepengegrunnlagBase
+export const sykepengegrunnlagBaseUnionSchema = z.discriminatedUnion('type', [
+    sykepengegrunnlagSchema,
+    frihåndSykepengegrunnlagSchema,
+])
+
 // Ny respons schema som inneholder både sykepengegrunnlag og sammenlikningsgrunnlag
 export const sykepengegrunnlagResponseSchema = z.object({
-    sykepengegrunnlag: sykepengegrunnlagSchema.nullable(),
+    sykepengegrunnlag: sykepengegrunnlagBaseUnionSchema.nullable(),
     sammenlikningsgrunnlag: sammenlikningsgrunnlagSchema.nullable(),
     opprettetForBehandling: z.string(), // UUID som string
 })
 
+// Request schema for å opprette sykepengegrunnlag
+export const opprettSykepengegrunnlagRequestSchema = z.object({
+    beregningsgrunnlag: z.number(), // BigDecimal som number (i øre)
+    begrunnelse: z.string(),
+    datoForGBegrensning: z.string().nullable().optional(), // LocalDate som ISO 8601 string
+    beregningskoder: z.array(z.string()), // List<BeregningskoderSykepengegrunnlag>
+})
+
 export type Sykepengegrunnlag = z.infer<typeof sykepengegrunnlagSchema>
+export type FrihåndSykepengegrunnlag = z.infer<typeof frihåndSykepengegrunnlagSchema>
+export type SykepengegrunnlagBase = z.infer<typeof sykepengegrunnlagBaseUnionSchema>
 export type Næringsdel = z.infer<typeof næringsdelSchema>
 export type Sammenlikningsgrunnlag = z.infer<typeof sammenlikningsgrunnlagSchema>
 export type SykepengegrunnlagResponse = z.infer<typeof sykepengegrunnlagResponseSchema>
+export type OpprettSykepengegrunnlagRequest = z.infer<typeof opprettSykepengegrunnlagRequestSchema>

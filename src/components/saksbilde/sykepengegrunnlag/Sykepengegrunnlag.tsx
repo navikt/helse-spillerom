@@ -151,9 +151,11 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                             {(() => {
                                                 // For selvstendig næringsdrivende, vis næringsdel hvis den finnes
                                                 if (erNæringsdrivendeOgKombinert) {
-                                                    return formaterBeløpKroner(
-                                                        sykepengegrunnlag?.næringsdel?.næringsdel,
-                                                    )
+                                                    const næringsdel =
+                                                        sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG'
+                                                            ? sykepengegrunnlag.næringsdel
+                                                            : null
+                                                    return formaterBeløpKroner(næringsdel?.næringsdel)
                                                 }
                                                 // Ellers vis omregnet årsinntekt som vanlig
                                                 return formaterBeløpKroner(

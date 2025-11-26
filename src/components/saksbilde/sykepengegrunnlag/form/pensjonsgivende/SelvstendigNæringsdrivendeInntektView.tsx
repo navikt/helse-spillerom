@@ -4,7 +4,7 @@ import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe, notNull } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
-import { Sykepengegrunnlag } from '@schemas/sykepengegrunnlag'
+import { SykepengegrunnlagBase } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
 
@@ -14,7 +14,7 @@ import { NæringsdelView } from './NæringsdelView'
 type SelvstendigNæringsdrivendeInntektViewProps = {
     inntektRequest?: InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
     inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<Sykepengegrunnlag>
+    sykepengegrunnlag?: Maybe<SykepengegrunnlagBase>
 }
 
 export function SelvstendigNæringsdrivendeInntektView({
@@ -34,10 +34,11 @@ export function SelvstendigNæringsdrivendeInntektView({
     }
 
     if (inntektData?.inntektstype === 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE') {
+        const næringsdel = sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG' ? sykepengegrunnlag.næringsdel : null
         return (
             <>
                 <PensjonsgivendeInntektView inntektData={inntektData} />
-                <NæringsdelView næringsdel={sykepengegrunnlag?.næringsdel} />
+                <NæringsdelView næringsdel={næringsdel} />
             </>
         )
     }
@@ -72,7 +73,9 @@ export function SelvstendigNæringsdrivendeInntektView({
                     </VStack>
                 )}
 
-                <NæringsdelView næringsdel={sykepengegrunnlag?.næringsdel} />
+                <NæringsdelView
+                    næringsdel={sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG' ? sykepengegrunnlag.næringsdel : null}
+                />
             </>
         )
     }

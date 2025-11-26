@@ -4,7 +4,7 @@ import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
-import { Sykepengegrunnlag } from '@schemas/sykepengegrunnlag'
+import { SykepengegrunnlagBase } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { frilanserSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
@@ -12,7 +12,7 @@ import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag
 type FrilanserInntektViewProps = {
     inntektRequest?: InntektRequestFor<'FRILANSER'>
     inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<Sykepengegrunnlag>
+    sykepengegrunnlag?: Maybe<SykepengegrunnlagBase>
 }
 
 export function FrilanserInntektView({ inntektRequest, inntektData }: FrilanserInntektViewProps): ReactElement {
