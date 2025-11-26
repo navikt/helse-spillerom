@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement } from 'react'
-import { ActionMenu, Button, Tabs } from '@navikt/ds-react'
+import { ActionMenu, HStack, Tabs } from '@navikt/ds-react'
 import { TabsList, TabsTab } from '@navikt/ds-react/Tabs'
 import { ChevronDownIcon } from '@navikt/aksel-icons'
 
@@ -44,7 +44,10 @@ export default function PersonPage(): ReactElement {
         <section className="flex-auto">
             <SaksbehandlingsperiodeHeading />
             <Tabs value={activeTab} onChange={handleTabChange}>
-                <div className="flex">
+                <HStack
+                    wrap={false}
+                    className="w-full inset-shadow-[0px_-1px] inset-shadow-ax-border-neutral-subtle-a [&>*:first-child]:w-fit [&>*:first-child]:inset-shadow-none"
+                >
                     <TabsList>
                         <TabsTab value="yrkesaktivitet" label="Yrkesaktivitet" />
                         <TabsTab value="sykepengegrunnlag" label="Sykepengegrunnlag" />
@@ -52,10 +55,18 @@ export default function PersonPage(): ReactElement {
                         <TabsTab value="dagoversikt" label="Dagoversikt" />
                     </TabsList>
                     <ActionMenu>
-                        <ActionMenu.Trigger className="ml-8">
-                            <Button variant="secondary" icon={<ChevronDownIcon aria-hidden />} iconPosition="right">
-                                Meny
-                            </Button>
+                        <ActionMenu.Trigger>
+                            <HStack
+                                as="button"
+                                align="center"
+                                justify="center"
+                                wrap={false}
+                                gap="2"
+                                className="cursor-pointer px-4 py-3 leading-6 inset-shadow-ax-border-neutral-subtle-a transition-shadow duration-[200ms] ease-[cubic-bezier(.2,0,0,1)] hover:inset-shadow-[0px_-4px]"
+                            >
+                                <span>Meny</span>
+                                <ChevronDownIcon aria-hidden fontSize={20} />
+                            </HStack>
                         </ActionMenu.Trigger>
                         <ActionMenu.Content>
                             <ActionMenu.Group label="Spesialverktøy">
@@ -83,7 +94,8 @@ export default function PersonPage(): ReactElement {
                             </ActionMenu.Group>
                         </ActionMenu.Content>
                     </ActionMenu>
-                </div>
+                </HStack>
+
                 <YrkesaktivitetTab value="yrkesaktivitet" />
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTab value="vilkar" />
