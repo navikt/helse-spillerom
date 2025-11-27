@@ -74,6 +74,17 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
         setEdit(false)
     }
 
+    const handleFjernRefusjon = () => {
+        oppdaterRefusjon(
+            { yrkesaktivitetId: ya.id, refusjon: null },
+            {
+                onSuccess: () => {
+                    setEdit(false)
+                },
+            },
+        )
+    }
+
     if (!erArbeidstaker) {
         return null
     }
@@ -131,6 +142,17 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                     >
                                         Avbryt
                                     </Button>
+                                    {ya.refusjon && ya.refusjon.length > 0 && (
+                                        <Button
+                                            variant="danger"
+                                            size="small"
+                                            type="button"
+                                            onClick={handleFjernRefusjon}
+                                            disabled={oppdaterIsPending}
+                                        >
+                                            Fjern refusjon
+                                        </Button>
+                                    )}
                                 </HStack>
                             </VStack>
                         </form>
@@ -156,9 +178,21 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
             </Table.DataCell>
             <Table.DataCell>
                 {!edit && (
-                    <Button size="small" variant="secondary" onClick={() => setEdit(true)}>
-                        Rediger
-                    </Button>
+                    <HStack gap="2">
+                        <Button size="small" variant="secondary" onClick={() => setEdit(true)}>
+                            Rediger
+                        </Button>
+                        {ya.refusjon && ya.refusjon.length > 0 && (
+                            <Button
+                                size="small"
+                                variant="danger"
+                                onClick={handleFjernRefusjon}
+                                disabled={oppdaterIsPending}
+                            >
+                                Fjern refusjon
+                            </Button>
+                        )}
+                    </HStack>
                 )}
             </Table.DataCell>
         </Table.Row>
