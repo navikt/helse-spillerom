@@ -11,7 +11,6 @@ import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/Saksbehandl
 import { YrkesaktivitetTab } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTab'
 import { useHash } from '@hooks/useHash'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
-import { InntekterTilFordelingTab } from '@components/saksbilde/inntekter-til-fordeling/InntekterTilFordelingTab'
 import { RefusjonTab } from '@components/saksbilde/refusjon/RefusjonTab'
 import { FrihåndSykepengegrunnlagTab } from '@components/saksbilde/frihand-sykepengegrunnlag/FrihåndSykepengegrunnlagTab'
 
@@ -79,13 +78,6 @@ export default function PersonPage(): ReactElement {
                                 </ActionMenu.Item>
                                 <ActionMenu.Item
                                     onSelect={() => {
-                                        handleTabChange('inntekter-fordeling')
-                                    }}
-                                >
-                                    Inntekter til fordeling
-                                </ActionMenu.Item>
-                                <ActionMenu.Item
-                                    onSelect={() => {
                                         handleTabChange('refusjon')
                                     }}
                                 >
@@ -100,7 +92,6 @@ export default function PersonPage(): ReactElement {
                 <Sykepengegrunnlag value="sykepengegrunnlag" />
                 <VilkårsvurderingTab value="vilkar" />
                 <Dagoversikt value="dagoversikt" />
-                <InntekterTilFordelingTab value="inntekter-fordeling" />
                 <RefusjonTab value="refusjon" />
                 <FrihåndSykepengegrunnlagTab value="frihand-sykepengegrunnlag" />
             </Tabs>

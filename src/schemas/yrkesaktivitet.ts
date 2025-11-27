@@ -25,7 +25,6 @@ export const yrkesaktivitetSchema = z.object({
     perioder: perioderSchema.nullable(),
     inntektRequest: inntektRequestSchema.nullable().optional(),
     inntektData: inntektDataSchema.nullable().optional(),
-    inntekt: z.number().nullable().optional(),
     refusjon: z.array(refusjonInfoSchema).nullable().optional(),
 })
 
