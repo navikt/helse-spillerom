@@ -61,7 +61,7 @@ export default function PersonPage(): ReactElement {
                                 justify="center"
                                 wrap={false}
                                 gap="2"
-                                className="cursor-pointer px-4 py-3 leading-6 inset-shadow-ax-border-neutral-subtle-a transition-shadow duration-[200ms] ease-[cubic-bezier(.2,0,0,1)] hover:inset-shadow-[0px_-4px]"
+                                className="cursor-pointer px-4 py-3 leading-6 font-semibold text-ax-text-accent-subtle inset-shadow-ax-border-neutral-subtle-a transition-shadow duration-[200ms] ease-[cubic-bezier(.2,0,0,1)] hover:inset-shadow-[0px_-4px]"
                             >
                                 <span>Meny</span>
                                 <ChevronDownIcon aria-hidden fontSize={20} />
