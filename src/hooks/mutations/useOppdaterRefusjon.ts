@@ -16,7 +16,7 @@ export function useOppdaterRefusjon() {
     return useMutation<void, Error, MutationProps>({
         mutationFn: async ({ yrkesaktivitetId, refusjon }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/refusjon`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/refusjon`,
                 refusjon,
             )
         },

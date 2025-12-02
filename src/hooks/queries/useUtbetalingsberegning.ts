@@ -15,7 +15,7 @@ export function useUtbetalingsberegning() {
         queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/utbetalingsberegning`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/utbetalingsberegning`,
                 z.union([beregningResponseSchema, z.null()]),
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,

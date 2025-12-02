@@ -11,7 +11,7 @@ export function useHentArbeidsforholdDokument() {
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter/arbeidsforhold/hent`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/dokumenter/arbeidsforhold/hent`,
                 dokumentSchema,
                 {}, // Ingen body i POST
             )

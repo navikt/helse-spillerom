@@ -17,7 +17,7 @@ export function useRevurder() {
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/revurder`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/revurder`,
                 saksbehandlingsperiodeSchema,
                 {},
             ),

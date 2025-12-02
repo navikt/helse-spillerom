@@ -18,7 +18,7 @@ export function useOpprettTilkommenInntekt() {
     return useMutation<TilkommenInntektResponse, Error, OpprettTilkommenInntektRequest>({
         mutationFn: async (request) => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/tilkommeninntekt`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/tilkommeninntekt`,
                 tilkommenInntektResponseSchema,
                 request,
             )

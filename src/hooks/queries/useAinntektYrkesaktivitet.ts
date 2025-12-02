@@ -34,7 +34,7 @@ export function useAinntektYrkesaktivitet(yrkesaktivitetId: string, enabled: boo
             }
 
             const response = await fetch(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/ainntekt`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/ainntekt`,
             )
 
             if (!response.ok) {

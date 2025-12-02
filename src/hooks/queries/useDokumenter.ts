@@ -12,7 +12,7 @@ export function useDokumenter() {
         queryKey: ['dokumenter', params.personId, params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/dokumenter`,
                 z.array(dokumentSchema),
             ),
         enabled: Boolean(params.personId && params.saksbehandlingsperiodeId),

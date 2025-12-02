@@ -14,7 +14,7 @@ export function useTilkommenInntekt(behandlingId?: string) {
         queryKey: ['tilkommenInntekt', personId, behandlingIdFaktisk],
         queryFn: async () => {
             return await fetchAndParse(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${behandlingIdFaktisk}/tilkommeninntekt`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingIdFaktisk}/tilkommeninntekt`,
                 z.array(tilkommenInntektResponseSchema),
             )
         },

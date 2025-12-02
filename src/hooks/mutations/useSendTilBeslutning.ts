@@ -21,7 +21,7 @@ export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId, individuellBegrunnelse }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sendtilbeslutning`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbeslutning`,
                 saksbehandlingsperiodeSchema,
                 { individuellBegrunnelse },
             ),

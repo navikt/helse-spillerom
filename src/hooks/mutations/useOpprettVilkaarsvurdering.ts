@@ -23,7 +23,7 @@ export function useOpprettVilkaarsvurdering() {
     return useMutation<Vilkaarsvurdering, Error, MutationProps>({
         mutationFn: async ({ kode, vurdering, underspørsmål, notat }) => {
             return await putAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
                 vilkaarsvurderingSchema,
                 {
                     vurdering,

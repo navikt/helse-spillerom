@@ -17,7 +17,7 @@ export function useSendTilbake() {
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId, kommentar }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/sendtilbake`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbake`,
                 saksbehandlingsperiodeSchema,
                 { kommentar },
             ),

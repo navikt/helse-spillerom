@@ -10,8 +10,7 @@ import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/
 export function useAlleSaksbehandlingsperioder() {
     return useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
         queryKey: ['alle-saksbehandlingsperioder'],
-        queryFn: () =>
-            fetchAndParse(`/api/bakrommet/v1/saksbehandlingsperioder`, z.array(saksbehandlingsperiodeSchema)),
+        queryFn: () => fetchAndParse(`/api/bakrommet/v1/behandlinger`, z.array(saksbehandlingsperiodeSchema)),
     })
 }
 
@@ -22,10 +21,7 @@ export function useSaksbehandlingsperioder() {
     const query = useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
         queryKey: ['saksbehandlingsperioder', params.personId],
         queryFn: () =>
-            fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder`,
-                z.array(saksbehandlingsperiodeSchema),
-            ),
+            fetchAndParse(`/api/bakrommet/v1/${params.personId}/behandlinger`, z.array(saksbehandlingsperiodeSchema)),
         enabled: !!params.personId,
     })
 

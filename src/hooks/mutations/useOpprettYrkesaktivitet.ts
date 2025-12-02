@@ -16,7 +16,7 @@ export function useOpprettYrkesaktivitet() {
     return useMutation<Yrkesaktivitet, Error, MutationProps>({
         mutationFn: async ({ kategorisering }) => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
                 yrkesaktivitetSchema,
                 {
                     kategorisering,

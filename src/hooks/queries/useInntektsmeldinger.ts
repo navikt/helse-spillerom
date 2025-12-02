@@ -21,7 +21,7 @@ export function useInntektsmeldinger(yrkesaktivitetId: string) {
             }
 
             const response = await fetch(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/inntektsmeldinger`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/inntektsmeldinger`,
             )
 
             if (!response.ok) {

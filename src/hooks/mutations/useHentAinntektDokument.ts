@@ -11,7 +11,7 @@ export function useHentAinntektDokument828() {
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter/ainntekt/hent-8-28`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/dokumenter/ainntekt/hent-8-28`,
                 dokumentSchema,
                 undefined,
             )
@@ -35,7 +35,7 @@ export function useHentAinntektDokument830() {
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter/ainntekt/hent-8-30`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/dokumenter/ainntekt/hent-8-30`,
                 dokumentSchema,
                 undefined,
             )

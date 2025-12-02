@@ -20,11 +20,7 @@ export function useOpprettSaksbehandlingsperiode() {
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ request }) =>
-            postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder`,
-                saksbehandlingsperiodeSchema,
-                request,
-            ),
+            postAndParse(`/api/bakrommet/v1/${params.personId}/behandlinger`, saksbehandlingsperiodeSchema, request),
         onSuccess: async (periode, r) => {
             // Invalidate all saksbehandlingsperioder caches
             await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })

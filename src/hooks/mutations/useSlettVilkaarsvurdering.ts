@@ -15,7 +15,7 @@ export function useSlettVilkaarsvurdering() {
     return useMutation<void, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ kode }) => {
             return await deleteNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
             )
         },
         onSuccess: () => {

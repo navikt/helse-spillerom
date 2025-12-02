@@ -21,7 +21,7 @@ export function useOppdaterSkjæringstidspunkt({ onSuccess }: UseOppdaterSkjæri
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, SkjæringstidspunktSchema>({
         mutationFn: async ({ saksbehandlingsperiodeId, skjæringstidspunkt }) =>
             putAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/skjaeringstidspunkt`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/skjaeringstidspunkt`,
                 saksbehandlingsperiodeSchema,
                 { skjaeringstidspunkt: skjæringstidspunkt } as OppdaterSkjæringstidspunkt,
             ),

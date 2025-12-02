@@ -11,7 +11,7 @@ export function useSlettYrkesaktivitet() {
     return useMutation<void, ProblemDetailsError, { yrkesaktivitetId: string }>({
         mutationFn: async ({ yrkesaktivitetId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}`,
             )
         },
         onSuccess: () => {

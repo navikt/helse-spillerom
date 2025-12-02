@@ -13,7 +13,7 @@ export function useSaksbehandlingsperiodeHistorikk() {
         queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/historikk`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/historikk`,
                 z.array(saksbehandlingsperiodeEndringSchema),
             ),
         enabled: Boolean(params.personId && params.saksbehandlingsperiodeId),

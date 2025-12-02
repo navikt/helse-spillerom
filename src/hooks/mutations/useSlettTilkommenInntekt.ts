@@ -14,7 +14,7 @@ export function useSlettTilkommenInntekt() {
     return useMutation<void, ProblemDetailsError, { tilkommenInntektId: string }>({
         mutationFn: async ({ tilkommenInntektId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/tilkommeninntekt/${tilkommenInntektId}`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/tilkommeninntekt/${tilkommenInntektId}`,
             )
         },
         onSuccess: () => {

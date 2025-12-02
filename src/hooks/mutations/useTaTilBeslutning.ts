@@ -16,7 +16,7 @@ export function useTaTilBeslutning() {
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/tatilbeslutning`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/tatilbeslutning`,
                 saksbehandlingsperiodeSchema,
                 {},
             ),

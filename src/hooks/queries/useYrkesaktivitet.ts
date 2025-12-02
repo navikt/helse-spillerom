@@ -15,7 +15,7 @@ export function useYrkesaktivitet() {
         queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
         enabled: !!params.personId && !!params.saksbehandlingsperiodeId,

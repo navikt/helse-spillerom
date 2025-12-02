@@ -31,7 +31,7 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             // Valider kategorisering mot schema før sending
             const validertKategorisering = yrkesaktivitetKategoriseringSchema.parse(kategorisering)
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
                 validertKategorisering,
             )
         },
@@ -64,7 +64,7 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
         mutationFn: async ({ yrkesaktivitetId, dager, notat }) => {
             // Send kun dagene som skal oppdateres
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
                 { dager, notat },
             )
         },
@@ -92,7 +92,7 @@ export function useOppdaterYrkesaktivitetPerioder() {
     return useMutation<void, Error, OppdaterPerioderMutationProps>({
         mutationFn: async ({ yrkesaktivitetId, perioder }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/perioder`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/perioder`,
                 perioder,
             )
         },

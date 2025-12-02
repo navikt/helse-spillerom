@@ -11,7 +11,7 @@ export function useHentPensjonsgivendeInntektDokument() {
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${params.saksbehandlingsperiodeId}/dokumenter/pensjonsgivendeinntekt/hent`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/dokumenter/pensjonsgivendeinntekt/hent`,
                 dokumentSchema,
                 undefined,
             )

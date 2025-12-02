@@ -16,7 +16,7 @@ export function useGodkjenn() {
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/godkjenn`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/godkjenn`,
                 saksbehandlingsperiodeSchema,
                 {},
             ),

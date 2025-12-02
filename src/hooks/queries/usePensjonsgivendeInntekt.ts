@@ -37,7 +37,7 @@ export function usePensjonsgivendeInntekt(yrkesaktivitetId: string, enabled: boo
             }
 
             const response = await fetch(
-                `/api/bakrommet/v1/${personId}/saksbehandlingsperioder/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/pensjonsgivendeinntekt`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/pensjonsgivendeinntekt`,
             )
 
             if (!response.ok) {

@@ -24,7 +24,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
             }
 
             return await fetchAndParse(
-                `/api/bakrommet/v2/${personId}/saksbehandlingsperioder/${aktivSaksbehandlingsperiode?.id}/sykepengegrunnlag`,
+                `/api/bakrommet/v2/${personId}/behandlinger/${aktivSaksbehandlingsperiode?.id}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema.nullable(),
             )
         },
@@ -51,7 +51,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
         queryKey: [params.personId, 'yrkesaktivitet', saksbehandlingsperiodeIdForYrkesaktivitet],
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/saksbehandlingsperioder/${saksbehandlingsperiodeIdForYrkesaktivitet}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeIdForYrkesaktivitet}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
         enabled: yrkesaktivitetFetchEnabled,
