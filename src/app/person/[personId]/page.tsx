@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { Button, Heading } from '@navikt/ds-react'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { SaksbehandlingsperioderTabell } from '@components/saksbilde/saksbehandlingsperioder/SaksbehandlingsperioderTabell'
+import { BehandlingerTabell } from '@components/saksbilde/behandlinger/BehandlingerTabell'
 import { useBrukerRoller } from '@/hooks/queries/useBrukerRoller'
 
 export default function PersonPage(): ReactElement {
@@ -28,7 +28,7 @@ export default function PersonPage(): ReactElement {
                 <Heading level="2" size="medium" className="mb-4">
                     Behandlingsperioder
                 </Heading>
-                <SaksbehandlingsperioderTabell />
+                <BehandlingerTabell />
             </div>
         </section>
     )

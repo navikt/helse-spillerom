@@ -8,13 +8,13 @@ import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsper
 import { getFormattedDateString } from '@utils/date-format'
 import { StatusTag } from '@components/statustag/StatusTag'
 
-export function SaksbehandlingsperioderTabell(): ReactElement {
+export function BehandlingerTabell(): ReactElement {
     const router = useRouter()
     const { data: perioder, isLoading, isError } = useSaksbehandlingsperioder()
 
-    if (isLoading) return <BodyShort>Laster behandlingsperioder...</BodyShort>
-    if (isError || !perioder) return <BodyShort>Kunne ikke laste behandlingsperioder</BodyShort>
-    if (perioder.length === 0) return <BodyShort>Ingen behandlingsperioder funnet</BodyShort>
+    if (isLoading) return <BodyShort>Laster behandlinger...</BodyShort>
+    if (isError || !perioder) return <BodyShort>Kunne ikke laste behandlinger</BodyShort>
+    if (perioder.length === 0) return <BodyShort>Ingen behandlinger funnet</BodyShort>
 
     return (
         <Table>

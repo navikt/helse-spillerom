@@ -1,23 +1,22 @@
 'use client'
 
-import { useParams, usePathname, useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import {useParams, usePathname, useRouter} from 'next/navigation'
+import {useEffect, useMemo} from 'react'
 import dayjs from 'dayjs'
 
-import { usePersoninfo } from '@hooks/queries/usePersoninfo'
-import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
-import { getFormattedDateString } from '@utils/date-format'
+import {usePersoninfo} from '@hooks/queries/usePersoninfo'
+import {useSaksbehandlingsperioder} from '@hooks/queries/useSaksbehandlingsperioder'
+import {getFormattedDateString} from '@utils/date-format'
 
-interface SaksbehandlingsperiodeHeadingProps {
+
+export function BehandlingHeading({className}: {
     className?: string
-}
-
-export function SaksbehandlingsperiodeHeading({ className }: SaksbehandlingsperiodeHeadingProps) {
+}) {
     const router = useRouter()
-    const { personId, saksbehandlingsperiodeId } = useParams() as { personId: string; saksbehandlingsperiodeId: string }
+    const {personId, saksbehandlingsperiodeId} = useParams() as { personId: string; saksbehandlingsperiodeId: string }
     const pathname = usePathname()
-    const { data: personinfo } = usePersoninfo()
-    const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()
+    const {data: personinfo} = usePersoninfo()
+    const {data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded} = useSaksbehandlingsperioder()
 
     const aktivPeriode = useMemo(() => {
         if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
@@ -44,7 +43,7 @@ export function SaksbehandlingsperiodeHeading({ className }: Saksbehandlingsperi
     useEffect(() => {
         if (!aktivPeriode || !saksbehandlingsperiodeId) return
         if (aktivPeriode.id !== saksbehandlingsperiodeId) {
-            router.replace(pathname.replace(saksbehandlingsperiodeId, aktivPeriode.id), { scroll: false })
+            router.replace(pathname.replace(saksbehandlingsperiodeId, aktivPeriode.id), {scroll: false})
         }
     }, [aktivPeriode, saksbehandlingsperiodeId, pathname, router])
 

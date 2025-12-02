@@ -7,7 +7,7 @@ import { ChevronDownIcon } from '@navikt/aksel-icons'
 
 import { VilkårsvurderingTab } from '@components/saksbilde/vilkårsvurdering/VilkårsvurderingTab'
 import { Dagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
-import { SaksbehandlingsperiodeHeading } from '@components/saksbilde/SaksbehandlingsperiodeHeading'
+import { BehandlingHeading } from '@components/saksbilde/BehandlingHeading'
 import { YrkesaktivitetTab } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetTab'
 import { useHash } from '@hooks/useHash'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
@@ -41,7 +41,7 @@ export default function PersonPage(): ReactElement {
 
     return (
         <section className="flex-auto">
-            <SaksbehandlingsperiodeHeading />
+            <BehandlingHeading />
             <Tabs value={activeTab} onChange={handleTabChange}>
                 <HStack
                     wrap={false}
