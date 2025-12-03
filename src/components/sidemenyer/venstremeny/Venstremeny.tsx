@@ -175,7 +175,10 @@ export function Venstremeny(): ReactElement {
 
                         {kanSaksbehandles ? (
                             <>
-                                <IndividuellBegrunnelse aktivSaksbehandlingsperiode={aktivSaksbehandlingsperiode} />
+                                <IndividuellBegrunnelse
+                                    key={aktivSaksbehandlingsperiode.id}
+                                    aktivSaksbehandlingsperiode={aktivSaksbehandlingsperiode}
+                                />
 
                                 <Button
                                     variant="primary"

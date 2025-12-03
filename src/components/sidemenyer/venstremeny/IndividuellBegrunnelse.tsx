@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Button, Heading, HStack, Modal, ReadMore, Textarea } from '@navikt/ds-react'
 import { ExpandIcon, ShrinkIcon } from '@navikt/aksel-icons'
 import { ModalBody, ModalHeader } from '@navikt/ds-react/Modal'
@@ -15,17 +15,11 @@ interface IndividuellBegrunnelseProps {
 export function IndividuellBegrunnelse({
     aktivSaksbehandlingsperiode,
 }: IndividuellBegrunnelseProps): Maybe<ReactElement> {
-    const [begrunnelse, setBegrunnelse] = useState('')
-    const [openReadMore, setOpenReadMore] = useState(false)
+    const [begrunnelse, setBegrunnelse] = useState(() => getBegrunnelseFromStorage(aktivSaksbehandlingsperiode))
+    const [openReadMore, setOpenReadMore] = useState(
+        () => getBegrunnelseFromStorage(aktivSaksbehandlingsperiode) !== '',
+    )
     const [openModal, setOpenModal] = useState(false)
-
-    useEffect(() => {
-        const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
-        const value =
-            aktivSaksbehandlingsperiode.individuellBegrunnelse ?? (storageValue ? JSON.parse(storageValue) : '')
-        setBegrunnelse(value)
-        setOpenReadMore(value !== '')
-    }, [aktivSaksbehandlingsperiode])
 
     function handleChange(value: string) {
         setBegrunnelse(value)
@@ -83,6 +77,11 @@ export function IndividuellBegrunnelse({
             )}
         </>
     )
+}
+
+function getBegrunnelseFromStorage(periode: Saksbehandlingsperiode) {
+    const storageValue = sessionStorage.getItem(`${periode.id}-individuell-begrunnelse`)
+    return periode.individuellBegrunnelse ?? (storageValue ? JSON.parse(storageValue) : '')
 }
 
 interface BegrunnelseTextAreaProps {
