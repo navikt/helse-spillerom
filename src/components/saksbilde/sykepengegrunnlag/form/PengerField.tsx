@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useController } from 'react-hook-form'
 import { TextField } from '@navikt/ds-react'
 
@@ -14,25 +14,22 @@ interface PengerFieldProps {
 
 export function PengerField({ name, label, readOnly = false, className }: PengerFieldProps): ReactElement {
     const { field, fieldState } = useController({ name })
-    const [display, setDisplay] = useState<string>(
-        field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'),
-    )
-
-    useEffect(() => {
-        setDisplay(field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'))
-    }, [field.value])
+    const [editingValue, setEditingValue] = useState<string | null>(null)
 
     const parse = (val: string) => Number(val.replace(/\s/g, '').replace(',', '.'))
 
-    const commit = () => {
-        const parsed = parse(display)
-        field.onChange(display.trim() === '' || isNaN(parsed) ? undefined : parsed)
+    const commit = (value: string) => {
+        const parsed = parse(value)
+        field.onChange(value.trim() === '' || isNaN(parsed) ? undefined : parsed)
+        setEditingValue(null)
     }
+
+    const displayValue = editingValue ?? (field.value == null ? '' : formaterBeløpKroner(field.value, 2, 'decimal'))
 
     return (
         <TextField
             readOnly={readOnly}
-            value={display}
+            value={displayValue}
             id={name.replaceAll('.', '-')}
             onMouseDown={(e) => {
                 if (document.activeElement !== e.target) {
@@ -40,15 +37,20 @@ export function PengerField({ name, label, readOnly = false, className }: Penger
                     ;(e.target as HTMLInputElement).select()
                 }
             }}
-            onChange={(e) => setDisplay(e.target.value)}
-            onBlur={() => {
-                commit()
-                if (display !== '') {
-                    setDisplay(formaterBeløpKroner(parse(display), 2, 'decimal'))
-                }
+            onFocus={(e) => {
+                setEditingValue(e.target.value)
+            }}
+            onChange={(e) => setEditingValue(e.target.value)}
+            onBlur={(e) => {
+                const value = e.target.value
+                commit(value)
                 field.onBlur()
             }}
-            onKeyDown={(e) => e.key === 'Enter' && commit()}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    commit((e.target as HTMLInputElement).value)
+                }
+            }}
             className={cn('[&_input]:text-right', className)}
             error={fieldState.error?.message != undefined}
             label={label}
