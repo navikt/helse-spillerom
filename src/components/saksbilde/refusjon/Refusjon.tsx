@@ -1,5 +1,5 @@
-import React, { ReactElement, useState, useEffect, useMemo } from 'react'
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 import { BoxNew, Button, HStack, Skeleton, Table, VStack } from '@navikt/ds-react'
@@ -29,10 +29,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
 
     const erArbeidstaker = ya.kategorisering.inntektskategori === 'ARBEIDSTAKER'
 
-    const defaultFom = useMemo(() => {
-        if (!aktivSaksbehandlingsperiode?.fom) return undefined
-        return dayjs(aktivSaksbehandlingsperiode.fom).toDate()
-    }, [aktivSaksbehandlingsperiode?.fom])
+    const defaultFom = aktivSaksbehandlingsperiode?.fom ? dayjs(aktivSaksbehandlingsperiode.fom).toDate() : undefined
 
     const methods = useForm<RefusjonFormData>({
         resolver: zodResolver(refusjonFormSchema),
