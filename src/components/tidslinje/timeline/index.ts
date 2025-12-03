@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
-import React, { PropsWithChildren, ReactElement, ReactNode, useMemo } from 'react'
+import React, { PropsWithChildren, ReactElement, ReactNode } from 'react'
 
 import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TidslinjeVariant, TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
@@ -41,9 +41,7 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
             React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelineZoom',
     ) as ReactElement<PropsWithChildren>[]
 
-    const parsedRows = useMemo(() => {
-        return parseRows(rowChildren)
-    }, [rowChildren])
+    const parsedRows = parseRows(rowChildren)
 
     const rowLabels = parsedRows.map((row) => {
         return { label: row.label, icon: row.icon }
@@ -133,23 +131,19 @@ function shouldCrop(status: string, thisSkjæringstidspunkt?: Dayjs, neighborSkj
 export const getNumberOfDays = (start: Dayjs, end: Dayjs): number => end.diff(start, 'day') + 1
 
 function useEarliestDate(periods: ParsedRow['periods']): Dayjs | undefined {
-    return useMemo(() => {
-        const dates = periods.filter((period) => period.startDate).map((period) => period.startDate)
+    const dates = periods.filter((period) => period.startDate).map((period) => period.startDate)
 
-        if (dates.length === 0) return undefined
+    if (dates.length === 0) return undefined
 
-        return dates.reduce((earliestDate, currentDate) =>
-            currentDate.isBefore(earliestDate) ? currentDate : earliestDate,
-        )
-    }, [periods])
+    return dates.reduce((earliestDate, currentDate) =>
+        currentDate.isBefore(earliestDate) ? currentDate : earliestDate,
+    )
 }
 
 function useLatestDate(periods: ParsedRow['periods']): Dayjs | undefined {
-    return useMemo(() => {
-        const dates = periods.filter((period) => period.endDate).map((period) => period.endDate)
+    const dates = periods.filter((period) => period.endDate).map((period) => period.endDate)
 
-        if (dates.length === 0) return undefined
+    if (dates.length === 0) return undefined
 
-        return dates.reduce((latestDate, currentDate) => (currentDate.isAfter(latestDate) ? currentDate : latestDate))
-    }, [periods])
+    return dates.reduce((latestDate, currentDate) => (currentDate.isAfter(latestDate) ? currentDate : latestDate))
 }
