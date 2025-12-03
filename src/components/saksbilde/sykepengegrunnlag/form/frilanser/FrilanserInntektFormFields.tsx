@@ -1,5 +1,5 @@
 import React, { Fragment, ReactElement } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Radio, RadioGroup } from '@navikt/ds-react'
 
 import {
@@ -13,8 +13,8 @@ import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 
 export function FrilanserInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
-    const { control, watch, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
-    const valgtType = watch('data.type')
+    const { control, setValue } = useFormContext<InntektRequestFor<'FRILANSER'>>()
+    const valgtType = useWatch({ control, name: 'data.type' })
 
     return (
         <>

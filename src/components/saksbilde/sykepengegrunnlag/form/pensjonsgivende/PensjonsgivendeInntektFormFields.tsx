@@ -1,5 +1,5 @@
 import React, { Fragment, ReactElement } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Alert, BodyShort, Radio, RadioGroup, VStack } from '@navikt/ds-react'
 
 import {
@@ -23,8 +23,8 @@ export function PensjonsgivendeInntektFormFields({
     kategori, // eslint-disable-line @typescript-eslint/no-unused-vars
     yrkesaktivitetId,
 }: PensjonsgivendeInntektFormFieldsProps): ReactElement {
-    const { control, watch, setValue } = useFormContext<InntektRequestFor<typeof kategori>>()
-    const valgtType = watch('data.type')
+    const { control, setValue } = useFormContext<InntektRequestFor<typeof kategori>>()
+    const valgtType = useWatch({ control, name: 'data.type' })
 
     return (
         <>

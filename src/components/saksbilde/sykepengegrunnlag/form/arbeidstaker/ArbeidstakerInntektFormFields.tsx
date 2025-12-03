@@ -1,5 +1,5 @@
 import React, { Fragment, ReactElement, useEffect, useRef } from 'react'
-import { Controller, useFormContext, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { Controller, useFormContext, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import { BodyShort, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
@@ -22,11 +22,12 @@ import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisni
 import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
-    const { control, watch, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const { control, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { hideSelectButtonForAll } = useDokumentVisningContext()
-    const visRefusjonsFelter = !!watch('data.refusjon')?.[0]?.fom
+    const refusjon = useWatch({ control, name: 'data.refusjon' })
+    const valgtType = useWatch({ control, name: 'data.type' })
+    const visRefusjonsFelter = !!refusjon?.[0]?.fom
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
-    const valgtType = watch('data.type')
 
     return (
         <>
@@ -48,7 +49,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                             id="data-type"
                             value={field.value}
                             onChange={(value) => {
-                                const valg = value.target.value
+                                const valg = value.currentTarget.value
                                 field.onChange(valg)
 
                                 if (valg !== 'INNTEKTSMELDING') {
@@ -140,10 +141,10 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
 }
 
 function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
-    const { control, setValue, getValues, watch } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
+    const { control, setValue, getValues } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
     const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
     const { selectDokument } = useDokumentVisningContext()
-    const valgtInntektsmeldingId = watch('data.inntektsmeldingId')
+    const valgtInntektsmeldingId = useWatch({ control, name: 'data.inntektsmeldingId' })
 
     useSyncInntektsmelding(valgtInntektsmeldingId, setValue, getValues, inntektsmeldinger)
 

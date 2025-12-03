@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Radio, RadioGroup } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
@@ -7,8 +7,8 @@ import { ArbeidsledigInntektType, arbeidsledigInntektTypeSchema } from '@schemas
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 
 export function ArbeidsledigInntektFormFields(): ReactElement {
-    const { control, watch } = useFormContext<InntektRequestFor<'ARBEIDSLEDIG'>>()
-    const valgtType = watch('data.type')
+    const { control } = useFormContext<InntektRequestFor<'ARBEIDSLEDIG'>>()
+    const valgtType = useWatch({ control, name: 'data.type' })
 
     return (
         <>
