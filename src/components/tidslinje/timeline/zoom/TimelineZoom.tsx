@@ -5,8 +5,6 @@ import { ComponentWithType } from '@components/tidslinje/timeline'
 import { cn } from '@utils/tw'
 import { useTimelineContext } from '@components/tidslinje/timeline/context'
 
-export interface TimelineZoomProps extends PropsWithChildren {}
-
 export type ZoomLevel = '2 måneder' | '6 måneder' | '1 år' | '4 år'
 
 export type ZoomLevels = Record<ZoomLevel, number>
@@ -18,7 +16,7 @@ export const zoomLevels: ZoomLevels = {
     '4 år': 365 * 4,
 }
 
-export const TimelineZoom: ComponentWithType<TimelineZoomProps> = (): ReactElement => {
+export const TimelineZoom: ComponentWithType<PropsWithChildren> = (): ReactElement => {
     const { zoomLevel, setZoomLevel, setZoomSpanInDays } = useTimelineContext()
 
     return (

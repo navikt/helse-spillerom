@@ -93,7 +93,7 @@ async function hoppTilModia(url: string, fødselsnummer?: string) {
     const forbered = () => (fødselsnummer ? settModiaContext(fødselsnummer) : nullstillModiaContext())
     try {
         await forbered()
-    } catch (_) {
+    } catch {
         const tekst = fødselsnummer
             ? 'Søk av person i Modia feilet, du må søke den opp manuelt når du kommer til Modia.'
             : 'Forrige person kan fortsatt være valgt når du kommer til Modia.'
@@ -102,6 +102,7 @@ async function hoppTilModia(url: string, fødselsnummer?: string) {
     }
     window.open(url)
 }
+
 async function settModiaContext(fødselsnummer: string) {
     const response = await fetch(`/api/modia/velg-bruker`, {
         method: 'POST',

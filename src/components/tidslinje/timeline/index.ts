@@ -1,9 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs'
-import React, { ReactElement, ReactNode, useMemo } from 'react'
+import React, { PropsWithChildren, ReactElement, ReactNode, useMemo } from 'react'
 
 import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
-import { TimelinePeriodProps, TidslinjeVariant } from '@components/tidslinje/timeline/period/TimelinePeriod'
-import { TimelineZoomProps } from '@components/tidslinje/timeline/zoom/TimelineZoom'
+import { TidslinjeVariant, TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
 
 export interface ComponentWithType<P = unknown> extends React.FC<P> {
     componentType: string
@@ -37,10 +36,10 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
             React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelineRow',
     ) as ReactElement<TimelineRowProps>[]
 
-    const zoomComponent: ReactElement<TimelineZoomProps>[] = React.Children.toArray(children).filter(
+    const zoomComponent: ReactElement<PropsWithChildren>[] = React.Children.toArray(children).filter(
         (child: ReactNode) =>
             React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelineZoom',
-    ) as ReactElement<TimelineZoomProps>[]
+    ) as ReactElement<PropsWithChildren>[]
 
     const parsedRows = useMemo(() => {
         return parseRows(rowChildren)
