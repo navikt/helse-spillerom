@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useMemo } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Chips, ErrorSummary, Heading, Textarea, UNSAFE_Combobox as Combobox, VStack } from '@navikt/ds-react'
 import { ErrorSummaryItem } from '@navikt/ds-react/ErrorSummary'
@@ -61,7 +61,7 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
         shouldFocusError: false,
     })
 
-    const valgteÅrsaker = form.watch('valgteÅrsaker')
+    const valgteÅrsaker = useWatch({ control: form.control, name: 'valgteÅrsaker' })
 
     // Filtrer beregningsregler som har SYKEPENGEGRUNNLAG i kodeverdien
     const sykepengegrunnlagKoder = useMemo(() => {
