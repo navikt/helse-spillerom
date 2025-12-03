@@ -15,7 +15,7 @@ import {
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 
@@ -89,7 +89,6 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const {
         control,
         handleSubmit,
-        watch,
         setValue,
         formState: { errors },
     } = useForm<StartBehandlingFormData>({
@@ -103,9 +102,11 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         },
     })
 
-    const isManualMode = watch('isManualMode')
-    const validFromDate = watch('validFromDate')
-    const selectedSøknader = watch('selectedSøknader')
+    const isManualMode = useWatch({ control, name: 'isManualMode' })
+    const validFromDate = useWatch({ control, name: 'validFromDate' })
+    const selectedSøknader = useWatch({ control, name: 'selectedSøknader' })
+    const manualFom = useWatch({ control, name: 'manualFom' })
+    const manualTom = useWatch({ control, name: 'manualTom' })
 
     const { data: søknader, isError } = useSoknader(dayjs(validFromDate))
 
@@ -121,12 +122,12 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
 
     const { datepickerProps: fomDatepickerProps, inputProps: fomInputProps } = useDatepicker({
         onDateChange: (d) => setValue('manualFom', d),
-        defaultSelected: watch('manualFom'),
+        defaultSelected: manualFom,
     })
 
     const { datepickerProps: tomDatepickerProps, inputProps: tomInputProps } = useDatepicker({
         onDateChange: (d) => setValue('manualTom', d),
-        defaultSelected: watch('manualTom'),
+        defaultSelected: manualTom,
     })
 
     if (isError) return <></> // vis noe fornuftig
