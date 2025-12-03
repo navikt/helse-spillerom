@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement } from 'react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Chips, ErrorSummary, Heading, Textarea, UNSAFE_Combobox as Combobox, VStack } from '@navikt/ds-react'
@@ -12,6 +12,7 @@ import { useOpprettSykepengegrunnlag } from '@hooks/mutations/useOpprettSykepeng
 import { OpprettSykepengegrunnlagRequest } from '@schemas/sykepengegrunnlag'
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateField'
+import { BeregningsreglerArray } from '@schemas/beregningsregler'
 
 const frihåndSykepengegrunnlagFormSchema = z
     .object({
@@ -63,23 +64,7 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
 
     const valgteÅrsaker = useWatch({ control: form.control, name: 'valgteÅrsaker' })
 
-    // Filtrer beregningsregler som har SYKEPENGEGRUNNLAG i kodeverdien
-    const sykepengegrunnlagKoder = useMemo(() => {
-        if (!beregningsregler) return []
-        const unikeKoder = new Map<string, { kode: string; beskrivelse: string }>()
-        beregningsregler
-            .filter((regel) => regel.kode.includes('SYKEPENGEGRUNNLAG'))
-            .forEach((regel) => {
-                if (!unikeKoder.has(regel.kode)) {
-                    unikeKoder.set(regel.kode, { kode: regel.kode, beskrivelse: regel.beskrivelse })
-                }
-            })
-        return Array.from(unikeKoder.values()).map((regel) => ({
-            value: regel.kode,
-            label: regel.beskrivelse,
-            beskrivelse: regel.beskrivelse,
-        }))
-    }, [beregningsregler])
+    const sykepengegrunnlagKoder = getSykepengegrunnlagKoder(beregningsregler)
 
     const handleLeggTilÅrsak = (kode: string) => {
         const regel = sykepengegrunnlagKoder.find((r) => r.value === kode)
@@ -195,4 +180,23 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
             </VStack>
         </FormProvider>
     )
+}
+
+// Filtrer beregningsregler som har SYKEPENGEGRUNNLAG i kodeverdien
+function getSykepengegrunnlagKoder(beregningsregler: BeregningsreglerArray | undefined) {
+    if (!beregningsregler) return []
+
+    const unikeKoder = new Map<string, { kode: string; beskrivelse: string }>()
+    beregningsregler
+        .filter((regel) => regel.kode.includes('SYKEPENGEGRUNNLAG'))
+        .forEach((regel) => {
+            if (!unikeKoder.has(regel.kode)) {
+                unikeKoder.set(regel.kode, { kode: regel.kode, beskrivelse: regel.beskrivelse })
+            }
+        })
+    return Array.from(unikeKoder.values()).map((regel) => ({
+        value: regel.kode,
+        label: regel.beskrivelse,
+        beskrivelse: regel.beskrivelse,
+    }))
 }
