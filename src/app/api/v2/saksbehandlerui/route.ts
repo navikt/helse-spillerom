@@ -28,7 +28,7 @@ export async function GET(request: Request): Promise<NextResponse<Hovedspørsmå
 
                     const data: HovedspørsmålArray = await response.json()
                     return NextResponse.json(data)
-                } catch (error) {
+                } catch {
                     return NextResponse.json(
                         { message: 'Feil ved henting av saksbehandler-UI fra ekstern tjeneste' },
                         { status: 500 },

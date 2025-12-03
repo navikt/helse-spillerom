@@ -28,7 +28,7 @@ export async function GET(request: Request): Promise<NextResponse<Kodeverk | Err
 
                     const data: Kodeverk = await response.json()
                     return NextResponse.json(data)
-                } catch (error) {
+                } catch {
                     return NextResponse.json(
                         { message: 'Feil ved henting av kodeverk fra ekstern tjeneste' },
                         { status: 500 },
