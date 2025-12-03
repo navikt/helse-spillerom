@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
@@ -11,7 +11,6 @@ import { FrilanserInntektFormFields } from '@components/saksbilde/sykepengegrunn
 import { getDefaultValues, InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { ArbeidsledigInntektFormFields } from '@components/saksbilde/sykepengegrunnlag/form/arbeidsledig/ArbeidsledigInntektFormFields'
 import { Feiloppsummering } from '@components/saksbilde/sykepengegrunnlag/form/Feiloppsummering'
-import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 
 type SykepengegrunnlagFormProps = {
     kategori: Inntektskategori
@@ -29,19 +28,12 @@ export function SykepengegrunnlagForm({
     erFørstegangsRedigering = false,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
-    const { hideSelectButtonForAll } = useDokumentVisningContext()
     const defaultValues = getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>)
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
         defaultValues,
         shouldFocusError: false,
     })
-
-    useEffect(() => {
-        if (!erFørstegangsRedigering) return
-        form.reset(defaultValues)
-        hideSelectButtonForAll()
-    }, [erFørstegangsRedigering, yrkesaktivitetId, defaultValues, form, hideSelectButtonForAll])
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
         await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {

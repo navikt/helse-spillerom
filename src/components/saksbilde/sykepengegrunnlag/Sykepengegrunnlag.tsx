@@ -126,6 +126,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         onClick={() => {
                                             setSelectedYrkesaktivitet(yrkesaktivitet)
                                             setManuellRedigeringsmodus(false)
+                                            hideSelectButtonForAll()
                                         }}
                                     >
                                         <TableDataCell className="pl-8 whitespace-nowrap">
@@ -267,6 +268,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                         )}
                         {erIRedigeringsmodus && (
                             <SykepengegrunnlagForm
+                                key={`${aktivYrkesaktivitet.id}-${harIkkeInntektData}`}
                                 kategori={kategori}
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
