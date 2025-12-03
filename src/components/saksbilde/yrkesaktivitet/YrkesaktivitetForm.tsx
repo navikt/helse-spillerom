@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useEffect, useState } from 'react'
+import { Fragment, ReactElement, useState } from 'react'
 import {
     Button,
     Checkbox,
@@ -73,12 +73,6 @@ export default function YrkesaktivitetForm({
     const mutation = useOpprettYrkesaktivitet()
     const { data: existingInntektsforhold = [] } = useYrkesaktivitet()
     const kansaksbehandles = useKanSaksbehandles()
-
-    useEffect(() => {
-        if (initialValues) {
-            setSelectedValues(toMap(initialValues))
-        }
-    }, [initialValues])
 
     // Sjekk om det allerede finnes et yrkesaktivitet med SELVSTENDIG_NÆRINGSDRIVENDE
     const hasExistingSelvstendigNæringsdrivende = existingInntektsforhold.some((forhold) => {

@@ -157,6 +157,7 @@ export function Yrkesaktivitet(): ReactElement {
                                         content={
                                             redigererId === forhold.id ? (
                                                 <YrkesaktivitetForm
+                                                    key={`edit-${forhold.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                                     closeForm={handleAvbrytRedigering}
                                                     disabled={false}
                                                     initialValues={forhold.kategorisering}
@@ -170,6 +171,7 @@ export function Yrkesaktivitet(): ReactElement {
                                             ) : (
                                                 <VStack gap="4" className="ignore-axe">
                                                     <YrkesaktivitetForm
+                                                        key={`view-${forhold.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                                         closeForm={() => {}}
                                                         disabled={true}
                                                         title={undefined}
@@ -269,6 +271,7 @@ export function Yrkesaktivitet(): ReactElement {
                                 className="rounded-md p-8"
                             >
                                 <YrkesaktivitetForm
+                                    key="create-new" // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                     closeForm={() => setVisOpprettForm(false)}
                                     title="Legg til ny yrkesaktivitet"
                                 />
