@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, HStack, Textarea, VStack } from '@navikt/ds-react'
@@ -30,10 +30,7 @@ export function SykepengegrunnlagForm({
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
     const { hideSelectButtonForAll } = useDokumentVisningContext()
-    const defaultValues = useMemo(
-        () => getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>),
-        [kategori, inntektRequest],
-    )
+    const defaultValues = getDefaultValues(kategori, inntektRequest as InntektRequestFor<typeof kategori>)
     const form = useForm<InntektRequestFor<typeof kategori>>({
         resolver: zodResolver(inntektRequestSchema),
         defaultValues,
