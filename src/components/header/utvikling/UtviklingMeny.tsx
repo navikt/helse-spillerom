@@ -1,11 +1,11 @@
 'use client'
 
-import React, { ReactElement, useState, useEffect, useCallback, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { BodyShort, Detail, Modal, Table, Tooltip } from '@navikt/ds-react'
 import {
     ChatIcon,
-    CodeIcon,
     CheckmarkIcon,
+    CodeIcon,
     InboxUpIcon,
     ParagraphIcon,
     PersonGroupIcon,
@@ -19,10 +19,10 @@ import { useTheme } from 'next-themes'
 import {
     Dropdown,
     DropdownMenu,
+    DropdownMenuDivider,
     DropdownMenuList,
     DropdownMenuListItem,
     DropdownToggle,
-    DropdownMenuDivider,
 } from '@navikt/ds-react/Dropdown'
 
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
@@ -41,38 +41,25 @@ import { KafkaOutboxTabell } from '../../saksbilde/kafka/KafkaOutboxTabell'
 type ModalType = 'vilkårsvurdering' | 'oppdrag' | 'kafkaoutbox' | null
 
 function RetroTemaToggleHeader(): ReactElement {
-    const [isRetroTema, setIsRetroTema] = useState(false)
+    const [wantsRetroTema, setWantsRetroTema] = useState(false)
     const { theme, setTheme } = useTheme()
 
-    const toggleRetroTema = useCallback(() => {
-        const newRetroTema = !isRetroTema
-        setIsRetroTema(newRetroTema)
+    const isRetroTema = theme === 'dark' && wantsRetroTema
 
-        if (newRetroTema) {
+    useEffect(() => {
+        if (isRetroTema) {
             document.documentElement.classList.add('retro-tema')
         } else {
             document.documentElement.classList.remove('retro-tema')
         }
     }, [isRetroTema])
 
-    useEffect(() => {
-        if (theme === 'light' && isRetroTema) {
-            setIsRetroTema(false)
-            toggleRetroTema()
-        }
-    }, [theme, isRetroTema, toggleRetroTema])
-
     const handleRetroToggle = () => {
-        if (theme !== 'dark' && !isRetroTema) {
-            // Første klikk: Skru på darkmode + retro tema
+        if (theme !== 'dark' && !wantsRetroTema) {
             setTheme('dark')
-            toggleRetroTema()
-        } else if (theme === 'dark' && isRetroTema) {
-            // Andre klikk: Skru av retro tema, la darkmode være på
-            toggleRetroTema()
-        } else if (theme === 'dark' && !isRetroTema) {
-            // Tredje klikk: Skru på retro tema igjen
-            toggleRetroTema()
+            setWantsRetroTema(true)
+        } else {
+            setWantsRetroTema(!wantsRetroTema)
         }
     }
 
@@ -89,7 +76,6 @@ function RetroTemaToggleHeader(): ReactElement {
         </Tooltip>
     )
 }
-
 export function UtviklingMeny(): ReactElement | null {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
     const params = useParams()
@@ -153,7 +139,7 @@ export function UtviklingMeny(): ReactElement | null {
                     open={true}
                     onClose={closeModal}
                     header={{ heading: 'Vilkår og beregning', closeButton: true, icon: <ParagraphIcon /> }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                    className="left-auto m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody className="space-y-6">
                         <Table>
@@ -171,7 +157,7 @@ export function UtviklingMeny(): ReactElement | null {
                     open={true}
                     onClose={closeModal}
                     header={{ heading: 'Oppdrag', closeButton: true }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                    className="left-auto m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>
                         <OppdragDebug />
@@ -184,7 +170,7 @@ export function UtviklingMeny(): ReactElement | null {
                     open={true}
                     onClose={closeModal}
                     header={{ heading: 'Kafka Outbox', closeButton: true, icon: <ChatIcon /> }}
-                    className="left-auto m-0 m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
+                    className="left-auto m-10 h-screen max-h-max min-h-[600px] max-w-[1200px] min-w-[800px] rounded-none p-0"
                 >
                     <ModalBody>
                         <KafkaOutboxTabell />
@@ -207,15 +193,13 @@ const TestdataMeny = React.forwardRef<{ åpne: () => void }, Record<string, neve
 
     const handleTestpersonClick = (personId: string) => {
         setOpen(false)
-        window.location.href = `/person/${personId}`
+        router.push(`/person/${personId}`)
     }
 
     const handleTestscenarioerClick = (e: React.MouseEvent) => {
         e.preventDefault()
         setOpen(false)
-        setTimeout(() => {
-            router.push('/testscenarioer')
-        }, 0)
+        router.push('/testscenarioer')
     }
 
     const handleNullstillSession = () => {
@@ -268,7 +252,7 @@ const TestdataMeny = React.forwardRef<{ åpne: () => void }, Record<string, neve
                                     <BodyShort size="small" as="span" className="font-semibold">
                                         {person.navn}
                                     </BodyShort>
-                                    <Detail size="small">{person.fnr}</Detail>
+                                    <Detail>{person.fnr}</Detail>
                                 </DropdownMenuListItem>
                             ))}
                         </>
@@ -318,7 +302,7 @@ function BrukerVelgerMeny(): ReactElement {
                                     </BodyShort>
                                     {erAktiv && <CheckmarkIcon aria-hidden className="text-green-600" />}
                                 </span>
-                                <Detail size="small">
+                                <Detail>
                                     {bruker.navIdent} • {bruker.roller.join(', ')}
                                 </Detail>
                             </DropdownMenuListItem>
