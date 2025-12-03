@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement } from 'react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, ErrorSummary, HStack, Select, Textarea, TextField, VStack } from '@navikt/ds-react'
@@ -79,33 +79,10 @@ export function TilkommenInntektForm(): ReactElement {
     const harGyldigOrgnummer = ident && ident.length === 9
     const { data: organisasjonsnavn } = useOrganisasjonsnavn(harGyldigOrgnummer ? ident : '')
 
-    // Beregn antall virkedager mellom fom og tom (inkludert begge ender)
-    const antallDager = useMemo(() => {
-        if (!fom || !tom) return 0
-        const fomDate = dayjs(fom)
-        const tomDate = dayjs(tom)
-        if (!fomDate.isValid() || !tomDate.isValid()) return 0
-        const sluttDato = tomDate.endOf('day')
-        let gjeldendeDato = fomDate.startOf('day')
-        let virkedager = 0
-
-        while (gjeldendeDato.isBefore(sluttDato) || gjeldendeDato.isSame(sluttDato, 'day')) {
-            const ukedag = gjeldendeDato.day()
-            const erHelg = ukedag === 0 || ukedag === 6
-            if (!erHelg) {
-                virkedager += 1
-            }
-            gjeldendeDato = gjeldendeDato.add(1, 'day')
-        }
-
-        return virkedager
-    }, [fom, tom])
+    const antallDager = kalkulerAntallDager(fom, tom)
 
     // Beregn inntekt per dag
-    const inntektPerDag = useMemo(() => {
-        if (!inntektForPerioden || antallDager === 0) return undefined
-        return inntektForPerioden / antallDager
-    }, [inntektForPerioden, antallDager])
+    const inntektPerDag = !inntektForPerioden || antallDager === 0 ? undefined : inntektForPerioden / antallDager
 
     async function onSubmit(data: OpprettTilkommenInntektRequest) {
         await mutation.mutateAsync(data)
@@ -277,4 +254,28 @@ export function TilkommenInntektForm(): ReactElement {
             </VStack>
         </FormProvider>
     )
+}
+
+// Beregn antall virkedager mellom fom og tom (inkludert begge ender)
+function kalkulerAntallDager(fom: string, tom: string): number {
+    if (!fom || !tom) return 0
+
+    const fomDate = dayjs(fom)
+    const tomDate = dayjs(tom)
+    if (!fomDate.isValid() || !tomDate.isValid()) return 0
+
+    const sluttDato = tomDate.endOf('day')
+    let gjeldendeDato = fomDate.startOf('day')
+    let virkedager = 0
+
+    while (gjeldendeDato.isBefore(sluttDato) || gjeldendeDato.isSame(sluttDato, 'day')) {
+        const ukedag = gjeldendeDato.day()
+        const erHelg = ukedag === 0 || ukedag === 6
+        if (!erHelg) {
+            virkedager += 1
+        }
+        gjeldendeDato = gjeldendeDato.add(1, 'day')
+    }
+
+    return virkedager
 }
