@@ -319,8 +319,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                                 {utbetalingsdata?.økonomi.totalGrad
                                                                     ? formaterTotalGrad(
                                                                           Math.round(
-                                                                              utbetalingsdata.økonomi.totalGrad
-                                                                                  .prosentDesimal * 100,
+                                                                              utbetalingsdata.økonomi.totalGrad * 100,
                                                                           ),
                                                                       )
                                                                     : '-'}
@@ -330,8 +329,8 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             <BodyShort>
                                                                 {utbetalingsdata
                                                                     ? formaterBeløp(
-                                                                          utbetalingsdata.økonomi.arbeidsgiverbeløp
-                                                                              ?.dagligInt?.beløp || 0,
+                                                                          utbetalingsdata.økonomi.arbeidsgiverbeløp ||
+                                                                              0,
                                                                       )
                                                                     : '-'}
                                                             </BodyShort>
@@ -340,8 +339,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             <BodyShort>
                                                                 {utbetalingsdata
                                                                     ? formaterBeløp(
-                                                                          utbetalingsdata.økonomi.personbeløp?.dagligInt
-                                                                              ?.beløp || 0,
+                                                                          utbetalingsdata.økonomi.personbeløp || 0,
                                                                       )
                                                                     : '-'}
                                                             </BodyShort>

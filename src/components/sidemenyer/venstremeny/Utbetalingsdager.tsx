@@ -13,8 +13,8 @@ export function Utbetalingsdager(): ReactElement {
         utbetalingsberegning.beregningData.yrkesaktiviteter.forEach((yrkesaktivitet) => {
             yrkesaktivitet.utbetalingstidslinje.dager.forEach((dag) => {
                 // Hent beløp fra økonomi-objektet
-                const arbeidsgiverbeløp = dag.økonomi.arbeidsgiverbeløp?.dagligInt?.beløp || 0
-                const personbeløp = dag.økonomi.personbeløp?.dagligInt?.beløp || 0
+                const arbeidsgiverbeløp = dag.økonomi.arbeidsgiverbeløp || 0
+                const personbeløp = dag.økonomi.personbeløp || 0
 
                 // Legg til datoen hvis det er utbetaling eller refusjon
                 if (personbeløp > 0 || arbeidsgiverbeløp > 0) {
