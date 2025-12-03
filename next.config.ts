@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
     experimental: {
         optimizePackageImports: ['@navikt/ds-react', '@navikt/aksel-icons'],
     },
-    eslint: {
-        dirs: ['src'],
-        ignoreDuringBuilds: true,
-    },
 }
 
 export default nextConfig

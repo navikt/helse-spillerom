@@ -4,7 +4,7 @@ description: "Builds a Next.JS App, creates a docker image and uploads it to GAR
 inputs:
   NPM_AUTH_TOKEN:
     required: true
-    type: string
+    description: "NPM authentication token"
 
 runs:
   using: "composite"
@@ -16,7 +16,7 @@ runs:
     - uses: actions/setup-node@v4
       id: setup-node
       with:
-        node-version: 22.x
+        node-version: 24
         cache: npm
     - id: set-env
       shell: bash
