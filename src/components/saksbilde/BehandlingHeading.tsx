@@ -1,12 +1,13 @@
 'use client'
 
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import dayjs from 'dayjs'
 
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
 import { getFormattedDateString } from '@utils/date-format'
+import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
 
 export function BehandlingHeading({ className }: { className?: string }) {
     const router = useRouter()
@@ -15,15 +16,9 @@ export function BehandlingHeading({ className }: { className?: string }) {
     const { data: personinfo } = usePersoninfo()
     const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()
 
-    const aktivPeriode = useMemo(() => {
-        if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
-        if (!saksbehandlingsperiodeId) return null
-
-        const periode = saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
-        if (periode) return periode
-
-        return saksbehandlingsperioder.reduce((latest, p) => (dayjs(p.tom).isAfter(dayjs(latest.tom)) ? p : latest))
-    }, [saksbehandlingsperioder, saksbehandlingsperiodeId])
+    const aktivPeriode = getAktivPeriode(saksbehandlingsperioder, saksbehandlingsperiodeId)
+    const formattedFom = formatShortDate(aktivPeriode?.fom)
+    const formattedTom = formatShortDate(aktivPeriode?.tom)
 
     // Naviger til person-siden hvis det ikke finnes noen saksbehandlingsperioder
     useEffect(() => {
@@ -44,20 +39,6 @@ export function BehandlingHeading({ className }: { className?: string }) {
         }
     }, [aktivPeriode, saksbehandlingsperiodeId, pathname, router])
 
-    const formattedFom = useMemo(() => {
-        if (!aktivPeriode?.fom) return ''
-        // Konverter fra DD.MM.YYYY til DD.MM format
-        const fullDate = getFormattedDateString(aktivPeriode.fom)
-        return fullDate.substring(0, 5) // Tar kun DD.MM delen
-    }, [aktivPeriode?.fom])
-
-    const formattedTom = useMemo(() => {
-        if (!aktivPeriode?.tom) return ''
-        // Konverter fra DD.MM.YYYY til DD.MM format
-        const fullDate = getFormattedDateString(aktivPeriode.tom)
-        return fullDate.substring(0, 5) // Tar kun DD.MM delen
-    }, [aktivPeriode?.tom])
-
     if (!personinfo || !aktivPeriode) {
         return <h1 className={`sr-only ${className || ''}`}>Sykepengesak - Laster...</h1>
     }
@@ -68,4 +49,23 @@ export function BehandlingHeading({ className }: { className?: string }) {
             {formattedTom} {new Date(aktivPeriode.tom).getFullYear()}
         </h1>
     )
+}
+
+function getAktivPeriode(
+    saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
+    saksbehandlingsperiodeId: string | undefined,
+) {
+    if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
+    if (!saksbehandlingsperiodeId) return null
+
+    const periode = saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+    if (periode) return periode
+
+    return saksbehandlingsperioder.reduce((latest, p) => (dayjs(p.tom).isAfter(dayjs(latest.tom)) ? p : latest))
+}
+
+function formatShortDate(dateString: string | undefined) {
+    if (!dateString) return ''
+    const fullDate = getFormattedDateString(dateString)
+    return fullDate.substring(0, 5) // DD.MM
 }
