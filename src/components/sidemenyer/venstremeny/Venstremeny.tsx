@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
@@ -58,21 +58,14 @@ export function Venstremeny(): ReactElement {
     const sendTilbake = useSendTilbake()
     const revurder = useRevurder()
 
-    const kanRevurderes = useMemo(() => {
-        if (!aktivSaksbehandlingsperiode || !saksbehandlingsperioder) return false
-
-        // Sjekk om perioden er godkjent
-        if (aktivSaksbehandlingsperiode.status !== 'GODKJENT') return false
-
-        // Sjekk om noen andre perioder har revurdererSaksbehandlingsperiodeId som peker på denne periodens id
-        const harEksisterendeRevurdering = saksbehandlingsperioder.some(
+    const kanRevurderes =
+        aktivSaksbehandlingsperiode?.status === 'GODKJENT' &&
+        saksbehandlingsperioder &&
+        !saksbehandlingsperioder.some(
             (periode) =>
                 periode.id !== aktivSaksbehandlingsperiode.id &&
                 periode.revurdererSaksbehandlingsperiodeId === aktivSaksbehandlingsperiode.id,
         )
-
-        return !harEksisterendeRevurdering
-    }, [aktivSaksbehandlingsperiode, saksbehandlingsperioder])
 
     if (isLoading) return <VenstremenySkeleton />
 
