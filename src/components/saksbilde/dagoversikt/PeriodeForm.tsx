@@ -1,15 +1,15 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { Button, DatePicker, HStack, VStack, BodyShort, Heading, useDatepicker } from '@navikt/ds-react'
-import { PencilIcon, CheckmarkIcon, XMarkIcon } from '@navikt/aksel-icons'
+import { BodyShort, Button, DatePicker, Heading, HStack, useDatepicker, VStack } from '@navikt/ds-react'
+import { CheckmarkIcon, PencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
-import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 
 import { useOppdaterYrkesaktivitetPerioder } from '@hooks/mutations/useOppdaterYrkesaktivitet'
-import { type Yrkesaktivitet, type Perioder, type Periodetype } from '@schemas/yrkesaktivitet'
+import { type Perioder, type Periodetype, type Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 import { getFormattedDateString } from '@utils/date-format'
 
@@ -96,7 +96,7 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
             })
 
             setErIRedigeringsmodus(false)
-        } catch (error) {
+        } catch {
             // Feil håndteres av mutation
         }
     }

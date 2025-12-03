@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { z } from 'zod/v4'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Checkbox, CheckboxGroup, Heading, HStack, Select, Textarea, TextField } from '@navikt/ds-react'
 
@@ -79,8 +79,8 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
             })
     }
 
-    const nyGrad = form.watch('grad')
-    const nyDagtype = form.watch('dagtype')
+    const nyGrad = useWatch({ control: form.control, name: 'grad' })
+    const nyDagtype = useWatch({ control: form.control, name: 'dagtype' })
 
     return (
         <FormProvider {...form}>
