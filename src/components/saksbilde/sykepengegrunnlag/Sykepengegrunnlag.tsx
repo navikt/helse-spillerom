@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
@@ -44,7 +44,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
 
-    const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
+    const [manuellRedigeringsmodus, setManuellRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
 
     const kanSaksbehandles = useKanSaksbehandles()
@@ -57,12 +57,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const inntektData = aktivYrkesaktivitet?.inntektData
     const harIkkeInntektData = !inntektData
 
-    // Åpne automatisk i redigeringsmodus hvis inntektData ikke er satt
-    useEffect(() => {
-        if (yrkesaktivitetSuccess && harIkkeInntektData && kanSaksbehandles) {
-            setErIRedigeringsmodus(true)
-        }
-    }, [aktivYrkesaktivitet?.id, harIkkeInntektData, kanSaksbehandles, yrkesaktivitetSuccess])
+    const skalAutomatiskÅpne = yrkesaktivitetSuccess && harIkkeInntektData && kanSaksbehandles
+    const erIRedigeringsmodus = skalAutomatiskÅpne || manuellRedigeringsmodus
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (
@@ -129,8 +125,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         })}
                                         onClick={() => {
                                             setSelectedYrkesaktivitet(yrkesaktivitet)
-                                            // Åpne i redigeringsmodus hvis inntektData mangler
-                                            setErIRedigeringsmodus(!yrkesaktivitet.inntektData && kanSaksbehandles)
+                                            setManuellRedigeringsmodus(false)
                                         }}
                                     >
                                         <TableDataCell className="pl-8 whitespace-nowrap">
@@ -225,7 +220,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                     }
                                     onClick={() => {
                                         if (erIRedigeringsmodus) hideSelectButtonForAll()
-                                        setErIRedigeringsmodus(!erIRedigeringsmodus)
+                                        setManuellRedigeringsmodus(!manuellRedigeringsmodus)
                                     }}
                                 >
                                     {erIRedigeringsmodus ? 'Avbryt' : 'Endre'}
@@ -276,7 +271,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
                                 avbryt={() => {
-                                    setErIRedigeringsmodus(false)
+                                    setManuellRedigeringsmodus(false)
                                     hideSelectButtonForAll()
                                 }}
                                 erFørstegangsRedigering={harIkkeInntektData}
