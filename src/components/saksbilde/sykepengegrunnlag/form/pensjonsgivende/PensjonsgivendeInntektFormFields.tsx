@@ -20,7 +20,7 @@ type PensjonsgivendeInntektFormFieldsProps = {
 }
 
 export function PensjonsgivendeInntektFormFields({
-    kategori,
+    kategori, // eslint-disable-line @typescript-eslint/no-unused-vars
     yrkesaktivitetId,
 }: PensjonsgivendeInntektFormFieldsProps): ReactElement {
     const { control, watch, setValue } = useFormContext<InntektRequestFor<typeof kategori>>()
