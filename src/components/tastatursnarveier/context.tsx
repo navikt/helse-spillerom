@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useEffect, useRef } from 'react'
+import { createContext, PropsWithChildren, ReactElement, useContext, useEffect, useRef } from 'react'
 
 import { Maybe } from '@utils/tsUtils'
 import {
@@ -46,8 +46,8 @@ export function useShortcutContext(): ShortcutContextType {
 }
 
 function useKeydownEventListener(metadata: ShortcutMetadata[], getHandler: (id: ShortcutId) => Maybe<ShortcutHandler>) {
-    const handleKeyDown = useCallback(
-        (event: KeyboardEvent) => {
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
             if (!event.code) return // Valg i autocomplete-lister, f.eks. i søkefeltet, trigger et tynt keydown-event, som vi ikke trenger å håndtere her
             const activeModifiers: ModifierKey[] = []
             if (event.getModifierState('Alt')) activeModifiers.push('Alt')
@@ -67,14 +67,11 @@ function useKeydownEventListener(metadata: ShortcutMetadata[], getHandler: (id: 
 
             const handler = getHandler(matchedShortcut.id)
             handler?.()
-        },
-        [metadata, getHandler],
-    )
+        }
 
-    useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)
         return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [handleKeyDown])
+    }, [metadata, getHandler])
 }
 
 const isInputFocused = (): boolean =>
