@@ -29,7 +29,9 @@ export function Høyremeny(): ReactElement {
     const params = useParams()
     const erISaksbehandlingsperiode = Boolean(params?.saksbehandlingsperiodeId)
 
-    const [filter, setFilter] = useState<HøyremenyFilter>(erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk')
+    const [internalFilter, setInternalFilter] = useState<HøyremenyFilter>(
+        erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk',
+    )
     const [showSidemeny, setShowSidemeny] = useState<boolean>(true)
     const showSidemenyRef = useRef(showSidemeny)
 
@@ -38,12 +40,7 @@ export function Høyremeny(): ReactElement {
         showSidemenyRef.current = showSidemeny
     }, [showSidemeny])
 
-    // Oppdater filter når vi navigerer til/fra saksbehandlingsperiode
-    useEffect(() => {
-        if (!erISaksbehandlingsperiode && filter === 'Dokumenter') {
-            setFilter('Historikk')
-        }
-    }, [erISaksbehandlingsperiode, filter])
+    const filter = !erISaksbehandlingsperiode && internalFilter === 'Dokumenter' ? 'Historikk' : internalFilter
 
     // Lukk høyremeny automatisk ved resize under 1280px bredde
     useEffect(() => {
@@ -66,7 +63,7 @@ export function Høyremeny(): ReactElement {
             setShowSidemeny(false)
         } else {
             setShowSidemeny(true)
-            setFilter(clickedFilter)
+            setInternalFilter(clickedFilter)
         }
     }
 
