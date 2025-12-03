@@ -9,31 +9,23 @@ export function useTimelineState(earliestDate: Dayjs, latestDate: Dayjs) {
     const timelineScrollableContainerRef = useRef<HTMLDivElement>(null)
     const [zoomLevel, setZoomLevel] = useState<ZoomLevel>('6 måneder')
     const [zoomSpanInDays, setZoomSpanInDays] = useState<number>(zoomLevels[zoomLevel])
-    const [startDate, setStartDate] = useState<Dayjs>(earliestDate)
-    const [dayLength, setDayLength] = useState<number>(0)
-    const [width, setWidth] = useState<number>(0)
 
     const containerWidth = useResizeObserver(timelineScrollableContainerRef)
-    useEffect(() => {
-        if (!containerWidth) return
-        const pxPerDay = containerWidth / zoomSpanInDays
-        const numberOfDaysBetweenPeriods = getNumberOfDays(earliestDate, latestDate)
-        const timelineStartDate = latestDate.subtract(zoomSpanInDays - 1, 'day')
 
-        if (containerWidth > numberOfDaysBetweenPeriods * pxPerDay) {
-            setStartDate(timelineStartDate)
-        } else {
-            setStartDate(earliestDate)
-        }
+    const pxPerDay = containerWidth ? containerWidth / zoomSpanInDays : 0
+    const numberOfDaysBetweenPeriods = getNumberOfDays(earliestDate, latestDate)
+    const timelineStartDate = latestDate.subtract(zoomSpanInDays - 1, 'day')
 
-        const numberOfDaysInTimeline =
-            containerWidth > numberOfDaysBetweenPeriods * pxPerDay
-                ? getNumberOfDays(timelineStartDate, latestDate)
-                : numberOfDaysBetweenPeriods
+    const fitsInContainer = containerWidth ? containerWidth > numberOfDaysBetweenPeriods * pxPerDay : false
 
-        setDayLength(pxPerDay)
-        setWidth(numberOfDaysInTimeline * pxPerDay)
-    }, [containerWidth, zoomSpanInDays, earliestDate, latestDate, setDayLength, setWidth])
+    const startDate = fitsInContainer ? timelineStartDate : earliestDate
+
+    const numberOfDaysInTimeline = fitsInContainer
+        ? getNumberOfDays(timelineStartDate, latestDate)
+        : numberOfDaysBetweenPeriods
+
+    const dayLength = pxPerDay
+    const width = numberOfDaysInTimeline * pxPerDay
 
     return {
         startDate,
