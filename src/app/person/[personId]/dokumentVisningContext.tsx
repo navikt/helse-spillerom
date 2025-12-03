@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, PropsWithChildren, ReactElement, useCallback, useContext, useState } from 'react'
+import { createContext, PropsWithChildren, ReactElement, useContext, useState } from 'react'
 import dayjs from 'dayjs'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
@@ -35,7 +35,7 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
     const [dokumenter, setDokumenter] = useState<Inntektsmelding[]>([])
     const [dokumentStateMap, setDokumentStateMap] = useState<Record<string, DokumentState>>({})
 
-    const updateDokumenter = useCallback((dokument: Inntektsmelding) => {
+    function updateDokumenter(dokument: Inntektsmelding) {
         setDokumenter((prev) => {
             const exists = prev.some((d) => d.inntektsmeldingId === dokument.inntektsmeldingId)
             const newList = exists
@@ -44,9 +44,9 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
 
             return newList.sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
         })
-    }, [])
+    }
 
-    const updateDokumentState = useCallback((id: string, changes: Partial<DokumentState>) => {
+    function updateDokumentState(id: string, changes: Partial<DokumentState>) {
         setDokumentStateMap((prev) => {
             const current = prev[id]
 
@@ -65,9 +65,9 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
                 [id]: current ? { ...current, ...changes } : { isSelected: false, showSelectButton: false, ...changes },
             }
         })
-    }, [])
+    }
 
-    const selectDokument = useCallback((id: string) => {
+    function selectDokument(id: string) {
         setDokumentStateMap((prev) =>
             Object.fromEntries(
                 Object.entries({ ...prev, [id]: prev[id] ?? { isSelected: false, showSelectButton: false } }).map(
@@ -75,15 +75,15 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
                 ),
             ),
         )
-    }, [])
+    }
 
-    const hideSelectButtonForAll = useCallback(() => {
+    function hideSelectButtonForAll() {
         setDokumentStateMap((prev) =>
             Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, { ...v, showSelectButton: false }])),
         )
-    }, [])
+    }
 
-    const syncDokumentStateWithForm = useCallback((ids: string[], selectedId: string) => {
+    function syncDokumentStateWithForm(ids: string[], selectedId: string) {
         setDokumentStateMap((prev) =>
             Object.fromEntries(
                 Object.entries(prev).map(([k, v]) => [
@@ -94,7 +94,7 @@ export function DokumentVisningProvider({ children }: PropsWithChildren): ReactE
                 ]),
             ),
         )
-    }, [])
+    }
 
     return (
         <DokumentVisningContext.Provider
