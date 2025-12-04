@@ -58,7 +58,7 @@ jobs:
         run: |
           echo "Copying .nais/envs/.env.prod..."
           cp .nais/envs/.env.prod .env.production
-      - id: npm-build
+      - id: pnpm-build
         shell: bash
         run: pnpm run build
         env:

@@ -5,7 +5,7 @@
 Frontend for backenden bakrommet
 
 ## Kjør lokalt
-`npm run dev`
+`pnpm run dev`
 
 ### Tilgang til Github Package Registry
 
