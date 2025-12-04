@@ -51,18 +51,18 @@ jobs:
       image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   run-playwright:
-    needs: [ prebuild-app-for-playwright ]
+    needs: [prebuild-app-for-playwright]
     name: Playwright shard ${{ matrix.shardIndex }}
     runs-on: ubuntu-latest
     services:
       app:
         image: ${{ needs.prebuild-app-for-playwright.outputs.image }}
-        ports: [ '3000:3000' ]
+        ports: ['3000:3000']
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [ 1, 2, 3, 4 ]
-        shardTotal: [ 4 ]
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
@@ -81,7 +81,7 @@ jobs:
 
   merge-reports:
     if: ${{ !cancelled() }}
-    needs: [ run-playwright ]
+    needs: [run-playwright]
     permissions:
       contents: read
       id-token: write
