@@ -11,7 +11,7 @@
         "lokal": "NEXT_PUBLIC_RUNTIME_ENV=lokal next dev --turbopack",
         "build": "next build",
         "start": "next start",
-        "start:e2e": "NEXT_PUBLIC_IS_E2E=true NEXT_PUBLIC_BASE_PATH= NEXT_PUBLIC_ASSET_PREFIX= node .next/standalone/server.js | pino-pretty",
+        "start:e2e": "NEXT_PUBLIC_IS_E2E=true NEXT_PUBLIC_BASE_PATH= NEXT_PUBLIC_ASSET_PREFIX= node .next/standalone/server.js",
         "build:e2e": "NEXT_PUBLIC_IS_E2E=true NEXT_PUBLIC_BASE_PATH= NEXT_PUBLIC_ASSET_PREFIX= next build",
         "prettier:write": "prettier --write .",
         "prettier:check": "prettier --check .",
