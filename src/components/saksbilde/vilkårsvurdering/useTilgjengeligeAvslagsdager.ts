@@ -14,26 +14,19 @@ export function useTilgjengeligeAvslagsdager(): Avslagsdag[] {
     const { data: kodeverk = [] } = useKodeverk()
     const { data: vilkårsvurderinger = [] } = useVilkaarsvurderinger()
 
-    // Samle alle årsakskoder som er valgt i vilkårsvurderinger med IKKE_OPPFYLT
-    const avslagsdagerMap = new Map<string, Avslagsdag>()
+    const ikkeOppfyltKoder = kodeverk.flatMap((vilkår) => vilkår.ikkeOppfylt)
+    const kodeverkMap = new Map(ikkeOppfyltKoder.map((årsak) => [årsak.kode, årsak]))
 
-    vilkårsvurderinger.forEach((vurdering) => {
-        if (vurdering.vurdering === 'IKKE_OPPFYLT') {
-            vurdering.underspørsmål.forEach((underspørsmål) => {
-                // Finn årsaken i kodeverket for å få beskrivelse
-                for (const vilkår of kodeverk) {
-                    const årsak = vilkår.ikkeOppfylt.find((årsak) => årsak.kode === underspørsmål.svar)
-                    if (årsak) {
-                        avslagsdagerMap.set(årsak.kode, {
-                            kode: årsak.kode,
-                            beskrivelse: årsak.beskrivelse,
-                        })
-                        break
-                    }
-                }
-            })
-        }
-    })
+    const avslagsdager = vilkårsvurderinger
+        .filter((vurdering) => vurdering.vurdering === 'IKKE_OPPFYLT')
+        .flatMap((vurdering) => vurdering.underspørsmål)
+        .reduce((map, underspørsmål) => {
+            const årsak = kodeverkMap.get(underspørsmål.svar)
+            if (årsak && !map.has(årsak.kode)) {
+                map.set(årsak.kode, { kode: årsak.kode, beskrivelse: årsak.beskrivelse })
+            }
+            return map
+        }, new Map<string, Avslagsdag>())
 
-    return Array.from(avslagsdagerMap.values()).sort((a, b) => a.kode.localeCompare(b.kode))
+    return Array.from(avslagsdager.values()).sort((a, b) => a.kode.localeCompare(b.kode))
 }
