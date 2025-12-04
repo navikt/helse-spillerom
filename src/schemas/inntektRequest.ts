@@ -34,13 +34,7 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakSchema = z.enum([
     'TIDSAVGRENSET',
 ])
 
-export const arbeidstakerInntektTypeSchema = z.enum([
-    'INNTEKTSMELDING',
-    'AINNTEKT',
-    'SKJONNSFASTSETTELSE',
-    'MANUELT_BEREGNET',
-    'DEFAULT',
-])
+export const arbeidstakerInntektTypeSchema = z.enum(['INNTEKTSMELDING', 'AINNTEKT', 'SKJONNSFASTSETTELSE', 'DEFAULT'])
 
 export const arbeidstakerInntektRequestSchema = z
     .discriminatedUnion('type', [
@@ -67,10 +61,6 @@ export const arbeidstakerInntektRequestSchema = z
             type: arbeidstakerInntektTypeSchema.extract(['SKJONNSFASTSETTELSE']),
             årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
             årsak: arbeidstakerSkjønnsfastsettelseÅrsakSchema,
-        }),
-        z.object({
-            type: arbeidstakerInntektTypeSchema.extract(['MANUELT_BEREGNET']),
-            årsinntekt: z.number({ error: 'Årsinntekt må være et tall' }),
         }),
     ])
     .and(

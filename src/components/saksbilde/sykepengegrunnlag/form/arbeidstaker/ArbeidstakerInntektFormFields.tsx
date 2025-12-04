@@ -63,7 +63,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
                                     setValue('data.inntektsmeldingId', '')
                                     setValue('data.årsinntekt', 0)
                                 }
-                                if (valg === 'SKJONNSFASTSETTELSE' || valg === 'MANUELT_BEREGNET') {
+                                if (valg === 'SKJONNSFASTSETTELSE') {
                                     setValue('data.årsinntekt', 0)
                                 }
                             }}
@@ -131,7 +131,6 @@ const typeLabels: Record<ArbeidstakerInntektType, string> = {
     INNTEKTSMELDING: 'Inntektsmelding',
     AINNTEKT: 'A-inntekt',
     SKJONNSFASTSETTELSE: 'Skjønnsfastsatt',
-    MANUELT_BEREGNET: 'Manuelt beregnet',
 }
 
 export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSkjønnsfastsettelseÅrsak, string> = {

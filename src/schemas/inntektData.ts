@@ -24,12 +24,6 @@ export const arbeidstakerInntektsmeldingSchema = z.object({
     sporing: z.string(),
 })
 
-export const arbeidstakerManueltBeregnetSchema = z.object({
-    inntektstype: z.literal('ARBEIDSTAKER_MANUELT_BEREGNET'),
-    omregnetÅrsinntekt: z.number(),
-    sporing: z.string(),
-})
-
 export const arbeidstakerAinntektSchema = z.object({
     inntektstype: z.literal('ARBEIDSTAKER_AINNTEKT'),
     omregnetÅrsinntekt: z.number(),
@@ -91,7 +85,6 @@ export const selvstendigNæringsdrivendeSkjønnsfastsattSchema = z.object({
 // Hovedunion for alle inntekt data
 export const inntektDataSchema = z.discriminatedUnion('inntektstype', [
     arbeidstakerInntektsmeldingSchema,
-    arbeidstakerManueltBeregnetSchema,
     arbeidstakerAinntektSchema,
     arbeidstakerSkjønnsfastsattSchema,
     frilanserAinntektSchema,
@@ -108,7 +101,6 @@ export type InntektData = z.infer<typeof inntektDataSchema>
 export type InntektAar = z.infer<typeof inntektAarSchema>
 export type PensjonsgivendeInntekt = z.infer<typeof pensjonsgivendeInntektSchema>
 export type ArbeidstakerInntektsmelding = z.infer<typeof arbeidstakerInntektsmeldingSchema>
-export type ArbeidstakerManueltBeregnet = z.infer<typeof arbeidstakerManueltBeregnetSchema>
 export type ArbeidstakerAinntekt = z.infer<typeof arbeidstakerAinntektSchema>
 export type ArbeidstakerSkjønnsfastsatt = z.infer<typeof arbeidstakerSkjønnsfastsattSchema>
 export type FrilanserAinntekt = z.infer<typeof frilanserAinntektSchema>

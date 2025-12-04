@@ -49,12 +49,6 @@ const arbeidstakerDefaults: Record<
         begrunnelse: '',
         refusjon: undefined,
     },
-    MANUELT_BEREGNET: {
-        type: 'MANUELT_BEREGNET',
-        årsinntekt: 0,
-        begrunnelse: '',
-        refusjon: undefined,
-    },
 }
 
 // SELVSTENDIG / INAKTIV

@@ -459,9 +459,7 @@ export function navigerTilSykepengegrunnlagFane() {
     }
 }
 
-export function velgSykepengegrunnlagKilde(
-    kilde: 'Inntektsmelding' | 'A-inntekt' | 'Skjønnsfastsatt' | 'Manuelt beregnet',
-) {
+export function velgSykepengegrunnlagKilde(kilde: 'Inntektsmelding' | 'A-inntekt' | 'Skjønnsfastsatt') {
     return async (page: Page) => {
         await test.step(`Velg sykepengegrunnlag kilde: ${kilde}`, async () => {
             // Vent på at skjemaet er åpent
@@ -481,8 +479,8 @@ export function fyllUtSykepengegrunnlag(inntekt: string, begrunnelse: string = '
             await page.waitForSelector('form', { state: 'visible' })
 
             // Velg kilde først for å gjøre årsinntekt-feltet redigerbart
-            // For manuell inntekt må vi velge "Manuelt beregnet" eller "Skjønnsfastsatt"
-            await velgSykepengegrunnlagKilde('Manuelt beregnet')(page)
+            // For manuell inntekt må vi velge "Skjønnsfastsatt"
+            await velgSykepengegrunnlagKilde('Skjønnsfastsatt')(page)
 
             // Vent på at årsinntekt-feltet blir redigerbart
             const inntektField = page.getByRole('textbox', { name: 'Årsinntekt' })

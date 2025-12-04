@@ -9,7 +9,6 @@ export const TagFor: Record<ArbeidstakerInntektType, ReactElement> = {
     INNTEKTSMELDING: <InntektsmeldingKildeTag />,
     AINNTEKT: <AOrdningenKildeTag />,
     SKJONNSFASTSETTELSE: <SaksbehandlerKildeTag />,
-    MANUELT_BEREGNET: <SaksbehandlerKildeTag />,
 }
 
 export function AOrdningenKildeTag(): ReactElement {
