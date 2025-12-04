@@ -1,9 +1,15 @@
 import { logger } from '@navikt/next-logger'
 import { getToken, validateAzureToken } from '@navikt/oasis'
-import { AzurePayload } from '@navikt/oasis/dist/validate'
 import { NextResponse } from 'next/server'
 
 import { erDevLokalEllerDemo } from '@/env'
+
+type AzurePayload = {
+    NAVident: string
+    name: string
+    preferred_username: string
+    groups?: string[]
+}
 
 export interface ErrorResponse {
     message: string
