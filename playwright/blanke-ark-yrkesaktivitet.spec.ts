@@ -1,20 +1,16 @@
 import { expect } from '@playwright/test'
+
 import { test } from './fixtures'
 import {
+    fyllUtArbeidstakerYrkesaktivitet,
+    fyllUtNæringsdrivendeYrkesaktivitet,
+    lagreYrkesaktivitet,
     navigerTilPersonOgBehandling,
     navigerTilYrkesaktivitetFane,
+    verifiserAntallYrkesaktiviteter,
     verifiserIngenYrkesaktiviteter,
     verifiserKategoriTag,
     åpneYrkesaktivitetSkjema,
-    fyllUtArbeidstakerYrkesaktivitet,
-    fyllUtNæringsdrivendeYrkesaktivitet,
-    fyllUtFrilanserYrkesaktivitet,
-    lagreYrkesaktivitet,
-    lagreRedigertYrkesaktivitet,
-    verifiserAntallYrkesaktiviteter,
-    slettYrkesaktivitet,
-    utvidYrkesaktivitetRad,
-    verifiserYrkesaktivitetTabell,
 } from './actions/saksbehandler-actions'
 
 test.describe('Blanke Ark - Yrkesaktivitet', () => {

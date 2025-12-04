@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import { Controller, useFormContext, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
 import { BodyShort, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
