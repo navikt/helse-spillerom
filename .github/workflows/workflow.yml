@@ -27,13 +27,13 @@ jobs:
       IMAGE_NAME: ${{ github.repository }}-e2e
       REGISTRY: ghcr.io
     steps:
-      - uses: navikt/helse-spillerom/actions/npm-cached@main
+      - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Build e2e version of app
         run: |
           cp .nais/envs/.env.playwright .env.production
-          npm run build:e2e
+          pnpm run build:e2e
       - run: cp -R .next/static .next/standalone/.next
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -64,13 +64,13 @@ jobs:
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
     steps:
-      - uses: navikt/helse-spillerom/actions/npm-cached@main
+      - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Install Playwright browsers
-        run: npx playwright install
+        run: pnpm exec playwright install
       - name: Run Playwright
-        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: pnpm exec playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload blob report to GitHub Actions Artifacts
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
@@ -100,7 +100,7 @@ jobs:
           merge-multiple: true
 
       - name: Merge into HTML Report
-        run: npx playwright merge-reports --reporter html ./all-blob-reports
+        run: pnpm dlx playwright merge-reports --reporter html ./all-blob-reports
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v5
@@ -119,7 +119,7 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 
       - name: Merge to json report
-        run: npx playwright merge-reports --reporter json  ./all-blob-reports > playwright-report/report.json
+        run: pnpm dlx playwright merge-reports --reporter json  ./all-blob-reports > playwright-report/report.json
 
       - name: Make fancy GHA Summary
         run: |

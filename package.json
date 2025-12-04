@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "engines": {
-        "node": "24"
+        "node": "24",
+        "pnpm": ">=10"
     },
     "scripts": {
         "dev": "next dev --turbopack",
@@ -15,12 +16,12 @@
         "prettier:write": "prettier --write .",
         "prettier:check": "prettier --check .",
         "tsc": "tsc",
-        "play": "npm run tsc && npx playwright test --ui",
-        "play-headless": "npm run tsc && npx playwright test",
+        "play": "pnpm run tsc && npx playwright test --ui",
+        "play-headless": "pnpm run tsc && npx playwright test",
         "lint": "eslint --ext=ts,tsx src",
         "test": "vitest --config vitest.config.mts --watch=false",
         "lint:fix": "eslint --ext=ts,tsx src --fix",
-        "format": "npm run prettier:write && npm run lint:fix"
+        "format": "pnpm run prettier:write && pnpm run lint:fix"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.2",

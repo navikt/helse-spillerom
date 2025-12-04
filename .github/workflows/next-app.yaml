@@ -37,20 +37,20 @@ jobs:
     name: Test and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/actions/npm-cached@main
+      - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm run tsc
-      - run: npm run prettier:check
-      - run: npm run lint
-      - run: npm run test
+      - run: pnpm run tsc
+      - run: pnpm run prettier:check
+      - run: pnpm run lint
+      - run: pnpm run test
 
   build-dependabot:
     if: github.actor == 'dependabot[bot]'
     name: Build for dependabot PR
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/helse-spillerom/actions/npm-cached@main
+      - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
           NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - name: Copy appropriate env file to root
@@ -60,7 +60,7 @@ jobs:
           cp .nais/envs/.env.prod .env.production
       - id: npm-build
         shell: bash
-        run: npm run build
+        run: pnpm run build
         env:
           NEXT_PUBLIC_VERSION: ${{ github.sha }}
 
