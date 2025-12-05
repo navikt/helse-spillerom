@@ -55,8 +55,6 @@ runs:
     - name: Push docker image to GAR
       uses: nais/docker-build-push@v0
       id: docker-build-push
-      env:
-        ACTIONS_RUNTIME_TOKEN: ${{ inputs.NPM_AUTH_TOKEN }}
       with:
         team: ${{ inputs.team }}
         identity_provider: ${{ inputs.identity_provider }}
