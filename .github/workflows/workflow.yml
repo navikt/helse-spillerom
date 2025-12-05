@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
-          NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build e2e version of app
         run: |
           cp .nais/envs/.env.playwright .env.production
@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
-          NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Playwright browsers
         run: pnpm exec playwright install
       - name: Run Playwright
@@ -89,7 +89,7 @@ jobs:
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
-          NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download blob reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v6
