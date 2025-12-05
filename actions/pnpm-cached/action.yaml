@@ -10,18 +10,17 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
-    - id: corepack
-      shell: bash
-      run: corepack enable
     - uses: actions/setup-node@v4
       id: setup-node
       with:
         node-version: 24
         cache: pnpm
+    - id: corepack
+      shell: bash
+      run: corepack enable
     - id: set-env
       shell: bash
       run: echo "NPM_AUTH_TOKEN=${{ inputs.NPM_AUTH_TOKEN }}" >> $GITHUB_ENV
     - id: pnpm-install
       shell: bash
       run: pnpm install --frozen-lockfile
-
