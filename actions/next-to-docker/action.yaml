@@ -34,27 +34,29 @@ runs:
         NPM_AUTH_TOKEN: ${{ inputs.NPM_AUTH_TOKEN }}
     - name: Copy appropriate env file to root
       shell: bash
+      env:
+        DEPLOY_ENV: ${{ inputs.env }}
       run: |
-        echo "Copying .nais/envs/.env.${{ inputs.env }}..."
-        cp .nais/envs/.env.${{ inputs.env }} .env.production
+        echo "Copying .nais/envs/.env.${DEPLOY_ENV}..."
+        cp ".nais/envs/.env.${DEPLOY_ENV}" .env.production
     - id: pnpm-run-build
       shell: bash
-      run: pnpm run build
       env:
         NEXT_PUBLIC_VERSION: ${{ github.sha }}
+      run: pnpm run build
     - name: Upload static files to NAV CDN
       uses: nais/deploy/actions/cdn-upload/v2@master
       with:
         team: ${{ inputs.team }}
         source: ./.next/static
-        destination: "/${{ inputs.app }}/_next"
+        destination: /${{ inputs.app }}/_next
         identity_provider: ${{ inputs.identity_provider }}
         project_id: ${{ inputs.project_id }}
     - name: Push docker image to GAR
       uses: nais/docker-build-push@v0
       id: docker-build-push
       env:
-        ACTIONS_RUNTIME_TOKEN: ${{ inputs.NPM_AUTH_TOKEN  }}
+        ACTIONS_RUNTIME_TOKEN: ${{ inputs.NPM_AUTH_TOKEN }}
       with:
         team: ${{ inputs.team }}
         identity_provider: ${{ inputs.identity_provider }}
