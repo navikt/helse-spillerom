@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
-import { PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
+import { BriefcaseIcon, PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
@@ -116,11 +116,6 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                         </TableHeader>
                         <TableBody className="border-b-1 border-b-ax-bg-neutral-strong">
                             {yrkesaktiviteter.map((yrkesaktivitet) => {
-                                // Er næringsdrivende og er kombinert. Altså denne er næringsdelen og det finnes andre yrkesaktiviteter
-                                const erNæringsdrivendeOgKombinert =
-                                    yrkesaktivitet.kategorisering?.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE' &&
-                                    yrkesaktiviteter.length > 1
-
                                 return (
                                     <TableRow
                                         key={yrkesaktivitet.id}
@@ -138,25 +133,26 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                             <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
                                         </TableDataCell>
                                         <TableDataCell className="pr-16 text-right">
-                                            {(() => {
-                                                // For selvstendig næringsdrivende, vis næringsdel hvis den finnes
-                                                if (erNæringsdrivendeOgKombinert) {
-                                                    const næringsdel =
-                                                        sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG'
-                                                            ? sykepengegrunnlag.næringsdel
-                                                            : null
-                                                    return formaterBeløpKroner(næringsdel?.næringsdel)
-                                                }
-                                                // Ellers vis omregnet årsinntekt som vanlig
-                                                return formaterBeløpKroner(
-                                                    yrkesaktivitet?.inntektData?.omregnetÅrsinntekt,
-                                                )
-                                            })()}
+                                            {formaterBeløpKroner(yrkesaktivitet?.inntektData?.omregnetÅrsinntekt)}
                                         </TableDataCell>
                                         <TableDataCell>{resolveRefusjonSpørsmål(yrkesaktivitet)}</TableDataCell>
                                     </TableRow>
                                 )
                             })}
+                            {sykepengegrunnlag?.type == 'SYKEPENGEGRUNNLAG' && sykepengegrunnlag.næringsdel && (
+                                <TableRow className="border-t">
+                                    <TableDataCell className="pl-8 whitespace-nowrap">
+                                        <HStack gap="2" wrap={false}>
+                                            <BriefcaseIcon aria-hidden fontSize="1.5rem" />
+                                            <BodyShort>Næringsdel</BodyShort>
+                                        </HStack>
+                                    </TableDataCell>
+                                    <TableDataCell className="pr-16 text-right">
+                                        {formaterBeløpKroner(sykepengegrunnlag.næringsdel.næringsdel)}
+                                    </TableDataCell>
+                                    <TableDataCell></TableDataCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                         <tfoot>
                             <TableRow>
