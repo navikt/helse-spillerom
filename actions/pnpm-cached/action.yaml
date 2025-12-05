@@ -1,5 +1,5 @@
 name: "Installs node, installs pnpm dependencies with cache"
-description: "Builds a Next.JS App, creates a docker image and uploads it to GAR"
+description: "Requires NPM_AUTH_TOKEN - Sets up Node.js 24 and installs dependencies"
 
 inputs:
   NPM_AUTH_TOKEN:
@@ -9,18 +9,13 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
+    - uses: pnpm/action-setup@v4
     - uses: actions/setup-node@v4
-      id: setup-node
       with:
         node-version: 24
         cache: pnpm
-    - id: corepack
-      shell: bash
-      run: corepack enable
-    - id: set-env
-      shell: bash
+    - shell: bash
       run: echo "NPM_AUTH_TOKEN=${{ inputs.NPM_AUTH_TOKEN }}" >> $GITHUB_ENV
-    - id: pnpm-install
-      shell: bash
+    - shell: bash
       run: pnpm install --frozen-lockfile
