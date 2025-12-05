@@ -62,7 +62,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const skalAutomatiskÅpne = yrkesaktivitetSuccess && harIkkeInntektData && kanSaksbehandles
     const erIRedigeringsmodus = skalAutomatiskÅpne || manuellRedigeringsmodus
     const grunnlagetEiesAvPerioden =
-        sykepengegrunnlagResponse?.opprettetForBehandling == aktivSaksbehandlingsperiode?.id
+        sykepengegrunnlagResponse != null &&
+        sykepengegrunnlagResponse.opprettetForBehandling == aktivSaksbehandlingsperiode?.id
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (
