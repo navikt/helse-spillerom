@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
-          NPM_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Copy appropriate env file to root
         shell: bash
         run: |
