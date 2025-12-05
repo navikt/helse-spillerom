@@ -12,6 +12,8 @@ jobs:
   test-and-verify:
     name: Test and lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
@@ -25,6 +27,8 @@ jobs:
     if: github.actor == 'dependabot[bot]'
     name: Build for dependabot PR
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: navikt/helse-spillerom/actions/pnpm-cached@main
         with:
@@ -45,9 +49,9 @@ jobs:
     name: Build for dev
     runs-on: ubuntu-latest
     permissions:
-      packages: "write"
-      contents: "read"
-      id-token: "write"
+      packages: write
+      contents: read
+      id-token: write
     outputs:
       image: ${{ steps.build-and-publish.outputs.image }}
     steps:
@@ -60,7 +64,6 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
   deploy-dev:
     if: ${{ !startsWith(github.ref_name, 'demo') }}
     name: Deploy to dev
@@ -69,6 +72,9 @@ jobs:
       url: ${{ steps.get-ingress.outputs.result }}
     runs-on: ubuntu-latest
     needs: [test-and-verify, build-dev]
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - id: get-ingress
@@ -86,9 +92,9 @@ jobs:
     name: Build for demo
     runs-on: ubuntu-latest
     permissions:
-      packages: "write"
-      contents: "read"
-      id-token: "write"
+      packages: write
+      contents: read
+      id-token: write
     outputs:
       image: ${{ steps.build-and-publish.outputs.image }}
     steps:
@@ -109,6 +115,9 @@ jobs:
       url: https://${{ inputs.app }}.ekstern.dev.nav.no${{ inputs.base-path }}
     runs-on: ubuntu-latest
     needs: [test-and-verify, build-demo]
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: nais/deploy/actions/deploy@v2
@@ -125,6 +134,9 @@ jobs:
       url: https://${{ steps.slug.outputs.slug }}.ekstern.dev.nav.no${{ inputs.base-path }}
     runs-on: ubuntu-latest
     needs: [test-and-verify, build-demo]
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v5
       - uses: gacts/github-slug@v1
