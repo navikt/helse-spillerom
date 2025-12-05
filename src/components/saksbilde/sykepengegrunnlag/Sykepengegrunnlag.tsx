@@ -24,6 +24,7 @@ import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { notNull } from '@utils/tsUtils'
 import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -40,6 +41,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         refetch,
     } = useSykepengegrunnlag()
     const { hideSelectButtonForAll } = useDokumentVisningContext()
+    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
@@ -59,6 +61,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     const skalAutomatiskÅpne = yrkesaktivitetSuccess && harIkkeInntektData && kanSaksbehandles
     const erIRedigeringsmodus = skalAutomatiskÅpne || manuellRedigeringsmodus
+    const grunnlagetEiesAvPerioden =
+        sykepengegrunnlagResponse?.opprettetForBehandling == aktivSaksbehandlingsperiode?.id
 
     if (sykepengegrunnlagLoading || yrkesaktivitetLoading || !yrkesaktiviteter) {
         return (
@@ -206,7 +210,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                         gap="6"
                         className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 pt-4 pb-8"
                     >
-                        {kanSaksbehandles && !harIkkeInntektData && (
+                        {kanSaksbehandles && !harIkkeInntektData && grunnlagetEiesAvPerioden && (
                             <div className="-ml-[4px]">
                                 <Button
                                     size="xsmall"
