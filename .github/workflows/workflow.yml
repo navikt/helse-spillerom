@@ -54,6 +54,9 @@ jobs:
     needs: [prebuild-app-for-playwright]
     name: Playwright shard ${{ matrix.shardIndex }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     services:
       app:
         image: ${{ needs.prebuild-app-for-playwright.outputs.image }}
