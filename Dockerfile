@@ -2,7 +2,6 @@ FROM gcr.io/distroless/nodejs24-debian12@sha256:770cf694c472b838da3ed594aebc3114
 
 WORKDIR /app
 
-COPY package.json /app/
 COPY next-logger.config.js /app/
 COPY .next/standalone /app/
 COPY public /app/public/
