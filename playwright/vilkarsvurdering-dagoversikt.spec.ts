@@ -1,6 +1,6 @@
-import { expect } from '@playwright/test'
-import { validerAxe } from './uuvalidering'
-import { test } from './fixtures'
+import { expect, test } from '@playwright/test'
+import { validerAxe } from './actions/uuvalidering'
+
 import {
     fyllUtArbeidstakerYrkesaktivitet,
     lagreYrkesaktivitet,

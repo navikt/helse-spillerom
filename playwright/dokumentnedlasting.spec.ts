@@ -1,5 +1,5 @@
-import { expect } from '@playwright/test'
-import { test } from './fixtures'
+import { expect, test } from '@playwright/test'
+
 import { navigerTilPersonOgBehandling } from './actions/saksbehandler-actions'
 
 test.describe('Dokumentnedlasting fra høyremeny', () => {

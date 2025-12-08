@@ -1,6 +1,5 @@
-import { expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-import { test } from './fixtures'
 import { søkPerson } from './actions/saksbehandler-actions'
 
 test.describe('Førstesiden', () => {

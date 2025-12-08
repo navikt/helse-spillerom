@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 import {
     fyllUtArbeidstakerYrkesaktivitet,
     fyllUtInaktivYrkesaktivitet,
@@ -9,7 +9,6 @@ import {
     settSykepengegrunnlagNæringsdrivende,
     verifiserKategoriTag,
 } from './actions/saksbehandler-actions'
-import { test } from './fixtures'
 
 test.describe('Dekningsgrad og Yrkesaktivitet', () => {
     test.beforeEach(async ({ page }) => {
