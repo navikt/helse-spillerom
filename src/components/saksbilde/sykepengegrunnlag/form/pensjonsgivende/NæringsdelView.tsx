@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, Label } from '@navikt/ds-react'
+import { Table } from '@navikt/ds-react'
 
 import { Næringsdel } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
@@ -14,21 +14,32 @@ export function NæringsdelView({ næringsdel }: NæringsdelViewProps): ReactEle
     }
     return (
         <>
-            <BodyShort className="font-semibold">Beregning av kombinert næringsdel</BodyShort>
-            <HStack gap="4">
-                <Label className="text-sm">Pensjonsgivende inntekt 6G begrenset:</Label>
-                <BodyShort className="text-sm">
-                    {formaterBeløpKroner(næringsdel.pensjonsgivendeÅrsinntekt6GBegrenset)}
-                </BodyShort>
-            </HStack>
-            <HStack gap="4">
-                <Label className="text-sm">Sum av arbeids og frilans inntekter</Label>
-                <BodyShort className="text-sm">-{formaterBeløpKroner(næringsdel.sumAvArbeidsinntekt)}</BodyShort>
-            </HStack>
-            <HStack gap="4">
-                <Label className="text-sm">Næringsdel</Label>
-                <BodyShort className="text-sm">={formaterBeløpKroner(næringsdel.næringsdel)}</BodyShort>
-            </HStack>
+            <Table size="small">
+                <Table.Body>
+                    <Table.Row>
+                        <Table.DataCell className="text-sm">Pensjonsgivende inntekt 6G begrenset</Table.DataCell>
+                        <Table.DataCell className="text-sm"></Table.DataCell>
+                        <Table.DataCell className="text-sm">
+                            {' '}
+                            {formaterBeløpKroner(næringsdel.pensjonsgivendeÅrsinntekt6GBegrenset)}
+                        </Table.DataCell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.DataCell className="text-sm">Sum av arbeids og frilans inntekter</Table.DataCell>
+                        <Table.DataCell className="text-sm">-</Table.DataCell>
+                        <Table.DataCell className="text-sm">
+                            {formaterBeløpKroner(næringsdel.sumAvArbeidsinntekt)}
+                        </Table.DataCell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.DataCell className="text-sm font-semibold">Næringsdel</Table.DataCell>
+                        <Table.DataCell className="text-sm font-semibold">=</Table.DataCell>
+                        <Table.DataCell className="text-sm font-semibold">
+                            {formaterBeløpKroner(næringsdel.næringsdel)}
+                        </Table.DataCell>
+                    </Table.Row>
+                </Table.Body>
+            </Table>
         </>
     )
 }

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, HStack, Table, VStack } from '@navikt/ds-react'
+import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BriefcaseIcon, PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
@@ -25,6 +25,7 @@ import { notNull } from '@utils/tsUtils'
 import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { NæringsdelView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/NæringsdelView'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
     const {
@@ -45,9 +46,9 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag
-
     const [manuellRedigeringsmodus, setManuellRedigeringsmodus] = useState(false)
     const [selectedYrkesaktivitet, setSelectedYrkesaktivitet] = useState<Yrkesaktivitet | undefined>(undefined)
+    const [visNaringsdel, setVisNaringsdel] = useState(false)
 
     const kanSaksbehandles = useKanSaksbehandles()
 
@@ -121,12 +122,13 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         key={yrkesaktivitet.id}
                                         className={cn('relative cursor-pointer hover:bg-ax-bg-neutral-moderate-hover', {
                                             'bg-ax-bg-accent-soft after:absolute after:top-0 after:bottom-0 after:z-10 after:w-[3px] after:bg-ax-bg-accent-soft':
-                                                aktivYrkesaktivitet?.id === yrkesaktivitet.id,
+                                                aktivYrkesaktivitet?.id === yrkesaktivitet.id && !visNaringsdel,
                                         })}
                                         onClick={() => {
                                             setSelectedYrkesaktivitet(yrkesaktivitet)
                                             setManuellRedigeringsmodus(false)
                                             hideSelectButtonForAll()
+                                            setVisNaringsdel(false)
                                         }}
                                     >
                                         <TableDataCell className="pl-8 whitespace-nowrap">
@@ -140,7 +142,20 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 )
                             })}
                             {sykepengegrunnlag?.type == 'SYKEPENGEGRUNNLAG' && sykepengegrunnlag.næringsdel && (
-                                <TableRow className="border-t">
+                                <TableRow
+                                    className={cn(
+                                        'relative cursor-pointer hover:bg-ax-bg-neutral-moderate-hover border-t',
+                                        {
+                                            'bg-ax-bg-accent-soft after:absolute after:top-0 after:bottom-0 after:z-10 after:w-[3px] after:bg-ax-bg-accent-soft':
+                                                visNaringsdel,
+                                        },
+                                    )}
+                                    onClick={() => {
+                                        setVisNaringsdel(true)
+                                        setManuellRedigeringsmodus(false)
+                                        hideSelectButtonForAll()
+                                    }}
+                                >
                                     <TableDataCell className="pl-8 whitespace-nowrap">
                                         <HStack gap="2" wrap={false}>
                                             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
@@ -202,11 +217,8 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 </VStack>
 
                 {/*høyrepanel*/}
-                {aktivYrkesaktivitet && (
-                    <VStack
-                        gap="6"
-                        className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 pt-4 pb-8"
-                    >
+                {aktivYrkesaktivitet && !visNaringsdel && (
+                    <Høyrepanel>
                         {kanSaksbehandles && !harIkkeInntektData && grunnlagetEiesAvPerioden && (
                             <div className="-ml-[4px]">
                                 <Button
@@ -244,7 +256,6 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                             inntektRequest as InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
                                         }
                                         inntektData={inntektData}
-                                        sykepengegrunnlag={sykepengegrunnlag}
                                     />
                                 )}
                                 {kategori === 'INAKTIV' && (
@@ -280,7 +291,15 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 erFørstegangsRedigering={harIkkeInntektData}
                             />
                         )}
-                    </VStack>
+                    </Høyrepanel>
+                )}
+                {visNaringsdel && sykepengegrunnlag?.type == 'SYKEPENGEGRUNNLAG' && sykepengegrunnlag.næringsdel && (
+                    <Høyrepanel>
+                        <Heading level="3" size="xsmall">
+                            Beregning av kombinert næringsdel
+                        </Heading>
+                        <NæringsdelView næringsdel={sykepengegrunnlag.næringsdel}></NæringsdelView>
+                    </Høyrepanel>
                 )}
             </HStack>
         </SaksbildePanel>
@@ -294,4 +313,15 @@ function resolveRefusjonSpørsmål(yrkesaktivitet: Yrkesaktivitet): string {
     if (!inntektRequest) return '-'
     if (notNull(inntektRequest.data.refusjon) && inntektRequest.data.refusjon.length > 0) return 'Ja'
     return 'Nei'
+}
+
+function Høyrepanel({ children }: { children: React.ReactNode }): ReactElement {
+    return (
+        <VStack
+            gap="6"
+            className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 pt-4 pb-8"
+        >
+            {children}
+        </VStack>
+    )
 }

@@ -4,23 +4,19 @@ import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { Maybe, notNull } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
-import { SykepengegrunnlagBase } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
 
 import { PensjonsgivendeInntektView } from './PensjonsgivendeInntektView'
-import { NæringsdelView } from './NæringsdelView'
 
 type SelvstendigNæringsdrivendeInntektViewProps = {
     inntektRequest?: InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
     inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<SykepengegrunnlagBase>
 }
 
 export function SelvstendigNæringsdrivendeInntektView({
     inntektRequest,
     inntektData,
-    sykepengegrunnlag,
 }: SelvstendigNæringsdrivendeInntektViewProps): ReactElement {
     const inntektRequestData = inntektRequest?.data
 
@@ -34,13 +30,7 @@ export function SelvstendigNæringsdrivendeInntektView({
     }
 
     if (inntektData?.inntektstype === 'SELVSTENDIG_NÆRINGSDRIVENDE_PENSJONSGIVENDE') {
-        const næringsdel = sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG' ? sykepengegrunnlag.næringsdel : null
-        return (
-            <>
-                <PensjonsgivendeInntektView inntektData={inntektData} />
-                <NæringsdelView næringsdel={næringsdel} />
-            </>
-        )
+        return <PensjonsgivendeInntektView inntektData={inntektData} />
     }
     if (inntektRequestData.type === 'SKJONNSFASTSETTELSE') {
         const { årsinntekt, årsak, begrunnelse } = inntektRequestData
@@ -72,10 +62,6 @@ export function SelvstendigNæringsdrivendeInntektView({
                         <BodyShort>{begrunnelse}</BodyShort>
                     </VStack>
                 )}
-
-                <NæringsdelView
-                    næringsdel={sykepengegrunnlag?.type === 'SYKEPENGEGRUNNLAG' ? sykepengegrunnlag.næringsdel : null}
-                />
             </>
         )
     }
