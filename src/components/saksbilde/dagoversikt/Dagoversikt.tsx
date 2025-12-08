@@ -394,6 +394,7 @@ function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElement {
     switch (dagtype) {
         case 'Syk':
         case 'SykNav':
+        case 'Behandlingsdag':
             return <BandageIcon aria-hidden />
         default:
             return spanMedBredde
@@ -480,6 +481,8 @@ function getDagtypeText(
                 return 'Syk'
             case 'SykNav':
                 return 'Syk (NAV)'
+            case 'Behandlingsdag':
+                return 'Behandlingsdag'
             case 'Ferie':
                 return 'Ferie'
             case 'Arbeidsdag':
