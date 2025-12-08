@@ -23,6 +23,11 @@ spec:
     http:
       path: /api/internal/preStop
       port: 3000
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
   azure:
     application:
       enabled: true
