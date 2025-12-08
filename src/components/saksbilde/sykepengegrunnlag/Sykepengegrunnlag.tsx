@@ -1,5 +1,17 @@
 import React, { ReactElement, useState } from 'react'
-import { Alert, Bleed, BodyLong, BodyShort, BoxNew, Button, Heading, HStack, Table, VStack } from '@navikt/ds-react'
+import {
+    Alert,
+    Bleed,
+    BodyLong,
+    BodyShort,
+    BoxNew,
+    Button,
+    Heading,
+    HStack,
+    InlineMessage,
+    Table,
+    VStack,
+} from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { BriefcaseIcon, PersonPencilIcon, XMarkIcon } from '@navikt/aksel-icons'
 
@@ -179,10 +191,12 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                             {sammenlikningsgrunnlag && (
                                 <TableRow>
                                     <TableDataCell className="border-0 pl-8 text-ax-text-neutral-subtle">
-                                        Sammenlikningsgrunnlag
-                                        <span className="ml-2 text-xs">
-                                            (avvik: {sammenlikningsgrunnlag.avvikProsent.toFixed(1)}%)
-                                        </span>
+                                        <InlineMessage
+                                            status={sammenlikningsgrunnlag.avvikProsent >= 25 ? 'error' : 'success'}
+                                        >
+                                            Sammenlikningsgrunnlag {sammenlikningsgrunnlag.avvikProsent.toFixed(1)}%
+                                            avvik
+                                        </InlineMessage>
                                     </TableDataCell>
                                     <TableDataCell className="border-0 pr-16 text-right text-ax-text-neutral-subtle">
                                         {formaterBeløpKroner(sammenlikningsgrunnlag.totaltSammenlikningsgrunnlag)}
