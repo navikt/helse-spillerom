@@ -1,18 +1,21 @@
 import React, { ReactElement } from 'react'
 import { Button } from '@navikt/ds-react'
-import { ArrowLeftIcon, ArrowRightIcon } from '@navikt/aksel-icons'
 
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
+import { OpenInSidePanelIcon } from '@components/ikoner/OpenInSidePanelIcon'
+import { CloseSidePanelIcon } from '@components/ikoner/CloseSidePanelIcon'
 
 interface VisInntektsmeldingButtonProps {
     inntektsmelding: Inntektsmelding
     showSelectButton?: boolean
+    showText?: boolean
 }
 
 export function VisInntektsmeldingButton({
     inntektsmelding,
     showSelectButton = false,
+    showText = true,
 }: VisInntektsmeldingButtonProps): ReactElement {
     const { dokumenter, updateDokumenter, updateDokumentState } = useDokumentVisningContext()
     return (
@@ -22,9 +25,9 @@ export function VisInntektsmeldingButton({
             variant="tertiary"
             icon={
                 dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? (
-                    <ArrowLeftIcon />
+                    <CloseSidePanelIcon aria-hidden fontSize="1.25rem" />
                 ) : (
-                    <ArrowRightIcon />
+                    <OpenInSidePanelIcon aria-hidden fontSize="1.25rem" />
                 )
             }
             iconPosition="right"
@@ -33,7 +36,8 @@ export function VisInntektsmeldingButton({
                 updateDokumenter(inntektsmelding)
             }}
         >
-            {dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? 'Skjul' : 'Vis'}
+            {showText &&
+                (dokumenter.some((d) => d.inntektsmeldingId === inntektsmelding.inntektsmeldingId) ? 'Skjul' : 'Vis')}
         </Button>
     )
 }

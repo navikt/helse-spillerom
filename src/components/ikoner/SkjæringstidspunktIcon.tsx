@@ -8,6 +8,8 @@ export const SkjæringstidspunktIcon = ({ fontSize = '1rem', ...props }: SVGProp
             height={fontSize}
             viewBox="0 0 24 24"
             fill="none"
+            focusable={false}
+            role="img"
             {...props}
         >
             <path

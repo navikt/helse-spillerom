@@ -18,6 +18,7 @@ import { PensjonsgivendeInntekt } from '@schemas/pensjonsgivende'
 import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { DokumentTag } from '@components/ikoner/kilde/kildeTags'
+import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -30,26 +31,36 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
 
     return (
         <li className="border-b border-ax-border-neutral-subtle py-2">
-            <button
-                type="button"
-                aria-expanded={open}
-                aria-controls={`dokument-innhold-${dokument.id}`}
-                onClick={toggleOpen}
-                className="flex w-full items-start gap-2 rounded border-0 bg-transparent px-0 text-left hover:cursor-pointer focus:outline-none focus-visible:ring"
-            >
-                <span className="mt-0.5">{DokumentTag[dokument.dokumentType]}</span>
-                <VStack className="min-w-0 flex-1">
-                    <BodyShort size="small" weight="semibold">
-                        {dokumentVisningstekst[dokument.dokumentType]}
-                    </BodyShort>
-                    <BodyShort className="text-sm text-ax-text-neutral-subtle">
-                        {getFormattedDatetimeString(dokument.opprettet)}
-                    </BodyShort>
-                </VStack>
-                <span aria-hidden="true" className="mt-1 ml-2">
-                    {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                </span>
-            </button>
+            <HStack wrap={false} align="start">
+                <button
+                    type="button"
+                    aria-expanded={open}
+                    aria-controls={`dokument-innhold-${dokument.id}`}
+                    onClick={toggleOpen}
+                    className="flex w-full items-start gap-2 rounded border-0 bg-transparent px-0 text-left hover:cursor-pointer focus:outline-none focus-visible:ring"
+                >
+                    <span className="mt-0.5">{DokumentTag[dokument.dokumentType]}</span>
+                    <VStack className="min-w-0 flex-1">
+                        <BodyShort size="small" weight="semibold">
+                            {dokumentVisningstekst[dokument.dokumentType]}
+                        </BodyShort>
+                        <BodyShort className="text-sm text-ax-text-neutral-subtle">
+                            {getFormattedDatetimeString(dokument.opprettet)}
+                        </BodyShort>
+                    </VStack>
+                    <span aria-hidden="true" className="ml-2">
+                        {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                    </span>
+                </button>
+                {dokument.dokumentType === 'inntektsmelding' && (
+                    <span aria-hidden="true" className="ml-2">
+                        <VisInntektsmeldingButton
+                            inntektsmelding={dokument.innhold as Inntektsmelding}
+                            showText={false}
+                        />
+                    </span>
+                )}
+            </HStack>
             <AnimatePresenceWrapper initial={false}>
                 {open && (
                     <motion.div
