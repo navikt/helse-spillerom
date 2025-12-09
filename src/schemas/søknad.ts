@@ -95,7 +95,7 @@ export const svarSchema = z.object({
 export type Svar = z.infer<typeof svarSchema>
 
 export const sporsmalSchema: z.ZodType<{
-    id: string
+    id: string | null
     tag: string
     sporsmalstekst: string | null
     undertekst: string | null
@@ -103,11 +103,11 @@ export const sporsmalSchema: z.ZodType<{
     max?: string | null
     svartype: Svartype
     kriterieForVisningAvUndersporsmal?: string | null
-    svar?: Svar[]
-    undersporsmal?: z.infer<typeof sporsmalSchema>[]
+    svar?: Svar[] | null
+    undersporsmal?: z.infer<typeof sporsmalSchema>[] | null
     metadata?: unknown | null
 }> = z.object({
-    id: z.string(),
+    id: z.string().nullable(),
     tag: z.string(),
     sporsmalstekst: z.string().nullable(),
     undertekst: z.string().nullable(),
@@ -115,8 +115,11 @@ export const sporsmalSchema: z.ZodType<{
     max: z.string().nullable().optional(),
     svartype: svartypeEnum,
     kriterieForVisningAvUndersporsmal: z.string().nullable().optional(),
-    svar: z.array(svarSchema).optional(),
-    undersporsmal: z.array(z.lazy(() => sporsmalSchema)).optional(),
+    svar: z.array(svarSchema).optional().nullable(),
+    undersporsmal: z
+        .array(z.lazy(() => sporsmalSchema))
+        .optional()
+        .nullable(),
     metadata: z.unknown().nullable().optional(),
 })
 

@@ -26,6 +26,9 @@ const skalVisesIOppsummering = (sporsmal: Sporsmal) => {
 }
 
 const erUndersporsmalStilt = (sporsmal: Sporsmal): boolean => {
+    if (sporsmal.svartype == 'INFO_BEHANDLINGSDAGER') {
+        return true
+    }
     if (!sporsmal.svar || sporsmal.svar.length === 0) return false
     if (sporsmal.kriterieForVisningAvUndersporsmal) {
         return sporsmal.svar.some((s) => s.verdi === sporsmal.kriterieForVisningAvUndersporsmal)
@@ -102,7 +105,9 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                 }
                 // GRUPPE_AV_UNDERSPORSMAL og IKKE_RELEVANT
                 if (
-                    (it.svartype === 'GRUPPE_AV_UNDERSPORSMAL' || it.svartype === 'IKKE_RELEVANT') &&
+                    (it.svartype === 'GRUPPE_AV_UNDERSPORSMAL' ||
+                        it.svartype === 'IKKE_RELEVANT' ||
+                        it.svartype === 'INFO_BEHANDLINGSDAGER') &&
                     it.undersporsmal &&
                     it.undersporsmal.length > 0
                 ) {
@@ -116,8 +121,8 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
-                                {besvarteUndersporsmal.map((us) => (
-                                    <div key={us.id} className="ml-4">
+                                {besvarteUndersporsmal.map((us, i) => (
+                                    <div key={us.id || i} className="ml-4">
                                         <VStack gap="2">
                                             {!(us.svartype === 'CHECKBOX' || us.svartype === 'RADIO') && (
                                                 <BodyShort size="small" className="text-gray-800 font-semibold">
