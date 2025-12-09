@@ -16,7 +16,7 @@ import { Historikk } from '@components/sidemenyer/høyremeny/historikk/Historikk
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { Ainntekt830Knapp } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt830Knapp'
-import { TagFor } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { InntektTag } from '@components/ikoner/kilde/kildeTags'
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 import { getFormattedDatetimeString } from '@utils/date-format'
 import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
@@ -91,7 +91,7 @@ export function Høyremeny(): ReactElement {
                                 <VStack gap="4">
                                     <HStack justify="space-between">
                                         <HStack gap="2" align="center">
-                                            <span className="px-0.5">{TagFor['INNTEKTSMELDING']}</span>
+                                            <span className="px-0.5">{InntektTag['INNTEKTSMELDING']}</span>
                                             <Heading level="1" size="xsmall" className="text-gray-600 font-medium">
                                                 {getFormattedDatetimeString(dokument.mottattDato)}
                                             </Heading>

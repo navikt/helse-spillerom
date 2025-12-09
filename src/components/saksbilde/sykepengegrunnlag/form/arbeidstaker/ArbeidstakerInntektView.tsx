@@ -17,11 +17,7 @@ import {
 import { InntektData } from '@schemas/inntektData'
 import { Maybe, notNull } from '@utils/tsUtils'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
-import {
-    InntektsmeldingKildeTag,
-    SaksbehandlerKildeTag,
-    TagFor,
-} from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { InntektsmeldingKildeTag, InntektTag, SaksbehandlerKildeTag } from '@components/ikoner/kilde/kildeTags'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
@@ -55,7 +51,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2" align="center">
                         <BodyShort size="small">{formaterBeløpKroner(årsinntekt)}</BodyShort>
-                        {TagFor[type]}
+                        {InntektTag[type]}
                     </HStack>
                 </VStack>
             )}

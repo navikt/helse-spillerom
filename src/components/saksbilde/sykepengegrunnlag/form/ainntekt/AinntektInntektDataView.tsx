@@ -5,7 +5,7 @@ import { capitalize } from 'remeda'
 
 import { ArbeidstakerAinntekt, FrilanserAinntekt } from '@schemas/inntektData'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
-import { TagFor } from '@components/saksbilde/sykepengegrunnlag/form/TagFor'
+import { InntektTag } from '@components/ikoner/kilde/kildeTags'
 import { getFormattedMonthYear } from '@utils/date-format'
 
 export function AinntektInntektDataView({
@@ -17,7 +17,7 @@ export function AinntektInntektDataView({
         <VStack>
             <HStack gap="2" align="center">
                 <BodyShort weight="semibold">Rapportert siste 3 måneder</BodyShort>
-                {TagFor['AINNTEKT']}
+                {InntektTag['AINNTEKT']}
             </HStack>
             <Bleed marginInline="2" asChild>
                 <BoxNew>

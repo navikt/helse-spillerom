@@ -1,10 +1,9 @@
 import { PropsWithChildren, ReactElement, useState } from 'react'
-import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
+import { BodyShort, BoxNew, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
 
 import { Dokument as _Dokument, Dokumenttype } from '@schemas/dokument'
-import { DokumentTag } from '@components/sidemenyer/høyremeny/dokumenter/DokumentTag'
 import { getFormattedDatetimeString } from '@utils/date-format'
 import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
 import { Søknad } from '@schemas/søknad'
@@ -16,6 +15,9 @@ import { PensjonsgivendeInntektVisning } from '@components/sidemenyer/høyremeny
 import { Ainntekt } from '@schemas/ainntekt'
 import { Arbeidsforhold } from '@schemas/aareg'
 import { PensjonsgivendeInntekt } from '@schemas/pensjonsgivende'
+import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
+import { Inntektsmelding } from '@schemas/inntektsmelding'
+import { DokumentTag } from '@components/ikoner/kilde/kildeTags'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -27,7 +29,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
     const toggleOpen = () => setOpen((prev) => !prev)
 
     return (
-        <li className="border-b-1 border-ax-border-neutral-subtle py-2">
+        <li className="border-b border-ax-border-neutral-subtle py-2">
             <button
                 type="button"
                 aria-expanded={open}
@@ -35,10 +37,12 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                 onClick={toggleOpen}
                 className="flex w-full items-start gap-2 rounded border-0 bg-transparent px-0 text-left hover:cursor-pointer focus:outline-none focus-visible:ring"
             >
-                <DokumentTag type={dokument.dokumentType} />
+                <span className="mt-0.5">{DokumentTag[dokument.dokumentType]}</span>
                 <VStack className="min-w-0 flex-1">
-                    <BodyShort className="font-bold">{dokumentVisningstekst[dokument.dokumentType]}</BodyShort>
-                    <BodyShort className="text-medium text-gray-600">
+                    <BodyShort size="small" weight="semibold">
+                        {dokumentVisningstekst[dokument.dokumentType]}
+                    </BodyShort>
+                    <BodyShort className="text-sm text-ax-text-neutral-subtle">
                         {getFormattedDatetimeString(dokument.opprettet)}
                     </BodyShort>
                 </VStack>
@@ -67,6 +71,16 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                             <PensjonsgivendeInntektVisning
                                 pensjonsgivendeInntekt={dokument.innhold as PensjonsgivendeInntekt}
                             />
+                        ) : dokument.dokumentType === 'inntektsmelding' ? (
+                            <BoxNew
+                                background="raised"
+                                borderRadius="large"
+                                borderWidth="1"
+                                borderColor="neutral-subtle"
+                                className="flex flex-col gap-4 p-4"
+                            >
+                                <InntektsmeldingInnhold inntektsmelding={dokument.innhold as Inntektsmelding} />
+                            </BoxNew>
                         ) : (
                             <pre className="bg-gray-50 overflow-x-auto rounded p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
@@ -105,7 +119,7 @@ export function DokumentSkeleton(): ReactElement {
 
 function DokumentContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="li" className="border-b-1 border-ax-border-neutral-subtle py-2" gap="2">
+        <HStack as="li" className="border-b border-ax-border-neutral-subtle py-2" gap="2">
             {children}
         </HStack>
     )

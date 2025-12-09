@@ -19,7 +19,7 @@ import { Maybe, notNull } from '@utils/tsUtils'
 
 export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
     const { dokumentStateMap, selectDokument } = useDokumentVisningContext()
-    const { isSelected = false, showSelectButton = false } = dokumentStateMap[inntektsmelding.inntektsmeldingId]
+    const { isSelected = false, showSelectButton = false } = dokumentStateMap?.[inntektsmelding.inntektsmeldingId] ?? {}
 
     return (
         <VStack
