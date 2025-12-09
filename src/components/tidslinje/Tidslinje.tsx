@@ -192,7 +192,7 @@ function TilkommenInntektKnapp(): ReactElement {
     }
 
     return (
-        <div className="border-b-1 border-ax-border-neutral-subtle px-8 py-4">
+        <div className="border-b border-ax-border-neutral-subtle px-8 py-4">
             <HStack gap="4" align="center" justify="space-between">
                 <Button variant="tertiary" size="small" onClick={handleLeggTilTilkommenInntekt}>
                     + Legg til tilkommen inntekt
@@ -240,32 +240,6 @@ function BehandlingPopover({ behandlingId }: { behandlingId: string }): ReactEle
     )
 }
 
-/*
-function SøknadPopover({ søknad }: { søknad: Søknad }): ReactElement {
-    return (
-        <PopoverContentWrapper heading="Søknad">
-            <BodyShort size="small">Arbeidssituasjon:</BodyShort>
-            <BodyShort size="small">{formaterArbeidssituasjon(søknad.arbeidssituasjon)}</BodyShort>
-
-            {søknad.arbeidsgiver && (
-                <>
-                    <BodyShort size="small">Arbeidsgivernavn:</BodyShort>
-                    <BodyShort size="small">{søknad.arbeidsgiver.navn}</BodyShort>
-
-                    <BodyShort size="small">Orgnummer:</BodyShort>
-                    <BodyShort size="small">{søknad.arbeidsgiver.orgnummer}</BodyShort>
-                </>
-            )}
-
-            <BodyShort size="small">Periode:</BodyShort>
-            <BodyShort size="small">
-                {getFormattedDateString(søknad.fom) + ' - ' + getFormattedDateString(søknad.tom)}
-            </BodyShort>
-        </PopoverContentWrapper>
-    )
-}
-*/
-
 function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ heading: string }>): ReactElement {
     return (
         <VStack gap="1">
@@ -289,7 +263,7 @@ export const statusTilIkon: Record<SaksbehandlingsperiodeStatus, ReactElement> =
 
 function TimelineSkeleton(): ReactElement {
     return (
-        <VStack className="mt-7 border-b-1 border-ax-border-neutral-subtle p-8 pb-4" gap="3">
+        <VStack className="mt-7 border-b border-ax-border-neutral-subtle p-8 pb-4" gap="3">
             <TimelineRowSkeleton />
             <TimelineRowSkeleton />
             <Skeleton variant="rectangle" height={14} className="mt-[15px] ml-[265px] grow" />
@@ -310,7 +284,7 @@ function TimelineRowSkeleton(): ReactElement {
 function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
     return (
         <HStack
-            className="h-60 w-full border-b-1 border-ax-border-neutral-subtle"
+            className="h-60 w-full border-b border-ax-border-neutral-subtle"
             align="center"
             justify="center"
             gap="4"
@@ -326,7 +300,7 @@ function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
 function TimelineEmpty(): ReactElement {
     return (
         <HStack
-            className="h-60 w-full border-b-1 border-ax-border-neutral-subtle"
+            className="h-60 w-full border-b border-ax-border-neutral-subtle"
             align="center"
             justify="center"
             gap="4"
