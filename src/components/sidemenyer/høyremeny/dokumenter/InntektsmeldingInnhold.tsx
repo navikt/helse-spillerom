@@ -94,7 +94,7 @@ export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: I
     )
 }
 
-function Details({ label, children }: PropsWithChildren<{ label: string }>): Maybe<ReactElement> {
+export function Details({ label, children }: PropsWithChildren<{ label: string }>): Maybe<ReactElement> {
     if (children == null) return null
 
     return (

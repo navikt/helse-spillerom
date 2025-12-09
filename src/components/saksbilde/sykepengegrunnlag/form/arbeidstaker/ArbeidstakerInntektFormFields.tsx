@@ -19,7 +19,7 @@ import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehan
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
-import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
+import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
@@ -189,7 +189,7 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                                     >
                                         Mottatt: {getFormattedDatetimeString(inntektsmelding.mottattDato)}
                                     </Radio>
-                                    <VisInntektsmeldingButton inntektsmelding={inntektsmelding} showSelectButton />
+                                    <OpenDocumentInSidebarButton dokument={inntektsmelding} showSelectButton />
                                 </HStack>
                             ))}
                     </VStack>

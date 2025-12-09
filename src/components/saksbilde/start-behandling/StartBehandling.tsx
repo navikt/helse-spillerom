@@ -3,6 +3,7 @@
 import { ReactElement, useState } from 'react'
 import {
     Alert,
+    BoxNew,
     Button,
     Checkbox,
     CheckboxGroup,
@@ -26,7 +27,7 @@ import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
 import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
-import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
+import { SøknadsInnhold } from '@components/søknad/SøknadsInnhold'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 
 interface StartBehandlingProps {
@@ -332,7 +333,15 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                 Laster søknad...
                             </div>
                         ) : aktivSøknad ? (
-                            <Søknadsinnhold søknad={aktivSøknad} />
+                            <BoxNew
+                                background="raised"
+                                borderRadius="large"
+                                borderWidth="1"
+                                borderColor="neutral-subtle"
+                                className="flex flex-col gap-4 p-4"
+                            >
+                                <SøknadsInnhold søknad={aktivSøknad} />
+                            </BoxNew>
                         ) : (
                             <div>Fant ikke søknad</div>
                         )}

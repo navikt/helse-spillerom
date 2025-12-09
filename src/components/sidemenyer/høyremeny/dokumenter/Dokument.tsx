@@ -5,7 +5,7 @@ import { motion } from 'motion/react'
 
 import { Dokument as _Dokument, Dokumenttype } from '@schemas/dokument'
 import { getFormattedDatetimeString } from '@utils/date-format'
-import { Søknadsinnhold } from '@components/søknad/Søknadsinnhold'
+import { SøknadsInnhold } from '@components/søknad/SøknadsInnhold'
 import { Søknad } from '@schemas/søknad'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
@@ -18,7 +18,8 @@ import { PensjonsgivendeInntekt } from '@schemas/pensjonsgivende'
 import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { DokumentTag } from '@components/ikoner/kilde/kildeTags'
-import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
+import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
+import { DokumentSomKanVisesISidebar } from '@/app/person/[personId]/dokumentVisningContext'
 
 interface DokumentProps {
     dokument: _Dokument
@@ -52,13 +53,12 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         {open ? <ChevronUpIcon /> : <ChevronDownIcon />}
                     </span>
                 </button>
-                {dokument.dokumentType === 'inntektsmelding' && (
-                    <span aria-hidden="true" className="ml-2">
-                        <VisInntektsmeldingButton
-                            inntektsmelding={dokument.innhold as Inntektsmelding}
-                            showText={false}
-                        />
-                    </span>
+                {(dokument.dokumentType === 'inntektsmelding' || dokument.dokumentType === 'søknad') && (
+                    <OpenDocumentInSidebarButton
+                        dokument={dokument.innhold as DokumentSomKanVisesISidebar}
+                        showText={false}
+                        className="ml-2"
+                    />
                 )}
             </HStack>
             <AnimatePresenceWrapper initial={false}>
@@ -73,7 +73,15 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         style={{ overflow: 'hidden' }}
                     >
                         {dokument.dokumentType === 'søknad' ? (
-                            <Søknadsinnhold søknad={dokument.innhold as Søknad} />
+                            <BoxNew
+                                background="raised"
+                                borderRadius="large"
+                                borderWidth="1"
+                                borderColor="neutral-subtle"
+                                className="flex flex-col gap-4 p-4"
+                            >
+                                <SøknadsInnhold søknad={dokument.innhold as Søknad} />
+                            </BoxNew>
                         ) : ['ainntekt828', 'ainntekt830'].includes(dokument.dokumentType) ? (
                             <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
                         ) : dokument.dokumentType === 'arbeidsforhold' ? (

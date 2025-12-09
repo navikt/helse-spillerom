@@ -4,7 +4,10 @@ import { createContext, PropsWithChildren, ReactElement, useContext, useState } 
 import dayjs from 'dayjs'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
+import { Søknad } from '@schemas/søknad'
 import { Maybe } from '@utils/tsUtils'
+
+export type DokumentSomKanVisesISidebar = Inntektsmelding | Søknad
 
 export type DokumentState = {
     isSelected: boolean
@@ -12,8 +15,8 @@ export type DokumentState = {
 }
 
 type DokumentVisningContextType = {
-    dokumenter: Inntektsmelding[]
-    updateDokumenter: (dokument: Inntektsmelding) => void
+    dokumenter: DokumentSomKanVisesISidebar[]
+    updateDokumenter: (dokument: DokumentSomKanVisesISidebar) => void
     dokumentStateMap: Record<string, DokumentState>
     selectDokument: (id: string) => void
     updateDokumentState: (id: string, changes: Partial<DokumentState>) => void
@@ -31,18 +34,31 @@ export function useDokumentVisningContext(): DokumentVisningContextType {
     return context
 }
 
+export function getDokumentId(dokument: DokumentSomKanVisesISidebar): string {
+    if ('inntektsmeldingId' in dokument) {
+        return dokument.inntektsmeldingId
+    }
+    return dokument.id
+}
+
+export function getMottattDato(dokument: DokumentSomKanVisesISidebar): string {
+    if ('mottattDato' in dokument) {
+        return dokument.mottattDato
+    }
+    return dokument.opprettet
+}
+
 export function DokumentVisningProvider({ children }: PropsWithChildren): ReactElement {
-    const [dokumenter, setDokumenter] = useState<Inntektsmelding[]>([])
+    const [dokumenter, setDokumenter] = useState<DokumentSomKanVisesISidebar[]>([])
     const [dokumentStateMap, setDokumentStateMap] = useState<Record<string, DokumentState>>({})
 
-    function updateDokumenter(dokument: Inntektsmelding) {
+    function updateDokumenter(dokument: DokumentSomKanVisesISidebar) {
+        const id = getDokumentId(dokument)
         setDokumenter((prev) => {
-            const exists = prev.some((d) => d.inntektsmeldingId === dokument.inntektsmeldingId)
-            const newList = exists
-                ? prev.filter((d) => d.inntektsmeldingId !== dokument.inntektsmeldingId)
-                : [...prev, dokument]
+            const exists = prev.some((d) => getDokumentId(d) === id)
+            const newList = exists ? prev.filter((d) => getDokumentId(d) !== id) : [...prev, dokument]
 
-            return newList.sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
+            return newList.sort((a, b) => dayjs(getMottattDato(b)).diff(dayjs(getMottattDato(a))))
         })
     }
 

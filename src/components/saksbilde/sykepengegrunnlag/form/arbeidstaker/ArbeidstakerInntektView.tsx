@@ -20,7 +20,7 @@ import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-
 import { InntektsmeldingKildeTag, InntektTag, SaksbehandlerKildeTag } from '@components/ikoner/kilde/kildeTags'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
-import { VisInntektsmeldingButton } from '@components/saksbilde/sykepengegrunnlag/form/arbeidstaker/VisInntektsmeldingButton'
+import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
 
 type ArbeidstakerInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSTAKER'>
@@ -64,7 +64,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 <VStack gap="1">
                     <HStack gap="3" align="start" wrap={false}>
                         <BodyShort weight="semibold">Inntektsmelding</BodyShort>
-                        <VisInntektsmeldingButton inntektsmelding={inntektsmelding} />
+                        <OpenDocumentInSidebarButton dokument={inntektsmelding} />
                     </HStack>
                     <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                 </VStack>
