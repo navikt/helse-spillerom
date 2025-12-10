@@ -1,63 +1,35 @@
 import React, { ReactElement, useEffect } from 'react'
-import { Alert, BodyShort, VStack } from '@navikt/ds-react'
+import { Alert, BodyShort } from '@navikt/ds-react'
 
 import { useAinntektYrkesaktivitet } from '@hooks/queries/useAinntektYrkesaktivitet'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
+import { FetchError } from '@components/saksbilde/FetchError'
 
-export function VisAinntekt({
-    yrkesaktivitetId,
-    setValue,
-}: {
+interface VisAinntektProps {
     yrkesaktivitetId: string
     setValue: (name: 'data.årsinntekt', value: number) => void
-}): ReactElement {
-    const { data, isLoading, isError } = useAinntektYrkesaktivitet(yrkesaktivitetId)
+}
+
+export function VisAinntekt({ yrkesaktivitetId, setValue }: VisAinntektProps): ReactElement {
+    const { data, isLoading, isError, refetch } = useAinntektYrkesaktivitet(yrkesaktivitetId)
 
     useEffect(() => {
-        if (data && data.success) {
-            setValue('data.årsinntekt', data.data.omregnetÅrsinntekt || 0)
+        if (data?.success) {
+            setValue('data.årsinntekt', data.data.omregnetÅrsinntekt ?? 0)
         }
     }, [data, setValue])
 
-    if (isLoading) {
-        return (
-            <VStack gap="2" className="m-4 ml-6">
-                <BodyShort>Laster a-inntekt...</BodyShort>
-            </VStack>
-        )
-    }
+    if (isLoading) return <BodyShort>Laster a-inntekt...</BodyShort>
 
-    if (isError) {
-        return (
-            <VStack gap="2" className="m-4 ml-6">
-                <Alert variant="error" size="small">
-                    Kunne ikke hente a-inntekt
-                </Alert>
-            </VStack>
-        )
-    }
-
-    if (!data) {
-        return (
-            <VStack gap="2" className="m-4 ml-6">
-                <BodyShort>Ingen data tilgjengelig</BodyShort>
-            </VStack>
-        )
-    }
+    if (isError || !data) return <FetchError refetch={refetch} message="Kunne ikke hente a-inntekt." />
 
     if (!data.success) {
         return (
-            <VStack gap="2" className="m-4 ml-6">
-                <Alert variant="warning" size="small">
-                    {data.feilmelding}
-                </Alert>
-            </VStack>
+            <Alert variant="warning" size="small">
+                {data.feilmelding}
+            </Alert>
         )
     }
 
-    return (
-        <VStack gap="4">
-            <AinntektInntektDataView inntektData={data.data} />
-        </VStack>
-    )
+    return <AinntektInntektDataView inntektData={data.data} />
 }
