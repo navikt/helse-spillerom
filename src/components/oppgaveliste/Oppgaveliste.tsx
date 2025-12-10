@@ -19,6 +19,7 @@ import { Filter, filterList, FilterStatus, filtrer } from '@components/oppgaveli
 import { OppgavelisteSkeleton } from '@components/oppgaveliste/OppgavelisteSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { StatusTag } from '@components/statustag/StatusTag'
+import { usePersonsøk } from '@hooks/mutations/usePersonsøk'
 
 type SakerTabs = 'ALLE' | 'MINE' | 'BEHANDLET'
 
@@ -166,9 +167,15 @@ function FilterRow({
 
 function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): ReactElement {
     const router = useRouter()
+    const personsøk = usePersonsøk()
 
     const handleRadKlikk = (periode: Saksbehandlingsperiode) => {
-        router.push(`/person/${periode.spilleromPersonId}/${periode.id}`)
+        personsøk.mutate({
+            request: { ident: periode.naturligIdent },
+            callback: (dd) => {
+                router.push(`/person/${dd.personId}/${periode.id}`)
+            },
+        })
     }
 
     return (

@@ -32,7 +32,7 @@ export const saksbehandlingsperiodeEndringSchema = z.object({
 
 export const saksbehandlingsperiodeSchema = z.object({
     id: z.uuid(),
-    spilleromPersonId: z.string(),
+    naturligIdent: z.string(),
     opprettet: z.string(), // ISO 8601 datetime string
     opprettetAvNavIdent: z.string(),
     opprettetAvNavn: z.string(),

@@ -8,7 +8,7 @@ interface MutationProps {
     request: {
         ident: string
     }
-    callback: (personId: PersonId) => void
+    callback: (pseudoId: PersonId) => void
 }
 
 export function usePersonsøk() {
