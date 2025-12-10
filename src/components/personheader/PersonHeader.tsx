@@ -13,7 +13,7 @@ export function PersonHeader(): ReactElement {
     const { data: personinfo, isLoading, isError, refetch } = usePersoninfo()
 
     if (isLoading) return <PersonHeaderSkeleton />
-    if (isError || !personinfo) return <PersonHeaderError refetch={() => refetch()} />
+    if (isError || !personinfo) return <PersonHeaderError refetch={refetch} />
 
     return (
         <PersonHeaderContainer>

@@ -11,8 +11,9 @@ export function Dokumenter(): ReactElement {
     const { data: dokumenter, isLoading, isError, refetch } = useDokumenter()
 
     if (isLoading) return <DokumenterSkeleton />
-    if (isError || !dokumenter)
-        return <FetchError refetch={() => void Promise.all([refetch()])} message="Kunne ikke laste dokumenter." />
+    if (isError || !dokumenter) {
+        return <FetchError refetch={refetch} message="Kunne ikke laste dokumenter." />
+    }
     if (dokumenter.length === 0) return <BodyShort>Ingen dokumenter</BodyShort>
 
     return (

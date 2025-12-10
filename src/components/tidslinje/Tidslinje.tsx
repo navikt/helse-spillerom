@@ -34,7 +34,7 @@ export function Tidslinje(): ReactElement {
     const { data: tidslinjeRader, isLoading, isError, refetch } = useTidslinje()
 
     if (isLoading) return <TimelineSkeleton />
-    if (isError) return <TimelineError refetch={() => Promise.all([refetch()])} />
+    if (isError) return <TimelineError refetch={refetch} />
     if (tidslinjeRader == null || tidslinjeRader.length === 0) return <TimelineEmpty />
 
     const tommeBehandlinger = tidslinjeRader.filter((t) => t.tidslinjeRadType === 'OpprettetBehandling')

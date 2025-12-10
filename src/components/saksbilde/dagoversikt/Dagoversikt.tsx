@@ -141,7 +141,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     if (yrkesaktivitetError) {
         return (
             <SaksbildePanel value={value}>
-                <FetchError refetch={() => refetch()} message="Kunne ikke laste dagoversikt." />
+                <FetchError refetch={refetch} message="Kunne ikke laste dagoversikt." />
             </SaksbildePanel>
         )
     }
@@ -404,14 +404,14 @@ function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElement {
 function KildeTag({ kilde }: { kilde: Kilde | null }): ReactElement {
     if (kilde === 'Søknad') {
         return (
-            <Tag variant="alt1" className="text-small mt-[2px] h-5 min-h-5 w-6 rounded-sm leading-0">
+            <Tag variant="alt1" className="text-small mt-0.5 h-5 min-h-5 w-6 rounded-sm leading-0">
                 SØ
             </Tag>
         )
     }
     if (kilde === 'Saksbehandler') {
         return (
-            <Tag variant="neutral" className="text-small mt-[2px] h-5 min-h-5 w-6 rounded-sm leading-0">
+            <Tag variant="neutral" className="text-small mt-0.5 h-5 min-h-5 w-6 rounded-sm leading-0">
                 SB
             </Tag>
         )

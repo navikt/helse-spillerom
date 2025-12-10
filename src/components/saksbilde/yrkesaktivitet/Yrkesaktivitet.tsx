@@ -48,7 +48,7 @@ export function Yrkesaktivitet(): ReactElement {
     } = useBekreftelsesModal()
 
     if (isLoading) return <YrkesaktivitetSkeleton />
-    if (isError) return <FetchError refetch={() => refetch()} message="Kunne ikke laste yrkesaktivitet." />
+    if (isError) return <FetchError refetch={refetch} message="Kunne ikke laste yrkesaktivitet." />
 
     // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
     const yrkesaktivitetSomIkkeKanKombineres =

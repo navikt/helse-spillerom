@@ -42,7 +42,7 @@ export function Oppgaveliste(): ReactElement {
     if (error) {
         return (
             <div className="p-8">
-                <FetchError message="Kunne ikke laste oppgaveliste" refetch={() => refetch()} />
+                <FetchError refetch={refetch} message="Kunne ikke laste oppgaveliste" />
             </div>
         )
     }

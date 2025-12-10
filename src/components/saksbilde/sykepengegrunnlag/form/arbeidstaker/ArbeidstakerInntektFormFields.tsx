@@ -20,6 +20,7 @@ import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
 import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
+import { FetchError } from '@components/saksbilde/FetchError'
 
 export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
@@ -141,7 +142,7 @@ export const arbeidstakerSkjønnsfastsettelseÅrsakLabels: Record<ArbeidstakerSk
 
 function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string }): ReactElement {
     const { control, setValue, getValues } = useFormContext<InntektRequestFor<'ARBEIDSTAKER'>>()
-    const { data: inntektsmeldinger, isLoading, isError } = useInntektsmeldinger(yrkesaktivitetId)
+    const { data: inntektsmeldinger, isLoading, isError, refetch } = useInntektsmeldinger(yrkesaktivitetId)
     const { selectDokument } = useDokumentVisningContext()
     const valgtInntektsmeldingId = useWatch({ control, name: 'data.inntektsmeldingId' })
 
@@ -152,8 +153,10 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
     }
 
     if (isError || !inntektsmeldinger) {
-        return <BodyShort>tryna</BodyShort> // TODO gjør noe fornuftig
+        return <FetchError refetch={refetch} message="Kunne ikke laste inntektsmeldinger." />
     }
+
+    if (inntektsmeldinger.length === 0) return <BodyShort>Fant ingen inntektsmeldinger å vise.</BodyShort>
 
     return (
         <Controller
