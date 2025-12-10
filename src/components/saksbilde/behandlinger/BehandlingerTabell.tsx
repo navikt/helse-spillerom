@@ -2,16 +2,17 @@
 
 import { ReactElement } from 'react'
 import { Table, BodyShort, Link } from '@navikt/ds-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
 import { getFormattedDateString } from '@utils/date-format'
 import { StatusTag } from '@components/statustag/StatusTag'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingerTabell(): ReactElement {
     const router = useRouter()
     const { data: perioder, isLoading, isError } = useSaksbehandlingsperioder()
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
 
     if (isLoading) return <BodyShort>Laster behandlinger...</BodyShort>
     if (isError || !perioder) return <BodyShort>Kunne ikke laste behandlinger</BodyShort>
@@ -39,7 +40,7 @@ export function BehandlingerTabell(): ReactElement {
                                 href="#"
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    router.push(`/person/${params.personId}/${periode.id}`)
+                                    router.push(`/person/${personId}/${periode.id}`)
                                 }}
                             >
                                 {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}

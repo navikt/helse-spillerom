@@ -1,4 +1,3 @@
-import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod/v4'
 
@@ -6,17 +5,18 @@ import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@/utils/ProblemDetailsError'
 import { Vilkaarsvurdering, vilkaarsvurderingSchema } from '@/schemas/vilkaarsvurdering'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useVilkaarsvurderinger() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
 
     return useQuery<Vilkaarsvurdering[], ProblemDetailsError>({
-        queryKey: queryKeys.vilkaarsvurderinger(params.personId as string, params.saksbehandlingsperiodeId as string),
+        queryKey: queryKeys.vilkaarsvurderinger(personId, saksbehandlingsperiodeId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/vilkaarsvurdering`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/vilkaarsvurdering`,
                 z.array(vilkaarsvurderingSchema),
             ),
-        enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
+        enabled: !!personId && !!saksbehandlingsperiodeId,
     })
 }

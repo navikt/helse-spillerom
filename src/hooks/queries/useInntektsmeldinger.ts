@@ -1,18 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
 import { z } from 'zod'
 
 import { InntektsmeldingSchema } from '@schemas/inntektsmelding'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 const InntektsmeldingerResponseSchema = z.array(InntektsmeldingSchema)
 
 type InntektsmeldingerResponse = z.infer<typeof InntektsmeldingerResponseSchema>
 
 export function useInntektsmeldinger(yrkesaktivitetId: string) {
-    const params = useParams()
-    const personId = params?.personId as string
-    const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
 
     return useQuery({
         queryKey: queryKeys.inntektsmeldinger(personId, saksbehandlingsperiodeId, yrkesaktivitetId),

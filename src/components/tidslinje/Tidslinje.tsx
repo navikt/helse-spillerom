@@ -4,8 +4,10 @@ import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon, SackKronerIcon } from '@navikt/aksel-icons'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation' // Brukes kun for saksbehandlingsperiodeId og tilkommenId som kan være undefined
 
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
@@ -23,7 +25,8 @@ import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
 
 export function Tidslinje(): ReactElement {
     const router = useRouter()
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
+    const params = useParams() // Brukes kun for saksbehandlingsperiodeId og tilkommenId som kan være undefined
 
     const { data, isLoading, isError, refetch } = useTidslinje()
 
@@ -46,9 +49,7 @@ export function Tidslinje(): ReactElement {
                                 skjæringstidspunkt={
                                     periode.skjæringstidspunkt ? dayjs(periode.skjæringstidspunkt) : undefined
                                 }
-                                onSelectPeriod={() =>
-                                    router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
-                                }
+                                onSelectPeriod={() => router.push(`/person/${personId}/${periode.behandlingId}`)}
                                 activePeriod={
                                     params.saksbehandlingsperiodeId === periode.behandlingId && !params.tilkommenId
                                 }
@@ -69,7 +70,7 @@ export function Tidslinje(): ReactElement {
                                 endDate={dayjs(periode.tom)}
                                 onSelectPeriod={() =>
                                     router.push(
-                                        `/person/${params.personId as string}/${periode.behandlingId}/tilkommen-inntekt/${periode.tilkommenInntektId}`,
+                                        `/person/${personId}/${periode.behandlingId}/tilkommen-inntekt/${periode.tilkommenInntektId}`,
                                     )
                                 }
                                 activePeriod={
@@ -129,15 +130,16 @@ function TilkommenInntektKnapp(): ReactElement {
     const kanSaksbehandles = useKanSaksbehandles()
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const router = useRouter()
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
+    const params = useParams() // Brukes kun for saksbehandlingsperiodeId som kan være undefined
 
     if (!kanSaksbehandles || !aktivSaksbehandlingsperiode) {
         return <></>
     }
 
     const handleLeggTilTilkommenInntekt = () => {
-        if (params.personId && params.saksbehandlingsperiodeId) {
-            router.push(`/person/${params.personId}/${params.saksbehandlingsperiodeId}/tilkommen-inntekt/opprett`)
+        if (personId && params.saksbehandlingsperiodeId) {
+            router.push(`/person/${personId}/${params.saksbehandlingsperiodeId}/tilkommen-inntekt/opprett`)
         }
     }
 

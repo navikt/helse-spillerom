@@ -4,9 +4,9 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { Button, Heading, HStack, VStack } from '@navikt/ds-react'
 import { ClockIcon, FolderIcon, XMarkIcon } from '@navikt/aksel-icons'
-import { useParams } from 'next/navigation'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
+import { useRouteParams } from '@hooks/useRouteParams'
 import { Dokumenter } from '@components/sidemenyer/høyremeny/dokumenter/Dokumenter'
 import { ArbeidsforholdKnapp } from '@components/sidemenyer/høyremeny/dokumenter/ArbeidsforholdKnapp'
 import { Ainntekt828Knapp } from '@components/sidemenyer/høyremeny/dokumenter/Ainntekt828Knapp'
@@ -31,8 +31,8 @@ type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 export function Høyremeny(): ReactElement {
     const { dokumenter, updateDokumenter } = useDokumentVisningContext()
 
-    const params = useParams()
-    const erISaksbehandlingsperiode = Boolean(params?.saksbehandlingsperiodeId)
+    const { saksbehandlingsperiodeId } = useRouteParams()
+    const erISaksbehandlingsperiode = Boolean(saksbehandlingsperiodeId)
 
     const [internalFilter, setInternalFilter] = useState<HøyremenyFilter>(
         erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk',

@@ -1,15 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
 
 import { fetchAndParse } from '@utils/fetch'
 import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@/schemas/sykepengegrunnlag'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSykepengegrunnlag() {
-    const params = useParams()
-    const personId = params?.personId as string
-    const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
 
     return useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
         queryKey: queryKeys.sykepengegrunnlag(personId, saksbehandlingsperiodeId),

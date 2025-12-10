@@ -1,4 +1,4 @@
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { z } from 'zod/v4'
@@ -7,19 +7,20 @@ import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { BeregningResponse, beregningResponseSchema } from '@schemas/utbetalingsberegning'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useUtbetalingsberegning() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
 
     const query = useQuery<BeregningResponse | null, ProblemDetailsError>({
-        queryKey: queryKeys.utbetalingsberegning(params.personId as string, params.saksbehandlingsperiodeId as string),
+        queryKey: queryKeys.utbetalingsberegning(personId, saksbehandlingsperiodeId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/utbetalingsberegning`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/utbetalingsberegning`,
                 z.union([beregningResponseSchema, z.null()]),
             ),
-        enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
+        enabled: !!personId && !!saksbehandlingsperiodeId,
     })
 
     useEffect(() => {

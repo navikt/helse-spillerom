@@ -1,10 +1,10 @@
-import { useParams } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
 import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvalidation'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
@@ -12,19 +12,17 @@ interface MutationProps {
 }
 
 export function useSendTilbake() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ saksbehandlingsperiodeId, kommentar }) =>
             postAndParse(
-                `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbake`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbake`,
                 saksbehandlingsperiodeSchema,
                 { kommentar },
             ),
         onSuccess: async () => {
-            const personId = params.personId as string
-            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
             await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })

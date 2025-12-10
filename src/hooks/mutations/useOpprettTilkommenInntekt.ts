@@ -1,4 +1,4 @@
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
@@ -8,13 +8,12 @@ import {
     TilkommenInntektResponse,
 } from '@schemas/tilkommenInntekt'
 import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidation'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useOpprettTilkommenInntekt() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
-    const personId = params.personId as string
-    const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
 
     return useMutation<TilkommenInntektResponse, Error, OpprettTilkommenInntektRequest>({
         mutationFn: async (request) => {

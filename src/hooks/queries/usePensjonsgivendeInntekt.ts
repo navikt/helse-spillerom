@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'next/navigation'
 import { z } from 'zod'
 
 import { inaktivPensjonsgivendeSchema, selvstendigNæringsdrivendePensjonsgivendeSchema } from '@schemas/inntektData'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 const pensjonsgivendeInntektSuccessResponseSchema = z.object({
     success: z.literal(true),
@@ -26,9 +26,7 @@ const pensjonsgivendeInntektResponseSchema = z.discriminatedUnion('success', [
 export type PensjonsgivendeInntektResponse = z.infer<typeof pensjonsgivendeInntektResponseSchema>
 
 export function usePensjonsgivendeInntekt(yrkesaktivitetId: string, enabled: boolean = true) {
-    const params = useParams()
-    const personId = params?.personId as string
-    const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
 
     return useQuery({
         queryKey: queryKeys.pensjonsgivendeInntekt(personId, saksbehandlingsperiodeId, yrkesaktivitetId),

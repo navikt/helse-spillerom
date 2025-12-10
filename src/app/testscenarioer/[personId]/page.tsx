@@ -1,17 +1,17 @@
 'use client'
 
 import { ReactElement, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Heading, BodyShort } from '@navikt/ds-react'
 
 import { erDevLokalEllerDemo } from '@/env'
 import { useScenarioer } from '@/hooks/queries/useScenarioer'
 import { TestscenarioDetaljer } from '@/components/testdata/TestscenarioDetaljer'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export default function TestscenarioDetaljerPage(): ReactElement {
     const router = useRouter()
-    const params = useParams()
-    const personId = params.personId as string
+    const { personId } = usePersonRouteParams()
     const { data: scenarioer, isLoading, isError } = useScenarioer()
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 
@@ -6,15 +6,16 @@ import { Personinfo, personinfoSchema } from '@/schemas/personinfo'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { queryKeys } from '@utils/queryKeys'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function usePersoninfo() {
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
     const router = useRouter()
 
     const query = useQuery<Personinfo, ProblemDetailsError>({
-        queryKey: queryKeys.personinfo(params.personId as string),
-        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${params.personId}/personinfo`, personinfoSchema),
-        enabled: !!params.personId,
+        queryKey: queryKeys.personinfo(personId),
+        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${personId}/personinfo`, personinfoSchema),
+        enabled: !!personId,
     })
 
     useEffect(() => {

@@ -1,16 +1,15 @@
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidation'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSlettTilkommenInntekt() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
-    const personId = params.personId as string
-    const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
 
     return useMutation<void, ProblemDetailsError, { tilkommenInntektId: string }>({
         mutationFn: async ({ tilkommenInntektId }) => {

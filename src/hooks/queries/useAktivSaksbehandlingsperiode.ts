@@ -1,6 +1,5 @@
-import { useParams } from 'next/navigation'
-
 import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
 
@@ -13,13 +12,13 @@ function findAktivSaksbehandlingsperiode(
 }
 
 export function useAktivSaksbehandlingsperiode() {
-    const { saksbehandlingsperiodeId } = useParams<{ saksbehandlingsperiodeId: string }>()
+    const { saksbehandlingsperiodeId } = useRouteParams()
     const { data } = useSaksbehandlingsperioder()
     return findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId)
 }
 
 export function useAktivSaksbehandlingsperiodeMedLoading() {
-    const { saksbehandlingsperiodeId } = useParams<{ saksbehandlingsperiodeId: string }>()
+    const { saksbehandlingsperiodeId } = useRouteParams()
     const { data, isLoading } = useSaksbehandlingsperioder()
     return {
         aktivSaksbehandlingsperiode: findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId),

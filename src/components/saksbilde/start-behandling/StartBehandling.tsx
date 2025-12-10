@@ -15,7 +15,7 @@ import {
 } from '@navikt/ds-react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
@@ -29,6 +29,7 @@ import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
 import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
 import { SøknadsInnhold } from '@components/søknad/SøknadsInnhold'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 interface StartBehandlingProps {
     value: string
@@ -71,7 +72,7 @@ type StartBehandlingFormData = z.infer<typeof startBehandlingSchema>
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const router = useRouter()
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
 
     const [openSoknadModal, setOpenSoknadModal] = useState(false)
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
@@ -181,7 +182,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
             },
             {
                 onSuccess: (periode) => {
-                    router.push(`/person/${params.personId}/${periode.id}`)
+                    router.push(`/person/${personId}/${periode.id}`)
                 },
             },
         )

@@ -14,7 +14,7 @@ import {
 } from '@navikt/aksel-icons'
 import { ModalBody } from '@navikt/ds-react/Modal'
 import { InternalHeaderButton } from '@navikt/ds-react/InternalHeader'
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import {
     Dropdown,
@@ -25,6 +25,7 @@ import {
     DropdownToggle,
 } from '@navikt/ds-react/Dropdown'
 
+import { useRouteParams } from '@hooks/useRouteParams'
 import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
 import { erDevLokalEllerDemo, erProd } from '@/env'
 import { VilkårsvurderingInnsikt } from '@/components/saksbilde/vilkårsvurdering/VilkårsvurderingInnsikt'
@@ -78,7 +79,7 @@ function RetroTemaToggleHeader(): ReactElement {
 }
 export function UtviklingMeny(): ReactElement | null {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
-    const params = useParams()
+    const { saksbehandlingsperiodeId } = useRouteParams()
     const testdataMenyRef = useRef<{ åpne: () => void }>(null)
 
     useRegisterShortcutHandler('open_testdata', () => {
@@ -89,7 +90,7 @@ export function UtviklingMeny(): ReactElement | null {
         return null
     }
 
-    const showUtviklingButtons = !erProd && params.saksbehandlingsperiodeId
+    const showUtviklingButtons = !erProd && saksbehandlingsperiodeId
 
     const closeModal = () => setActiveModal(null)
 

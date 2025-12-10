@@ -1,4 +1,4 @@
-import { useParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { z } from 'zod/v4'
@@ -7,19 +7,20 @@ import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
 import { queryKeys } from '@utils/queryKeys'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useYrkesaktivitet() {
-    const params = useParams()
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: queryKeys.yrkesaktivitet(params.personId as string, params.saksbehandlingsperiodeId as string),
+        queryKey: queryKeys.yrkesaktivitet(personId, saksbehandlingsperiodeId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
-        enabled: !!params.personId && !!params.saksbehandlingsperiodeId,
+        enabled: !!personId && !!saksbehandlingsperiodeId,
     })
 
     useEffect(() => {

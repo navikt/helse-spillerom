@@ -1,11 +1,8 @@
-import { useParams } from 'next/navigation'
-
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
+import { usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams } from '@hooks/useRouteParams'
 
 export function useTilkommenInntektByParamId() {
-    const params = useParams()
-    const behandlingId = params.saksbehandlingsperiodeId as string
-    const tilkommenInntektId = params.tilkommenId as string
+    const { saksbehandlingsperiodeId, tilkommenId } = usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams()
 
-    return useTilkommenInntektById(behandlingId, tilkommenInntektId)
+    return useTilkommenInntektById(saksbehandlingsperiodeId, tilkommenId)
 }

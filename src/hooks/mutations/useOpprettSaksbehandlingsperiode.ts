@@ -1,4 +1,3 @@
-import { useParams } from 'next/navigation'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
@@ -11,6 +10,7 @@ import {
     refetchQuery,
 } from '@utils/queryInvalidation'
 import { queryKeys } from '@utils/queryKeys'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
     request: {
@@ -22,14 +22,13 @@ interface MutationProps {
 }
 
 export function useOpprettSaksbehandlingsperiode() {
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ request }) =>
-            postAndParse(`/api/bakrommet/v1/${params.personId}/behandlinger`, saksbehandlingsperiodeSchema, request),
+            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger`, saksbehandlingsperiodeSchema, request),
         onSuccess: async (periode, r) => {
-            const personId = params.personId as string
             // Invalidate all saksbehandlingsperioder caches
             await invaliderAlleSaksbehandlingsperioder(queryClient)
             await refetchQuery(queryClient, queryKeys.saksbehandlingsperioder(personId))

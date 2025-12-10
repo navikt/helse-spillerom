@@ -1,6 +1,6 @@
 'use client'
 
-import { useParams, usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import dayjs from 'dayjs'
 
@@ -8,10 +8,11 @@ import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
 import { getFormattedDateString } from '@utils/date-format'
 import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingHeading({ className }: { className?: string }) {
     const router = useRouter()
-    const { personId, saksbehandlingsperiodeId } = useParams() as { personId: string; saksbehandlingsperiodeId: string }
+    const { personId, saksbehandlingsperiodeId } = useRouteParams()
     const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
     const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()

@@ -1,4 +1,3 @@
-import { useParams } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { Dayjs } from 'dayjs'
 import { z } from 'zod/v4'
@@ -6,9 +5,10 @@ import { z } from 'zod/v4'
 import { Søknad, søknadSchema } from '@/schemas/søknad'
 import { fetchAndParse } from '@utils/fetch'
 import { queryKeys } from '@utils/queryKeys'
+import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function useSoknader(fom: Dayjs) {
-    const params = useParams()
+    const { personId } = usePersonRouteParams()
 
     if (!fom.isValid()) {
         throw new Error('Invalid date: fom må være en gyldig Dayjs-dato')
@@ -18,12 +18,12 @@ export function useSoknader(fom: Dayjs) {
 
     return useQuery<Søknad[], Error>({
         // Inkluder personId og fom i cache-nøkkelen
-        queryKey: queryKeys.soknader(params.personId as string, formattedFom),
+        queryKey: queryKeys.soknader(personId, formattedFom),
         queryFn: () => {
-            const base = `/api/bakrommet/v1/${params.personId}/soknader`
+            const base = `/api/bakrommet/v1/${personId}/soknader`
             const url = `${base}?fom=${encodeURIComponent(formattedFom)}`
             return fetchAndParse(url, z.array(søknadSchema))
         },
-        enabled: !!params.personId,
+        enabled: !!personId,
     })
 }
