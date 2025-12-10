@@ -3,9 +3,8 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon, SackKronerIcon } from '@navikt/aksel-icons'
-import { useRouter } from 'next/navigation'
-import { useParams } from 'next/navigation' // Brukes kun for behandlingId og tilkommenId som kan være undefined
+import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon } from '@navikt/aksel-icons'
+import { useParams, useRouter } from 'next/navigation' // Brukes kun for behandlingId og tilkommenId som kan være undefined
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -53,6 +52,7 @@ export function Tidslinje(): ReactElement {
                                 activePeriod={params.behandlingId === periode.behandlingId && !params.tilkommenId}
                                 icon={statusTilIkon[periode.status]}
                                 variant={periode.ghost ? 'GHOST' : periode.status}
+                                generasjonIndex={periode.generasjonIndex}
                             >
                                 <BehandlingPopover behandlingId={periode.behandlingId} />
                             </TimelinePeriod>
@@ -60,7 +60,7 @@ export function Tidslinje(): ReactElement {
                     </TimelineRow>
                 ))}
                 {tilkomneInntekter.map((rad) => (
-                    <TimelineRow key={rad.id} label={rad.navn} icon={<SackKronerIcon aria-hidden fontSize="1.5rem" />}>
+                    <TimelineRow key={rad.id} label={rad.navn} icon={rad.icon}>
                         {rad.tidslinjeElementer.map((periode) => (
                             <TimelinePeriod
                                 key={rad.id + periode.fom + periode.tom}

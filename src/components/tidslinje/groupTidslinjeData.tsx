@@ -1,7 +1,7 @@
 import { BriefcaseIcon, PencilLineIcon, SackKronerIcon } from '@navikt/aksel-icons'
 
 import { BehandlingStatus } from '@schemas/behandling'
-import { TidslinjeBehandling } from '@schemas/tidslinje'
+import { TidslinjeBehandling, TidslinjeYrkesaktivitet } from '@schemas/tidslinje'
 
 type TidslinjeElement = {
     fom: string
@@ -9,7 +9,8 @@ type TidslinjeElement = {
     skjæringstidspunkt?: string
     behandlingId: string
     status: BehandlingStatus
-    ghost?: boolean
+    ghost: boolean
+    generasjonIndex: number
 }
 
 type TilkommenTidslinjeElement = {
@@ -19,50 +20,80 @@ type TilkommenTidslinjeElement = {
     tilkommenInntektId: string
 }
 
+function toTidslinjeElement(
+    behandling: TidslinjeBehandling,
+    ya?: TidslinjeYrkesaktivitet,
+    generasjonIndex: number = 0,
+): TidslinjeElement {
+    return {
+        fom: behandling.fom,
+        tom: behandling.tom,
+        skjæringstidspunkt: behandling.skjæringstidspunkt ?? undefined,
+        behandlingId: behandling.id,
+        status: behandling.status,
+        ghost: ya ? !ya.sykmeldt : false,
+        generasjonIndex,
+    }
+}
+
 export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
+    const behandlingMap = new Map(behandlinger.map((b) => [b.id, b]))
+    const revurdertIds = new Set(
+        behandlinger.map((b) => b.revurdererBehandlingId).filter((id): id is string => id != null),
+    )
+
+    const getGenerasjoner = (behandling: TidslinjeBehandling): TidslinjeBehandling[] => {
+        const generasjoner: TidslinjeBehandling[] = []
+        let currentId = behandling.revurdererBehandlingId
+        while (currentId) {
+            const prev = behandlingMap.get(currentId)
+            if (!prev) break
+            generasjoner.push(prev)
+            currentId = prev.revurdererBehandlingId
+        }
+        return generasjoner
+    }
+
+    const aktiveBehandlinger = behandlinger.filter((b) => !revurdertIds.has(b.id))
+
     const tomme: TidslinjeElement[] = []
     const yrkesaktiviteterGrouped: Record<string, { navn: string; tidslinjeElementer: TidslinjeElement[] }> = {}
     const tilkomneGrouped: Record<string, { navn: string; tidslinjeElementer: TilkommenTidslinjeElement[] }> = {}
 
-    behandlinger.forEach((behandling) => {
+    for (const behandling of aktiveBehandlinger) {
+        const generasjoner = getGenerasjoner(behandling)
+
         if (behandling.yrkesaktiviteter.length === 0 && behandling.tilkommenInntekt.length === 0) {
-            tomme.push({
-                fom: behandling.fom,
-                tom: behandling.tom,
-                skjæringstidspunkt: behandling.skjæringstidspunkt ?? undefined,
-                behandlingId: behandling.id,
-                status: behandling.status,
+            tomme.push(toTidslinjeElement(behandling))
+        }
+
+        for (const ya of behandling.yrkesaktiviteter) {
+            const key = `${ya.orgnummer}-${ya.yrkesaktivitetType}`
+            yrkesaktiviteterGrouped[key] ??= { navn: ya.orgnavn ?? 'Ukjent virksomhet', tidslinjeElementer: [] }
+
+            // Push active element (index 0)
+            yrkesaktiviteterGrouped[key].tidslinjeElementer.push(toTidslinjeElement(behandling, ya, 0))
+
+            // Push generasjoner with their index
+            generasjoner.forEach((gen, index) => {
+                const matchingYa = gen.yrkesaktiviteter.find(
+                    (genYa) => `${genYa.orgnummer}-${genYa.yrkesaktivitetType}` === key,
+                )
+                yrkesaktiviteterGrouped[key].tidslinjeElementer.push(toTidslinjeElement(gen, matchingYa, index + 1))
             })
         }
 
-        behandling.yrkesaktiviteter.forEach((ya) => {
-            const key = `${ya.orgnummer}-${ya.yrkesaktivitetType}`
-            if (!yrkesaktiviteterGrouped[key]) {
-                yrkesaktiviteterGrouped[key] = { navn: ya.orgnavn ?? 'Ukjent virksomhet', tidslinjeElementer: [] }
-            }
-            yrkesaktiviteterGrouped[key].tidslinjeElementer.push({
-                fom: behandling.fom,
-                tom: behandling.tom,
-                skjæringstidspunkt: behandling.skjæringstidspunkt ?? undefined,
-                behandlingId: behandling.id,
-                status: behandling.status,
-                ghost: !ya.sykmeldt,
-            })
-        })
-
-        behandling.tilkommenInntekt.forEach((ti) => {
+        for (const ti of behandling.tilkommenInntekt) {
             const key = `${ti.orgnavn}-${ti.yrkesaktivitetType}`
-            if (!tilkomneGrouped[key]) {
-                tilkomneGrouped[key] = { navn: ti.orgnavn ?? 'Ukjent virksomhet', tidslinjeElementer: [] }
-            }
+            tilkomneGrouped[key] ??= { navn: ti.orgnavn ?? 'Ukjent virksomhet', tidslinjeElementer: [] }
             tilkomneGrouped[key].tidslinjeElementer.push({
                 fom: ti.fom,
                 tom: ti.tom,
                 behandlingId: behandling.id,
                 tilkommenInntektId: ti.id,
             })
-        })
-    })
+        }
+    }
 
     return {
         behandlinger: [
@@ -71,20 +102,20 @@ export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
                       {
                           id: 'tomme-behandlinger',
                           navn: 'Opprettet behandling',
-                          icon: <PencilLineIcon aria-hidden fontSize="1.5rem" />,
+                          icon: <PencilLineIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
                           tidslinjeElementer: tomme,
                       },
                   ]
                 : []),
             ...Object.entries(yrkesaktiviteterGrouped).map(([key, value]) => ({
                 id: key,
-                icon: <BriefcaseIcon aria-hidden fontSize="1.5rem" />,
+                icon: <BriefcaseIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
                 ...value,
             })),
         ],
         tilkomneInntekter: Object.entries(tilkomneGrouped).map(([key, value]) => ({
             id: key,
-            icon: <SackKronerIcon aria-hidden fontSize="1.5rem" />,
+            icon: <SackKronerIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
             ...value,
         })),
     }

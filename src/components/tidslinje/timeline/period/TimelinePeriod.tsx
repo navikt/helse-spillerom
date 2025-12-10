@@ -22,18 +22,21 @@ export interface TimelinePeriodProps extends PropsWithChildren {
     onSelectPeriod?: () => void
     icon?: ReactElement
     variant: TidslinjeVariant
+    generasjonIndex?: number
 }
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
     const buttonRef = useRef<HTMLButtonElement>(null)
     const { onMouseOver, onMouseOut, ...popoverProps } = usePopoverAnchor()
     const { dayLength, endDate: timelineEnd } = useTimelineContext()
-    const { periods } = useRowContext()
+    const { allPeriods } = useRowContext()
     const { periodId } = usePeriodContext()
     const showIcon = useIsWiderThan(buttonRef, 32)
 
-    const period = periods.find((p) => p.id === periodId)
+    const period = allPeriods.find((p) => p.id === periodId)
+
     if (!period) return <></>
+
     const { startDate, endDate, cropLeft, cropRight, isActive, onSelectPeriod, icon, variant, children } = period
 
     // TODO ordne bredde og plassering et annet sted

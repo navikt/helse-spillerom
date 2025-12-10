@@ -56,3 +56,21 @@ function useResizeObserver(ref: RefObject<Maybe<HTMLElement>>) {
 
     return width
 }
+
+export function useExpandableRows() {
+    const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set())
+
+    function toggleRowExpanded(rowIndex: number) {
+        setExpandedRows((prev) => {
+            const next = new Set(prev)
+            if (next.has(rowIndex)) {
+                next.delete(rowIndex)
+            } else {
+                next.add(rowIndex)
+            }
+            return next
+        })
+    }
+
+    return { expandedRows, toggleRowExpanded }
+}

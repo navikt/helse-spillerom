@@ -20,10 +20,18 @@ type Period = {
     variant: TidslinjeVariant
     cropLeft: boolean
     cropRight: boolean
+    generasjonIndex: number
 }
 
+export type RowLabels = {
+    label: string
+    icon: ReactElement
+    rowIndex: number
+    generationLevels: number
+}[]
+
 type ParsedRowsResult = {
-    rowLabels: { label: string; icon: ReactElement }[]
+    rowLabels: RowLabels
     earliestDate: Dayjs
     latestDate: Dayjs
     parsedRows: ParsedRow[]
@@ -43,8 +51,13 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
 
     const parsedRows = parseRows(rowChildren)
 
-    const rowLabels = parsedRows.map((row) => {
-        return { label: row.label, icon: row.icon }
+    const rowLabels = parsedRows.map((row, rowIndex) => {
+        return {
+            label: row.label,
+            icon: row.icon,
+            rowIndex,
+            generationLevels: row.generasjonPeriodsByLevel?.size ?? 0,
+        }
     })
     const allPeriods = parsedRows.map((row) => row.periods).flat()
 
@@ -58,62 +71,86 @@ export type ParsedRow = {
     label: string
     icon: ReactElement
     periods: Period[]
+    generasjonPeriodsByLevel: Map<number, Period[]>
 }
 
 export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
-    const parsedRow: ParsedRow[] = []
+    const parsedRows: ParsedRow[] = []
+
     rows.forEach((row, rowIndex) => {
-        const periods: ParsedRow['periods'] = []
+        const periods: Period[] = []
+        const generasjonPeriodsByLevel: Map<number, Period[]> = new Map()
+
         const periodChildren: ReactElement<TimelinePeriodProps>[] = React.Children.toArray(row.props.children).filter(
             (child: ReactNode) =>
                 React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelinePeriod',
         ) as ReactElement<TimelinePeriodProps>[]
 
-        periodChildren
-            .sort((a, b) => a.props.startDate.diff(b.props.startDate))
-            .forEach((period, periodIndex) => {
-                const startDate = period.props.startDate
-                const endDate = period.props.endDate
-                const skjæringstidspunkt = period.props.skjæringstidspunkt
-                const prevPeriodEndDate = periodChildren[periodIndex - 1]?.props.endDate
-                const prevPeriodSkjæringstidspunkt = periodChildren[periodIndex - 1]?.props.skjæringstidspunkt
-                const nextPeriodStartDate = periodChildren[periodIndex + 1]?.props.startDate
-                const nextPeriodSkjæringstidspunkt = periodChildren[periodIndex + 1]?.props.skjæringstidspunkt
-                const cropLeft = Boolean(
-                    nextPeriodStartDate &&
-                    dayjs(endDate).add(1, 'day').isSame(nextPeriodStartDate, 'day') &&
-                    shouldCrop(skjæringstidspunkt, nextPeriodSkjæringstidspunkt),
-                )
+        const sortedPeriods = periodChildren.sort((a, b) => a.props.startDate.diff(b.props.startDate))
 
-                const cropRight = Boolean(
-                    prevPeriodEndDate &&
-                    dayjs(prevPeriodEndDate).add(1, 'day').isSame(startDate, 'day') &&
-                    shouldCrop(skjæringstidspunkt, prevPeriodSkjæringstidspunkt),
-                )
+        sortedPeriods.forEach((period, periodIndex) => {
+            const startDate = period.props.startDate
+            const endDate = period.props.endDate
+            const skjæringstidspunkt = period.props.skjæringstidspunkt
+            const generasjonIndex = period.props.generasjonIndex ?? 0
+            const isGenerasjon = generasjonIndex > 0
 
-                periods.push({
-                    id: `r-${rowIndex}-p-${periodIndex}`,
-                    children: period.props.children,
-                    isActive: period.props.activePeriod,
-                    onSelectPeriod: period.props.onSelectPeriod,
-                    icon: period.props.icon,
-                    variant: period.props.variant,
-                    startDate,
-                    endDate,
-                    skjæringstidspunkt,
-                    cropLeft,
-                    cropRight,
-                })
-            })
+            const sameLevelPeriods = sortedPeriods.filter((p) => (p.props.generasjonIndex ?? 0) === generasjonIndex)
+            const indexInSameLevel = sameLevelPeriods.findIndex((p) => p === period)
 
-        parsedRow.push({
+            const prevPeriod = sameLevelPeriods[indexInSameLevel - 1]
+            const nextPeriod = sameLevelPeriods[indexInSameLevel + 1]
+
+            const cropLeft = Boolean(
+                nextPeriod?.props.startDate &&
+                dayjs(endDate).add(1, 'day').isSame(nextPeriod.props.startDate, 'day') &&
+                shouldCrop(skjæringstidspunkt, nextPeriod.props.skjæringstidspunkt),
+            )
+
+            const cropRight = Boolean(
+                prevPeriod?.props.endDate &&
+                dayjs(prevPeriod.props.endDate).add(1, 'day').isSame(startDate, 'day') &&
+                shouldCrop(skjæringstidspunkt, prevPeriod.props.skjæringstidspunkt),
+            )
+
+            const parsedPeriod: Period = {
+                id: `r-${rowIndex}-p-${periodIndex}`,
+                children: period.props.children,
+                isActive: period.props.activePeriod,
+                onSelectPeriod: period.props.onSelectPeriod,
+                icon: period.props.icon,
+                variant: period.props.variant,
+                startDate,
+                endDate,
+                skjæringstidspunkt,
+                cropLeft,
+                cropRight,
+                generasjonIndex,
+            }
+
+            if (isGenerasjon) {
+                if (!generasjonPeriodsByLevel.has(generasjonIndex)) {
+                    generasjonPeriodsByLevel.set(generasjonIndex, [])
+                }
+                generasjonPeriodsByLevel.get(generasjonIndex)!.push(parsedPeriod)
+            } else {
+                periods.push(parsedPeriod)
+            }
+        })
+
+        const sortedGenerasjonPeriodsByLevel = new Map(
+            [...generasjonPeriodsByLevel.entries()].sort(([a], [b]) => a - b),
+        )
+
+        parsedRows.push({
             label: row.props?.label,
             icon: row.props?.icon,
             periods,
+            generasjonPeriodsByLevel: sortedGenerasjonPeriodsByLevel,
         })
     })
 
-    return parsedRow
+    return parsedRows
 }
 
 function shouldCrop(thisSkjæringstidspunkt?: Dayjs, neighborSkjæringstidspunkt?: Dayjs): boolean {
