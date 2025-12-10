@@ -1,50 +1,50 @@
 export const allowedAPIs = [
     'GET /v1/bruker',
     'GET /v1/behandlinger',
-    'GET /v1/[personId]/personinfo',
-    'GET /v1/[personId]/soknader',
+    'GET /v1/[uuid]/personinfo',
+    'GET /v1/[uuid]/soknader',
     'POST /v1/personsok',
     'GET /v1/organisasjon/[orgnummer]',
-    'GET /v1/[personId]/behandlinger',
-    'POST /v1/[personId]/behandlinger',
-    'GET /v1/[personId]/inntektsmeldinger',
-    'GET /v1/[personId]/behandlinger/[uuid]/utbetalingsberegning',
-    'GET /v1/[personId]/behandlinger/[uuid]/dokumenter',
-    'POST /v1/[personId]/behandlinger/[uuid]/dokumenter/ainntekt/hent-8-28',
-    'POST /v1/[personId]/behandlinger/[uuid]/dokumenter/ainntekt/hent-8-30',
-    'POST /v1/[personId]/behandlinger/[uuid]/dokumenter/arbeidsforhold/hent',
-    'POST /v1/[personId]/behandlinger/[uuid]/dokumenter/pensjonsgivendeinntekt/hent',
-    'GET /v1/[personId]/behandlinger/[uuid]/vilkaarsvurdering',
-    'PUT /v1/[personId]/behandlinger/[uuid]/vilkaarsvurdering/[kode]',
-    'DELETE /v1/[personId]/behandlinger/[uuid]/vilkaarsvurdering/[kode]',
-    'GET /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet',
-    'POST /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/kategorisering',
-    'DELETE /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/dagoversikt',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/perioder',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/inntekt',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/fri-inntekt',
-    'PUT /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/refusjon',
-    'GET /v1/[personId]/soknader/[uuid]',
-    'POST /v1/[personId]/behandlinger/[uuid]/sendtilbeslutning',
-    'POST /v1/[personId]/behandlinger/[uuid]/tatilbeslutning',
-    'POST /v1/[personId]/behandlinger/[uuid]/sendtilbake',
-    'POST /v1/[personId]/behandlinger/[uuid]/godkjenn',
-    'POST /v1/[personId]/behandlinger/[uuid]/revurder',
-    'GET /v1/[personId]/behandlinger/[uuid]/historikk',
-    'GET /v2/[personId]/behandlinger/[uuid]/sykepengegrunnlag',
-    'POST /v2/[personId]/behandlinger/[uuid]/sykepengegrunnlag',
-    'DELETE /v2/[personId]/behandlinger/[uuid]/sykepengegrunnlag',
-    'PUT /v1/[personId]/behandlinger/[uuid]/skjaeringstidspunkt',
-    'GET /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
-    'GET /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
-    'GET /v1/[personId]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/ainntekt',
-    'GET /v1/[personId]/behandlinger/[uuid]/tilkommeninntekt',
-    'POST /v1/[personId]/behandlinger/[uuid]/tilkommeninntekt',
-    'PUT /v1/[personId]/behandlinger/[uuid]/tilkommeninntekt/[uuid]',
-    'DELETE /v1/[personId]/behandlinger/[uuid]/tilkommeninntekt/[uuid]',
-    'GET /v2/[personId]/tidslinje',
+    'GET /v1/[uuid]/behandlinger',
+    'POST /v1/[uuid]/behandlinger',
+    'GET /v1/[uuid]/inntektsmeldinger',
+    'GET /v1/[uuid]/behandlinger/[uuid]/utbetalingsberegning',
+    'GET /v1/[uuid]/behandlinger/[uuid]/dokumenter',
+    'POST /v1/[uuid]/behandlinger/[uuid]/dokumenter/ainntekt/hent-8-28',
+    'POST /v1/[uuid]/behandlinger/[uuid]/dokumenter/ainntekt/hent-8-30',
+    'POST /v1/[uuid]/behandlinger/[uuid]/dokumenter/arbeidsforhold/hent',
+    'POST /v1/[uuid]/behandlinger/[uuid]/dokumenter/pensjonsgivendeinntekt/hent',
+    'GET /v1/[uuid]/behandlinger/[uuid]/vilkaarsvurdering',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/vilkaarsvurdering/[kode]',
+    'DELETE /v1/[uuid]/behandlinger/[uuid]/vilkaarsvurdering/[kode]',
+    'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet',
+    'POST /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/kategorisering',
+    'DELETE /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/dagoversikt',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/perioder',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/inntekt',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/fri-inntekt',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/refusjon',
+    'GET /v1/[uuid]/soknader/[uuid]',
+    'POST /v1/[uuid]/behandlinger/[uuid]/sendtilbeslutning',
+    'POST /v1/[uuid]/behandlinger/[uuid]/tatilbeslutning',
+    'POST /v1/[uuid]/behandlinger/[uuid]/sendtilbake',
+    'POST /v1/[uuid]/behandlinger/[uuid]/godkjenn',
+    'POST /v1/[uuid]/behandlinger/[uuid]/revurder',
+    'GET /v1/[uuid]/behandlinger/[uuid]/historikk',
+    'GET /v2/[uuid]/behandlinger/[uuid]/sykepengegrunnlag',
+    'POST /v2/[uuid]/behandlinger/[uuid]/sykepengegrunnlag',
+    'DELETE /v2/[uuid]/behandlinger/[uuid]/sykepengegrunnlag',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/skjaeringstidspunkt',
+    'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
+    'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
+    'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/ainntekt',
+    'GET /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt',
+    'POST /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt',
+    'PUT /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt/[uuid]',
+    'DELETE /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt/[uuid]',
+    'GET /v2/[uuid]/tidslinje',
 ]
 
 export const allowedDemoAPIs = [
@@ -59,20 +59,6 @@ export const allowedDemoAPIs = [
 const UUID = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/g
 // Matcher 9-sifret orgnummer i organisasjon-endepunkt
 const ORGNUMMER = /\/v1\/organisasjon\/(\d{9})/g
-// Kjente path-segmenter som ikke skal matche som person-ID
-const KNOWN_PATH_SEGMENTS = [
-    'demo',
-    'bruker',
-    'brukere',
-    'saksbehandlingsperioder',
-    'personsok',
-    'organisasjon',
-    'scenarioer',
-    'testpersoner',
-    'tilkommeninntekt',
-]
-// Matcher person-ID kun når den er i riktig kontekst: etter /v1/ eller /v2/, og ikke et kjent path-segment
-const PERSONID = /(\/v[12]\/)([a-z0-9-]{5,50})(\/|$|\s)/g
 
 export function cleanPath(value: string): string {
     if (!value) return value
@@ -87,14 +73,6 @@ export function cleanPath(value: string): string {
     let cleanedPath = value.replace(UUID, '[uuid]')
     // Deretter erstatter orgnummer (9 siffer) i organisasjon-endepunkt
     cleanedPath = cleanedPath.replace(ORGNUMMER, '/v1/organisasjon/[orgnummer]')
-    // Deretter erstatter person-ID kun i riktig kontekst (etter /v1/ eller /v2/), men ikke kjente segmenter
-    cleanedPath = cleanedPath.replace(PERSONID, (match, prefix, personId, suffix) => {
-        // Sjekk om det matchede segmentet allerede er en placeholder eller et kjent path-segment
-        if (personId.startsWith('[') || KNOWN_PATH_SEGMENTS.includes(personId)) {
-            return match // Returner uendret hvis det er en placeholder eller kjent segment
-        }
-        return `${prefix}[personId]${suffix}`
-    })
 
     const parts = cleanedPath.split('/')
     const isVilkaarModification = cleanedPath.startsWith('PUT') || cleanedPath.startsWith('DELETE')
