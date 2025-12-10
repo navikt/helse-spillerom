@@ -51,10 +51,11 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
         // Utvid Kapittel 2 - Medlemskap i folketrygden
         await test.step('Utvid Kapittel 2 - Medlemskap i folketrygden', async () => {
             // Klikk på "Vis mer" knappen for Kapittel 2
-            const kapittel2Row = page.getByRole('row', {
-                name: 'Medlemskap i folketrygden Ikke vurdert Vis mer',
-            })
-            await kapittel2Row.getByRole('button', { name: 'Vis mer' }).click()
+            const kapittel2Row = page
+                .getByRole('row', {
+                    name: 'Medlemskap i folketrygden Ikke vurdert Vis mer',
+                })
+                .click()
 
             // Vent på at innholdet blir synlig
             await expect(page.getByText('Er den sykmeldte medlem i folketrygden?')).toBeVisible()
