@@ -8,15 +8,15 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useVilkaarsvurderinger() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
 
     return useQuery<Vilkaarsvurdering[], ProblemDetailsError>({
-        queryKey: queryKeys.vilkaarsvurderinger(personId, behandlingId),
+        queryKey: queryKeys.vilkaarsvurderinger(pseudoId, behandlingId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/vilkaarsvurdering`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/vilkaarsvurdering`,
                 z.array(vilkaarsvurderingSchema),
             ),
-        enabled: !!personId && !!behandlingId,
+        enabled: !!pseudoId && !!behandlingId,
     })
 }

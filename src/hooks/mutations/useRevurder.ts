@@ -17,24 +17,24 @@ interface MutationProps {
 }
 
 export function useRevurder() {
-    const { personId, behandlingId: gammelSaksbehandlingsperiodeId } = useRouteParams()
+    const { pseudoId, behandlingId: gammelSaksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ behandlingId }) =>
-            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/revurder`, behandlingSchema, {}),
+            postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/revurder`, behandlingSchema, {}),
         onSuccess: async (nyPeriode) => {
             // Invalidate all saksbehandlingsperioder caches
             await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await invaliderSaksbehandlingsperioder(queryClient, personId)
+            await invaliderSaksbehandlingsperioder(queryClient, pseudoId)
             // Invalider historikk for både gammel og ny periode
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, gammelSaksbehandlingsperiodeId)
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, nyPeriode.id)
-            await invaliderTidslinje(queryClient, personId)
+            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, gammelSaksbehandlingsperiodeId)
+            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, nyPeriode.id)
+            await invaliderTidslinje(queryClient, pseudoId)
 
             // Naviger til den nye perioden
-            router.push(`/person/${personId}/${nyPeriode.id}`)
+            router.push(`/person/${pseudoId}/${nyPeriode.id}`)
         },
     })
 }

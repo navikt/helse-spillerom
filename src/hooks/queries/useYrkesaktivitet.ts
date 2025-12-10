@@ -10,17 +10,17 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useYrkesaktivitet() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const router = useRouter()
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: queryKeys.yrkesaktivitet(personId, behandlingId),
+        queryKey: queryKeys.yrkesaktivitet(pseudoId, behandlingId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
-        enabled: !!personId && !!behandlingId,
+        enabled: !!pseudoId && !!behandlingId,
     })
 
     useEffect(() => {

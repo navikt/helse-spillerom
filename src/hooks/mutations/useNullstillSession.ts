@@ -9,12 +9,12 @@ export function useNullstillSession() {
         },
         onSuccess: () => {
             const pathname = window.location.pathname
-            // Sjekk om vi er på en personside (f.eks. /person/[personId] eller /person/[personId]/...)
+            // Sjekk om vi er på en personside (f.eks. /person/[pseudoId] eller /person/[pseudoId]/...)
             const personMatch = pathname.match(/^\/person\/([^/]+)/)
             if (personMatch) {
                 // Naviger tilbake til personens startsted (ut av behandlingen)
-                const personId = personMatch[1]
-                window.location.href = `/person/${personId}`
+                const pseudoId = personMatch[1]
+                window.location.href = `/person/${pseudoId}`
             } else {
                 // Hvis vi ikke er på en personside, bare refresh
                 window.location.reload()

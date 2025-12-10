@@ -9,15 +9,15 @@ import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function useTidslinje() {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const router = useRouter()
 
     const query = useQuery<TidslinjeBehandling[], ProblemDetailsError>({
-        queryKey: queryKeys.tidslinje(personId),
+        queryKey: queryKeys.tidslinje(pseudoId),
         queryFn: async () => {
-            return await fetchAndParse(`/api/bakrommet/v2/${personId}/tidslinje`, tidslinjeBehandlingerSchema)
+            return await fetchAndParse(`/api/bakrommet/v2/${pseudoId}/tidslinje`, tidslinjeBehandlingerSchema)
         },
-        enabled: !!personId,
+        enabled: !!pseudoId,
     })
 
     useEffect(() => {

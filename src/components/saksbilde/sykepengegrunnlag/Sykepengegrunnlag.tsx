@@ -35,7 +35,7 @@ import { ArbeidsledigInntektView } from '@components/saksbilde/sykepengegrunnlag
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { notNull } from '@utils/tsUtils'
 import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
-import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { NæringsdelView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/NæringsdelView'
 

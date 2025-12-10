@@ -23,17 +23,17 @@ const ainntektResponseSchema = z.discriminatedUnion('success', [
 export type AinntektResponse = z.infer<typeof ainntektResponseSchema>
 
 export function useAinntektYrkesaktivitet(yrkesaktivitetId: string, enabled: boolean = true) {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
 
     return useQuery({
-        queryKey: queryKeys.ainntektYrkesaktivitet(personId, behandlingId, yrkesaktivitetId),
+        queryKey: queryKeys.ainntektYrkesaktivitet(pseudoId, behandlingId, yrkesaktivitetId),
         queryFn: async (): Promise<AinntektResponse> => {
-            if (!personId || !behandlingId || !yrkesaktivitetId) {
+            if (!pseudoId || !behandlingId || !yrkesaktivitetId) {
                 throw new Error('PersonId, behandlingId og yrkesaktivitetId må være tilstede')
             }
 
             const response = await fetch(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/ainntekt`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/ainntekt`,
             )
 
             if (!response.ok) {
@@ -43,6 +43,6 @@ export function useAinntektYrkesaktivitet(yrkesaktivitetId: string, enabled: boo
             const data = await response.json()
             return ainntektResponseSchema.parse(data)
         },
-        enabled: enabled && !!personId && !!behandlingId && !!yrkesaktivitetId,
+        enabled: enabled && !!pseudoId && !!behandlingId && !!yrkesaktivitetId,
     })
 }

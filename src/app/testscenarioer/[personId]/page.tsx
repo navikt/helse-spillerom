@@ -11,7 +11,7 @@ import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export default function TestscenarioDetaljerPage(): ReactElement {
     const router = useRouter()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const { data: scenarioer, isLoading, isError } = useScenarioer()
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function TestscenarioDetaljerPage(): ReactElement {
         )
     }
 
-    const scenario = scenarioer.find((s) => s.testperson.spilleromId === personId)
+    const scenario = scenarioer.find((s) => s.testperson.spilleromId === pseudoId)
 
     if (!scenario) {
         return (
@@ -52,7 +52,7 @@ export default function TestscenarioDetaljerPage(): ReactElement {
                 <Heading level="1" size="large" className="mb-4">
                     Scenario ikke funnet
                 </Heading>
-                <BodyShort>Fant ikke scenario for personId: {personId}</BodyShort>
+                <BodyShort>Fant ikke scenario for pseudoId: {pseudoId}</BodyShort>
             </section>
         )
     }

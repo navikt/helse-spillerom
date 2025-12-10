@@ -13,24 +13,24 @@ import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function useYrkesaktivitetForSykepengegrunnlag() {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId som kan være undefined
     const router = useRouter()
     const { aktivSaksbehandlingsperiode } = useAktivSaksbehandlingsperiodeMedLoading()
 
     const sykepengegrunnlag = useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: queryKeys.sykepengegrunnlag(personId, aktivSaksbehandlingsperiode?.id ?? ''),
+        queryKey: queryKeys.sykepengegrunnlag(pseudoId, aktivSaksbehandlingsperiode?.id ?? ''),
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
-            if (!personId || !aktivSaksbehandlingsperiode?.id) {
+            if (!pseudoId || !aktivSaksbehandlingsperiode?.id) {
                 throw new Error('PersonId og behandlingId må være tilstede')
             }
 
             return await fetchAndParse(
-                `/api/bakrommet/v2/${personId}/behandlinger/${aktivSaksbehandlingsperiode?.id}/sykepengegrunnlag`,
+                `/api/bakrommet/v2/${pseudoId}/behandlinger/${aktivSaksbehandlingsperiode?.id}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema.nullable(),
             )
         },
-        enabled: !!personId && !!aktivSaksbehandlingsperiode?.id,
+        enabled: !!pseudoId && !!aktivSaksbehandlingsperiode?.id,
         staleTime: 5 * 60 * 1000, // 5 minutter
     })
 
@@ -45,13 +45,13 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
         : true
 
     const yrkesaktivitetFetchEnabled =
-        !!personId && harBehandlingId && sykepengegrunnlagErFerdigLastet && sykepengegrunnlagHarData
+        !!pseudoId && harBehandlingId && sykepengegrunnlagErFerdigLastet && sykepengegrunnlagHarData
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: queryKeys.yrkesaktivitet(personId, behandlingIdForYrkesaktivitet ?? ''),
+        queryKey: queryKeys.yrkesaktivitet(pseudoId, behandlingIdForYrkesaktivitet ?? ''),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingIdForYrkesaktivitet}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingIdForYrkesaktivitet}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
         enabled: yrkesaktivitetFetchEnabled,

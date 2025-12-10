@@ -17,24 +17,24 @@ type MutationProps = {
 }
 
 export function useOppdaterInntekt() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, MutationProps>({
         mutationFn: async ({ yrkesaktivitetId, inntektRequest }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/inntekt`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/inntekt`,
                 inntektRequest,
             )
         },
         onSuccess: () => {
             //hvis requesten var ainntekt, inntektsmelding eller sigrun så kan det bære at vi må hente dokumenter på nytt
             // TODO denne kan optimaliseres ved å se på hva slags inntekt som ble requestet
-            invaliderDokumenter(queryClient, personId, behandlingId)
-            invaliderYrkesaktivitet(queryClient, personId, behandlingId)
-            invaliderSykepengegrunnlag(queryClient, personId, behandlingId)
-            invaliderUtbetalingsberegning(queryClient, personId, behandlingId)
-            invaliderHistory(queryClient, personId, behandlingId)
+            invaliderDokumenter(queryClient, pseudoId, behandlingId)
+            invaliderYrkesaktivitet(queryClient, pseudoId, behandlingId)
+            invaliderSykepengegrunnlag(queryClient, pseudoId, behandlingId)
+            invaliderUtbetalingsberegning(queryClient, pseudoId, behandlingId)
+            invaliderHistory(queryClient, pseudoId, behandlingId)
         },
     })
 }

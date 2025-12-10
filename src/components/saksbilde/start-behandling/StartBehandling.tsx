@@ -72,7 +72,7 @@ type StartBehandlingFormData = z.infer<typeof startBehandlingSchema>
 
 export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const router = useRouter()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
 
     const [openSoknadModal, setOpenSoknadModal] = useState(false)
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
@@ -182,7 +182,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
             },
             {
                 onSuccess: (periode) => {
-                    router.push(`/person/${personId}/${periode.id}`)
+                    router.push(`/person/${pseudoId}/${periode.id}`)
                 },
             },
         )

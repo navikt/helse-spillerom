@@ -21,7 +21,7 @@ import {
     getDokumentId,
     getMottattDato,
     useDokumentVisningContext,
-} from '@/app/person/[personId]/dokumentVisningContext'
+} from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { getFormattedDatetimeString } from '@utils/date-format'
 import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokumenter/InntektsmeldingInnhold'
 import { SøknadsInnhold } from '@components/søknad/SøknadsInnhold'

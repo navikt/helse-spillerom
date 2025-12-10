@@ -8,7 +8,7 @@ import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function useSoknader(fom: Dayjs) {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
 
     if (!fom.isValid()) {
         throw new Error('Invalid date: fom må være en gyldig Dayjs-dato')
@@ -18,12 +18,12 @@ export function useSoknader(fom: Dayjs) {
 
     return useQuery<Søknad[], Error>({
         // Inkluder personId og fom i cache-nøkkelen
-        queryKey: queryKeys.soknader(personId, formattedFom),
+        queryKey: queryKeys.soknader(pseudoId, formattedFom),
         queryFn: () => {
-            const base = `/api/bakrommet/v1/${personId}/soknader`
+            const base = `/api/bakrommet/v1/${pseudoId}/soknader`
             const url = `${base}?fom=${encodeURIComponent(formattedFom)}`
             return fetchAndParse(url, z.array(søknadSchema))
         },
-        enabled: !!personId,
+        enabled: !!pseudoId,
     })
 }

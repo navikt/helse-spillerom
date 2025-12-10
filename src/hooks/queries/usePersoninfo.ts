@@ -9,13 +9,13 @@ import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function usePersoninfo() {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const router = useRouter()
 
     const query = useQuery<Personinfo, ProblemDetailsError>({
-        queryKey: queryKeys.personinfo(personId),
-        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${personId}/personinfo`, personinfoSchema),
-        enabled: !!personId,
+        queryKey: queryKeys.personinfo(pseudoId),
+        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${pseudoId}/personinfo`, personinfoSchema),
+        enabled: !!pseudoId,
     })
 
     useEffect(() => {

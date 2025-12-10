@@ -6,20 +6,20 @@ import { useRouteParams } from '@hooks/useRouteParams'
 import { queryKeys } from '@utils/queryKeys'
 
 export function useHentAinntektDokument828() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/dokumenter/ainntekt/hent-8-28`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/dokumenter/ainntekt/hent-8-28`,
                 dokumentSchema,
                 undefined,
             )
         },
         onSuccess: (nyttDokument: Dokument) => {
             // Oppdater dokumenter-cachen direkte uten invalidering
-            const queryKey = queryKeys.dokumenter(personId, behandlingId)
+            const queryKey = queryKeys.dokumenter(pseudoId, behandlingId)
 
             queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
                 // Legg det nye dokumentet øverst i listen
@@ -30,20 +30,20 @@ export function useHentAinntektDokument828() {
 }
 
 export function useHentAinntektDokument830() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/dokumenter/ainntekt/hent-8-30`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/dokumenter/ainntekt/hent-8-30`,
                 dokumentSchema,
                 undefined,
             )
         },
         onSuccess: (nyttDokument: Dokument) => {
             // Oppdater dokumenter-cachen direkte uten invalidering
-            const queryKey = queryKeys.dokumenter(personId, behandlingId)
+            const queryKey = queryKeys.dokumenter(pseudoId, behandlingId)
 
             queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
                 // Legg det nye dokumentet øverst i listen

@@ -192,9 +192,9 @@ const TestdataMeny = React.forwardRef<{ åpne: () => void }, Record<string, neve
         åpne: () => setOpen(true),
     }))
 
-    const handleTestpersonClick = (personId: string) => {
+    const handleTestpersonClick = (pseudoId: string) => {
         setOpen(false)
-        router.push(`/person/${personId}`)
+        router.push(`/person/${pseudoId}`)
     }
 
     const handleTestscenarioerClick = (e: React.MouseEvent) => {

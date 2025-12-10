@@ -14,7 +14,7 @@ import {
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
-import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { Maybe, notNull } from '@utils/tsUtils'
 
 export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {

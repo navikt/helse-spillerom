@@ -11,14 +11,14 @@ interface NavnOgAlderProps {
 
 export function NavnOgAlder({ navn, alder }: NavnOgAlderProps): ReactElement {
     const router = useRouter()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
 
     return (
         <HStack gap="1" align="center">
             <BodyShort
                 weight="semibold"
                 className="cursor-pointer hover:underline"
-                onClick={() => router.push(`/person/${personId}`)}
+                onClick={() => router.push(`/person/${pseudoId}`)}
             >
                 {navn} ({alder} år)
             </BodyShort>

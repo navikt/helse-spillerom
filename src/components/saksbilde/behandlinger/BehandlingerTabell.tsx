@@ -12,7 +12,7 @@ import { usePersonRouteParams } from '@hooks/useRouteParams'
 export function BehandlingerTabell(): ReactElement {
     const router = useRouter()
     const { data: perioder, isLoading, isError } = useBehandlinger()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
 
     if (isLoading) return <BodyShort>Laster behandlinger...</BodyShort>
     if (isError || !perioder) return <BodyShort>Kunne ikke laste behandlinger</BodyShort>
@@ -40,7 +40,7 @@ export function BehandlingerTabell(): ReactElement {
                                 href="#"
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    router.push(`/person/${personId}/${periode.id}`)
+                                    router.push(`/person/${pseudoId}/${periode.id}`)
                                 }}
                             >
                                 {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}

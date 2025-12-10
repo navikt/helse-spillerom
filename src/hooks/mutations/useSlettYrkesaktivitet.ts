@@ -6,17 +6,17 @@ import { invaliderYrkesaktivitetRelaterteQueries } from '@utils/queryInvalidatio
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSlettYrkesaktivitet() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, ProblemDetailsError, { yrkesaktivitetId: string }>({
         mutationFn: async ({ yrkesaktivitetId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}`,
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, pseudoId, behandlingId)
         },
     })
 }

@@ -7,21 +7,21 @@ import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidat
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSlettTilkommenInntekt() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
 
     return useMutation<void, ProblemDetailsError, { tilkommenInntektId: string }>({
         mutationFn: async ({ tilkommenInntektId }) => {
             await deleteNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/tilkommeninntekt/${tilkommenInntektId}`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/tilkommeninntekt/${tilkommenInntektId}`,
             )
         },
         onSuccess: () => {
-            invaliderTilkommenInntektRelaterteQueries(queryClient, personId, behandlingId)
+            invaliderTilkommenInntektRelaterteQueries(queryClient, pseudoId, behandlingId)
 
             // Naviger tilbake til hovedsiden for saksbehandlingsperioden
-            router.push(`/person/${personId}/${behandlingId}`)
+            router.push(`/person/${pseudoId}/${behandlingId}`)
         },
     })
 }

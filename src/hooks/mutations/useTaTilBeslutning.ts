@@ -11,18 +11,18 @@ interface MutationProps {
 }
 
 export function useTaTilBeslutning() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ behandlingId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/tatilbeslutning`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/tatilbeslutning`,
                 behandlingSchema,
                 {},
             ),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, pseudoId, behandlingId)
         },
     })
 }

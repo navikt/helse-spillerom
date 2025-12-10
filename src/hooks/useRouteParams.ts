@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation'
 
 export interface PersonRouteParams {
-    personId: string
+    pseudoId: string
 }
 
 export interface PersonBehandlingRouteParams extends PersonRouteParams {
@@ -19,7 +19,7 @@ export interface PersonSoknadRouteParams extends PersonRouteParams {
 export function useRouteParams(): PersonBehandlingRouteParams {
     const params = useParams()
     return {
-        personId: params.personId as string,
+        pseudoId: params.pseudoId as string,
         behandlingId: params.behandlingId as string,
     }
 }
@@ -27,26 +27,23 @@ export function useRouteParams(): PersonBehandlingRouteParams {
 export function usePersonRouteParams(): PersonRouteParams {
     const params = useParams()
     return {
-        personId: params.personId as string,
+        pseudoId: params.pseudoId as string,
     }
 }
 
 export function usePersonBehandlingTilkommenInntektRouteParams(): PersonBehandlingTilkommenInntektRouteParams {
     const params = useParams()
     return {
-        personId: params.personId as string,
+        pseudoId: params.pseudoId as string,
         behandlingId: params.behandlingId as string,
         tilkommenId: params.tilkommenId as string,
     }
 }
 
-/**
- * Type-safe hook for routes med personId og soknadId
- */
 export function usePersonSoknadRouteParams(): PersonSoknadRouteParams {
     const params = useParams()
     return {
-        personId: params.personId as string,
+        pseudoId: params.pseudoId as string,
         soknadId: params.soknadId as string,
     }
 }

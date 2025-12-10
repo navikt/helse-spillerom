@@ -7,21 +7,21 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSykepengegrunnlag() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
 
     return useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: queryKeys.sykepengegrunnlag(personId, behandlingId),
+        queryKey: queryKeys.sykepengegrunnlag(pseudoId, behandlingId),
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
-            if (!personId || !behandlingId) {
+            if (!pseudoId || !behandlingId) {
                 throw new Error('PersonId og behandlingId må være tilstede')
             }
 
             return await fetchAndParse(
-                `/api/bakrommet/v2/${personId}/behandlinger/${behandlingId}/sykepengegrunnlag`,
+                `/api/bakrommet/v2/${pseudoId}/behandlinger/${behandlingId}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema.nullable(),
             )
         },
-        enabled: !!personId && !!behandlingId,
+        enabled: !!pseudoId && !!behandlingId,
         staleTime: 5 * 60 * 1000, // 5 minutter
     })
 }

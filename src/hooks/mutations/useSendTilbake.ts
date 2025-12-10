@@ -12,16 +12,16 @@ interface MutationProps {
 }
 
 export function useSendTilbake() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ behandlingId, kommentar }) =>
-            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/sendtilbake`, behandlingSchema, {
+            postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/sendtilbake`, behandlingSchema, {
                 kommentar,
             }),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, pseudoId, behandlingId)
         },
     })
 }

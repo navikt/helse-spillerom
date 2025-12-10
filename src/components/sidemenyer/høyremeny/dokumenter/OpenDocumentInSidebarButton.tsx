@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Button } from '@navikt/ds-react'
 
-import { getDokumentId, useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { getDokumentId, useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { OpenInSidePanelIcon } from '@components/ikoner/OpenInSidePanelIcon'
 import { CloseSidePanelIcon } from '@components/ikoner/CloseSidePanelIcon'

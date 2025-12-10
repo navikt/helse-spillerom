@@ -5,7 +5,7 @@ import { PersonHeader } from '@components/personheader/PersonHeader'
 import { Tidslinje } from '@components/tidslinje/Tidslinje'
 import { Venstremeny } from '@components/sidemenyer/venstremeny/Venstremeny'
 import { Høyremeny } from '@components/sidemenyer/høyremeny/Høyremeny'
-import { DokumentVisningProvider } from '@/app/person/[personId]/dokumentVisningContext'
+import { DokumentVisningProvider } from '@/app/person/[pseudoId]/dokumentVisningContext'
 
 export default async function PersonLayout({ children }: PropsWithChildren): Promise<ReactElement> {
     return (

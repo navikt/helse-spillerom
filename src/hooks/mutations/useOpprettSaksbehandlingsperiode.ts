@@ -22,18 +22,18 @@ interface MutationProps {
 }
 
 export function useOpprettSaksbehandlingsperiode() {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ request }) =>
-            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger`, behandlingSchema, request),
+            postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger`, behandlingSchema, request),
         onSuccess: async (periode, r) => {
             // Invalidate all saksbehandlingsperioder caches
             await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await refetchQuery(queryClient, queryKeys.behandlinger(personId))
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, periode.id)
-            await invaliderTidslinje(queryClient, personId)
+            await refetchQuery(queryClient, queryKeys.behandlinger(pseudoId))
+            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, periode.id)
+            await invaliderTidslinje(queryClient, pseudoId)
             r.callback(periode)
         },
     })

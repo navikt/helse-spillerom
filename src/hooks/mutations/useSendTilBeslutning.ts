@@ -16,18 +16,18 @@ interface UseSendTilBeslutningProps {
 }
 
 export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = {}) {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ behandlingId, individuellBegrunnelse }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/sendtilbeslutning`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/sendtilbeslutning`,
                 behandlingSchema,
                 { individuellBegrunnelse },
             ),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, pseudoId, behandlingId)
 
             // Kjør callback etter at cache invalidation er ferdig
             onSuccess?.()

@@ -16,21 +16,21 @@ interface UseOppdaterSkjæringstidspunktProps {
 }
 
 export function useOppdaterSkjæringstidspunkt({ onSuccess }: UseOppdaterSkjæringstidspunktProps = {}) {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, SkjæringstidspunktSchema>({
         mutationFn: async ({ saksbehandlingsperiodeId: behandlingId, skjæringstidspunkt }) =>
             putAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/skjaeringstidspunkt`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/skjaeringstidspunkt`,
                 behandlingSchema,
                 { skjaeringstidspunkt: skjæringstidspunkt } as OppdaterSkjæringstidspunkt,
             ),
         onSuccess: async () => {
             // Invalidate all saksbehandlingsperioder caches
             await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await invaliderSaksbehandlingsperioder(queryClient, personId)
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, behandlingId)
+            await invaliderSaksbehandlingsperioder(queryClient, pseudoId)
+            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId)
 
             // Kjør callback etter at cache invalidation er ferdig
             onSuccess?.()

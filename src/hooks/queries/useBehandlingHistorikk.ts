@@ -8,15 +8,15 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useBehandlingHistorikk() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
 
     return useQuery<BehandlingEndring[], ProblemDetailsError>({
-        queryKey: queryKeys.behandlingHistorikk(personId, behandlingId),
+        queryKey: queryKeys.behandlingHistorikk(pseudoId, behandlingId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/historikk`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/historikk`,
                 z.array(behandlingEndringSchema),
             ),
-        enabled: Boolean(personId && behandlingId),
+        enabled: Boolean(pseudoId && behandlingId),
     })
 }

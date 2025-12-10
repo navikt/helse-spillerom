@@ -19,7 +19,7 @@ import { InntektsmeldingInnhold } from '@components/sidemenyer/høyremeny/dokume
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { DokumentTag } from '@components/ikoner/kilde/kildeTags'
 import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
-import { DokumentSomKanVisesISidebar } from '@/app/person/[personId]/dokumentVisningContext'
+import { DokumentSomKanVisesISidebar } from '@/app/person/[pseudoId]/dokumentVisningContext'
 
 interface DokumentProps {
     dokument: _Dokument

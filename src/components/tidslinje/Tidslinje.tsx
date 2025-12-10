@@ -25,7 +25,7 @@ import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
 
 export function Tidslinje(): ReactElement {
     const router = useRouter()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId og tilkommenId som kan være undefined
 
     const { data, isLoading, isError, refetch } = useTidslinje()
@@ -49,7 +49,7 @@ export function Tidslinje(): ReactElement {
                                 skjæringstidspunkt={
                                     periode.skjæringstidspunkt ? dayjs(periode.skjæringstidspunkt) : undefined
                                 }
-                                onSelectPeriod={() => router.push(`/person/${personId}/${periode.behandlingId}`)}
+                                onSelectPeriod={() => router.push(`/person/${pseudoId}/${periode.behandlingId}`)}
                                 activePeriod={params.behandlingId === periode.behandlingId && !params.tilkommenId}
                                 icon={statusTilIkon[periode.status]}
                                 variant={periode.ghost ? 'GHOST' : periode.status}
@@ -68,7 +68,7 @@ export function Tidslinje(): ReactElement {
                                 endDate={dayjs(periode.tom)}
                                 onSelectPeriod={() =>
                                     router.push(
-                                        `/person/${personId}/${periode.behandlingId}/tilkommen-inntekt/${periode.tilkommenInntektId}`,
+                                        `/person/${pseudoId}/${periode.behandlingId}/tilkommen-inntekt/${periode.tilkommenInntektId}`,
                                     )
                                 }
                                 activePeriod={
@@ -128,7 +128,7 @@ function TilkommenInntektKnapp(): ReactElement {
     const kanSaksbehandles = useKanSaksbehandles()
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const router = useRouter()
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId som kan være undefined
 
     if (!kanSaksbehandles || !aktivSaksbehandlingsperiode) {
@@ -136,8 +136,8 @@ function TilkommenInntektKnapp(): ReactElement {
     }
 
     const handleLeggTilTilkommenInntekt = () => {
-        if (personId && params.behandlingId) {
-            router.push(`/person/${personId}/${params.behandlingId}/tilkommen-inntekt/opprett`)
+        if (pseudoId && params.behandlingId) {
+            router.push(`/person/${pseudoId}/${params.behandlingId}/tilkommen-inntekt/opprett`)
         }
     }
 

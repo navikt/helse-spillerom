@@ -7,17 +7,17 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useTilkommenInntekt(behandlingId?: string) {
-    const { personId, behandlingId: behandlingIdParam } = useRouteParams()
+    const { pseudoId, behandlingId: behandlingIdParam } = useRouteParams()
     const behandlingIdFaktisk = behandlingId ?? behandlingIdParam
 
     return useQuery<TilkommenInntektResponse[], Error>({
-        queryKey: queryKeys.tilkommenInntekt(personId, behandlingIdFaktisk),
+        queryKey: queryKeys.tilkommenInntekt(pseudoId, behandlingIdFaktisk),
         queryFn: async () => {
             return await fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingIdFaktisk}/tilkommeninntekt`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingIdFaktisk}/tilkommeninntekt`,
                 z.array(tilkommenInntektResponseSchema),
             )
         },
-        enabled: Boolean(personId && behandlingIdFaktisk),
+        enabled: Boolean(pseudoId && behandlingIdFaktisk),
     })
 }

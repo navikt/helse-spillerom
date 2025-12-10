@@ -18,7 +18,7 @@ import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/Ref
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
-import { useDokumentVisningContext } from '@/app/person/[personId]/dokumentVisningContext'
+import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/dokumenter/OpenDocumentInSidebarButton'
 import { FetchError } from '@components/saksbilde/FetchError'
 

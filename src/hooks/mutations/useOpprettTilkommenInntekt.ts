@@ -11,23 +11,23 @@ import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidat
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useOpprettTilkommenInntekt() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
 
     return useMutation<TilkommenInntektResponse, Error, OpprettTilkommenInntektRequest>({
         mutationFn: async (request) => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/tilkommeninntekt`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/tilkommeninntekt`,
                 tilkommenInntektResponseSchema,
                 request,
             )
         },
         onSuccess: (data) => {
-            invaliderTilkommenInntektRelaterteQueries(queryClient, personId, behandlingId)
+            invaliderTilkommenInntektRelaterteQueries(queryClient, pseudoId, behandlingId)
 
             // Naviger til visningssiden
-            router.push(`/person/${personId}/${behandlingId}/tilkommen-inntekt/${data.id}`)
+            router.push(`/person/${pseudoId}/${behandlingId}/tilkommen-inntekt/${data.id}`)
         },
     })
 }

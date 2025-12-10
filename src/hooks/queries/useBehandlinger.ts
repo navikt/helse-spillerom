@@ -17,13 +17,13 @@ export function useAlleBehandlinger() {
 }
 
 export function useBehandlinger() {
-    const { personId } = usePersonRouteParams()
+    const { pseudoId } = usePersonRouteParams()
     const router = useRouter()
 
     const query = useQuery<Behandling[], ProblemDetailsError>({
-        queryKey: queryKeys.behandlinger(personId),
-        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${personId}/behandlinger`, z.array(behandlingSchema)),
-        enabled: !!personId,
+        queryKey: queryKeys.behandlinger(pseudoId),
+        queryFn: () => fetchAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger`, z.array(behandlingSchema)),
+        enabled: !!pseudoId,
     })
 
     useEffect(() => {

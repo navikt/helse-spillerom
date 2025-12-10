@@ -6,20 +6,20 @@ import { useRouteParams } from '@hooks/useRouteParams'
 import { queryKeys } from '@utils/queryKeys'
 
 export function useHentPensjonsgivendeInntektDokument() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Dokument, Error>({
         mutationFn: async () => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/dokumenter/pensjonsgivendeinntekt/hent`,
+                `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/dokumenter/pensjonsgivendeinntekt/hent`,
                 dokumentSchema,
                 undefined,
             )
         },
         onSuccess: (nyttDokument: Dokument) => {
             // Oppdater dokumenter-cachen direkte uten invalidering
-            const queryKey = queryKeys.dokumenter(personId, behandlingId)
+            const queryKey = queryKeys.dokumenter(pseudoId, behandlingId)
 
             queryClient.setQueryData<Dokument[]>(queryKey, (existingDokumenter = []) => {
                 // Legg det nye dokumentet øverst i listen

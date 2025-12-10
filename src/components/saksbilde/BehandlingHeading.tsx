@@ -12,7 +12,7 @@ import { useRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingHeading({ className }: { className?: string }) {
     const router = useRouter()
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
     const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useBehandlinger()
@@ -25,13 +25,13 @@ export function BehandlingHeading({ className }: { className?: string }) {
     useEffect(() => {
         if (
             saksbehandlingsperioderLoaded &&
-            personId &&
+            pseudoId &&
             saksbehandlingsperioder &&
             saksbehandlingsperioder.length === 0
         ) {
-            router.replace(`/person/${personId}`)
+            router.replace(`/person/${pseudoId}`)
         }
-    }, [personId, saksbehandlingsperioder, saksbehandlingsperioderLoaded, router])
+    }, [pseudoId, saksbehandlingsperioder, saksbehandlingsperioderLoaded, router])
 
     useEffect(() => {
         if (!aktivPeriode || !behandlingId) return

@@ -11,14 +11,14 @@ interface MutationProps {
 }
 
 export function useGodkjenn() {
-    const { personId, behandlingId } = useRouteParams()
+    const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ behandlingId }) =>
-            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/godkjenn`, behandlingSchema, {}),
+            postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/godkjenn`, behandlingSchema, {}),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, pseudoId, behandlingId)
         },
     })
 }
