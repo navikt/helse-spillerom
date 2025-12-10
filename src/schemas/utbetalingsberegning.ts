@@ -1,10 +1,5 @@
 import { z } from 'zod/v4'
 
-import { sykepengegrunnlagBaseUnionSchema } from '@schemas/sykepengegrunnlag'
-
-import { yrkesaktivitetSchema } from './yrkesaktivitet'
-
-
 export const prosentDtoSchema = z.object({
     prosentDesimal: z.number(),
 })

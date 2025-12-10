@@ -1,8 +1,8 @@
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
-import { usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams } from '@hooks/useRouteParams'
+import { usePersonBehandlingTilkommenInntektRouteParams } from '@hooks/useRouteParams'
 
 export function useTilkommenInntektByParamId() {
-    const { behandlingId, tilkommenId } = usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams()
+    const { behandlingId, tilkommenId } = usePersonBehandlingTilkommenInntektRouteParams()
 
     return useTilkommenInntektById(behandlingId, tilkommenId)
 }

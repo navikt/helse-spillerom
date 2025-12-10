@@ -1,17 +1,14 @@
 import { useParams } from 'next/navigation'
 
-/**
- * Type-safe route parameters for person routes
- */
 export interface PersonRouteParams {
     personId: string
 }
 
-export interface PersonSaksbehandlingsperiodeRouteParams extends PersonRouteParams {
+export interface PersonBehandlingRouteParams extends PersonRouteParams {
     behandlingId: string
 }
 
-export interface PersonSaksbehandlingsperiodeTilkommenInntektRouteParams extends PersonSaksbehandlingsperiodeRouteParams {
+export interface PersonBehandlingTilkommenInntektRouteParams extends PersonBehandlingRouteParams {
     tilkommenId: string
 }
 
@@ -19,18 +16,7 @@ export interface PersonSoknadRouteParams extends PersonRouteParams {
     soknadId: string
 }
 
-/**
- * Type-safe wrapper for useParams() som gir typed output
- *
- * Bruk denne i stedet for useParams() direkte for å få type-sikkerhet.
- *
- * @example
- * ```ts
- * const { personId, behandlingId } = useRouteParams()
- * // personId og behandlingId er nå typet som string, ikke string | string[] | undefined
- * ```
- */
-export function useRouteParams(): PersonSaksbehandlingsperiodeRouteParams {
+export function useRouteParams(): PersonBehandlingRouteParams {
     const params = useParams()
     return {
         personId: params.personId as string,
@@ -38,9 +24,6 @@ export function useRouteParams(): PersonSaksbehandlingsperiodeRouteParams {
     }
 }
 
-/**
- * Type-safe hook for routes som kun har personId
- */
 export function usePersonRouteParams(): PersonRouteParams {
     const params = useParams()
     return {
@@ -48,21 +31,7 @@ export function usePersonRouteParams(): PersonRouteParams {
     }
 }
 
-/**
- * Type-safe hook for routes med personId og behandlingId
- */
-export function usePersonSaksbehandlingsperiodeRouteParams(): PersonSaksbehandlingsperiodeRouteParams {
-    const params = useParams()
-    return {
-        personId: params.personId as string,
-        behandlingId: params.behandlingId as string,
-    }
-}
-
-/**
- * Type-safe hook for routes med personId, behandlingId og tilkommenId
- */
-export function usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams(): PersonSaksbehandlingsperiodeTilkommenInntektRouteParams {
+export function usePersonBehandlingTilkommenInntektRouteParams(): PersonBehandlingTilkommenInntektRouteParams {
     const params = useParams()
     return {
         personId: params.personId as string,
