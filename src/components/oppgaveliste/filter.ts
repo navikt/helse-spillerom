@@ -1,4 +1,4 @@
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Behandling } from '@schemas/behandling'
 
 export enum FilterStatus {
     PLUS = 'PLUS',
@@ -25,12 +25,12 @@ export const filterList: Filter[] = [
     },
 ]
 
-const predicates: Record<Filter['key'], (p: Saksbehandlingsperiode) => boolean> = {
+const predicates: Record<Filter['key'], (p: Behandling) => boolean> = {
     UNDER_BEHANDLING: (p) => p.status === 'UNDER_BEHANDLING',
     BESLUTTER: (p) => p.status === 'TIL_BESLUTNING' || p.status === 'UNDER_BESLUTNING',
 }
 
-export function filtrer(perioder: Saksbehandlingsperiode[], filters: Filter[]): Saksbehandlingsperiode[] {
+export function filtrer(perioder: Behandling[], filters: Filter[]): Behandling[] {
     return filters.reduce((acc, f) => {
         if (f.status === FilterStatus.OFF) return acc
         const pred = predicates[f.key]

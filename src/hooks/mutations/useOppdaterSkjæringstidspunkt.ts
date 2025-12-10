@@ -2,11 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { putAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import {
-    OppdaterSkjæringstidspunkt,
-    Saksbehandlingsperiode,
-    saksbehandlingsperiodeSchema,
-} from '@/schemas/saksbehandlingsperiode'
+import { OppdaterSkjæringstidspunkt, Behandling, behandlingSchema } from '@schemas/behandling'
 import { SkjæringstidspunktSchema } from '@schemas/skjæringstidspunkt'
 import {
     invaliderAlleSaksbehandlingsperioder,
@@ -23,11 +19,11 @@ export function useOppdaterSkjæringstidspunkt({ onSuccess }: UseOppdaterSkjæri
     const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
-    return useMutation<Saksbehandlingsperiode, ProblemDetailsError, SkjæringstidspunktSchema>({
+    return useMutation<Behandling, ProblemDetailsError, SkjæringstidspunktSchema>({
         mutationFn: async ({ saksbehandlingsperiodeId: behandlingId, skjæringstidspunkt }) =>
             putAndParse(
                 `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/skjaeringstidspunkt`,
-                saksbehandlingsperiodeSchema,
+                behandlingSchema,
                 { skjaeringstidspunkt: skjæringstidspunkt } as OppdaterSkjæringstidspunkt,
             ),
         onSuccess: async () => {

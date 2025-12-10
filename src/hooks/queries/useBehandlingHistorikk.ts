@@ -3,19 +3,19 @@ import { z } from 'zod/v4'
 
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import { SaksbehandlingsperiodeEndring, saksbehandlingsperiodeEndringSchema } from '@/schemas/saksbehandlingsperiode'
+import { BehandlingEndring, behandlingEndringSchema } from '@schemas/behandling'
 import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
-export function useSaksbehandlingsperiodeHistorikk() {
+export function useBehandlingHistorikk() {
     const { personId, behandlingId } = useRouteParams()
 
-    return useQuery<SaksbehandlingsperiodeEndring[], ProblemDetailsError>({
-        queryKey: queryKeys.saksbehandlingsperiodeHistorikk(personId, behandlingId),
+    return useQuery<BehandlingEndring[], ProblemDetailsError>({
+        queryKey: queryKeys.behandlingHistorikk(personId, behandlingId),
         queryFn: () =>
             fetchAndParse(
                 `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/historikk`,
-                z.array(saksbehandlingsperiodeEndringSchema),
+                z.array(behandlingEndringSchema),
             ),
         enabled: Boolean(personId && behandlingId),
     })

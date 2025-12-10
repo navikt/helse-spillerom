@@ -14,7 +14,7 @@ import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePe
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
-import { SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { BehandlingStatus } from '@schemas/behandling'
 import { statusTilTekst } from '@components/statustag/StatusTag'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
@@ -203,7 +203,7 @@ function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ headin
     )
 }
 
-export const statusTilIkon: Record<SaksbehandlingsperiodeStatus, ReactElement> = {
+export const statusTilIkon: Record<BehandlingStatus, ReactElement> = {
     UNDER_BEHANDLING: <PencilFillIcon />,
     TIL_BESLUTNING: <PencilFillIcon />,
     UNDER_BESLUTNING: <PencilFillIcon />,

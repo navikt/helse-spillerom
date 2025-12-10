@@ -6,10 +6,10 @@ import { ExpandIcon, ShrinkIcon } from '@navikt/aksel-icons'
 import { ModalBody, ModalHeader } from '@navikt/ds-react/Modal'
 
 import { Maybe } from '@utils/tsUtils'
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Behandling } from '@schemas/behandling'
 
 interface IndividuellBegrunnelseProps {
-    aktivSaksbehandlingsperiode: Saksbehandlingsperiode
+    aktivSaksbehandlingsperiode: Behandling
 }
 
 export function IndividuellBegrunnelse({
@@ -79,7 +79,7 @@ export function IndividuellBegrunnelse({
     )
 }
 
-function getBegrunnelseFromStorage(periode: Saksbehandlingsperiode) {
+function getBegrunnelseFromStorage(periode: Behandling) {
     const storageValue = sessionStorage.getItem(`${periode.id}-individuell-begrunnelse`)
     return periode.individuellBegrunnelse ?? (storageValue ? JSON.parse(storageValue) : '')
 }

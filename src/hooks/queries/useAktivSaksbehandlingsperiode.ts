@@ -1,10 +1,10 @@
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Behandling } from '@schemas/behandling'
 import { useRouteParams } from '@hooks/useRouteParams'
 
-import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
+import { useBehandlinger } from './useBehandlinger'
 
 function findAktivSaksbehandlingsperiode(
-    saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
+    saksbehandlingsperioder: Behandling[] | undefined,
     behandlingId: string | undefined,
 ) {
     if (!saksbehandlingsperioder || !behandlingId) return undefined
@@ -13,13 +13,13 @@ function findAktivSaksbehandlingsperiode(
 
 export function useAktivSaksbehandlingsperiode() {
     const { behandlingId } = useRouteParams()
-    const { data } = useSaksbehandlingsperioder()
+    const { data } = useBehandlinger()
     return findAktivSaksbehandlingsperiode(data, behandlingId)
 }
 
 export function useAktivSaksbehandlingsperiodeMedLoading() {
     const { behandlingId } = useRouteParams()
-    const { data, isLoading } = useSaksbehandlingsperioder()
+    const { data, isLoading } = useBehandlinger()
     return {
         aktivSaksbehandlingsperiode: findAktivSaksbehandlingsperiode(data, behandlingId),
         isLoading,

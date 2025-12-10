@@ -1,6 +1,6 @@
 import { BriefcaseIcon, PencilLineIcon, SackKronerIcon } from '@navikt/aksel-icons'
 
-import { SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { BehandlingStatus } from '@schemas/behandling'
 import { TidslinjeBehandling } from '@schemas/tidslinje'
 
 type TidslinjeElement = {
@@ -8,7 +8,7 @@ type TidslinjeElement = {
     tom: string
     skjæringstidspunkt?: string
     behandlingId: string
-    status: SaksbehandlingsperiodeStatus
+    status: BehandlingStatus
     ghost?: boolean
 }
 

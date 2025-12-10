@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
+import { Behandling, behandlingSchema } from '@schemas/behandling'
 import {
     invaliderAlleSaksbehandlingsperioder,
     invaliderSaksbehandlingsperiodeHistorikk,
@@ -18,20 +18,20 @@ interface MutationProps {
         tom: string
         søknader: string[] // Array of søknad IDs
     }
-    callback: (periode: Saksbehandlingsperiode) => void
+    callback: (periode: Behandling) => void
 }
 
 export function useOpprettSaksbehandlingsperiode() {
     const { personId } = usePersonRouteParams()
     const queryClient = useQueryClient()
 
-    return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
+    return useMutation<Behandling, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ request }) =>
-            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger`, saksbehandlingsperiodeSchema, request),
+            postAndParse(`/api/bakrommet/v1/${personId}/behandlinger`, behandlingSchema, request),
         onSuccess: async (periode, r) => {
             // Invalidate all saksbehandlingsperioder caches
             await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await refetchQuery(queryClient, queryKeys.saksbehandlingsperioder(personId))
+            await refetchQuery(queryClient, queryKeys.behandlinger(personId))
             await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, periode.id)
             await invaliderTidslinje(queryClient, personId)
             r.callback(periode)

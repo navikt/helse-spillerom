@@ -1,6 +1,6 @@
 import { z } from 'zod/v4'
 
-import { saksbehandlingsperiodeStatusSchema } from './saksbehandlingsperiode'
+import { behandlingStatusSchema } from './behandling'
 
 const yrkesaktivitetTypeSchema = z.enum([
     'ARBEIDSTAKER',
@@ -31,7 +31,7 @@ const tidslinjeTilkommenInntektSchema = z.object({
 
 export const tidslinjeBehandlingSchema = z.object({
     id: z.string(),
-    status: saksbehandlingsperiodeStatusSchema,
+    status: behandlingStatusSchema,
     fom: z.iso.date(),
     tom: z.iso.date(),
     skjæringstidspunkt: z.iso.date().optional().nullable(),

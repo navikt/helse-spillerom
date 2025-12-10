@@ -2,10 +2,10 @@ import { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, HStack, Skeleton, VStack } from '@navikt/ds-react'
 
 import { getFormattedDatetimeString } from '@utils/date-format'
-import { SaksbehandlingsperiodeEndring } from '@/schemas/saksbehandlingsperiode'
+import { BehandlingEndring } from '@schemas/behandling'
 
 interface HistorikkinnslagProps {
-    historikkinnslag: SaksbehandlingsperiodeEndring
+    historikkinnslag: BehandlingEndring
 }
 
 export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): ReactElement {

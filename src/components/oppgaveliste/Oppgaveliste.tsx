@@ -8,8 +8,8 @@ import { FilterIcon, MinusIcon, PlusIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
-import { useAlleSaksbehandlingsperioder } from '@/hooks/queries/useSaksbehandlingsperioder'
-import { Saksbehandlingsperiode } from '@/schemas/saksbehandlingsperiode'
+import { useAlleBehandlinger } from '@hooks/queries/useBehandlinger'
+import { Behandling } from '@schemas/behandling'
 import { getFormattedDateString, getFormattedDatetimeString } from '@/utils/date-format'
 import { getTestSafeTransition } from '@utils/tsUtils'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
@@ -27,7 +27,7 @@ export function Oppgaveliste(): ReactElement {
     const [filters, setFilters] = useState<Filter[]>(filterList)
     const [showFilters, setShowFilters] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<SakerTabs>('ALLE')
-    const { data: saksbehandlingsperioder = [], isLoading, error, refetch } = useAlleSaksbehandlingsperioder()
+    const { data: saksbehandlingsperioder = [], isLoading, error, refetch } = useAlleBehandlinger()
     const { data: aktivBruker } = useBrukerinfo()
 
     const { mine, behandlet, alle } = splitPerioderForTabs(saksbehandlingsperioder, aktivBruker)
@@ -107,8 +107,8 @@ export function Oppgaveliste(): ReactElement {
     )
 }
 
-function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[], aktivBruker?: Bruker) {
-    return (saksbehandlingsperioder as Saksbehandlingsperiode[]).reduce(
+function splitPerioderForTabs(saksbehandlingsperioder: Behandling[], aktivBruker?: Bruker) {
+    return (saksbehandlingsperioder as Behandling[]).reduce(
         (acc, periode) => {
             if (
                 (periode.status === 'TIL_BESLUTNING' && periode.beslutterNavIdent === aktivBruker?.navIdent) ||
@@ -123,9 +123,9 @@ function splitPerioderForTabs(saksbehandlingsperioder: Saksbehandlingsperiode[],
             return acc
         },
         {
-            mine: [] as Saksbehandlingsperiode[],
-            behandlet: [] as Saksbehandlingsperiode[],
-            alle: [] as Saksbehandlingsperiode[],
+            mine: [] as Behandling[],
+            behandlet: [] as Behandling[],
+            alle: [] as Behandling[],
         },
     )
 }
@@ -165,11 +165,11 @@ function FilterRow({
     )
 }
 
-function OppgaveTabell({ perioder }: { perioder: Saksbehandlingsperiode[] }): ReactElement {
+function OppgaveTabell({ perioder }: { perioder: Behandling[] }): ReactElement {
     const router = useRouter()
     const personsøk = usePersonsøk()
 
-    const handleRadKlikk = (periode: Saksbehandlingsperiode) => {
+    const handleRadKlikk = (periode: Behandling) => {
         personsøk.mutate({
             request: { ident: periode.naturligIdent },
             callback: (dd) => {

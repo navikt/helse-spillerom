@@ -2,10 +2,10 @@ import { ReactElement } from 'react'
 import { BodyShort, VStack } from '@navikt/ds-react'
 
 import { Historikkinnslag, HistorikkinnslagSkeleton } from '@components/sidemenyer/høyremeny/historikk/Historikkinnslag'
-import { useSaksbehandlingsperiodeHistorikk } from '@/hooks/queries/useSaksbehandlingsperiodeHistorikk'
+import { useBehandlingHistorikk } from '@hooks/queries/useBehandlingHistorikk'
 
 export function Historikk(): ReactElement {
-    const { data: historikk, isLoading, isError } = useSaksbehandlingsperiodeHistorikk()
+    const { data: historikk, isLoading, isError } = useBehandlingHistorikk()
 
     if (isLoading) return <HistorikkSkeleton />
     if (isError || !historikk) return <></> // vis noe fornuftig

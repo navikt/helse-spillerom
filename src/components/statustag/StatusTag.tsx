@@ -1,9 +1,9 @@
 import { Tag } from '@navikt/ds-react'
 import { ReactElement } from 'react'
 
-import { Saksbehandlingsperiode, SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { Behandling, BehandlingStatus } from '@schemas/behandling'
 
-export const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
+export const statusTilTekst: Record<BehandlingStatus, string> = {
     UNDER_BEHANDLING: 'Under behandling',
     TIL_BESLUTNING: 'Til beslutning',
     UNDER_BESLUTNING: 'Under beslutning',
@@ -11,7 +11,7 @@ export const statusTilTekst: Record<SaksbehandlingsperiodeStatus, string> = {
     REVURDERT: 'Revurdert',
 }
 
-const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'warning' | 'success' | 'error' => {
+const statusTilTagVariant = (status: BehandlingStatus): 'info' | 'warning' | 'success' | 'error' => {
     switch (status) {
         case 'UNDER_BEHANDLING':
             return 'info'
@@ -28,7 +28,7 @@ const statusTilTagVariant = (status: SaksbehandlingsperiodeStatus): 'info' | 'wa
     }
 }
 
-function getStatusTekstOgVariant(status: SaksbehandlingsperiodeStatus): {
+function getStatusTekstOgVariant(status: BehandlingStatus): {
     tekst: string
     variant: 'info' | 'success' | 'warning' | 'error' | 'neutral'
 } {
@@ -37,13 +37,7 @@ function getStatusTekstOgVariant(status: SaksbehandlingsperiodeStatus): {
     return { tekst, variant }
 }
 
-export function StatusTag({
-    periode,
-    size,
-}: {
-    periode?: Saksbehandlingsperiode
-    size: 'small' | 'medium'
-}): ReactElement | null {
+export function StatusTag({ periode, size }: { periode?: Behandling; size: 'small' | 'medium' }): ReactElement | null {
     if (!periode) {
         return null
     }

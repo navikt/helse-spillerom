@@ -13,14 +13,14 @@ import { queryKeys } from './queryKeys'
  * Invaliderer alle saksbehandlingsperioder queries
  */
 export function invaliderAlleSaksbehandlingsperioder(queryClient: QueryClient): Promise<void> {
-    return queryClient.invalidateQueries({ queryKey: queryKeys.alleSaksbehandlingsperioder() })
+    return queryClient.invalidateQueries({ queryKey: queryKeys.alleBehandlinger() })
 }
 
 /**
  * Invaliderer saksbehandlingsperioder for en spesifikk person
  */
 export function invaliderSaksbehandlingsperioder(queryClient: QueryClient, personId: string): Promise<void> {
-    return queryClient.invalidateQueries({ queryKey: queryKeys.saksbehandlingsperioder(personId) })
+    return queryClient.invalidateQueries({ queryKey: queryKeys.behandlinger(personId) })
 }
 
 /**
@@ -32,7 +32,7 @@ export function invaliderSaksbehandlingsperiodeHistorikk(
     behandlingId: string,
 ): Promise<void> {
     return queryClient.invalidateQueries({
-        queryKey: queryKeys.saksbehandlingsperiodeHistorikk(personId, behandlingId),
+        queryKey: queryKeys.behandlingHistorikk(personId, behandlingId),
     })
 }
 

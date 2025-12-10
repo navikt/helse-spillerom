@@ -5,9 +5,9 @@ import { useEffect } from 'react'
 import dayjs from 'dayjs'
 
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
-import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
+import { useBehandlinger } from '@hooks/queries/useBehandlinger'
 import { getFormattedDateString } from '@utils/date-format'
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Behandling } from '@schemas/behandling'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingHeading({ className }: { className?: string }) {
@@ -15,7 +15,7 @@ export function BehandlingHeading({ className }: { className?: string }) {
     const { personId, behandlingId } = useRouteParams()
     const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
-    const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()
+    const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useBehandlinger()
 
     const aktivPeriode = getAktivPeriode(saksbehandlingsperioder, behandlingId)
     const formattedFom = formatShortDate(aktivPeriode?.fom)
@@ -52,10 +52,7 @@ export function BehandlingHeading({ className }: { className?: string }) {
     )
 }
 
-function getAktivPeriode(
-    saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
-    behandlingId: string | undefined,
-) {
+function getAktivPeriode(saksbehandlingsperioder: Behandling[] | undefined, behandlingId: string | undefined) {
     if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
     if (!behandlingId) return null
 

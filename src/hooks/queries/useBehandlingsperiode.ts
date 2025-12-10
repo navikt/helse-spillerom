@@ -1,17 +1,14 @@
-import { Saksbehandlingsperiode } from '@schemas/saksbehandlingsperiode'
+import { Behandling } from '@schemas/behandling'
 
-import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
+import { useBehandlinger } from './useBehandlinger'
 
-function findBehandling(
-    saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
-    behandlingId: string | undefined,
-) {
+function findBehandling(saksbehandlingsperioder: Behandling[] | undefined, behandlingId: string | undefined) {
     if (!saksbehandlingsperioder || !behandlingId) return undefined
     return saksbehandlingsperioder.find((periode) => periode.id === behandlingId)
 }
 
 export function useBehandlingsperiodeMedLoading(id: string) {
-    const { data, isLoading } = useSaksbehandlingsperioder()
+    const { data, isLoading } = useBehandlinger()
     return {
         behandling: findBehandling(data, id),
         isLoading,

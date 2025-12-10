@@ -10,9 +10,9 @@ import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
 import { Maybe } from '@/utils/tsUtils'
-import { SaksbehandlingsperiodeStatus } from '@schemas/saksbehandlingsperiode'
+import { BehandlingStatus } from '@schemas/behandling'
 
-export type TidslinjeVariant = SaksbehandlingsperiodeStatus | 'GHOST' | 'TILKOMMEN_INNTEKT'
+export type TidslinjeVariant = BehandlingStatus | 'GHOST' | 'TILKOMMEN_INNTEKT'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs

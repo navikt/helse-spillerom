@@ -4,14 +4,14 @@ import { ReactElement } from 'react'
 import { Table, BodyShort, Link } from '@navikt/ds-react'
 import { useRouter } from 'next/navigation'
 
-import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
+import { useBehandlinger } from '@hooks/queries/useBehandlinger'
 import { getFormattedDateString } from '@utils/date-format'
 import { StatusTag } from '@components/statustag/StatusTag'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingerTabell(): ReactElement {
     const router = useRouter()
-    const { data: perioder, isLoading, isError } = useSaksbehandlingsperioder()
+    const { data: perioder, isLoading, isError } = useBehandlinger()
     const { personId } = usePersonRouteParams()
 
     if (isLoading) return <BodyShort>Laster behandlinger...</BodyShort>

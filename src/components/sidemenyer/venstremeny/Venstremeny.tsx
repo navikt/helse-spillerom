@@ -11,7 +11,7 @@ import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useErBeslutter } from '@hooks/queries/useErBeslutter'
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
-import { useSaksbehandlingsperioder } from '@hooks/queries/useSaksbehandlingsperioder'
+import { useBehandlinger } from '@hooks/queries/useBehandlinger'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
@@ -40,7 +40,7 @@ export function Venstremeny(): ReactElement {
     const erBeslutter = useErBeslutter()
     const { data: brukerRoller } = useBrukerRoller()
     const { data: brukerinfo } = useBrukerinfo()
-    const { data: saksbehandlingsperioder } = useSaksbehandlingsperioder()
+    const { data: saksbehandlingsperioder } = useBehandlinger()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
 
