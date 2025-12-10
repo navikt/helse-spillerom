@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation'
 import { fetchAndParse } from '@utils/fetch'
 import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@/schemas/sykepengegrunnlag'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useSykepengegrunnlag() {
     const params = useParams()
@@ -11,7 +12,7 @@ export function useSykepengegrunnlag() {
     const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
 
     return useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: ['sykepengegrunnlag', personId, saksbehandlingsperiodeId],
+        queryKey: queryKeys.sykepengegrunnlag(personId, saksbehandlingsperiodeId),
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
             if (!personId || !saksbehandlingsperiodeId) {
                 throw new Error('PersonId og saksbehandlingsperiodeId må være tilstede')

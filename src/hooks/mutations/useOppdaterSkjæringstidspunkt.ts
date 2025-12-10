@@ -9,6 +9,11 @@ import {
     saksbehandlingsperiodeSchema,
 } from '@/schemas/saksbehandlingsperiode'
 import { SkjæringstidspunktSchema } from '@schemas/skjæringstidspunkt'
+import {
+    invaliderAlleSaksbehandlingsperioder,
+    invaliderSaksbehandlingsperioder,
+    invaliderSaksbehandlingsperiodeHistorikk,
+} from '@utils/queryInvalidation'
 
 interface UseOppdaterSkjæringstidspunktProps {
     onSuccess?: () => void
@@ -27,16 +32,15 @@ export function useOppdaterSkjæringstidspunkt({ onSuccess }: UseOppdaterSkjæri
             ),
         onSuccess: async () => {
             // Lagre personId før navigering kan endre den
-            const personId = params.personId
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
 
             // Invalidate all saksbehandlingsperioder caches
-            await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
+            await invaliderAlleSaksbehandlingsperioder(queryClient)
 
             if (personId) {
-                await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', personId] })
-                await queryClient.invalidateQueries({
-                    queryKey: ['saksbehandlingsperiode-historikk', personId, params.saksbehandlingsperiodeId],
-                })
+                await invaliderSaksbehandlingsperioder(queryClient, personId)
+                await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, saksbehandlingsperiodeId)
             }
 
             // Kjør callback etter at cache invalidation er ferdig

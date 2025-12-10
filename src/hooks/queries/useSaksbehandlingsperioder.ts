@@ -6,10 +6,11 @@ import { z } from 'zod/v4'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useAlleSaksbehandlingsperioder() {
     return useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
-        queryKey: ['alle-saksbehandlingsperioder'],
+        queryKey: queryKeys.alleSaksbehandlingsperioder(),
         queryFn: () => fetchAndParse(`/api/bakrommet/v1/behandlinger`, z.array(saksbehandlingsperiodeSchema)),
     })
 }
@@ -19,7 +20,7 @@ export function useSaksbehandlingsperioder() {
     const router = useRouter()
 
     const query = useQuery<Saksbehandlingsperiode[], ProblemDetailsError>({
-        queryKey: ['saksbehandlingsperioder', params.personId],
+        queryKey: queryKeys.saksbehandlingsperioder(params.personId as string),
         queryFn: () =>
             fetchAndParse(`/api/bakrommet/v1/${params.personId}/behandlinger`, z.array(saksbehandlingsperiodeSchema)),
         enabled: !!params.personId,

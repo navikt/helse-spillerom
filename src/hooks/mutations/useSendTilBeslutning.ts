@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
+import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvalidation'
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
@@ -27,19 +28,11 @@ export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = 
             ),
         onSuccess: async () => {
             // Lagre personId før navigering kan endre den
-            const personId = params.personId
-
-            // Invalidate all saksbehandlingsperioder caches
-            await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
 
             if (personId) {
-                await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', personId] })
-                await queryClient.invalidateQueries({
-                    queryKey: ['saksbehandlingsperiode-historikk', personId, params.saksbehandlingsperiodeId],
-                })
-                await queryClient.invalidateQueries({
-                    queryKey: ['tidslinje', params.personId],
-                })
+                await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
             }
 
             // Kjør callback etter at cache invalidation er ferdig

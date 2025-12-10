@@ -8,6 +8,7 @@ import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
 import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlag'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useYrkesaktivitetForSykepengegrunnlag() {
     const params = useParams()
@@ -17,7 +18,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
     const personId = params?.personId as string
 
     const sykepengegrunnlag = useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: ['sykepengegrunnlag', personId, aktivSaksbehandlingsperiode?.id],
+        queryKey: queryKeys.sykepengegrunnlag(personId, aktivSaksbehandlingsperiode?.id ?? ''),
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
             if (!personId || !aktivSaksbehandlingsperiode?.id) {
                 throw new Error('PersonId og saksbehandlingsperiodeId må være tilstede')
@@ -48,7 +49,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
         harPersonId && harSaksbehandlingsperiodeId && sykepengegrunnlagErFerdigLastet && sykepengegrunnlagHarData
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: [params.personId, 'yrkesaktivitet', saksbehandlingsperiodeIdForYrkesaktivitet],
+        queryKey: queryKeys.yrkesaktivitet(params.personId as string, saksbehandlingsperiodeIdForYrkesaktivitet),
         queryFn: () =>
             fetchAndParse(
                 `/api/bakrommet/v1/${params.personId}/behandlinger/${saksbehandlingsperiodeIdForYrkesaktivitet}/yrkesaktivitet`,

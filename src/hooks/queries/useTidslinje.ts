@@ -5,13 +5,14 @@ import { useEffect } from 'react'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { TidslinjeBehandling, tidslinjeBehandlingerSchema } from '@schemas/tidslinje'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useTidslinje() {
     const params = useParams()
     const router = useRouter()
 
     const query = useQuery<TidslinjeBehandling[], ProblemDetailsError>({
-        queryKey: ['tidslinje', params.personId],
+        queryKey: queryKeys.tidslinje(params.personId as string),
         queryFn: async () => {
             return await fetchAndParse(`/api/bakrommet/v2/${params.personId}/tidslinje`, tidslinjeBehandlingerSchema)
         },

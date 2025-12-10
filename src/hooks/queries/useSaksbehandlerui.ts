@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { HovedspørsmålArray } from '@schemas/saksbehandlergrensesnitt'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useSaksbehandlerui() {
     return useQuery<HovedspørsmålArray, Error>({
-        queryKey: ['saksbehandlerui'],
+        queryKey: queryKeys.saksbehandlerui(),
         queryFn: async () => {
             const response = await fetch(`/api/v2/saksbehandlerui`)
             const data = await response.json()

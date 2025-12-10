@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { BeregningsreglerArray } from '@/schemas/beregningsregler'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useBeregningsregler() {
     return useQuery<BeregningsreglerArray>({
-        queryKey: ['beregningsregler'],
+        queryKey: queryKeys.beregningsregler(),
         queryFn: async () => {
             const response = await fetch('/api/v2/beregningsregler')
             if (!response.ok) {

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { Organisasjonsnavn } from '@/schemas/organisasjon'
+import { queryKeys } from '@utils/queryKeys'
 
 const LOCALSTORAGE_KEY = 'organisasjonsnavnCache'
 const TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 dager i millisekunder
@@ -69,7 +70,7 @@ function cleanupExpiredEntries(cache: Record<string, CachedOrganisasjon>): void 
 
 export function useOrganisasjonsnavn(orgnummer: string) {
     return useQuery<Organisasjonsnavn, Error>({
-        queryKey: ['organisasjonsnavn', orgnummer],
+        queryKey: queryKeys.organisasjonsnavn(orgnummer),
         queryFn: async () => {
             // Sjekk localStorage først
             const cached = getCachedOrganisasjonsnavn(orgnummer)

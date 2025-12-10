@@ -5,6 +5,10 @@ import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Perioder } from '@/schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering, yrkesaktivitetKategoriseringSchema } from '@schemas/yrkesaktivitetKategorisering'
+import {
+    invaliderYrkesaktivitetRelaterteQueries,
+    invaliderSaksbehandlingsperiodeHistorikk,
+} from '@utils/queryInvalidation'
 
 type KategoriseringMutationProps = {
     yrkesaktivitetId: string
@@ -36,22 +40,11 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
             // Invalider historikk siden kategorisering endring kan legge til ny historikkinnslag
-            queryClient.invalidateQueries({
-                queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }
@@ -69,18 +62,9 @@ export function useOppdaterYrkesaktivitetDagoversikt() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }
@@ -97,18 +81,9 @@ export function useOppdaterYrkesaktivitetPerioder() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

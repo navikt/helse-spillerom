@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { invaliderYrkesaktivitetRelaterteQueries } from '@utils/queryInvalidation'
 
 export function useSlettYrkesaktivitet() {
     const params = useParams()
@@ -15,18 +16,9 @@ export function useSlettYrkesaktivitet() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

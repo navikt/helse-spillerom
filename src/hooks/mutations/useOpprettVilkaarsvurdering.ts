@@ -8,6 +8,7 @@ import {
     Vurdering,
     VilkaarsvurderingUnderspørsmål,
 } from '@/schemas/vilkaarsvurdering'
+import { invaliderVilkaarsvurderinger } from '@utils/queryInvalidation'
 
 type MutationProps = {
     kode: string
@@ -33,9 +34,9 @@ export function useOpprettVilkaarsvurdering() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderVilkaarsvurderinger(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

@@ -8,6 +8,7 @@ import {
     sykepengegrunnlagResponseSchema,
     OpprettSykepengegrunnlagRequest,
 } from '@/schemas/sykepengegrunnlag'
+import { invaliderBeregningsrelaterteQueries } from '@utils/queryInvalidation'
 
 export function useOpprettSykepengegrunnlag() {
     const params = useParams()
@@ -24,22 +25,7 @@ export function useOpprettSykepengegrunnlag() {
             )
         },
         onSuccess: () => {
-            // Invalider sykepengegrunnlag query
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', personId, saksbehandlingsperiodeId],
-            })
-            // Invalider history queries siden sykepengegrunnlag påvirker historikk
-            queryClient.invalidateQueries({
-                queryKey: ['history', personId, saksbehandlingsperiodeId],
-            })
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [personId, 'utbetalingsberegning', saksbehandlingsperiodeId],
-            })
-            // Invalider tidslinje queries
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', personId],
-            })
+            invaliderBeregningsrelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { invaliderVilkaarsvurderinger } from '@utils/queryInvalidation'
 
 type MutationProps = {
     kode: string
@@ -19,13 +20,10 @@ export function useSlettVilkaarsvurdering() {
             )
         },
         onSuccess: () => {
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
             // Invalidate both v1 and v2 cache keys
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'vilkaarsvurderinger', params.saksbehandlingsperiodeId],
-            })
+            invaliderVilkaarsvurderinger(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

@@ -6,13 +6,14 @@ import { z } from 'zod/v4'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { BeregningResponse, beregningResponseSchema } from '@schemas/utbetalingsberegning'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useUtbetalingsberegning() {
     const params = useParams()
     const router = useRouter()
 
     const query = useQuery<BeregningResponse | null, ProblemDetailsError>({
-        queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
+        queryKey: queryKeys.utbetalingsberegning(params.personId as string, params.saksbehandlingsperiodeId as string),
         queryFn: () =>
             fetchAndParse(
                 `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/utbetalingsberegning`,

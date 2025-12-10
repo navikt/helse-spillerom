@@ -7,6 +7,7 @@ import {
     OpprettTilkommenInntektRequest,
     TilkommenInntektResponse,
 } from '@schemas/tilkommenInntekt'
+import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidation'
 
 export function useOpprettTilkommenInntekt() {
     const params = useParams()
@@ -24,23 +25,7 @@ export function useOpprettTilkommenInntekt() {
             )
         },
         onSuccess: (data) => {
-            // Invalider tilkommen inntekt queries
-            queryClient.invalidateQueries({
-                queryKey: ['tilkommenInntekt', personId, saksbehandlingsperiodeId],
-            })
-
-            // Invalider history queries siden tilkommen inntekt påvirker historikk
-            queryClient.invalidateQueries({
-                queryKey: ['history', personId, saksbehandlingsperiodeId],
-            })
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
-            // Invalider tidslinje queries
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', personId],
-            })
+            invaliderTilkommenInntektRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
 
             // Naviger til visningssiden
             router.push(`/person/${personId}/${saksbehandlingsperiodeId}/tilkommen-inntekt/${data.id}`)

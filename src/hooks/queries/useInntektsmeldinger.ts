@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation'
 import { z } from 'zod'
 
 import { InntektsmeldingSchema } from '@schemas/inntektsmelding'
+import { queryKeys } from '@utils/queryKeys'
 
 const InntektsmeldingerResponseSchema = z.array(InntektsmeldingSchema)
 
@@ -14,7 +15,7 @@ export function useInntektsmeldinger(yrkesaktivitetId: string) {
     const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
 
     return useQuery({
-        queryKey: ['inntektsmeldinger', personId, saksbehandlingsperiodeId, yrkesaktivitetId],
+        queryKey: queryKeys.inntektsmeldinger(personId, saksbehandlingsperiodeId, yrkesaktivitetId),
         queryFn: async (): Promise<InntektsmeldingerResponse> => {
             if (!personId || !saksbehandlingsperiodeId || !yrkesaktivitetId) {
                 throw new Error('PersonId, saksbehandlingsperiodeId og yrkesaktivitetId må være tilstede')

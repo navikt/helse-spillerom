@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation'
 import { z } from 'zod'
 
 import { arbeidstakerAinntektSchema, frilanserAinntektSchema } from '@schemas/inntektData'
+import { queryKeys } from '@utils/queryKeys'
 
 const ainntektSuccessResponseSchema = z.object({
     success: z.literal(true),
@@ -27,7 +28,7 @@ export function useAinntektYrkesaktivitet(yrkesaktivitetId: string, enabled: boo
     const saksbehandlingsperiodeId = params?.saksbehandlingsperiodeId as string
 
     return useQuery({
-        queryKey: ['ainntekt-yrkesaktivitet', personId, saksbehandlingsperiodeId, yrkesaktivitetId],
+        queryKey: queryKeys.ainntektYrkesaktivitet(personId, saksbehandlingsperiodeId, yrkesaktivitetId),
         queryFn: async (): Promise<AinntektResponse> => {
             if (!personId || !saksbehandlingsperiodeId || !yrkesaktivitetId) {
                 throw new Error('PersonId, saksbehandlingsperiodeId og yrkesaktivitetId må være tilstede')

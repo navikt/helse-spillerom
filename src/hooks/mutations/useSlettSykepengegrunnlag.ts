@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { invaliderBeregningsrelaterteQueries } from '@utils/queryInvalidation'
 
 export function useSlettSykepengegrunnlag() {
     const params = useParams()
@@ -17,22 +18,7 @@ export function useSlettSykepengegrunnlag() {
             )
         },
         onSuccess: () => {
-            // Invalider sykepengegrunnlag query
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', personId, saksbehandlingsperiodeId],
-            })
-            // Invalider history queries siden sletting av sykepengegrunnlag påvirker historikk
-            queryClient.invalidateQueries({
-                queryKey: ['history', personId, saksbehandlingsperiodeId],
-            })
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [personId, 'utbetalingsberegning', saksbehandlingsperiodeId],
-            })
-            // Invalider tidslinje queries
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', personId],
-            })
+            invaliderBeregningsrelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

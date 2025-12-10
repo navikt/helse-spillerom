@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
+import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvalidation'
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
@@ -22,15 +23,9 @@ export function useSendTilbake() {
                 { kommentar },
             ),
         onSuccess: async () => {
-            // Invalidate all saksbehandlingsperioder caches
-            await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
-            await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', params.personId] })
-            await queryClient.invalidateQueries({
-                queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

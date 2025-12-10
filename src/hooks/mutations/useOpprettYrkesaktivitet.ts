@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postAndParse } from '@utils/fetch'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { invaliderYrkesaktivitetRelaterteQueries } from '@utils/queryInvalidation'
 
 type MutationProps = {
     kategorisering: YrkesaktivitetKategorisering
@@ -24,15 +25,9 @@ export function useOpprettYrkesaktivitet() {
             )
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', params.personId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

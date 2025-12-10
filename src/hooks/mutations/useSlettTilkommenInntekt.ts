@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { deleteNoContent } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { invaliderTilkommenInntektRelaterteQueries } from '@utils/queryInvalidation'
 
 export function useSlettTilkommenInntekt() {
     const params = useParams()
@@ -18,25 +19,7 @@ export function useSlettTilkommenInntekt() {
             )
         },
         onSuccess: () => {
-            // Invalider tilkommen inntekt queries
-            queryClient.invalidateQueries({
-                queryKey: ['tilkommenInntekt', personId, saksbehandlingsperiodeId],
-            })
-
-            // Invalider history queries siden tilkommen inntekt påvirker historikk
-            queryClient.invalidateQueries({
-                queryKey: ['history', personId, saksbehandlingsperiodeId],
-            })
-
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [personId, 'utbetalingsberegning', saksbehandlingsperiodeId],
-            })
-
-            // Invalider tidslinje queries
-            queryClient.invalidateQueries({
-                queryKey: ['tidslinje', personId],
-            })
+            invaliderTilkommenInntektRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
 
             // Naviger tilbake til hovedsiden for saksbehandlingsperioden
             router.push(`/person/${personId}/${saksbehandlingsperiodeId}`)

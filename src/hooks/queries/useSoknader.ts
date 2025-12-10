@@ -5,6 +5,7 @@ import { z } from 'zod/v4'
 
 import { Søknad, søknadSchema } from '@/schemas/søknad'
 import { fetchAndParse } from '@utils/fetch'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useSoknader(fom: Dayjs) {
     const params = useParams()
@@ -17,7 +18,7 @@ export function useSoknader(fom: Dayjs) {
 
     return useQuery<Søknad[], Error>({
         // Inkluder personId og fom i cache-nøkkelen
-        queryKey: ['soknader', params.personId, formattedFom],
+        queryKey: queryKeys.soknader(params.personId as string, formattedFom),
         queryFn: () => {
             const base = `/api/bakrommet/v1/${params.personId}/soknader`
             const url = `${base}?fom=${encodeURIComponent(formattedFom)}`

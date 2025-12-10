@@ -3,6 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { putNoContent } from '@utils/fetch'
 import { InntektRequest } from '@/schemas/inntektRequest'
+import {
+    invaliderDokumenter,
+    invaliderYrkesaktivitet,
+    invaliderSykepengegrunnlag,
+    invaliderUtbetalingsberegning,
+    invaliderHistory,
+} from '@utils/queryInvalidation'
 
 type MutationProps = {
     yrkesaktivitetId: string
@@ -21,29 +28,16 @@ export function useOppdaterInntekt() {
             )
         },
         onSuccess: () => {
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+
             //hvis requesten var ainntekt, inntektsmelding eller sigrun så kan det bære at vi må hente dokumenter på nytt
             // TODO denne kan optimaliseres ved å se på hva slags inntekt som ble requestet
-            queryClient.invalidateQueries({
-                queryKey: ['dokumenter', params.personId, params.saksbehandlingsperiodeId],
-            })
-
-            // Invalider yrkesaktivitet queries
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-
-            // Invalider sykepengegrunnlag queries
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
-            // Invalider history queries siden inntekt endringer påvirker historikk
-            queryClient.invalidateQueries({
-                queryKey: ['history', params.personId, params.saksbehandlingsperiodeId],
-            })
+            invaliderDokumenter(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitet(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderSykepengegrunnlag(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderUtbetalingsberegning(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderHistory(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

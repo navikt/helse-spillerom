@@ -5,13 +5,14 @@ import { useEffect } from 'react'
 import { Personinfo, personinfoSchema } from '@/schemas/personinfo'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
+import { queryKeys } from '@utils/queryKeys'
 
 export function usePersoninfo() {
     const params = useParams()
     const router = useRouter()
 
     const query = useQuery<Personinfo, ProblemDetailsError>({
-        queryKey: ['personinfo', params.personId],
+        queryKey: queryKeys.personinfo(params.personId as string),
         queryFn: () => fetchAndParse(`/api/bakrommet/v1/${params.personId}/personinfo`, personinfoSchema),
         enabled: !!params.personId,
     })

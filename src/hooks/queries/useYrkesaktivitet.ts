@@ -6,13 +6,14 @@ import { z } from 'zod/v4'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
+import { queryKeys } from '@utils/queryKeys'
 
 export function useYrkesaktivitet() {
     const params = useParams()
     const router = useRouter()
 
     const query = useQuery<Yrkesaktivitet[], ProblemDetailsError>({
-        queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
+        queryKey: queryKeys.yrkesaktivitet(params.personId as string, params.saksbehandlingsperiodeId as string),
         queryFn: () =>
             fetchAndParse(
                 `/api/bakrommet/v1/${params.personId}/behandlinger/${params.saksbehandlingsperiodeId}/yrkesaktivitet`,

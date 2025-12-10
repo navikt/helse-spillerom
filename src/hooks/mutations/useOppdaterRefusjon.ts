@@ -3,6 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { putNoContent } from '@utils/fetch'
 import { RefusjonInfo } from '@schemas/inntektRequest'
+import {
+    invaliderYrkesaktivitetRelaterteQueries,
+    invaliderSaksbehandlingsperiodeHistorikk,
+} from '@utils/queryInvalidation'
 
 type MutationProps = {
     yrkesaktivitetId: string
@@ -21,22 +25,11 @@ export function useOppdaterRefusjon() {
             )
         },
         onSuccess: () => {
-            // Invalider yrkesaktivitet queries
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'yrkesaktivitet', params.saksbehandlingsperiodeId],
-            })
-            // Invalider sykepengegrunnlag queries
-            queryClient.invalidateQueries({
-                queryKey: ['sykepengegrunnlag', params.personId, params.saksbehandlingsperiodeId],
-            })
-            // Invalider utbetalingsberegning queries
-            queryClient.invalidateQueries({
-                queryKey: [params.personId, 'utbetalingsberegning', params.saksbehandlingsperiodeId],
-            })
+            const personId = params.personId as string
+            const saksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
             // Invalider historikk siden refusjon endring kan legge til ny historikkinnslag
-            queryClient.invalidateQueries({
-                queryKey: ['saksbehandlingsperiode-historikk', params.personId, params.saksbehandlingsperiodeId],
-            })
+            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, saksbehandlingsperiodeId)
         },
     })
 }

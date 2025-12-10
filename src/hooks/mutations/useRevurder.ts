@@ -4,6 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Saksbehandlingsperiode, saksbehandlingsperiodeSchema } from '@/schemas/saksbehandlingsperiode'
+import {
+    invaliderAlleSaksbehandlingsperioder,
+    invaliderSaksbehandlingsperioder,
+    invaliderSaksbehandlingsperiodeHistorikk,
+    invaliderTidslinje,
+} from '@utils/queryInvalidation'
 
 interface MutationProps {
     saksbehandlingsperiodeId: string
@@ -23,23 +29,18 @@ export function useRevurder() {
             ),
         onSuccess: async (nyPeriode) => {
             // Lagre personId før navigering kan endre den
-            const personId = params.personId
+            const personId = params.personId as string
+            const gammelSaksbehandlingsperiodeId = params.saksbehandlingsperiodeId as string
 
             // Invalidate all saksbehandlingsperioder caches
-            await queryClient.invalidateQueries({ queryKey: ['alle-saksbehandlingsperioder'] })
+            await invaliderAlleSaksbehandlingsperioder(queryClient)
 
             if (personId) {
-                await queryClient.invalidateQueries({ queryKey: ['saksbehandlingsperioder', personId] })
+                await invaliderSaksbehandlingsperioder(queryClient, personId)
                 // Invalider historikk for både gammel og ny periode
-                await queryClient.invalidateQueries({
-                    queryKey: ['saksbehandlingsperiode-historikk', personId, params.saksbehandlingsperiodeId],
-                })
-                await queryClient.invalidateQueries({
-                    queryKey: ['saksbehandlingsperiode-historikk', personId, nyPeriode.id],
-                })
-                queryClient.invalidateQueries({
-                    queryKey: ['tidslinje', params.personId],
-                })
+                await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, gammelSaksbehandlingsperiodeId)
+                await invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, nyPeriode.id)
+                await invaliderTidslinje(queryClient, personId)
             }
 
             // Naviger til den nye perioden
