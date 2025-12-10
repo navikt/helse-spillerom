@@ -3,14 +3,7 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import {
-    BriefcaseIcon,
-    CheckmarkCircleFillIcon,
-    PencilFillIcon,
-    PencilLineIcon,
-    PlusIcon,
-    SackKronerIcon,
-} from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon, SackKronerIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation'
 
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -26,51 +19,33 @@ import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehan
 import { useTidslinje } from '@hooks/queries/useTidslinje'
 import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingsperiode'
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
+import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
 
 export function Tidslinje(): ReactElement {
     const router = useRouter()
     const params = useParams()
 
-    const { data: tidslinjeRader, isLoading, isError, refetch } = useTidslinje()
+    const { data, isLoading, isError, refetch } = useTidslinje()
 
     if (isLoading) return <TimelineSkeleton />
     if (isError) return <TimelineError refetch={refetch} />
-    if (tidslinjeRader == null || tidslinjeRader.length === 0) return <TimelineEmpty />
+    if (data == null || data.length === 0) return <TimelineEmpty />
 
-    const tommeBehandlinger = tidslinjeRader.filter((t) => t.tidslinjeRadType === 'OpprettetBehandling')
-    const yrkesaktiviteter = tidslinjeRader.filter((t) => t.tidslinjeRadType === 'SykmeldtYrkesaktivitet')
-    const tilkomneInntekter = tidslinjeRader.filter((t) => t.tidslinjeRadType === 'TilkommenInntekt')
+    const { behandlinger, tilkomneInntekter } = groupTidslinjeData(data)
 
     return (
         <>
             <Timeline>
-                {tommeBehandlinger.map((rad) => (
-                    <TimelineRow key={rad.id} label={rad.navn} icon={<PencilLineIcon aria-hidden fontSize="1.5rem" />}>
+                {behandlinger.map((rad) => (
+                    <TimelineRow key={rad.id} label={rad.navn} icon={rad.icon}>
                         {rad.tidslinjeElementer.map((periode) => (
                             <TimelinePeriod
                                 key={rad.id + periode.fom + periode.tom}
                                 startDate={dayjs(periode.fom)}
                                 endDate={dayjs(periode.tom)}
-                                onSelectPeriod={() =>
-                                    router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
+                                skjæringstidspunkt={
+                                    periode.skjæringstidspunkt ? dayjs(periode.skjæringstidspunkt) : undefined
                                 }
-                                activePeriod={params.saksbehandlingsperiodeId === periode.behandlingId}
-                                icon={statusTilIkon[periode.status]}
-                                variant={periode.status}
-                            >
-                                <BehandlingPopover behandlingId={periode.behandlingId} />
-                            </TimelinePeriod>
-                        ))}
-                    </TimelineRow>
-                ))}
-                {yrkesaktiviteter.map((rad) => (
-                    <TimelineRow key={rad.id} label={rad.navn} icon={<BriefcaseIcon aria-hidden fontSize="1.5rem" />}>
-                        {rad.tidslinjeElementer.map((periode) => (
-                            <TimelinePeriod
-                                key={rad.id + periode.fom + periode.tom}
-                                startDate={dayjs(periode.fom)}
-                                endDate={dayjs(periode.tom)}
-                                skjæringstidspunkt={dayjs(periode.skjæringstidspunkt)}
                                 onSelectPeriod={() =>
                                     router.push(`/person/${params.personId as string}/${periode.behandlingId}`)
                                 }

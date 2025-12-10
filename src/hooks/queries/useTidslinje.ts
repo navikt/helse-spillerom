@@ -4,17 +4,16 @@ import { useEffect } from 'react'
 
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
-import { TidslinjeRad, tidslinjeSchema } from '@/schemas/tidslinje'
+import { TidslinjeBehandling, tidslinjeBehandlingerSchema } from '@schemas/tidslinje'
 
 export function useTidslinje() {
     const params = useParams()
     const router = useRouter()
 
-    const query = useQuery<TidslinjeRad[], ProblemDetailsError>({
+    const query = useQuery<TidslinjeBehandling[], ProblemDetailsError>({
         queryKey: ['tidslinje', params.personId],
         queryFn: async () => {
-            const tidslinje = await fetchAndParse(`/api/bakrommet/v1/${params.personId}/tidslinje`, tidslinjeSchema)
-            return tidslinje.rader
+            return await fetchAndParse(`/api/bakrommet/v2/${params.personId}/tidslinje`, tidslinjeBehandlingerSchema)
         },
         enabled: !!params.personId,
     })
