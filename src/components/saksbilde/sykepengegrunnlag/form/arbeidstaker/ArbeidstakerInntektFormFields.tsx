@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useRef } from 'react'
 import { Controller, useFormContext, UseFormGetValues, UseFormSetValue, useWatch } from 'react-hook-form'
-import { BodyShort, HStack, Radio, RadioGroup, Select, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, Radio, RadioGroup, Select, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import {
@@ -148,9 +148,7 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
 
     useSyncInntektsmelding(valgtInntektsmeldingId, setValue, getValues, inntektsmeldinger)
 
-    if (isLoading) {
-        return <BodyShort className="m-4 ml-6">Laster...</BodyShort> // TODO lag skeleton her
-    }
+    if (isLoading) return <VelgInntektsmeldingSkeleton />
 
     if (isError || !inntektsmeldinger) {
         return <FetchError refetch={refetch} message="Kunne ikke laste inntektsmeldinger." />
@@ -199,6 +197,21 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                 </RadioGroup>
             )}
         />
+    )
+}
+
+function VelgInntektsmeldingSkeleton(): ReactElement {
+    return (
+        <VStack gap="4" className="my-1">
+            <HStack wrap={false} gap="3">
+                <Skeleton variant="circle" width={24} />
+                <Skeleton width={280} />
+            </HStack>
+            <HStack wrap={false} gap="3">
+                <Skeleton variant="circle" width={24} />
+                <Skeleton width={280} />
+            </HStack>
+        </VStack>
     )
 }
 
