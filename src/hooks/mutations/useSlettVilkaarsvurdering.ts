@@ -10,18 +10,18 @@ type MutationProps = {
 }
 
 export function useSlettVilkaarsvurdering() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, ProblemDetailsError, MutationProps>({
         mutationFn: async ({ kode }) => {
             return await deleteNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/vilkaarsvurdering/${kode}`,
             )
         },
         onSuccess: () => {
             // Invalidate both v1 and v2 cache keys
-            invaliderVilkaarsvurderinger(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderVilkaarsvurderinger(queryClient, personId, behandlingId)
         },
     })
 }

@@ -9,51 +9,47 @@ export const queryKeys = {
     // Saksbehandlingsperioder
     alleSaksbehandlingsperioder: () => ['alle-saksbehandlingsperioder'] as const,
     saksbehandlingsperioder: (personId: string) => ['saksbehandlingsperioder', personId] as const,
-    saksbehandlingsperiodeHistorikk: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['saksbehandlingsperiode-historikk', personId, saksbehandlingsperiodeId] as const,
+    saksbehandlingsperiodeHistorikk: (personId: string, behandlingId: string) =>
+        ['saksbehandlingsperiode-historikk', personId, behandlingId] as const,
 
     // Yrkesaktivitet
-    yrkesaktivitet: (personId: string, saksbehandlingsperiodeId: string) =>
-        [personId, 'yrkesaktivitet', saksbehandlingsperiodeId] as const,
+    yrkesaktivitet: (personId: string, behandlingId: string) => [personId, 'yrkesaktivitet', behandlingId] as const,
 
     // Sykepengegrunnlag
-    sykepengegrunnlag: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['sykepengegrunnlag', personId, saksbehandlingsperiodeId] as const,
+    sykepengegrunnlag: (personId: string, behandlingId: string) =>
+        ['sykepengegrunnlag', personId, behandlingId] as const,
 
     // Utbetalingsberegning
-    utbetalingsberegning: (personId: string, saksbehandlingsperiodeId: string) =>
-        [personId, 'utbetalingsberegning', saksbehandlingsperiodeId] as const,
+    utbetalingsberegning: (personId: string, behandlingId: string) =>
+        [personId, 'utbetalingsberegning', behandlingId] as const,
 
     // Tidslinje
     tidslinje: (personId: string) => ['tidslinje', personId] as const,
 
     // Historikk
-    history: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['history', personId, saksbehandlingsperiodeId] as const,
+    history: (personId: string, behandlingId: string) => ['history', personId, behandlingId] as const,
 
     // Tilkommen inntekt
-    tilkommenInntekt: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['tilkommenInntekt', personId, saksbehandlingsperiodeId] as const,
+    tilkommenInntekt: (personId: string, behandlingId: string) => ['tilkommenInntekt', personId, behandlingId] as const,
 
     // Vilkårsvurderinger
-    vilkaarsvurderinger: (personId: string, saksbehandlingsperiodeId: string) =>
-        [personId, 'vilkaarsvurderinger', saksbehandlingsperiodeId] as const,
+    vilkaarsvurderinger: (personId: string, behandlingId: string) =>
+        [personId, 'vilkaarsvurderinger', behandlingId] as const,
 
     // Dokumenter
-    dokumenter: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['dokumenter', personId, saksbehandlingsperiodeId] as const,
+    dokumenter: (personId: string, behandlingId: string) => ['dokumenter', personId, behandlingId] as const,
 
     // Inntektsmeldinger
-    inntektsmeldinger: (personId: string, saksbehandlingsperiodeId: string, yrkesaktivitetId: string) =>
-        ['inntektsmeldinger', personId, saksbehandlingsperiodeId, yrkesaktivitetId] as const,
+    inntektsmeldinger: (personId: string, behandlingId: string, yrkesaktivitetId: string) =>
+        ['inntektsmeldinger', personId, behandlingId, yrkesaktivitetId] as const,
 
     // Ainntekt yrkesaktivitet
-    ainntektYrkesaktivitet: (personId: string, saksbehandlingsperiodeId: string, yrkesaktivitetId: string) =>
-        ['ainntekt-yrkesaktivitet', personId, saksbehandlingsperiodeId, yrkesaktivitetId] as const,
+    ainntektYrkesaktivitet: (personId: string, behandlingId: string, yrkesaktivitetId: string) =>
+        ['ainntekt-yrkesaktivitet', personId, behandlingId, yrkesaktivitetId] as const,
 
     // Pensjonsgivende inntekt
-    pensjonsgivendeInntekt: (personId: string, saksbehandlingsperiodeId: string, yrkesaktivitetId: string) =>
-        ['pensjonsgivendeinntekt', personId, saksbehandlingsperiodeId, yrkesaktivitetId] as const,
+    pensjonsgivendeInntekt: (personId: string, behandlingId: string, yrkesaktivitetId: string) =>
+        ['pensjonsgivendeinntekt', personId, behandlingId, yrkesaktivitetId] as const,
 
     // Organisasjonsnavn
     organisasjonsnavn: (orgnummer: string) => ['organisasjonsnavn', orgnummer] as const,
@@ -87,8 +83,8 @@ export const queryKeys = {
     soknad: (personId: string, soknadId: string) => ['soknad', personId, soknadId] as const,
 
     // Behandlingsperiode
-    behandlingsperiode: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['behandlingsperiode', personId, saksbehandlingsperiodeId] as const,
+    behandlingsperiode: (personId: string, behandlingId: string) =>
+        ['behandlingsperiode', personId, behandlingId] as const,
 
     // Aktiv saksbehandlingsperiode
     aktivSaksbehandlingsperiode: (personId: string) => ['aktivSaksbehandlingsperiode', personId] as const,
@@ -100,8 +96,7 @@ export const queryKeys = {
     brukerRoller: () => ['brukerRoller'] as const,
 
     // Kan saksbehandles
-    kanSaksbehandles: (personId: string, saksbehandlingsperiodeId: string) =>
-        ['kanSaksbehandles', personId, saksbehandlingsperiodeId] as const,
+    kanSaksbehandles: (personId: string, behandlingId: string) => ['kanSaksbehandles', personId, behandlingId] as const,
 
     // Er beslutter
     erBeslutter: () => ['erBeslutter'] as const,

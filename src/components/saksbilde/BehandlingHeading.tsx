@@ -12,12 +12,12 @@ import { useRouteParams } from '@hooks/useRouteParams'
 
 export function BehandlingHeading({ className }: { className?: string }) {
     const router = useRouter()
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const pathname = usePathname()
     const { data: personinfo } = usePersoninfo()
     const { data: saksbehandlingsperioder, isSuccess: saksbehandlingsperioderLoaded } = useSaksbehandlingsperioder()
 
-    const aktivPeriode = getAktivPeriode(saksbehandlingsperioder, saksbehandlingsperiodeId)
+    const aktivPeriode = getAktivPeriode(saksbehandlingsperioder, behandlingId)
     const formattedFom = formatShortDate(aktivPeriode?.fom)
     const formattedTom = formatShortDate(aktivPeriode?.tom)
 
@@ -34,11 +34,11 @@ export function BehandlingHeading({ className }: { className?: string }) {
     }, [personId, saksbehandlingsperioder, saksbehandlingsperioderLoaded, router])
 
     useEffect(() => {
-        if (!aktivPeriode || !saksbehandlingsperiodeId) return
-        if (aktivPeriode.id !== saksbehandlingsperiodeId) {
-            router.replace(pathname.replace(saksbehandlingsperiodeId, aktivPeriode.id), { scroll: false })
+        if (!aktivPeriode || !behandlingId) return
+        if (aktivPeriode.id !== behandlingId) {
+            router.replace(pathname.replace(behandlingId, aktivPeriode.id), { scroll: false })
         }
-    }, [aktivPeriode, saksbehandlingsperiodeId, pathname, router])
+    }, [aktivPeriode, behandlingId, pathname, router])
 
     if (!personinfo || !aktivPeriode) {
         return <h1 className={`sr-only ${className || ''}`}>Sykepengesak - Laster...</h1>
@@ -54,12 +54,12 @@ export function BehandlingHeading({ className }: { className?: string }) {
 
 function getAktivPeriode(
     saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
-    saksbehandlingsperiodeId: string | undefined,
+    behandlingId: string | undefined,
 ) {
     if (!saksbehandlingsperioder || saksbehandlingsperioder.length === 0) return null
-    if (!saksbehandlingsperiodeId) return null
+    if (!behandlingId) return null
 
-    const periode = saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+    const periode = saksbehandlingsperioder.find((periode) => periode.id === behandlingId)
     if (periode) return periode
 
     return saksbehandlingsperioder.reduce((latest, p) => (dayjs(p.tom).isAfter(dayjs(latest.tom)) ? p : latest))

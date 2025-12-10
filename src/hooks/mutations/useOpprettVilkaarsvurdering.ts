@@ -18,13 +18,13 @@ type MutationProps = {
 }
 
 export function useOpprettVilkaarsvurdering() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Vilkaarsvurdering, Error, MutationProps>({
         mutationFn: async ({ kode, vurdering, underspørsmål, notat }) => {
             return await putAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/vilkaarsvurdering/${kode}`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/vilkaarsvurdering/${kode}`,
                 vilkaarsvurderingSchema,
                 {
                     vurdering,
@@ -34,7 +34,7 @@ export function useOpprettVilkaarsvurdering() {
             )
         },
         onSuccess: () => {
-            invaliderVilkaarsvurderinger(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderVilkaarsvurderinger(queryClient, personId, behandlingId)
         },
     })
 }

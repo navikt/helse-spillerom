@@ -8,7 +8,7 @@ export interface PersonRouteParams {
 }
 
 export interface PersonSaksbehandlingsperiodeRouteParams extends PersonRouteParams {
-    saksbehandlingsperiodeId: string
+    behandlingId: string
 }
 
 export interface PersonSaksbehandlingsperiodeTilkommenInntektRouteParams extends PersonSaksbehandlingsperiodeRouteParams {
@@ -26,15 +26,15 @@ export interface PersonSoknadRouteParams extends PersonRouteParams {
  *
  * @example
  * ```ts
- * const { personId, saksbehandlingsperiodeId } = useRouteParams()
- * // personId og saksbehandlingsperiodeId er nå typet som string, ikke string | string[] | undefined
+ * const { personId, behandlingId } = useRouteParams()
+ * // personId og behandlingId er nå typet som string, ikke string | string[] | undefined
  * ```
  */
 export function useRouteParams(): PersonSaksbehandlingsperiodeRouteParams {
     const params = useParams()
     return {
         personId: params.personId as string,
-        saksbehandlingsperiodeId: params.saksbehandlingsperiodeId as string,
+        behandlingId: params.behandlingId as string,
     }
 }
 
@@ -49,24 +49,24 @@ export function usePersonRouteParams(): PersonRouteParams {
 }
 
 /**
- * Type-safe hook for routes med personId og saksbehandlingsperiodeId
+ * Type-safe hook for routes med personId og behandlingId
  */
 export function usePersonSaksbehandlingsperiodeRouteParams(): PersonSaksbehandlingsperiodeRouteParams {
     const params = useParams()
     return {
         personId: params.personId as string,
-        saksbehandlingsperiodeId: params.saksbehandlingsperiodeId as string,
+        behandlingId: params.behandlingId as string,
     }
 }
 
 /**
- * Type-safe hook for routes med personId, saksbehandlingsperiodeId og tilkommenId
+ * Type-safe hook for routes med personId, behandlingId og tilkommenId
  */
 export function usePersonSaksbehandlingsperiodeTilkommenInntektRouteParams(): PersonSaksbehandlingsperiodeTilkommenInntektRouteParams {
     const params = useParams()
     return {
         personId: params.personId as string,
-        saksbehandlingsperiodeId: params.saksbehandlingsperiodeId as string,
+        behandlingId: params.behandlingId as string,
         tilkommenId: params.tilkommenId as string,
     }
 }

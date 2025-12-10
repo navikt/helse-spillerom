@@ -31,8 +31,8 @@ type HøyremenyFilter = 'Historikk' | 'Dokumenter'
 export function Høyremeny(): ReactElement {
     const { dokumenter, updateDokumenter } = useDokumentVisningContext()
 
-    const { saksbehandlingsperiodeId } = useRouteParams()
-    const erISaksbehandlingsperiode = Boolean(saksbehandlingsperiodeId)
+    const { behandlingId } = useRouteParams()
+    const erISaksbehandlingsperiode = Boolean(behandlingId)
 
     const [internalFilter, setInternalFilter] = useState<HøyremenyFilter>(
         erISaksbehandlingsperiode ? 'Dokumenter' : 'Historikk',

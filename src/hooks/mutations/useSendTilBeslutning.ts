@@ -7,7 +7,7 @@ import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvali
 import { useRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
-    saksbehandlingsperiodeId: string
+    behandlingId: string
     individuellBegrunnelse: string | undefined
 }
 
@@ -16,18 +16,18 @@ interface UseSendTilBeslutningProps {
 }
 
 export function useSendTilBeslutning({ onSuccess }: UseSendTilBeslutningProps = {}) {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId, individuellBegrunnelse }) =>
+        mutationFn: async ({ behandlingId, individuellBegrunnelse }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbeslutning`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/sendtilbeslutning`,
                 saksbehandlingsperiodeSchema,
                 { individuellBegrunnelse },
             ),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
 
             // Kjør callback etter at cache invalidation er ferdig
             onSuccess?.()

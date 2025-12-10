@@ -14,20 +14,20 @@ type MutationProps = {
 }
 
 export function useOppdaterRefusjon() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, MutationProps>({
         mutationFn: async ({ yrkesaktivitetId, refusjon }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/refusjon`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/refusjon`,
                 refusjon,
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
             // Invalider historikk siden refusjon endring kan legge til ny historikkinnslag
-            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, behandlingId)
         },
     })
 }

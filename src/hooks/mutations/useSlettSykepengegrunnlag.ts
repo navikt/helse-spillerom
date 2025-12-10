@@ -6,17 +6,15 @@ import { invaliderBeregningsrelaterteQueries } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useSlettSykepengegrunnlag() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, ProblemDetailsError, void>({
         mutationFn: async () => {
-            await deleteNoContent(
-                `/api/bakrommet/v2/${personId}/behandlinger/${saksbehandlingsperiodeId}/sykepengegrunnlag`,
-            )
+            await deleteNoContent(`/api/bakrommet/v2/${personId}/behandlinger/${behandlingId}/sykepengegrunnlag`)
         },
         onSuccess: () => {
-            invaliderBeregningsrelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderBeregningsrelaterteQueries(queryClient, personId, behandlingId)
         },
     })
 }

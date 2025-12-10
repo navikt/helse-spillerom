@@ -7,22 +7,22 @@ import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvali
 import { useRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
-    saksbehandlingsperiodeId: string
+    behandlingId: string
 }
 
 export function useGodkjenn() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId }) =>
+        mutationFn: async ({ behandlingId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/godkjenn`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/godkjenn`,
                 saksbehandlingsperiodeSchema,
                 {},
             ),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
         },
     })
 }

@@ -73,7 +73,7 @@ export function Venstremeny(): ReactElement {
         if (!aktivSaksbehandlingsperiode) return
         const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
         sendTilBeslutning.mutate({
-            saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            behandlingId: aktivSaksbehandlingsperiode.id,
             individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
         })
     }
@@ -82,7 +82,7 @@ export function Venstremeny(): ReactElement {
         if (!aktivSaksbehandlingsperiode) return
         taTilBeslutning.mutate(
             {
-                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivSaksbehandlingsperiode.id,
             },
             {
                 onSuccess: () => {
@@ -96,7 +96,7 @@ export function Venstremeny(): ReactElement {
         if (!aktivSaksbehandlingsperiode) return
         godkjenn.mutate(
             {
-                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivSaksbehandlingsperiode.id,
             },
             {
                 onSuccess: () => {
@@ -115,7 +115,7 @@ export function Venstremeny(): ReactElement {
         if (!aktivSaksbehandlingsperiode) return
         sendTilbake.mutate(
             {
-                saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivSaksbehandlingsperiode.id,
                 kommentar,
             },
             {
@@ -130,7 +130,7 @@ export function Venstremeny(): ReactElement {
     const håndterRevurder = () => {
         if (!aktivSaksbehandlingsperiode) return
         revurder.mutate({
-            saksbehandlingsperiodeId: aktivSaksbehandlingsperiode.id,
+            behandlingId: aktivSaksbehandlingsperiode.id,
         })
     }
 
@@ -157,7 +157,7 @@ export function Venstremeny(): ReactElement {
                         {aktivSaksbehandlingsperiode.skjæringstidspunkt && (
                             <Skjæringstidspunkt
                                 dato={aktivSaksbehandlingsperiode.skjæringstidspunkt}
-                                saksbehandlingsperiodeId={aktivSaksbehandlingsperiode.id}
+                                behandlingId={aktivSaksbehandlingsperiode.id}
                             />
                         )}
 

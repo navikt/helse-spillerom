@@ -7,23 +7,23 @@ import { invaliderSaksbehandlingsperiodeStatusQueries } from '@utils/queryInvali
 import { useRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
-    saksbehandlingsperiodeId: string
+    behandlingId: string
     kommentar: string
 }
 
 export function useSendTilbake() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId, kommentar }) =>
+        mutationFn: async ({ behandlingId, kommentar }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/sendtilbake`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/sendtilbake`,
                 saksbehandlingsperiodeSchema,
                 { kommentar },
             ),
         onSuccess: async () => {
-            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, saksbehandlingsperiodeId)
+            await invaliderSaksbehandlingsperiodeStatusQueries(queryClient, personId, behandlingId)
         },
     })
 }

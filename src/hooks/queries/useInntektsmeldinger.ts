@@ -10,17 +10,17 @@ const InntektsmeldingerResponseSchema = z.array(InntektsmeldingSchema)
 type InntektsmeldingerResponse = z.infer<typeof InntektsmeldingerResponseSchema>
 
 export function useInntektsmeldinger(yrkesaktivitetId: string) {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
 
     return useQuery({
-        queryKey: queryKeys.inntektsmeldinger(personId, saksbehandlingsperiodeId, yrkesaktivitetId),
+        queryKey: queryKeys.inntektsmeldinger(personId, behandlingId, yrkesaktivitetId),
         queryFn: async (): Promise<InntektsmeldingerResponse> => {
-            if (!personId || !saksbehandlingsperiodeId || !yrkesaktivitetId) {
-                throw new Error('PersonId, saksbehandlingsperiodeId og yrkesaktivitetId må være tilstede')
+            if (!personId || !behandlingId || !yrkesaktivitetId) {
+                throw new Error('PersonId, behandlingId og yrkesaktivitetId må være tilstede')
             }
 
             const response = await fetch(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/inntektsmeldinger`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/inntektsmeldinger`,
             )
 
             if (!response.ok) {
@@ -30,6 +30,6 @@ export function useInntektsmeldinger(yrkesaktivitetId: string) {
             const data = await response.json()
             return InntektsmeldingerResponseSchema.parse(data)
         },
-        enabled: !!personId && !!saksbehandlingsperiodeId && !!yrkesaktivitetId,
+        enabled: !!personId && !!behandlingId && !!yrkesaktivitetId,
     })
 }

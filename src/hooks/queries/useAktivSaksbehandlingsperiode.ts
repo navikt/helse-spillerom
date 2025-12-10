@@ -5,23 +5,23 @@ import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
 
 function findAktivSaksbehandlingsperiode(
     saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
-    saksbehandlingsperiodeId: string | undefined,
+    behandlingId: string | undefined,
 ) {
-    if (!saksbehandlingsperioder || !saksbehandlingsperiodeId) return undefined
-    return saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+    if (!saksbehandlingsperioder || !behandlingId) return undefined
+    return saksbehandlingsperioder.find((periode) => periode.id === behandlingId)
 }
 
 export function useAktivSaksbehandlingsperiode() {
-    const { saksbehandlingsperiodeId } = useRouteParams()
+    const { behandlingId } = useRouteParams()
     const { data } = useSaksbehandlingsperioder()
-    return findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId)
+    return findAktivSaksbehandlingsperiode(data, behandlingId)
 }
 
 export function useAktivSaksbehandlingsperiodeMedLoading() {
-    const { saksbehandlingsperiodeId } = useRouteParams()
+    const { behandlingId } = useRouteParams()
     const { data, isLoading } = useSaksbehandlingsperioder()
     return {
-        aktivSaksbehandlingsperiode: findAktivSaksbehandlingsperiode(data, saksbehandlingsperiodeId),
+        aktivSaksbehandlingsperiode: findAktivSaksbehandlingsperiode(data, behandlingId),
         isLoading,
     }
 }

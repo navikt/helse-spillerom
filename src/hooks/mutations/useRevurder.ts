@@ -13,18 +13,18 @@ import {
 import { useRouteParams } from '@hooks/useRouteParams'
 
 interface MutationProps {
-    saksbehandlingsperiodeId: string
+    behandlingId: string
 }
 
 export function useRevurder() {
-    const { personId, saksbehandlingsperiodeId: gammelSaksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId: gammelSaksbehandlingsperiodeId } = useRouteParams()
     const router = useRouter()
     const queryClient = useQueryClient()
 
     return useMutation<Saksbehandlingsperiode, ProblemDetailsError, MutationProps>({
-        mutationFn: async ({ saksbehandlingsperiodeId }) =>
+        mutationFn: async ({ behandlingId }) =>
             postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/revurder`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/revurder`,
                 saksbehandlingsperiodeSchema,
                 {},
             ),

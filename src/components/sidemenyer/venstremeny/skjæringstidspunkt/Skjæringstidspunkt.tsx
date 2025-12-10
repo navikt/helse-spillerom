@@ -8,10 +8,10 @@ import { cn } from '@utils/tw'
 
 interface SkjæringstidspunktProps {
     dato: string
-    saksbehandlingsperiodeId: string
+    behandlingId: string
 }
 
-export function Skjæringstidspunkt({ dato, saksbehandlingsperiodeId }: SkjæringstidspunktProps): ReactElement {
+export function Skjæringstidspunkt({ dato, behandlingId }: SkjæringstidspunktProps): ReactElement {
     const [isEditing, setIsEditing] = useState(false)
 
     return (
@@ -20,11 +20,7 @@ export function Skjæringstidspunkt({ dato, saksbehandlingsperiodeId }: Skjærin
                 <SkjæringstidspunktIcon aria-hidden fontSize="1.25rem" className={cn({ 'mt-1.5': isEditing })} />
             </Tooltip>
             {isEditing ? (
-                <SkjæringstidspunktForm
-                    dato={dato}
-                    saksbehandlingsperiodeId={saksbehandlingsperiodeId}
-                    avbryt={() => setIsEditing(false)}
-                />
+                <SkjæringstidspunktForm dato={dato} behandlingId={behandlingId} avbryt={() => setIsEditing(false)} />
             ) : (
                 <>
                     <BodyShort size="small">{getFormattedDateString(dato)}</BodyShort>

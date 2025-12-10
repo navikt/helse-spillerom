@@ -79,7 +79,7 @@ function RetroTemaToggleHeader(): ReactElement {
 }
 export function UtviklingMeny(): ReactElement | null {
     const [activeModal, setActiveModal] = useState<ModalType>(null)
-    const { saksbehandlingsperiodeId } = useRouteParams()
+    const { behandlingId } = useRouteParams()
     const testdataMenyRef = useRef<{ åpne: () => void }>(null)
 
     useRegisterShortcutHandler('open_testdata', () => {
@@ -90,7 +90,7 @@ export function UtviklingMeny(): ReactElement | null {
         return null
     }
 
-    const showUtviklingButtons = !erProd && saksbehandlingsperiodeId
+    const showUtviklingButtons = !erProd && behandlingId
 
     const closeModal = () => setActiveModal(null)
 

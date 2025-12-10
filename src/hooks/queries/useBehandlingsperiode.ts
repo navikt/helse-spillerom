@@ -4,10 +4,10 @@ import { useSaksbehandlingsperioder } from './useSaksbehandlingsperioder'
 
 function findBehandling(
     saksbehandlingsperioder: Saksbehandlingsperiode[] | undefined,
-    saksbehandlingsperiodeId: string | undefined,
+    behandlingId: string | undefined,
 ) {
-    if (!saksbehandlingsperioder || !saksbehandlingsperiodeId) return undefined
-    return saksbehandlingsperioder.find((periode) => periode.id === saksbehandlingsperiodeId)
+    if (!saksbehandlingsperioder || !behandlingId) return undefined
+    return saksbehandlingsperioder.find((periode) => periode.id === behandlingId)
 }
 
 export function useBehandlingsperiodeMedLoading(id: string) {

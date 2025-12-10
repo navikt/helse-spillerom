@@ -10,21 +10,17 @@ import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateFiel
 
 interface SkjæringstidspunktFormProps {
     dato: string
-    saksbehandlingsperiodeId: string
+    behandlingId: string
     avbryt: () => void
 }
 
-export function SkjæringstidspunktForm({
-    dato,
-    saksbehandlingsperiodeId,
-    avbryt,
-}: SkjæringstidspunktFormProps): ReactElement {
+export function SkjæringstidspunktForm({ dato, behandlingId, avbryt }: SkjæringstidspunktFormProps): ReactElement {
     const mutation = useOppdaterSkjæringstidspunkt()
     const form = useForm<SkjæringstidspunktSchema>({
         resolver: zodResolver(skjæringstidspunktSchema),
         defaultValues: {
             skjæringstidspunkt: dato,
-            saksbehandlingsperiodeId: saksbehandlingsperiodeId,
+            saksbehandlingsperiodeId: behandlingId,
         },
     })
 

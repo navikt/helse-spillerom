@@ -11,13 +11,13 @@ type MutationProps = {
 }
 
 export function useOpprettYrkesaktivitet() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<Yrkesaktivitet, Error, MutationProps>({
         mutationFn: async ({ kategorisering }) => {
             return await postAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet`,
                 yrkesaktivitetSchema,
                 {
                     kategorisering,
@@ -25,7 +25,7 @@ export function useOpprettYrkesaktivitet() {
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
         },
     })
 }

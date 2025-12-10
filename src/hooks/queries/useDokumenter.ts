@@ -7,15 +7,15 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useDokumenter() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
 
     return useQuery<Dokument[], Error>({
-        queryKey: queryKeys.dokumenter(personId, saksbehandlingsperiodeId),
+        queryKey: queryKeys.dokumenter(personId, behandlingId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/dokumenter`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/dokumenter`,
                 z.array(dokumentSchema),
             ),
-        enabled: Boolean(personId && saksbehandlingsperiodeId),
+        enabled: Boolean(personId && behandlingId),
     })
 }

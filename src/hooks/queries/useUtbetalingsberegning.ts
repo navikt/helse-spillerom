@@ -10,17 +10,17 @@ import { queryKeys } from '@utils/queryKeys'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 export function useUtbetalingsberegning() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const router = useRouter()
 
     const query = useQuery<BeregningResponse | null, ProblemDetailsError>({
-        queryKey: queryKeys.utbetalingsberegning(personId, saksbehandlingsperiodeId),
+        queryKey: queryKeys.utbetalingsberegning(personId, behandlingId),
         queryFn: () =>
             fetchAndParse(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/utbetalingsberegning`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/utbetalingsberegning`,
                 z.union([beregningResponseSchema, z.null()]),
             ),
-        enabled: !!personId && !!saksbehandlingsperiodeId,
+        enabled: !!personId && !!behandlingId,
     })
 
     useEffect(() => {

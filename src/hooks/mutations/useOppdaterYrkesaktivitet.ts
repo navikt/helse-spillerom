@@ -27,7 +27,7 @@ type OppdaterPerioderMutationProps = {
 }
 
 export function useOppdaterYrkesaktivitetKategorisering() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, KategoriseringMutationProps>({
@@ -35,49 +35,49 @@ export function useOppdaterYrkesaktivitetKategorisering() {
             // Valider kategorisering mot schema før sending
             const validertKategorisering = yrkesaktivitetKategoriseringSchema.parse(kategorisering)
             return await putNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/kategorisering`,
                 validertKategorisering,
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
             // Invalider historikk siden kategorisering endring kan legge til ny historikkinnslag
-            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderSaksbehandlingsperiodeHistorikk(queryClient, personId, behandlingId)
         },
     })
 }
 
 export function useOppdaterYrkesaktivitetDagoversikt() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, OppdaterDagerMutationProps>({
         mutationFn: async ({ yrkesaktivitetId, dager, notat }) => {
             // Send kun dagene som skal oppdateres
             return await putNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/dagoversikt`,
                 { dager, notat },
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
         },
     })
 }
 
 export function useOppdaterYrkesaktivitetPerioder() {
-    const { personId, saksbehandlingsperiodeId } = useRouteParams()
+    const { personId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
     return useMutation<void, Error, OppdaterPerioderMutationProps>({
         mutationFn: async ({ yrkesaktivitetId, perioder }) => {
             return await putNoContent(
-                `/api/bakrommet/v1/${personId}/behandlinger/${saksbehandlingsperiodeId}/yrkesaktivitet/${yrkesaktivitetId}/perioder`,
+                `/api/bakrommet/v1/${personId}/behandlinger/${behandlingId}/yrkesaktivitet/${yrkesaktivitetId}/perioder`,
                 perioder,
             )
         },
         onSuccess: () => {
-            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, saksbehandlingsperiodeId)
+            invaliderYrkesaktivitetRelaterteQueries(queryClient, personId, behandlingId)
         },
     })
 }

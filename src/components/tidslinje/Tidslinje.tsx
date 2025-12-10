@@ -5,7 +5,7 @@ import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@na
 import dayjs from 'dayjs'
 import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon, SackKronerIcon } from '@navikt/aksel-icons'
 import { useRouter } from 'next/navigation'
-import { useParams } from 'next/navigation' // Brukes kun for saksbehandlingsperiodeId og tilkommenId som kan være undefined
+import { useParams } from 'next/navigation' // Brukes kun for behandlingId og tilkommenId som kan være undefined
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -26,7 +26,7 @@ import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
 export function Tidslinje(): ReactElement {
     const router = useRouter()
     const { personId } = usePersonRouteParams()
-    const params = useParams() // Brukes kun for saksbehandlingsperiodeId og tilkommenId som kan være undefined
+    const params = useParams() // Brukes kun for behandlingId og tilkommenId som kan være undefined
 
     const { data, isLoading, isError, refetch } = useTidslinje()
 
@@ -50,9 +50,7 @@ export function Tidslinje(): ReactElement {
                                     periode.skjæringstidspunkt ? dayjs(periode.skjæringstidspunkt) : undefined
                                 }
                                 onSelectPeriod={() => router.push(`/person/${personId}/${periode.behandlingId}`)}
-                                activePeriod={
-                                    params.saksbehandlingsperiodeId === periode.behandlingId && !params.tilkommenId
-                                }
+                                activePeriod={params.behandlingId === periode.behandlingId && !params.tilkommenId}
                                 icon={statusTilIkon[periode.status]}
                                 variant={periode.ghost ? 'GHOST' : periode.status}
                             >
@@ -74,7 +72,7 @@ export function Tidslinje(): ReactElement {
                                     )
                                 }
                                 activePeriod={
-                                    params.saksbehandlingsperiodeId === periode.behandlingId &&
+                                    params.behandlingId === periode.behandlingId &&
                                     params.tilkommenId === periode.tilkommenInntektId
                                 }
                                 icon={<PlusIcon />}
@@ -131,15 +129,15 @@ function TilkommenInntektKnapp(): ReactElement {
     const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
     const router = useRouter()
     const { personId } = usePersonRouteParams()
-    const params = useParams() // Brukes kun for saksbehandlingsperiodeId som kan være undefined
+    const params = useParams() // Brukes kun for behandlingId som kan være undefined
 
     if (!kanSaksbehandles || !aktivSaksbehandlingsperiode) {
         return <></>
     }
 
     const handleLeggTilTilkommenInntekt = () => {
-        if (personId && params.saksbehandlingsperiodeId) {
-            router.push(`/person/${personId}/${params.saksbehandlingsperiodeId}/tilkommen-inntekt/opprett`)
+        if (personId && params.behandlingId) {
+            router.push(`/person/${personId}/${params.behandlingId}/tilkommen-inntekt/opprett`)
         }
     }
 
