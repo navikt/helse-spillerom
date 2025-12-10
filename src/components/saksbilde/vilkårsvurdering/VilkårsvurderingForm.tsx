@@ -2,7 +2,7 @@
 
 import { Fragment, ReactElement, useEffect, useRef } from 'react'
 import { Button, Checkbox, CheckboxGroup, HStack, Radio, RadioGroup, Select, Textarea, VStack } from '@navikt/ds-react'
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 
@@ -32,103 +32,6 @@ interface VilkårsvurderingFormProps {
     vilkår: Hovedspørsmål
     vurdering?: Vilkaarsvurdering
     onSuccess?: () => void
-}
-
-// Dynamisk schema basert på vilkårstruktur
-const createDynamicSchema = (vilkår: Hovedspørsmål) => {
-    // Bygger et objekt med alle mulige spørsmål
-    const spørsmålFields: Record<string, z.ZodString | z.ZodOptional<z.ZodString>> = {}
-
-    const samleSpørsmålKoder = (spørsmål: UnderspørsmålSchema, isTopLevel: boolean = false) => {
-        // Registrer dette spørsmålet
-        // Top level spørsmål er påkrevd, men ikke CHECKBOX (som er valgfri)
-        if (isTopLevel && spørsmål.variant !== 'CHECKBOX') {
-            spørsmålFields[spørsmål.kode] = z
-                .string({
-                    message: 'Du må velge et alternativ',
-                })
-                .min(1, 'Du må velge et alternativ')
-        } else {
-            spørsmålFields[spørsmål.kode] = z.string().optional()
-        }
-
-        // Gå gjennom alternativer og deres underspørsmål
-        if (spørsmål.alternativer) {
-            for (const alt of spørsmål.alternativer) {
-                if (alt.underspørsmål) {
-                    for (const nestedSpørsmål of alt.underspørsmål) {
-                        samleSpørsmålKoder(nestedSpørsmål, false)
-                    }
-                }
-            }
-        }
-    }
-
-    // Samle alle spørsmål - første nivå er påkrevd
-    for (const spørsmål of vilkår.underspørsmål) {
-        samleSpørsmålKoder(spørsmål, true)
-    }
-
-    return z
-        .object({
-            ...spørsmålFields,
-            notat: z.string().optional(),
-        })
-        .superRefine((data, ctx) => {
-            // Custom validering for å sjekke at underspørsmål er besvart
-            const validerUnderspørsmål = (spørsmål: UnderspørsmålSchema, path: string[] = []) => {
-                if (spørsmål.variant === 'RADIO' || spørsmål.variant === 'SELECT') {
-                    const valgtVerdi = (data as Record<string, string | undefined>)[spørsmål.kode]
-                    if (valgtVerdi) {
-                        const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
-                        if (valgtAlternativ?.underspørsmål) {
-                            for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
-                                const nestedVerdi = (data as Record<string, string | undefined>)[nestedSpørsmål.kode]
-                                if (!nestedVerdi || nestedVerdi.trim() === '') {
-                                    ctx.addIssue({
-                                        code: z.ZodIssueCode.custom,
-                                        path: [nestedSpørsmål.kode],
-                                        message: 'Dette feltet er påkrevd',
-                                    })
-                                } else {
-                                    // Rekursivt valider nestede spørsmål
-                                    validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
-                                }
-                            }
-                        }
-                    }
-                } else if (spørsmål.variant === 'CHECKBOX') {
-                    const verdi = (data as Record<string, string | undefined>)[spørsmål.kode]
-                    const valgteVerdier = verdi?.split(',').filter((v: string) => v) || []
-                    if (valgteVerdier.length > 0) {
-                        for (const valgtVerdi of valgteVerdier) {
-                            const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
-                            if (valgtAlternativ?.underspørsmål) {
-                                for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
-                                    const nestedVerdi = (data as Record<string, string | undefined>)[
-                                        nestedSpørsmål.kode
-                                    ]
-                                    if (!nestedVerdi || nestedVerdi.trim() === '') {
-                                        ctx.addIssue({
-                                            code: z.ZodIssueCode.custom,
-                                            path: [nestedSpørsmål.kode],
-                                            message: 'Dette feltet er påkrevd',
-                                        })
-                                    } else {
-                                        validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Valider alle hovedspørsmål
-            for (const spørsmål of vilkår.underspørsmål) {
-                validerUnderspørsmål(spørsmål)
-            }
-        })
 }
 
 export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: VilkårsvurderingFormProps): ReactElement {
@@ -499,4 +402,101 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
             </VStack>
         </form>
     )
+}
+
+// Dynamisk schema basert på vilkårstruktur
+function createDynamicSchema(vilkår: Hovedspørsmål) {
+    // Bygger et objekt med alle mulige spørsmål
+    const spørsmålFields: Record<string, z.ZodString | z.ZodOptional<z.ZodString>> = {}
+
+    const samleSpørsmålKoder = (spørsmål: UnderspørsmålSchema, isTopLevel: boolean = false) => {
+        // Registrer dette spørsmålet
+        // Top level spørsmål er påkrevd, men ikke CHECKBOX (som er valgfri)
+        if (isTopLevel && spørsmål.variant !== 'CHECKBOX') {
+            spørsmålFields[spørsmål.kode] = z
+                .string({
+                    message: 'Du må velge et alternativ',
+                })
+                .min(1, 'Du må velge et alternativ')
+        } else {
+            spørsmålFields[spørsmål.kode] = z.string().optional()
+        }
+
+        // Gå gjennom alternativer og deres underspørsmål
+        if (spørsmål.alternativer) {
+            for (const alt of spørsmål.alternativer) {
+                if (alt.underspørsmål) {
+                    for (const nestedSpørsmål of alt.underspørsmål) {
+                        samleSpørsmålKoder(nestedSpørsmål, false)
+                    }
+                }
+            }
+        }
+    }
+
+    // Samle alle spørsmål - første nivå er påkrevd
+    for (const spørsmål of vilkår.underspørsmål) {
+        samleSpørsmålKoder(spørsmål, true)
+    }
+
+    return z
+        .object({
+            ...spørsmålFields,
+            notat: z.string().optional(),
+        })
+        .superRefine((data, ctx) => {
+            // Custom validering for å sjekke at underspørsmål er besvart
+            const validerUnderspørsmål = (spørsmål: UnderspørsmålSchema, path: string[] = []) => {
+                if (spørsmål.variant === 'RADIO' || spørsmål.variant === 'SELECT') {
+                    const valgtVerdi = (data as Record<string, string | undefined>)[spørsmål.kode]
+                    if (valgtVerdi) {
+                        const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
+                        if (valgtAlternativ?.underspørsmål) {
+                            for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
+                                const nestedVerdi = (data as Record<string, string | undefined>)[nestedSpørsmål.kode]
+                                if (!nestedVerdi || nestedVerdi.trim() === '') {
+                                    ctx.addIssue({
+                                        code: z.ZodIssueCode.custom,
+                                        path: [nestedSpørsmål.kode],
+                                        message: 'Dette feltet er påkrevd',
+                                    })
+                                } else {
+                                    // Rekursivt valider nestede spørsmål
+                                    validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
+                                }
+                            }
+                        }
+                    }
+                } else if (spørsmål.variant === 'CHECKBOX') {
+                    const verdi = (data as Record<string, string | undefined>)[spørsmål.kode]
+                    const valgteVerdier = verdi?.split(',').filter((v: string) => v) || []
+                    if (valgteVerdier.length > 0) {
+                        for (const valgtVerdi of valgteVerdier) {
+                            const valgtAlternativ = spørsmål.alternativer?.find((alt) => alt.kode === valgtVerdi)
+                            if (valgtAlternativ?.underspørsmål) {
+                                for (const nestedSpørsmål of valgtAlternativ.underspørsmål) {
+                                    const nestedVerdi = (data as Record<string, string | undefined>)[
+                                        nestedSpørsmål.kode
+                                    ]
+                                    if (!nestedVerdi || nestedVerdi.trim() === '') {
+                                        ctx.addIssue({
+                                            code: z.ZodIssueCode.custom,
+                                            path: [nestedSpørsmål.kode],
+                                            message: 'Dette feltet er påkrevd',
+                                        })
+                                    } else {
+                                        validerUnderspørsmål(nestedSpørsmål, [...path, nestedSpørsmål.kode])
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Valider alle hovedspørsmål
+            for (const spørsmål of vilkår.underspørsmål) {
+                validerUnderspørsmål(spørsmål)
+            }
+        })
 }

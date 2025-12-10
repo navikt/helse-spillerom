@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { Accordion, BodyShort, Table, Tag, TagProps } from '@navikt/ds-react'
 import { AccordionContent, AccordionHeader, AccordionItem } from '@navikt/ds-react/Accordion'
 import {
@@ -23,6 +23,7 @@ import { FetchError } from '@components/saksbilde/FetchError'
 import { kategoriLabels } from './kategorier'
 
 export function Vilkårsvurdering(): ReactElement {
+    const [expandedRow, setExpandedRow] = useState<string | undefined>(undefined)
     const { data: vilkårsvurderinger, isLoading, isError, refetch } = useVilkaarsvurderinger()
     const {
         data: kodeverk,
@@ -51,7 +52,7 @@ export function Vilkårsvurdering(): ReactElement {
     )
 
     return (
-        <Accordion size="small" headingSize="xsmall" indent={false}>
+        <Accordion size="small" indent={false}>
             {Object.entries(gruppert).map(([kategori, vilkårListe]) => {
                 const vurdertAntall = vilkårListe.filter((v) =>
                     vilkårsvurderinger?.some((vv) => vv.hovedspørsmål === v.kode),
@@ -74,7 +75,9 @@ export function Vilkårsvurdering(): ReactElement {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {vilkårListe.map((vilkår) => {
+                                    {vilkårListe.map((vilkår, index) => {
+                                        const isLast = index === vilkårListe.length - 1
+                                        const rowKey = `${kategori}-${index}`
                                         const vilkårsvurdering = vilkårsvurderinger?.find(
                                             (v) => v.hovedspørsmål === vilkår.kode,
                                         )
@@ -84,10 +87,19 @@ export function Vilkårsvurdering(): ReactElement {
                                                 key={vilkår.kode}
                                                 togglePlacement="right"
                                                 expandOnRowClick
+                                                open={expandedRow === rowKey}
+                                                onClick={() =>
+                                                    setExpandedRow((prev) => (prev === rowKey ? undefined : rowKey))
+                                                }
                                                 content={
                                                     <VilkårsvurderingForm
                                                         vilkår={vilkår}
                                                         vurdering={vilkårsvurdering}
+                                                        onSuccess={() =>
+                                                            setExpandedRow(
+                                                                isLast ? undefined : `${kategori}-${index + 1}`,
+                                                            )
+                                                        }
                                                     />
                                                 }
                                             >
