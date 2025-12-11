@@ -32,8 +32,6 @@ export const selvstendigForsikringSchema = z.enum([
     'INGEN_FORSIKRING',
 ])
 
-export const variantAvInaktivSchema = z.enum(['INAKTIV_VARIANT_A', 'INAKTIV_VARIANT_B'])
-
 // TypeSelvstendigNæringsdrivende
 export const typeSelvstendigNæringsdrivendeSchema = z.discriminatedUnion('type', [
     z.object({
@@ -79,7 +77,6 @@ export const yrkesaktivitetKategoriseringSchema = z.discriminatedUnion('inntekts
     z.object({
         inntektskategori: z.literal('INAKTIV'),
         sykmeldt: z.literal(true),
-        variant: variantAvInaktivSchema,
     }),
     z.object({
         inntektskategori: z.literal('ARBEIDSLEDIG'),
@@ -92,7 +89,6 @@ export type TypeArbeidstaker = z.infer<typeof typeArbeidstakerSchema>
 export type FrilanserForsikring = z.infer<typeof frilanserForsikringSchema>
 export type SelvstendigForsikring = z.infer<typeof selvstendigForsikringSchema>
 export type TypeSelvstendigNæringsdrivende = z.infer<typeof typeSelvstendigNæringsdrivendeSchema>
-export type VariantAvInaktiv = z.infer<typeof variantAvInaktivSchema>
 
 /**
  * Henter orgnummer fra YrkesaktivitetKategorisering hvis det finnes

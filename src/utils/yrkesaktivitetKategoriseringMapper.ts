@@ -217,20 +217,9 @@ function mapSelvstendigForsikring(map: Record<string, string | string[]>): Selvs
 }
 
 function mapInaktiv(map: Record<string, string | string[]>): YrkesaktivitetKategorisering {
-    const variantString = map['VARIANT_AV_INAKTIV']
-    if (!variantString || typeof variantString !== 'string') {
-        throw new InputValideringException('VARIANT_AV_INAKTIV mangler for INAKTIV')
-    }
-
-    const validVarianter = ['INAKTIV_VARIANT_A', 'INAKTIV_VARIANT_B']
-    if (!validVarianter.includes(variantString)) {
-        throw new InputValideringException(`Ugyldig VARIANT_AV_INAKTIV: ${variantString}`)
-    }
-
     return {
         inntektskategori: 'INAKTIV',
         sykmeldt: true,
-        variant: variantString as 'INAKTIV_VARIANT_A' | 'INAKTIV_VARIANT_B',
     }
 }
 
@@ -316,7 +305,7 @@ export function toMap(kategorisering: YrkesaktivitetKategorisering): Record<stri
             break
         }
         case 'INAKTIV':
-            map['VARIANT_AV_INAKTIV'] = kategorisering.variant
+            // Ingen ekstra felter
             break
         case 'ARBEIDSLEDIG':
             // Ingen ekstra felter
