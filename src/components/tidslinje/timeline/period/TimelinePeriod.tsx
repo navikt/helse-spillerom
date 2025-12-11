@@ -10,9 +10,14 @@ import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
 import { Maybe } from '@/utils/tsUtils'
-import { BehandlingStatus } from '@schemas/behandling'
 
-export type TidslinjeVariant = BehandlingStatus | 'GHOST' | 'TILKOMMEN_INNTEKT'
+export type TimelineVariant =
+    | 'behandles'
+    | 'godkjent'
+    | 'ingen_utbetaling'
+    | 'revurdert'
+    | 'ghost'
+    | 'tilkommen_inntekt'
 
 export interface TimelinePeriodProps extends PropsWithChildren {
     startDate: Dayjs
@@ -21,7 +26,7 @@ export interface TimelinePeriodProps extends PropsWithChildren {
     activePeriod?: boolean
     onSelectPeriod?: () => void
     icon?: ReactElement
-    variant: TidslinjeVariant
+    variant: TimelineVariant
     generasjonIndex?: number
 }
 
@@ -47,7 +52,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
     return (
         <>
             <button
-                data-color={statusTilDataColor[variant]}
+                data-period-variant={variant}
                 className={cn(
                     'aksel-timeline__period--clickable aksel-timeline__period absolute h-[24px] rounded-full',
                     {
@@ -72,16 +77,6 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 }
 
 TimelinePeriod.componentType = 'TimelinePeriod'
-
-export const statusTilDataColor: Record<TidslinjeVariant, string> = {
-    UNDER_BEHANDLING: 'warning',
-    TIL_BESLUTNING: 'warning',
-    UNDER_BESLUTNING: 'warning',
-    GODKJENT: 'success',
-    REVURDERT: 'error',
-    GHOST: 'neutral',
-    TILKOMMEN_INNTEKT: 'info',
-}
 
 const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {
     const [isWider, setIsWider] = useState(false)

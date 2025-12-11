@@ -8,8 +8,7 @@ type TidslinjeElement = {
     tom: string
     skjæringstidspunkt?: string
     behandlingId: string
-    status: BehandlingStatus
-    ghost: boolean
+    status: BehandlingStatus | 'GHOST'
     generasjonIndex: number
 }
 
@@ -30,8 +29,7 @@ function toTidslinjeElement(
         tom: behandling.tom,
         skjæringstidspunkt: behandling.skjæringstidspunkt ?? undefined,
         behandlingId: behandling.id,
-        status: behandling.status,
-        ghost: ya ? !ya.sykmeldt : false,
+        status: ya && !ya.sykmeldt ? 'GHOST' : behandling.status,
         generasjonIndex,
     }
 }

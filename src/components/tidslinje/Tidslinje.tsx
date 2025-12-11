@@ -3,13 +3,13 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, PencilFillIcon, PlusIcon } from '@navikt/aksel-icons'
+import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon } from '@navikt/aksel-icons'
 import { useParams, useRouter } from 'next/navigation' // Brukes kun for behandlingId og tilkommenId som kan være undefined
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
-import { TimelinePeriod } from '@components/tidslinje/timeline/period/TimelinePeriod'
+import { TimelinePeriod, TimelineVariant } from '@components/tidslinje/timeline/period/TimelinePeriod'
 import { TimelineRow } from '@components/tidslinje/timeline/row/TimelineRow'
 import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
@@ -51,7 +51,7 @@ export function Tidslinje(): ReactElement {
                                 onSelectPeriod={() => router.push(`/person/${pseudoId}/${periode.behandlingId}`)}
                                 activePeriod={params.behandlingId === periode.behandlingId && !params.tilkommenId}
                                 icon={statusTilIkon[periode.status]}
-                                variant={periode.ghost ? 'GHOST' : periode.status}
+                                variant={statusTilVariant[periode.status]}
                                 generasjonIndex={periode.generasjonIndex}
                             >
                                 <BehandlingPopover behandlingId={periode.behandlingId} />
@@ -75,8 +75,8 @@ export function Tidslinje(): ReactElement {
                                     params.behandlingId === periode.behandlingId &&
                                     params.tilkommenId === periode.tilkommenInntektId
                                 }
-                                icon={<PlusIcon />}
-                                variant="TILKOMMEN_INNTEKT"
+                                icon={<PlusCircleFillIcon />}
+                                variant="tilkommen_inntekt"
                             >
                                 <TilkommenInntektPopover
                                     behandlingId={periode.behandlingId}
@@ -91,6 +91,24 @@ export function Tidslinje(): ReactElement {
             <TilkommenInntektKnapp />
         </>
     )
+}
+
+const statusTilVariant: Record<BehandlingStatus | 'GHOST', TimelineVariant> = {
+    UNDER_BEHANDLING: 'behandles',
+    TIL_BESLUTNING: 'behandles',
+    UNDER_BESLUTNING: 'behandles',
+    GODKJENT: 'godkjent',
+    REVURDERT: 'revurdert',
+    GHOST: 'ghost',
+}
+
+export const statusTilIkon: Record<BehandlingStatus | 'GHOST', ReactElement> = {
+    UNDER_BEHANDLING: <PencilFillIcon />,
+    TIL_BESLUTNING: <PencilFillIcon />,
+    UNDER_BESLUTNING: <PencilFillIcon />,
+    GODKJENT: <CheckmarkCircleFillIcon />,
+    REVURDERT: <CheckmarkCircleFillIcon />,
+    GHOST: <CheckmarkCircleFillIcon />,
 }
 
 function TilkommenInntektPopover({
@@ -201,14 +219,6 @@ function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ headin
             </HGrid>
         </VStack>
     )
-}
-
-export const statusTilIkon: Record<BehandlingStatus, ReactElement> = {
-    UNDER_BEHANDLING: <PencilFillIcon />,
-    TIL_BESLUTNING: <PencilFillIcon />,
-    UNDER_BESLUTNING: <PencilFillIcon />,
-    GODKJENT: <CheckmarkCircleFillIcon />,
-    REVURDERT: <PencilFillIcon />,
 }
 
 function TimelineSkeleton(): ReactElement {

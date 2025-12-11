@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import React, { PropsWithChildren, ReactElement, ReactNode } from 'react'
 
 import { TimelineRowProps } from '@components/tidslinje/timeline/row/TimelineRow'
-import { TidslinjeVariant, TimelinePeriodProps } from '@components/tidslinje/timeline/period/TimelinePeriod'
+import { TimelinePeriodProps, TimelineVariant } from '@components/tidslinje/timeline/period/TimelinePeriod'
 
 export interface ComponentWithType<P = unknown> extends React.FC<P> {
     componentType: string
@@ -17,7 +17,7 @@ type Period = {
     endDate: Dayjs
     skjæringstidspunkt?: Dayjs
     icon?: ReactElement
-    variant: TidslinjeVariant
+    variant: TimelineVariant
     cropLeft: boolean
     cropRight: boolean
     generasjonIndex: number
