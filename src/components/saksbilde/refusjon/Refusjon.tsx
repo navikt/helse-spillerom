@@ -88,7 +88,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
 
     return (
         <Table.Row>
-            <Table.DataCell>{getInntektsforholdDisplayText(ya.kategorisering)}</Table.DataCell>
+            <Table.DataCell>{getInntektsforholdDisplayText(ya.kategorisering, ya.orgnavn)}</Table.DataCell>
             <Table.DataCell>
                 {edit ? (
                     <FormProvider {...methods}>
