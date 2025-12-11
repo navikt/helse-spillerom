@@ -1,9 +1,9 @@
 'use client'
 
-import { CopyButton } from '@navikt/ds-react'
 import { ReactElement } from 'react'
 
 import { useOrganisasjonsnavn } from '@/hooks/queries/useOrganisasjonsnavn'
+import { OrgMedCopyButton } from '@components/organisasjon/OrgMedCopyButton'
 
 interface OrganisasjonsnavnProps {
     orgnummer: string
@@ -17,11 +17,7 @@ export function Organisasjonsnavn({ orgnummer, medOrgnummer = false }: Organisas
     if (error || !organisasjonsnavn) return <>{orgnummer} (ukjent organisasjon)</>
 
     if (medOrgnummer) {
-        return (
-            <span className="flex flex-row items-center">
-                {organisasjonsnavn} ({orgnummer} <CopyButton copyText={orgnummer} size="xsmall" />)
-            </span>
-        )
+        return <OrgMedCopyButton orgnummer={orgnummer} orgnavn={organisasjonsnavn} />
     }
 
     return <>{organisasjonsnavn}</>

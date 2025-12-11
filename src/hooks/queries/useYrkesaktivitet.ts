@@ -20,6 +20,7 @@ export function useYrkesaktivitet() {
                 `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
+        select: sortByOrgnavn,
         enabled: !!pseudoId && !!behandlingId,
     })
 
@@ -31,4 +32,8 @@ export function useYrkesaktivitet() {
     }, [query.error, router])
 
     return query
+}
+
+export function sortByOrgnavn(data: Yrkesaktivitet[]): Yrkesaktivitet[] {
+    return [...data].sort((a, b) => (a.orgnavn ?? '').localeCompare(b.orgnavn ?? '', 'nb'))
 }

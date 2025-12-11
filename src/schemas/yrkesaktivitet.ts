@@ -20,6 +20,7 @@ export const perioderSchema = z.object({
 export const yrkesaktivitetSchema = z.object({
     id: z.string(),
     kategorisering: yrkesaktivitetKategoriseringSchema,
+    orgnavn: z.string().nullable(),
     dagoversikt: dagoversiktSchema.nullable(),
     generertFraDokumenter: z.array(z.string()),
     perioder: perioderSchema.nullable(),

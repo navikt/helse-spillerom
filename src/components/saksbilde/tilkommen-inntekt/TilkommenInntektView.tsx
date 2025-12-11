@@ -67,7 +67,7 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Organisasjonsnummer
                                 </BodyShort>
-                                <BodyShort>
+                                <BodyShort as="span">
                                     <Organisasjonsnavn orgnummer={tilkommenInntekt.ident} medOrgnummer />
                                 </BodyShort>
                             </VStack>

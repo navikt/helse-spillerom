@@ -1,9 +1,13 @@
 import React, { ReactElement } from 'react'
+import { BodyShort } from '@navikt/ds-react'
 
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
-import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
+import { Maybe } from '@utils/tsUtils'
 
-export function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategorisering): ReactElement {
+export function getInntektsforholdDisplayText(
+    kategorisering: YrkesaktivitetKategorisering,
+    orgnavn: Maybe<string>,
+): ReactElement {
     let typeText: string
     let orgnummer: string | undefined
 
@@ -69,9 +73,9 @@ export function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKate
     if (orgnummer) {
         return (
             <div className="text-center">
-                <div className="text-sm font-medium">
-                    <Organisasjonsnavn orgnummer={orgnummer} />
-                </div>
+                <BodyShort className="text-sm" weight="semibold">
+                    {orgnavn ?? `${orgnummer} (ukjent organisasjon)`}
+                </BodyShort>
                 <div className="text-gray-600 text-xs">{typeText}</div>
             </div>
         )

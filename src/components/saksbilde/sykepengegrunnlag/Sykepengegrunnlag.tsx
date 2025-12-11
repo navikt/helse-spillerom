@@ -127,7 +127,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 </TableHeaderCell>
                             </TableRow>
                         </TableHeader>
-                        <TableBody className="border-b-1 border-b-ax-bg-neutral-strong">
+                        <TableBody className="border-b border-b-ax-bg-neutral-strong">
                             {yrkesaktiviteter.map((yrkesaktivitet) => {
                                 return (
                                     <TableRow
@@ -144,7 +144,10 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                         }}
                                     >
                                         <TableDataCell className="pl-8 whitespace-nowrap">
-                                            <NavnOgIkon kategorisering={yrkesaktivitet.kategorisering} />
+                                            <NavnOgIkon
+                                                kategorisering={yrkesaktivitet.kategorisering}
+                                                orgnavn={yrkesaktivitet.orgnavn}
+                                            />
                                         </TableDataCell>
                                         <TableDataCell className="pr-16 text-right">
                                             {formaterBeløpKroner(yrkesaktivitet?.inntektData?.omregnetÅrsinntekt)}
@@ -255,7 +258,11 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 </Button>
                             </div>
                         )}
-                        <NavnOgIkon kategorisering={aktivYrkesaktivitet.kategorisering} medOrgnummer />
+                        <NavnOgIkon
+                            kategorisering={aktivYrkesaktivitet.kategorisering}
+                            orgnavn={aktivYrkesaktivitet.orgnavn}
+                            medOrgnummer
+                        />
                         {!erIRedigeringsmodus && (
                             <>
                                 {kategori === 'ARBEIDSTAKER' && (

@@ -1,8 +1,7 @@
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { z } from 'zod/v4'
-import { useParams } from 'next/navigation'
 
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
@@ -11,6 +10,7 @@ import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAkti
 import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlag'
 import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
+import { sortByOrgnavn } from '@hooks/queries/useYrkesaktivitet'
 
 export function useYrkesaktivitetForSykepengegrunnlag() {
     const { pseudoId } = usePersonRouteParams()
@@ -54,6 +54,7 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
                 `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingIdForYrkesaktivitet}/yrkesaktivitet`,
                 z.array(yrkesaktivitetSchema),
             ),
+        select: sortByOrgnavn,
         enabled: yrkesaktivitetFetchEnabled,
     })
 

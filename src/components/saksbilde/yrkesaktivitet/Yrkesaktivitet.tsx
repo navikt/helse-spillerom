@@ -20,14 +20,13 @@ import YrkesaktivitetForm from '@components/saksbilde/yrkesaktivitet/Yrkesaktivi
 import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetKodeverk'
 import { AnimatePresenceWrapper } from '@components/AnimatePresenceWrapper'
 import { getTestSafeTransition } from '@utils/tsUtils'
-import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useBekreftelsesModal } from '@hooks/useBekreftelsesModal'
 import { BekreftelsesModal } from '@components/BekreftelsesModal'
 import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetSkeleton'
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
-import { maybeOrgnummer, YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
@@ -214,15 +213,7 @@ export function Yrkesaktivitet(): ReactElement {
                                             </BodyShort>
                                         </TableDataCell>
                                         <TableDataCell>
-                                            <VStack gap="1">
-                                                {maybeOrgnummer(forhold.kategorisering) && (
-                                                    <BodyShort>
-                                                        <Organisasjonsnavn
-                                                            orgnummer={maybeOrgnummer(forhold.kategorisering)!}
-                                                        />
-                                                    </BodyShort>
-                                                )}
-                                            </VStack>
+                                            <VStack gap="1">{forhold.orgnavn ?? 'Ukjent orgnavn'}</VStack>
                                         </TableDataCell>
                                         <TableDataCell>
                                             <BodyShort>{forhold.kategorisering.sykmeldt ? 'Ja' : 'Nei'}</BodyShort>
