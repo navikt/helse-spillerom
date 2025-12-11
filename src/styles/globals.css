@@ -130,3 +130,25 @@
     --ax-border-subtleA: var(--ax-border-meta-purple-subtleA);
     --ax-border-strong: var(--ax-border-meta-purple-strong);
 }
+
+[data-period-variant='ingen_utbetaling'] {
+    --ax-bg-soft: var(--ax-bg-neutral-soft);
+    --ax-bg-softA: var(--ax-bg-neutral-softA);
+    --ax-bg-moderate: var(--ax-bg-neutral-moderate);
+    --ax-bg-moderateA: var(--ax-bg-neutral-moderateA);
+    --ax-bg-moderate-hover: var(--ax-bg-neutral-moderate-hover);
+    --ax-bg-moderate-hoverA: var(--ax-bg-neutral-moderate-hoverA);
+    --ax-bg-moderate-pressed: var(--ax-bg-neutral-moderate-pressed);
+    --ax-bg-moderate-pressedA: var(--ax-bg-neutral-moderate-pressedA);
+    --ax-bg-strong: var(--ax-bg-neutral-strong);
+    --ax-bg-strong-hover: var(--ax-bg-neutral-strong-hover);
+    --ax-bg-strong-pressed: var(--ax-bg-neutral-strong-pressed);
+    --ax-text-default: var(--ax-text-neutral);
+    --ax-text-subtle: var(--ax-text-neutral-subtle);
+    --ax-text-decoration: var(--ax-text-default);
+    --ax-text-contrast: var(--ax-text-neutral-contrast);
+    --ax-border-default: var(--ax-border-neutral);
+    --ax-border-subtle: var(--ax-border-neutral-subtle);
+    --ax-border-subtleA: var(--ax-border-neutral-subtleA);
+    --ax-border-strong: var(--ax-border-neutral-strong);
+}
