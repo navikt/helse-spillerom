@@ -21,7 +21,7 @@
 }
 
 /* Tidslinjeperiode styling */
-[data-period-variant="behandles"] {
+[data-period-variant='behandles'] {
     --ax-bg-soft: var(--ax-bg-warning-soft);
     --ax-bg-softA: var(--ax-bg-warning-softA);
     --ax-bg-moderate: var(--ax-bg-warning-moderate);
@@ -43,7 +43,7 @@
     --ax-border-strong: var(--ax-border-warning-strong);
 }
 
-[data-period-variant="godkjent"] {
+[data-period-variant='godkjent'] {
     --ax-bg-soft: var(--ax-bg-success-soft);
     --ax-bg-softA: var(--ax-bg-success-softA);
     --ax-bg-moderate: var(--ax-bg-success-moderate);
@@ -65,7 +65,7 @@
     --ax-border-strong: var(--ax-border-success-strong);
 }
 
-[data-period-variant="revurdert"] {
+[data-period-variant='revurdert'] {
     --ax-bg-soft: var(--ax-bg-meta-lime-soft);
     --ax-bg-softA: var(--ax-bg-meta-lime-softA);
     --ax-bg-moderate: var(--ax-bg-meta-lime-soft);
@@ -87,7 +87,7 @@
     --ax-border-strong: var(--ax-border-meta-lime-strong);
 }
 
-[data-period-variant="ghost"] {
+[data-period-variant='ghost'] {
     --ax-bg-soft: var(--ax-bg-default);
     --ax-bg-softA: var(--ax-bg-default);
     --ax-bg-moderate: var(--ax-bg-default);
@@ -109,7 +109,7 @@
     --ax-border-strong: var(--ax-border-neutral-strong);
 }
 
-[data-period-variant="tilkommen_inntekt"] {
+[data-period-variant='tilkommen_inntekt'] {
     --ax-bg-soft: var(--ax-bg-meta-purple-soft);
     --ax-bg-softA: var(--ax-bg-meta-purple-softA);
     --ax-bg-moderate: var(--ax-bg-meta-purple-moderate);
