@@ -4,7 +4,7 @@ import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon } from '@navikt/aksel-icons'
-import { useParams, useRouter } from 'next/navigation' // Brukes kun for behandlingId og tilkommenId som kan være undefined
+import { useParams, useRouter } from 'next/navigation'
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
