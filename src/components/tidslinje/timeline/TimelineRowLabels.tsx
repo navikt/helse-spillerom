@@ -23,32 +23,32 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                 const expandedExtraHeight = isExpanded ? label.generationLevels * 32 : 0
 
                 return (
-                    <HStack
-                        as={isExpandable ? 'button' : 'div'}
-                        role={isExpandable ? 'button' : undefined}
-                        onClick={isExpandable ? () => toggleRowExpanded(label.rowIndex) : undefined}
-                        aria-expanded={isExpandable ? isExpanded : undefined}
-                        key={label.rowIndex}
-                        className={cn('my-4', {
-                            'cursor-pointer text-ax-text-accent-subtle group': isExpandable,
-                        })}
-                        style={{ height: `${24 + expandedExtraHeight}px` }}
-                        gap="2"
-                        wrap={false}
-                        align="start"
-                    >
-                        {isExpandable ? (
-                            isExpanded ? (
-                                <ChevronDownIcon className="-mr-1" fontSize="1.5rem" />
+                    <div key={label.rowIndex} className="my-4" style={{ height: `${24 + expandedExtraHeight}px` }}>
+                        <HStack
+                            as={isExpandable ? 'button' : 'div'}
+                            role={isExpandable ? 'button' : undefined}
+                            onClick={isExpandable ? () => toggleRowExpanded(label.rowIndex) : undefined}
+                            aria-expanded={isExpandable ? isExpanded : undefined}
+                            className={cn('h-6', {
+                                'cursor-pointer text-ax-text-accent-subtle group': isExpandable,
+                            })}
+                            gap="2"
+                            wrap={false}
+                            align="start"
+                        >
+                            {isExpandable ? (
+                                isExpanded ? (
+                                    <ChevronDownIcon className="-mr-1" fontSize="1.5rem" />
+                                ) : (
+                                    <ChevronRightIcon className="-mr-1" fontSize="1.5rem" />
+                                )
                             ) : (
-                                <ChevronRightIcon className="-mr-1" fontSize="1.5rem" />
-                            )
-                        ) : (
-                            <div className="w-5" />
-                        )}
-                        {label.icon}
-                        <BodyShort className="group-hover:underline">{label.label}</BodyShort>
-                    </HStack>
+                                <div className="w-5" />
+                            )}
+                            {label.icon}
+                            <BodyShort className="group-hover:underline">{label.label}</BodyShort>
+                        </HStack>
+                    </div>
                 )
             })}
         </VStack>
