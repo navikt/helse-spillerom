@@ -19,3 +19,10 @@ export const vilkaarsvurderingSchema = z.object({
 })
 
 export type Vilkaarsvurdering = z.infer<typeof vilkaarsvurderingSchema>
+
+export const oppdaterVilkaarsvurderingResponseSchema = z.object({
+    vilkaarsvurderingDto: vilkaarsvurderingSchema,
+    invalidations: z.array(z.string()),
+})
+
+export type OppdaterVilkaarsvurderingResponse = z.infer<typeof oppdaterVilkaarsvurderingResponseSchema>
