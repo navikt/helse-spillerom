@@ -29,7 +29,7 @@ export function fromMap(map: Record<string, string | string[]>): YrkesaktivitetK
         case 'SELVSTENDIG_NÆRINGSDRIVENDE':
             return mapSelvstendigNæringsdrivende(map)
         case 'INAKTIV':
-            return mapInaktiv(map)
+            return mapInaktiv()
         case 'ARBEIDSLEDIG':
             return {
                 inntektskategori: 'ARBEIDSLEDIG',
@@ -216,7 +216,7 @@ function mapSelvstendigForsikring(map: Record<string, string | string[]>): Selvs
     return forsikringString as SelvstendigForsikring
 }
 
-function mapInaktiv(map: Record<string, string | string[]>): YrkesaktivitetKategorisering {
+function mapInaktiv(): YrkesaktivitetKategorisering {
     return {
         inntektskategori: 'INAKTIV',
         sykmeldt: true,

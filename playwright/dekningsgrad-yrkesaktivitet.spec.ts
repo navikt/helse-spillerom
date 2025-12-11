@@ -61,23 +61,11 @@ test.describe('Dekningsgrad og Yrkesaktivitet', () => {
     })
 
     test('65% dekningsgrad inaktiv yrkeskategori', async ({ page }) => {
-        await opprettManuellBehandlingMedYrkesaktivitet('12345214264', () =>
-            fyllUtInaktivYrkesaktivitet('Bokstav A, 65% dekningsgrad')(page),
-        )(page)
+        await opprettManuellBehandlingMedYrkesaktivitet('12345214264', () => fyllUtInaktivYrkesaktivitet()(page))(page)
         await settSykepengegrunnlagNæringsdrivende()(page)
 
         await verifiserKategoriTag('Inaktiv')(page)
         await verifiserDekningsgradSynlig(page, '65%')
-    })
-
-    test('100% dekningsgrad inaktiv yrkeskategori', async ({ page }) => {
-        await opprettManuellBehandlingMedYrkesaktivitet('12345214265', () =>
-            fyllUtInaktivYrkesaktivitet('Bokstav B, 100% dekningsgrad')(page),
-        )(page)
-        await settSykepengegrunnlagNæringsdrivende()(page)
-
-        await verifiserKategoriTag('Inaktiv')(page)
-        await verifiserDekningsgradSynlig(page, '100%')
     })
 })
 

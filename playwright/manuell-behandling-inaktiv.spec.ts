@@ -43,10 +43,6 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             const yrkesaktivitetSelect = page.getByLabel('Velg type yrkesaktivitet')
             await yrkesaktivitetSelect.selectOption('Inaktiv')
 
-            // Velg "Bokstav A, 65% dekningsgrad"
-            const dekningsgradRadio = page.getByRole('radio', { name: 'Bokstav A, 65% dekningsgrad' })
-            await dekningsgradRadio.click()
-
             await lagreYrkesaktivitet()(page)
         })
 

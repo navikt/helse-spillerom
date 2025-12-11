@@ -165,17 +165,11 @@ export function fyllUtFrilanserYrkesaktivitet(erSykmeldt: boolean = false, orgnu
     }
 }
 
-export function fyllUtInaktivYrkesaktivitet(dekningsgrad: string) {
+export function fyllUtInaktivYrkesaktivitet() {
     return async (page: Page) => {
-        await test.step(`Fyll ut inaktiv yrkesaktivitet med ${dekningsgrad}`, async () => {
+        await test.step(`Fyll ut inaktiv yrkesaktivitet`, async () => {
             const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
             await typeSelect.selectOption('INAKTIV')
-
-            const dekningsgradRadio = page.getByRole('group', {
-                name: 'Hvordan fylles vilkårene i vilkårene i §8-47 første ledd?',
-            })
-            await dekningsgradRadio.waitFor({ state: 'visible' })
-            await dekningsgradRadio.getByRole('radio', { name: dekningsgrad }).check()
         })
     }
 }
