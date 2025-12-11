@@ -105,16 +105,20 @@ export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
                       },
                   ]
                 : []),
-            ...Object.entries(yrkesaktiviteterGrouped).map(([key, value]) => ({
+            ...Object.entries(yrkesaktiviteterGrouped)
+                .sort(([, a], [, b]) => a.navn.localeCompare(b.navn, 'nb'))
+                .map(([key, value]) => ({
+                    id: key,
+                    icon: <BriefcaseIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
+                    ...value,
+                })),
+        ],
+        tilkomneInntekter: Object.entries(tilkomneGrouped)
+            .sort(([, a], [, b]) => a.navn.localeCompare(b.navn, 'nb'))
+            .map(([key, value]) => ({
                 id: key,
-                icon: <BriefcaseIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
+                icon: <SackKronerIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
                 ...value,
             })),
-        ],
-        tilkomneInntekter: Object.entries(tilkomneGrouped).map(([key, value]) => ({
-            id: key,
-            icon: <SackKronerIcon aria-hidden className="text-ax-text-neutral" fontSize="1.5rem" />,
-            ...value,
-        })),
     }
 }
