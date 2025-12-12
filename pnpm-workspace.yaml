@@ -1,9 +1,6 @@
 # Konfigurasjon for registry ligger i .npmrc, slik at vi henter navikt-pakker fra riktig sted
 
 minimumReleaseAge: 10080  # 7 dager i minutter. Matcher vår dependanbot-config
-minimumReleaseAgeExclude:
-  - react
-  - react-dom
 
 trustPolicy: no-downgrade # Ikke tillat å oppdatere en pakke om "trust level" er lavere på ny versjon enn gammel
 
