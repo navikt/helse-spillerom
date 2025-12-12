@@ -2,6 +2,7 @@ import { BriefcaseIcon, PencilLineIcon, SackKronerIcon } from '@navikt/aksel-ico
 
 import { BehandlingStatus } from '@schemas/behandling'
 import { TidslinjeBehandling, TidslinjeYrkesaktivitet } from '@schemas/tidslinje'
+import { notNull } from '@utils/tsUtils'
 
 type TidslinjeElement = {
     fom: string
@@ -42,7 +43,7 @@ function getYrkesaktivitetNavn(ya: TidslinjeYrkesaktivitet): string {
 export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
     const behandlingMap = new Map(behandlinger.map((b) => [b.id, b]))
     const revurdertIds = new Set(
-        behandlinger.map((b) => b.revurdererBehandlingId).filter((id): id is string => id != null),
+        behandlinger.map((b) => b.revurdererBehandlingId).filter((id): id is string => notNull(id)),
     )
 
     const getGenerasjoner = (behandling: TidslinjeBehandling): TidslinjeBehandling[] => {

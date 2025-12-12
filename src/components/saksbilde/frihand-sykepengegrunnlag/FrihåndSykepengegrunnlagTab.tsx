@@ -5,6 +5,7 @@ import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { useSlettSykepengegrunnlag } from '@hooks/mutations/useSlettSykepengegrunnlag'
+import { notNull } from '@utils/tsUtils'
 
 import { FrihåndSykepengegrunnlagForm } from './FrihåndSykepengegrunnlagForm'
 import { FrihåndSykepengegrunnlagVisning } from './FrihåndSykepengegrunnlagVisning'
@@ -12,7 +13,7 @@ import { FrihåndSykepengegrunnlagVisning } from './FrihåndSykepengegrunnlagVis
 export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): ReactElement {
     const { data: sykepengegrunnlagResponse, isLoading } = useSykepengegrunnlag()
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
-    const harSykepengegrunnlag = sykepengegrunnlag != null
+    const harSykepengegrunnlag = notNull(sykepengegrunnlag)
     const erFrihåndSykepengegrunnlag = sykepengegrunnlag?.type === 'FRIHÅND_SYKEPENGEGRUNNLAG'
     const slettMutation = useSlettSykepengegrunnlag()
     const [slettModalOpen, setSlettModalOpen] = useState(false)
