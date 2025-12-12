@@ -1,14 +1,15 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { BodyShort, Button, DatePicker, Heading, HStack, useDatepicker, VStack } from '@navikt/ds-react'
-import { CheckmarkIcon, PencilIcon, XMarkIcon } from '@navikt/aksel-icons'
+import { BodyShort, Button, DatePicker, Heading, HStack, VStack, useRangeDatepicker } from '@navikt/ds-react'
+import { CheckmarkIcon, PencilIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { type Control, useController, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 
 import { useOppdaterYrkesaktivitetPerioder } from '@hooks/mutations/useOppdaterYrkesaktivitet'
+import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
 import { type Perioder, type Periodetype, type Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 import { getFormattedDateString } from '@utils/date-format'
@@ -41,6 +42,15 @@ interface PeriodeFormProps {
 
 export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
+
+    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const defaultMonth = React.useMemo(
+        () =>
+            aktivSaksbehandlingsperiode?.fom
+                ? dayjs(aktivSaksbehandlingsperiode.fom).startOf('month').toDate()
+                : undefined,
+        [aktivSaksbehandlingsperiode],
+    )
 
     const mutation = useOppdaterYrkesaktivitetPerioder()
 
@@ -141,10 +151,59 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mt-6 rounded-lg border border-ax-border-accent bg-ax-bg-neutral-soft p-4">
+            <div className="mt-6 rounded-lg border bg-ax-bg-neutral-soft p-4">
                 <VStack gap="4">
                     <HStack justify="space-between" align="center">
                         <Heading size="small">Rediger {periodeTypeText.toLowerCase()}</Heading>
+                    </HStack>
+
+                    <VStack gap="3">
+                        {fields.map((field, index) => (
+                            <div
+                                key={field.id}
+                                className="border-ax-border-default bg-white flex items-center gap-3 rounded border p-3"
+                            >
+                                <div className="flex-1">
+                                    <HStack gap="3">
+                                        <div className="flex-1">
+                                            <PeriodeRangePicker
+                                                control={control}
+                                                fomName={`perioder.${index}.fom`}
+                                                tomName={`perioder.${index}.tom`}
+                                                defaultMonth={defaultMonth}
+                                                errors={{
+                                                    fom: errors.perioder?.[index]?.fom?.message,
+                                                    tom: errors.perioder?.[index]?.tom?.message,
+                                                }}
+                                            />
+                                        </div>
+                                        <Button
+                                            size="small"
+                                            variant="tertiary"
+                                            icon={<XMarkIcon aria-hidden />}
+                                            onClick={() => handleFjernPeriode(index)}
+                                            disabled={mutation.isPending}
+                                            type="button"
+                                        >
+                                            Fjern
+                                        </Button>
+                                    </HStack>
+                                </div>
+                            </div>
+                        ))}
+
+                        <HStack gap="2" align="center" className="h-8">
+                            <Button
+                                size="small"
+                                variant="tertiary"
+                                icon={<PlusIcon aria-hidden />}
+                                onClick={handleLeggTilPeriode}
+                                disabled={mutation.isPending}
+                                type="button"
+                            >
+                                Legg til periode
+                            </Button>
+                        </HStack>
                         <HStack gap="2">
                             <Button
                                 size="small"
@@ -166,69 +225,6 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
                                 Lagre
                             </Button>
                         </HStack>
-                    </HStack>
-
-                    <VStack gap="3">
-                        {fields.map((field, index) => (
-                            <div
-                                key={field.id}
-                                className="border-ax-border-default bg-white flex items-center gap-3 rounded border p-3"
-                            >
-                                <div className="flex-1">
-                                    <HStack gap="3">
-                                        <div className="flex-1">
-                                            <Controller
-                                                name={`perioder.${index}.fom`}
-                                                control={control}
-                                                render={({ field: formField }) => (
-                                                    <PeriodeDatePicker
-                                                        label="Fra dato"
-                                                        value={formField.value}
-                                                        onChange={formField.onChange}
-                                                        error={errors.perioder?.[index]?.fom?.message}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <Controller
-                                                name={`perioder.${index}.tom`}
-                                                control={control}
-                                                render={({ field: formField }) => (
-                                                    <PeriodeDatePicker
-                                                        label="Til dato"
-                                                        value={formField.value}
-                                                        onChange={formField.onChange}
-                                                        error={errors.perioder?.[index]?.tom?.message}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                        <Button
-                                            size="small"
-                                            variant="tertiary"
-                                            icon={<XMarkIcon aria-hidden />}
-                                            onClick={() => handleFjernPeriode(index)}
-                                            disabled={mutation.isPending}
-                                            type="button"
-                                        >
-                                            Fjern
-                                        </Button>
-                                    </HStack>
-                                </div>
-                            </div>
-                        ))}
-
-                        <Button
-                            size="small"
-                            variant="secondary"
-                            onClick={handleLeggTilPeriode}
-                            disabled={mutation.isPending}
-                            type="button"
-                        >
-                            + Legg til periode
-                        </Button>
-
                         {errors.perioder && <BodyShort className="text-red-600">{errors.perioder.message}</BodyShort>}
                     </VStack>
                 </VStack>
@@ -271,24 +267,63 @@ function PeriodeVisning({
     )
 }
 
-interface PeriodeDatePickerProps {
-    label: string
-    value: string
-    onChange: (value: string) => void
-    error?: string
+interface PeriodeRangePickerProps {
+    control: Control<PeriodeFormData>
+    fomName: `perioder.${number}.fom`
+    tomName: `perioder.${number}.tom`
+    defaultMonth?: Date
+    errors?: {
+        fom?: string
+        tom?: string
+    }
 }
 
-function PeriodeDatePicker({ label, value, onChange, error }: PeriodeDatePickerProps): ReactElement {
-    const { datepickerProps, inputProps } = useDatepicker({
-        defaultSelected: value ? dayjs(value).toDate() : undefined,
-        onDateChange: (date) => {
-            onChange(date ? dayjs(date).format('YYYY-MM-DD') : '')
+function PeriodeRangePicker({
+    control,
+    fomName,
+    tomName,
+    defaultMonth,
+    errors,
+}: PeriodeRangePickerProps): ReactElement {
+    const { field: fomField } = useController({ control, name: fomName })
+    const { field: tomField } = useController({ control, name: tomName })
+
+    const selectedRange = React.useMemo(() => {
+        const from = fomField.value ? dayjs(fomField.value).toDate() : undefined
+        const to = tomField.value ? dayjs(tomField.value).toDate() : undefined
+        if (!from && !to) return undefined
+        return { from, to }
+    }, [fomField.value, tomField.value])
+
+    const { datepickerProps, fromInputProps, toInputProps } = useRangeDatepicker({
+        defaultSelected: selectedRange,
+        defaultMonth,
+        onRangeChange: (range) => {
+            const fom = range?.from ? dayjs(range.from).format('YYYY-MM-DD') : ''
+            const tom = range?.to ? dayjs(range.to).format('YYYY-MM-DD') : ''
+            fomField.onChange(fom)
+            tomField.onChange(tom)
         },
     })
 
     return (
         <DatePicker {...datepickerProps}>
-            <DatePicker.Input {...inputProps} label={label} size="small" error={error} />
+            <HStack gap="3" wrap>
+                <DatePicker.Input
+                    {...fromInputProps}
+                    label="Fra dato"
+                    size="small"
+                    error={errors?.fom}
+                    onBlur={fomField.onBlur}
+                />
+                <DatePicker.Input
+                    {...toInputProps}
+                    label="Til dato"
+                    size="small"
+                    error={errors?.tom}
+                    onBlur={tomField.onBlur}
+                />
+            </HStack>
         </DatePicker>
     )
 }
