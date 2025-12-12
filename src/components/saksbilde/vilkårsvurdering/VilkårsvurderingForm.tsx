@@ -132,30 +132,33 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     }
 
     useEffect(() => {
-        if (vurdering) {
-            // Gjenopprett verdier fra eksisterende vurdering
-            const values: Record<string, string> = { notat: vurdering.notat ?? '' }
+        if (!vurdering) return
 
-            if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
-                for (const usp of vurdering.underspørsmål) {
-                    const spørsmålKode = finnSpørsmålForAlternativ(usp.svar)
-                    if (spørsmålKode) {
-                        const spørsmål = finnSpørsmålByKode(spørsmålKode)
-                        if (spørsmål) {
-                            if (spørsmål.variant === 'CHECKBOX') {
-                                // For checkboxes, samle alle verdier med komma
-                                const existing = values[spørsmålKode] || ''
-                                values[spørsmålKode] = existing ? `${existing},${usp.svar}` : usp.svar
-                            } else {
-                                values[spørsmålKode] = usp.svar
-                            }
-                        }
+        const values: Record<string, string> = { notat: vurdering.notat ?? '' }
+
+        if (vurdering.underspørsmål && vurdering.underspørsmål.length > 0) {
+            for (const usp of vurdering.underspørsmål) {
+                // Primært bruk spørsmålkode fra lagret vurdering; fallback til søk på svar-kode ved utdatert data
+                const fallbackKode = finnSpørsmålForAlternativ(usp.svar)
+                const spørsmål =
+                    finnSpørsmålByKode(usp.spørsmål) ?? (fallbackKode ? finnSpørsmålByKode(fallbackKode) : null)
+
+                if (!spørsmål) continue
+
+                if (spørsmål.variant === 'CHECKBOX') {
+                    const existing = values[spørsmål.kode] || ''
+                    const verdier = existing ? existing.split(',').filter((v) => v) : []
+                    if (!verdier.includes(usp.svar)) {
+                        verdier.push(usp.svar)
+                        values[spørsmål.kode] = verdier.join(',')
                     }
+                } else {
+                    values[spørsmål.kode] = usp.svar
                 }
             }
-
-            reset(values)
         }
+
+        reset(values)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vurdering])
 
