@@ -317,5 +317,5 @@ function getKategoriDisplayText(kategorisering: YrkesaktivitetKategorisering): s
 
 function getOrgnavnDisplayText(yrkesaktivitet: _Yrkesaktivitet): string | null {
     if (yrkesaktivitet.kategorisering.inntektskategori === 'INAKTIV') return null
-    return yrkesaktivitet.orgnavn || 'Ukjent virksomhet'
+    return yrkesaktivitet.orgnavn ?? 'Ukjent virksomhet'
 }
