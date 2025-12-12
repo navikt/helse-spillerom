@@ -44,12 +44,12 @@ test.describe('Kalle Kranfører', () => {
             })
         await expect(yrkesaktivitetTable).toBeVisible()
 
-        // Finn første rad i tabellen
-        const firstRow = yrkesaktivitetTable.locator('tbody tr').first()
+        // Finn første datarad via rolle (hopper over header)
+        const firstRow = yrkesaktivitetTable.getByRole('row', { name: /Arbeidstaker/ }).first()
         await expect(firstRow).toBeVisible()
 
-        // Finn første celle i første rad
-        const firstCell = firstRow.locator('td p').first()
+        // Verifiser første celle (yrkesaktivitetstype)
+        const firstCell = firstRow.getByRole('cell', { name: 'Arbeidstaker' })
         await expect(firstCell).toBeVisible()
         await expect(firstCell).toHaveText('Arbeidstaker')
 
