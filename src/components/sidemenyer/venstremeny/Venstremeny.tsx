@@ -6,7 +6,7 @@ import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navi
 import { CalendarIcon } from '@navikt/aksel-icons'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
-import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandlingMedLoading } from '@hooks/queries/useAktivBehandling'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
 import { useErBeslutter } from '@hooks/queries/useErBeslutter'
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
@@ -35,7 +35,7 @@ import { IndividuellBegrunnelse } from './IndividuellBegrunnelse'
 export function Venstremeny(): ReactElement {
     const router = useRouter()
     const { visToast } = useToast()
-    const { aktivSaksbehandlingsperiode, isLoading } = useAktivSaksbehandlingsperiodeMedLoading()
+    const { aktivBehandling, isLoading } = useAktivBehandlingMedLoading()
     const kanSaksbehandles = useKanSaksbehandles()
     const erBeslutter = useErBeslutter()
     const { data: brukerRoller } = useBrukerRoller()
@@ -47,7 +47,7 @@ export function Venstremeny(): ReactElement {
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
             // Vis success toast og naviger etter at cache invalidation er ferdig
-            sessionStorage.removeItem(`${aktivSaksbehandlingsperiode!.id}-individuell-begrunnelse`)
+            sessionStorage.removeItem(`${aktivBehandling!.id}-individuell-begrunnelse`)
             visToast('Saken er sendt til beslutter', 'success')
             router.push('/')
         },
@@ -59,30 +59,29 @@ export function Venstremeny(): ReactElement {
     const revurder = useRevurder()
 
     const kanRevurderes =
-        aktivSaksbehandlingsperiode?.status === 'GODKJENT' &&
+        aktivBehandling?.status === 'GODKJENT' &&
         saksbehandlingsperioder &&
         !saksbehandlingsperioder.some(
             (periode) =>
-                periode.id !== aktivSaksbehandlingsperiode.id &&
-                periode.revurdererSaksbehandlingsperiodeId === aktivSaksbehandlingsperiode.id,
+                periode.id !== aktivBehandling.id && periode.revurdererSaksbehandlingsperiodeId === aktivBehandling.id,
         )
 
     if (isLoading) return <VenstremenySkeleton />
 
     const håndterSendTilGodkjenning = () => {
-        if (!aktivSaksbehandlingsperiode) return
-        const storageValue = sessionStorage.getItem(`${aktivSaksbehandlingsperiode.id}-individuell-begrunnelse`)
+        if (!aktivBehandling) return
+        const storageValue = sessionStorage.getItem(`${aktivBehandling.id}-individuell-begrunnelse`)
         sendTilBeslutning.mutate({
-            behandlingId: aktivSaksbehandlingsperiode.id,
+            behandlingId: aktivBehandling.id,
             individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
         })
     }
 
     const håndterTaTilBeslutning = () => {
-        if (!aktivSaksbehandlingsperiode) return
+        if (!aktivBehandling) return
         taTilBeslutning.mutate(
             {
-                behandlingId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivBehandling.id,
             },
             {
                 onSuccess: () => {
@@ -93,10 +92,10 @@ export function Venstremeny(): ReactElement {
     }
 
     const håndterGodkjenn = () => {
-        if (!aktivSaksbehandlingsperiode) return
+        if (!aktivBehandling) return
         godkjenn.mutate(
             {
-                behandlingId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivBehandling.id,
             },
             {
                 onSuccess: () => {
@@ -112,10 +111,10 @@ export function Venstremeny(): ReactElement {
     }
 
     const håndterSendTilbakeBekreft = (kommentar: string) => {
-        if (!aktivSaksbehandlingsperiode) return
+        if (!aktivBehandling) return
         sendTilbake.mutate(
             {
-                behandlingId: aktivSaksbehandlingsperiode.id,
+                behandlingId: aktivBehandling.id,
                 kommentar,
             },
             {
@@ -128,9 +127,9 @@ export function Venstremeny(): ReactElement {
     }
 
     const håndterRevurder = () => {
-        if (!aktivSaksbehandlingsperiode) return
+        if (!aktivBehandling) return
         revurder.mutate({
-            behandlingId: aktivSaksbehandlingsperiode.id,
+            behandlingId: aktivBehandling.id,
         })
     }
 
@@ -139,25 +138,25 @@ export function Venstremeny(): ReactElement {
             <VStack gap="4" className="pb-24">
                 <HStack gap="2" wrap role="region" aria-label="Saksinformasjon">
                     <KategoriTag />
-                    <StatusTag periode={aktivSaksbehandlingsperiode} size="small" />
+                    <StatusTag periode={aktivBehandling} size="small" />
                 </HStack>
 
-                {aktivSaksbehandlingsperiode && (
+                {aktivBehandling && (
                     <>
                         <HStack gap="2" align="center">
                             <Tooltip content="Sykmeldingsperiode">
                                 <CalendarIcon aria-hidden fontSize="1.25rem" />
                             </Tooltip>
                             <BodyShort size="small">
-                                {getFormattedDateString(aktivSaksbehandlingsperiode.fom)} -{' '}
-                                {getFormattedDateString(aktivSaksbehandlingsperiode.tom)}
+                                {getFormattedDateString(aktivBehandling.fom)} -{' '}
+                                {getFormattedDateString(aktivBehandling.tom)}
                             </BodyShort>
                         </HStack>
 
-                        {aktivSaksbehandlingsperiode.skjæringstidspunkt && (
+                        {aktivBehandling.skjæringstidspunkt && (
                             <Skjæringstidspunkt
-                                dato={aktivSaksbehandlingsperiode.skjæringstidspunkt}
-                                behandlingId={aktivSaksbehandlingsperiode.id}
+                                dato={aktivBehandling.skjæringstidspunkt}
+                                behandlingId={aktivBehandling.id}
                             />
                         )}
 
@@ -169,8 +168,8 @@ export function Venstremeny(): ReactElement {
                         {kanSaksbehandles ? (
                             <>
                                 <IndividuellBegrunnelse
-                                    key={aktivSaksbehandlingsperiode.id}
-                                    aktivSaksbehandlingsperiode={aktivSaksbehandlingsperiode}
+                                    key={aktivBehandling.id}
+                                    aktivSaksbehandlingsperiode={aktivBehandling}
                                 />
 
                                 <Button
@@ -185,14 +184,14 @@ export function Venstremeny(): ReactElement {
                                 </Button>
                             </>
                         ) : (
-                            aktivSaksbehandlingsperiode.individuellBegrunnelse && (
+                            aktivBehandling.individuellBegrunnelse && (
                                 <Bleed asChild marginInline="4 4" reflectivePadding>
                                     <VStack as={BoxNew} gap="4" background="neutral-soft" className="py-4">
                                         <BodyShort size="small" weight="semibold">
                                             Individuell begrunnelse
                                         </BodyShort>
                                         <BodyShort size="small" className="whitespace-pre-wrap">
-                                            {aktivSaksbehandlingsperiode.individuellBegrunnelse}
+                                            {aktivBehandling.individuellBegrunnelse}
                                         </BodyShort>
                                     </VStack>
                                 </Bleed>
@@ -201,10 +200,10 @@ export function Venstremeny(): ReactElement {
 
                         {erBeslutter && (
                             <>
-                                {(aktivSaksbehandlingsperiode?.status === 'TIL_BESLUTNING' ||
-                                    (aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' &&
-                                        aktivSaksbehandlingsperiode.beslutterNavIdent &&
-                                        aktivSaksbehandlingsperiode.beslutterNavIdent !== brukerinfo?.navIdent)) && (
+                                {(aktivBehandling?.status === 'TIL_BESLUTNING' ||
+                                    (aktivBehandling?.status === 'UNDER_BESLUTNING' &&
+                                        aktivBehandling.beslutterNavIdent &&
+                                        aktivBehandling.beslutterNavIdent !== brukerinfo?.navIdent)) && (
                                     <Button
                                         variant="primary"
                                         size="small"
@@ -217,9 +216,9 @@ export function Venstremeny(): ReactElement {
                                     </Button>
                                 )}
 
-                                {aktivSaksbehandlingsperiode?.status === 'UNDER_BESLUTNING' &&
-                                    aktivSaksbehandlingsperiode.beslutterNavIdent &&
-                                    aktivSaksbehandlingsperiode.beslutterNavIdent === brukerinfo?.navIdent && (
+                                {aktivBehandling?.status === 'UNDER_BESLUTNING' &&
+                                    aktivBehandling.beslutterNavIdent &&
+                                    aktivBehandling.beslutterNavIdent === brukerinfo?.navIdent && (
                                         <>
                                             <Button
                                                 variant="primary"

@@ -16,7 +16,7 @@ import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { BehandlingStatus } from '@schemas/behandling'
 import { statusTilTekst } from '@components/statustag/StatusTag'
 import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 import { useTidslinje } from '@hooks/queries/useTidslinje'
 import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingsperiode'
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
@@ -144,7 +144,7 @@ function TilkommenInntektPopover({
 
 function TilkommenInntektKnapp(): ReactElement {
     const kanSaksbehandles = useKanSaksbehandles()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
     const router = useRouter()
     const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId som kan være undefined

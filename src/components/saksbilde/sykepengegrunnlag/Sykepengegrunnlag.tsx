@@ -36,7 +36,7 @@ import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 import { notNull } from '@utils/tsUtils'
 import { useYrkesaktivitetForSykepengegrunnlag } from '@hooks/queries/useYrkesaktivitetForSykepengegrunnlag'
 import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 import { NæringsdelView } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/NæringsdelView'
 
 export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
@@ -54,7 +54,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         refetch,
     } = useSykepengegrunnlag()
     const { hideSelectButtonForAll } = useDokumentVisningContext()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
 
     const sykepengegrunnlag = sykepengegrunnlagResponse?.sykepengegrunnlag
     const sammenlikningsgrunnlag = sykepengegrunnlagResponse?.sammenlikningsgrunnlag

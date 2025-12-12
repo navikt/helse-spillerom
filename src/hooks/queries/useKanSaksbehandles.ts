@@ -1,11 +1,11 @@
 import { useBrukerRoller } from './useBrukerRoller'
-import { useAktivSaksbehandlingsperiode } from './useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from './useAktivBehandling'
 import { useBrukerinfo } from './useBrukerinfo'
 
 export function useKanSaksbehandles() {
     const { data: brukerRoller } = useBrukerRoller()
     const { data: brukerinfo } = useBrukerinfo()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
 
     return (
         brukerRoller.saksbehandler &&

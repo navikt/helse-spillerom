@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 
 import { useOppdaterYrkesaktivitetPerioder } from '@hooks/mutations/useOppdaterYrkesaktivitet'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 import { type Perioder, type Periodetype, type Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
 import { getFormattedDateString } from '@utils/date-format'
@@ -43,7 +43,7 @@ interface PeriodeFormProps {
 export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormProps): ReactElement {
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
 
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
     const defaultMonth = React.useMemo(
         () =>
             aktivSaksbehandlingsperiode?.fom

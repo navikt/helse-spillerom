@@ -20,7 +20,7 @@ import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/Penger
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 
 const yrkesaktivitetTypeLabels: Record<TilkommenInntektYrkesaktivitetType, string> = {
     VIRKSOMHET: 'Virksomhet',
@@ -31,7 +31,7 @@ const yrkesaktivitetTypeLabels: Record<TilkommenInntektYrkesaktivitetType, strin
 export function TilkommenInntektForm(): ReactElement {
     const router = useRouter()
     const mutation = useOpprettTilkommenInntekt()
-    const aktivPeriode = useAktivSaksbehandlingsperiode()
+    const aktivPeriode = useAktivBehandling()
 
     // Dynamisk valideringsschema
     const form = useForm({

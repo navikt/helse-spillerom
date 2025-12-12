@@ -14,7 +14,7 @@ import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateFiel
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { cn } from '@utils/tw'
 import { getFormattedDateString } from '@utils/date-format'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 
 const refusjonFormSchema = z.object({
     refusjon: z.array(refusjonInfoSchema),
@@ -25,7 +25,7 @@ type RefusjonFormData = z.infer<typeof refusjonFormSchema>
 function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
     const [edit, setEdit] = useState(false)
     const { mutate: oppdaterRefusjon, isPending: oppdaterIsPending } = useOppdaterRefusjon()
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
 
     const erArbeidstaker = ya.kategorisering.inntektskategori === 'ARBEIDSTAKER'
 

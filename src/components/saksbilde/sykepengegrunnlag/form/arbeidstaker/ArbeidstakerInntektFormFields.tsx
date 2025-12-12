@@ -15,7 +15,7 @@ import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/
 import { useInntektsmeldinger } from '@hooks/queries/useInntektsmeldinger'
 import { getFormattedDatetimeString } from '@utils/date-format'
 import { RefusjonFields } from '@components/saksbilde/sykepengegrunnlag/form/RefusjonFields'
-import { useAktivSaksbehandlingsperiode } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { VisAinntekt } from '@components/saksbilde/sykepengegrunnlag/form/VisAinntekt'
 import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
@@ -28,7 +28,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
     const refusjon = useWatch({ control, name: 'data.refusjon' })
     const valgtType = useWatch({ control, name: 'data.type' })
     const visRefusjonsFelter = !!refusjon?.[0]?.fom
-    const aktivSaksbehandlingsperiode = useAktivSaksbehandlingsperiode()
+    const aktivSaksbehandlingsperiode = useAktivBehandling()
 
     return (
         <>

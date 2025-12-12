@@ -6,7 +6,7 @@ import { z } from 'zod/v4'
 import { fetchAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Yrkesaktivitet, yrkesaktivitetSchema } from '@schemas/yrkesaktivitet'
-import { useAktivSaksbehandlingsperiodeMedLoading } from '@hooks/queries/useAktivSaksbehandlingsperiode'
+import { useAktivBehandlingMedLoading } from '@hooks/queries/useAktivBehandling'
 import { SykepengegrunnlagResponse, sykepengegrunnlagResponseSchema } from '@schemas/sykepengegrunnlag'
 import { queryKeys } from '@utils/queryKeys'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
@@ -16,21 +16,21 @@ export function useYrkesaktivitetForSykepengegrunnlag() {
     const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId som kan være undefined
     const router = useRouter()
-    const { aktivSaksbehandlingsperiode } = useAktivSaksbehandlingsperiodeMedLoading()
+    const { aktivBehandling } = useAktivBehandlingMedLoading()
 
     const sykepengegrunnlag = useQuery<SykepengegrunnlagResponse | null, ProblemDetailsError>({
-        queryKey: queryKeys.sykepengegrunnlag(pseudoId, aktivSaksbehandlingsperiode?.id ?? ''),
+        queryKey: queryKeys.sykepengegrunnlag(pseudoId, aktivBehandling?.id ?? ''),
         queryFn: async (): Promise<SykepengegrunnlagResponse | null> => {
-            if (!pseudoId || !aktivSaksbehandlingsperiode?.id) {
+            if (!pseudoId || !aktivBehandling?.id) {
                 throw new Error('PersonId og behandlingId må være tilstede')
             }
 
             return await fetchAndParse(
-                `/api/bakrommet/v2/${pseudoId}/behandlinger/${aktivSaksbehandlingsperiode?.id}/sykepengegrunnlag`,
+                `/api/bakrommet/v2/${pseudoId}/behandlinger/${aktivBehandling?.id}/sykepengegrunnlag`,
                 sykepengegrunnlagResponseSchema.nullable(),
             )
         },
-        enabled: !!pseudoId && !!aktivSaksbehandlingsperiode?.id,
+        enabled: !!pseudoId && !!aktivBehandling?.id,
         staleTime: 5 * 60 * 1000, // 5 minutter
     })
 
