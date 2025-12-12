@@ -27,13 +27,14 @@ import { YrkesaktivitetSkeleton } from '@components/saksbilde/yrkesaktivitet/Yrk
 import { FetchError } from '@components/saksbilde/FetchError'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
+import { Yrkesaktivitet as _Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 
 export function Yrkesaktivitet(): ReactElement {
     const [visOpprettForm, setVisOpprettForm] = useState(false)
     const [slettModalOpen, setSlettModalOpen] = useState(false)
     const [yrkesaktivitetTilSlett, setInntektsforholdTilSlett] = useState<string | null>(null)
     const [redigererId, setRedigererId] = useState<string | null>(null)
-    const { data: yrkesaktivitet, isLoading, isError, refetch } = useYrkesaktivitet()
+    const { data: yrkesaktiviteter, isLoading, isError, refetch } = useYrkesaktivitet()
     const { data: sykepengegrunnlag } = useSykepengegrunnlag()
     const slettMutation = useSlettYrkesaktivitet()
     const oppdaterMutation = useOppdaterYrkesaktivitetKategorisering()
@@ -51,14 +52,15 @@ export function Yrkesaktivitet(): ReactElement {
 
     // Sjekk om det finnes yrkesaktivitet som ikke kan kombineres med andre
     const yrkesaktivitetSomIkkeKanKombineres =
-        yrkesaktivitet?.filter((forhold) => {
+        yrkesaktiviteter?.filter((forhold) => {
             const kategori = forhold.kategorisering.inntektskategori
             const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === kategori)
             return alternativ?.kanIkkeKombineresMedAndre === true
         }) || []
 
     // Vis advarsel hvis det finnes yrkesaktivitet som ikke kan kombineres og det er flere enn ett yrkesaktivitet totalt
-    const showKombinasjonsAdvarsel = yrkesaktivitetSomIkkeKanKombineres.length > 0 && (yrkesaktivitet?.length || 0) > 1
+    const showKombinasjonsAdvarsel =
+        yrkesaktivitetSomIkkeKanKombineres.length > 0 && (yrkesaktiviteter?.length || 0) > 1
 
     const handleSlett = async (yrkesaktivitetId: string) => {
         // Sjekk om sykepengegrunnlag eksisterer
@@ -137,7 +139,7 @@ export function Yrkesaktivitet(): ReactElement {
                     </Alert>
                 )}
 
-                {yrkesaktivitet && yrkesaktivitet.length > 0 ? (
+                {yrkesaktiviteter && yrkesaktiviteter.length > 0 ? (
                     <div role="region" aria-label="Yrkesaktivitet tabell">
                         <Table size="medium" aria-label="Yrkesaktivitet oversikt">
                             <TableHeader>
@@ -149,19 +151,19 @@ export function Yrkesaktivitet(): ReactElement {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {yrkesaktivitet.map((forhold, index) => (
+                                {yrkesaktiviteter.map((yrkesaktivitet, index) => (
                                     <TableExpandableRow
-                                        key={forhold.id}
+                                        key={yrkesaktivitet.id}
                                         expandOnRowClick
                                         content={
-                                            redigererId === forhold.id ? (
+                                            redigererId === yrkesaktivitet.id ? (
                                                 <YrkesaktivitetForm
-                                                    key={`edit-${forhold.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
+                                                    key={`edit-${yrkesaktivitet.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                                     closeForm={handleAvbrytRedigering}
                                                     disabled={false}
-                                                    initialValues={forhold.kategorisering}
+                                                    initialValues={yrkesaktivitet.kategorisering}
                                                     onSubmit={(kategorisering) =>
-                                                        handleLagreRedigering(forhold.id, kategorisering)
+                                                        handleLagreRedigering(yrkesaktivitet.id, kategorisering)
                                                     }
                                                     isLoading={oppdaterMutation.isPending}
                                                     avbrytLabel="Avbryt"
@@ -170,11 +172,11 @@ export function Yrkesaktivitet(): ReactElement {
                                             ) : (
                                                 <VStack gap="4" className="ignore-axe">
                                                     <YrkesaktivitetForm
-                                                        key={`view-${forhold.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
+                                                        key={`view-${yrkesaktivitet.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                                         closeForm={() => {}}
                                                         disabled={true}
                                                         title={undefined}
-                                                        initialValues={forhold.kategorisering}
+                                                        initialValues={yrkesaktivitet.kategorisering}
                                                     />
                                                     {kanSaksbehandles && (
                                                         <HStack gap="2">
@@ -182,9 +184,10 @@ export function Yrkesaktivitet(): ReactElement {
                                                                 variant="tertiary"
                                                                 size="small"
                                                                 icon={<PencilIcon aria-hidden />}
-                                                                onClick={() => handleRediger(forhold.id)}
+                                                                onClick={() => handleRediger(yrkesaktivitet.id)}
                                                                 disabled={
-                                                                    redigererId !== null && redigererId !== forhold.id
+                                                                    redigererId !== null &&
+                                                                    redigererId !== yrkesaktivitet.id
                                                                 }
                                                                 aria-label={`Rediger yrkesaktivitet ${index + 1}`}
                                                             >
@@ -195,7 +198,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                                 variant="tertiary"
                                                                 size="small"
                                                                 icon={<TrashIcon aria-hidden />}
-                                                                onClick={() => handleSlett(forhold.id)}
+                                                                onClick={() => handleSlett(yrkesaktivitet.id)}
                                                                 disabled={slettMutation.isPending}
                                                                 aria-label={`Slett yrkesaktivitet ${index + 1}`}
                                                             >
@@ -208,15 +211,11 @@ export function Yrkesaktivitet(): ReactElement {
                                         }
                                     >
                                         <TableDataCell>
-                                            <BodyShort>
-                                                {getInntektsforholdDisplayText(forhold.kategorisering)}
-                                            </BodyShort>
+                                            {getKategoriDisplayText(yrkesaktivitet.kategorisering)}
                                         </TableDataCell>
+                                        <TableDataCell>{getOrgnavnDisplayText(yrkesaktivitet)}</TableDataCell>
                                         <TableDataCell>
-                                            <VStack gap="1">{forhold.orgnavn ?? 'Ukjent orgnavn'}</VStack>
-                                        </TableDataCell>
-                                        <TableDataCell>
-                                            <BodyShort>{forhold.kategorisering.sykmeldt ? 'Ja' : 'Nei'}</BodyShort>
+                                            {yrkesaktivitet.kategorisering.sykmeldt ? 'Ja' : 'Nei'}
                                         </TableDataCell>
                                     </TableExpandableRow>
                                 ))}
@@ -305,7 +304,7 @@ export function Yrkesaktivitet(): ReactElement {
     )
 }
 
-function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategorisering): string {
+function getKategoriDisplayText(kategorisering: YrkesaktivitetKategorisering): string {
     const inntektskategori = kategorisering.inntektskategori
 
     if (!inntektskategori) {
@@ -314,4 +313,9 @@ function getInntektsforholdDisplayText(kategorisering: YrkesaktivitetKategoriser
 
     const alternativ = yrkesaktivitetKodeverk.alternativer.find((alt) => alt.kode === inntektskategori)
     return alternativ?.navn || inntektskategori
+}
+
+function getOrgnavnDisplayText(yrkesaktivitet: _Yrkesaktivitet): string | null {
+    if (yrkesaktivitet.kategorisering.inntektskategori === 'INAKTIV') return null
+    return yrkesaktivitet.orgnavn || 'Ukjent virksomhet'
 }
