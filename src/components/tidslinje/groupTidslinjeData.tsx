@@ -34,6 +34,11 @@ function toTidslinjeElement(
     }
 }
 
+function getYrkesaktivitetNavn(ya: TidslinjeYrkesaktivitet): string {
+    if (ya.yrkesaktivitetType === 'INAKTIV') return 'Inaktiv'
+    return ya.orgnavn ?? 'Ukjent virksomhet'
+}
+
 export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
     const behandlingMap = new Map(behandlinger.map((b) => [b.id, b]))
     const revurdertIds = new Set(
@@ -67,7 +72,7 @@ export function groupTidslinjeData(behandlinger: TidslinjeBehandling[]) {
 
         for (const ya of behandling.yrkesaktiviteter) {
             const key = `${ya.orgnummer}-${ya.yrkesaktivitetType}`
-            yrkesaktiviteterGrouped[key] ??= { navn: ya.orgnavn ?? 'Ukjent virksomhet', tidslinjeElementer: [] }
+            yrkesaktiviteterGrouped[key] ??= { navn: getYrkesaktivitetNavn(ya), tidslinjeElementer: [] }
 
             // Push active element (index 0)
             yrkesaktiviteterGrouped[key].tidslinjeElementer.push(toTidslinjeElement(behandling, ya, 0))
