@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 
 import { Inntektsmelding } from '@schemas/inntektsmelding'
 import { Søknad } from '@schemas/søknad'
-import { Maybe } from '@utils/tsUtils'
 
 export type DokumentSomKanVisesISidebar = Inntektsmelding | Søknad
 
@@ -24,7 +23,7 @@ type DokumentVisningContextType = {
     syncDokumentStateWithForm: (ids: string[], selectedId: string) => void
 }
 
-export const DokumentVisningContext = createContext<Maybe<DokumentVisningContextType>>(null)
+export const DokumentVisningContext = createContext<DokumentVisningContextType | null>(null)
 
 export function useDokumentVisningContext(): DokumentVisningContextType {
     const context = useContext(DokumentVisningContext)

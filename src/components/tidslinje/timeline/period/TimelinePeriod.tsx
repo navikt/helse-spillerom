@@ -9,7 +9,6 @@ import { ComponentWithType, getNumberOfDays } from '@components/tidslinje/timeli
 import { useRowContext } from '@components/tidslinje/timeline/row/context'
 import { usePeriodContext } from '@components/tidslinje/timeline/period/context'
 import { usePopoverAnchor } from '@components/tidslinje/timeline/period/usePopoverAnchor'
-import { Maybe } from '@/utils/tsUtils'
 
 export type TimelineVariant =
     | 'behandles'
@@ -78,7 +77,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
 
 TimelinePeriod.componentType = 'TimelinePeriod'
 
-const useIsWiderThan = (ref: RefObject<Maybe<HTMLElement>>, targetWidth: number) => {
+const useIsWiderThan = (ref: RefObject<HTMLElement | null>, targetWidth: number) => {
     const [isWider, setIsWider] = useState(false)
 
     useEffect(() => {

@@ -1,6 +1,5 @@
 import { createContext, PropsWithChildren, ReactElement, useContext, useEffect, useRef } from 'react'
 
-import { Maybe } from '@utils/tsUtils'
 import {
     ModifierKey,
     ShortcutId,
@@ -13,10 +12,10 @@ export type ShortcutHandler = () => void
 
 type ShortcutContextType = {
     registerHandler: (id: ShortcutId, handler: ShortcutHandler) => void
-    getHandler: (id: ShortcutId) => Maybe<ShortcutHandler>
+    getHandler: (id: ShortcutId) => ShortcutHandler | null
 }
 
-const ShortcutContext = createContext<Maybe<ShortcutContextType>>(null)
+const ShortcutContext = createContext<ShortcutContextType | null>(null)
 
 export function ShortcutProvider({ children }: PropsWithChildren): ReactElement {
     const { allGlobalHandlers } = useGlobalHandlers()
@@ -45,7 +44,7 @@ export function useShortcutContext(): ShortcutContextType {
     return context
 }
 
-function useKeydownEventListener(metadata: ShortcutMetadata[], getHandler: (id: ShortcutId) => Maybe<ShortcutHandler>) {
+function useKeydownEventListener(metadata: ShortcutMetadata[], getHandler: (id: ShortcutId) => ShortcutHandler | null) {
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!event.code) return // Valg i autocomplete-lister, f.eks. i søkefeltet, trigger et tynt keydown-event, som vi ikke trenger å håndtere her

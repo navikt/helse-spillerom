@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
-import { Maybe } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagBase } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
@@ -11,8 +10,8 @@ import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag
 
 type FrilanserInntektViewProps = {
     inntektRequest?: InntektRequestFor<'FRILANSER'>
-    inntektData?: Maybe<InntektData>
-    sykepengegrunnlag?: Maybe<SykepengegrunnlagBase>
+    inntektData?: InntektData | null
+    sykepengegrunnlag?: SykepengegrunnlagBase | null
 }
 
 export function FrilanserInntektView({ inntektRequest, inntektData }: FrilanserInntektViewProps): ReactElement {

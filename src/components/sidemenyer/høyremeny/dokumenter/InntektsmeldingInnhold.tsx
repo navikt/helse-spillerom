@@ -15,7 +15,7 @@ import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
-import { Maybe, notNull } from '@utils/tsUtils'
+import { notNull } from '@utils/tsUtils'
 
 export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: Inntektsmelding }): ReactElement {
     const { dokumentStateMap, selectDokument } = useDokumentVisningContext()
@@ -94,7 +94,7 @@ export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: I
     )
 }
 
-export function Details({ label, children }: PropsWithChildren<{ label: string }>): Maybe<ReactElement> {
+export function Details({ label, children }: PropsWithChildren<{ label: string }>): ReactElement | null {
     if (children == null) return null
 
     return (
@@ -107,7 +107,7 @@ export function Details({ label, children }: PropsWithChildren<{ label: string }
     )
 }
 
-function InntektEndringsÅrsaker({ årsaker }: { årsaker: InntektEndringÅrsak[] }): Maybe<ReactElement> {
+function InntektEndringsÅrsaker({ årsaker }: { årsaker: InntektEndringÅrsak[] }): ReactElement | null {
     if (årsaker.length === 0) return null
     return (
         <VStack gap="1">
@@ -148,7 +148,7 @@ function InntektEndringsÅrsaker({ årsaker }: { årsaker: InntektEndringÅrsak[
     )
 }
 
-function Perioder({ label, perioder }: { label: string; perioder: Periode[] }): Maybe<ReactElement> {
+function Perioder({ label, perioder }: { label: string; perioder: Periode[] }): ReactElement | null {
     if (perioder.length === 0) return null
 
     return (
@@ -165,7 +165,7 @@ function Perioder({ label, perioder }: { label: string; perioder: Periode[] }): 
     )
 }
 
-function EndringIRefusjoner({ endringer }: { endringer: EndringIRefusjon[] }): Maybe<ReactElement> {
+function EndringIRefusjoner({ endringer }: { endringer: EndringIRefusjon[] }): ReactElement | null {
     if (endringer.length === 0) return null
     return (
         <VStack gap="1">
@@ -190,7 +190,7 @@ function EndringIRefusjoner({ endringer }: { endringer: EndringIRefusjon[] }): M
     )
 }
 
-function Refusjon({ refusjon }: { refusjon: RefusjonType }): Maybe<ReactElement> {
+function Refusjon({ refusjon }: { refusjon: RefusjonType }): ReactElement | null {
     return (
         <VStack gap="1">
             <BodyShort weight="semibold" size="small">
@@ -212,7 +212,7 @@ function Naturalytelser({
 }: {
     label: string
     naturalytelser: OpphørAvNaturalYtelse[] | GjenopptakelseNaturalytelse[]
-}): Maybe<ReactElement> {
+}): ReactElement | null {
     if (naturalytelser.length === 0) return null
     const normalized = naturalytelser.map((ytelse) => ({
         naturalytelse: 'naturalytelse' in ytelse ? ytelse.naturalytelse : ytelse.naturalYtelse,

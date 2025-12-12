@@ -2,7 +2,6 @@ import { Dayjs } from 'dayjs'
 import { RefObject, useEffect, useRef, useState } from 'react'
 
 import { ZoomLevel, zoomLevels } from '@components/tidslinje/timeline/zoom/TimelineZoom'
-import { Maybe } from '@utils/tsUtils'
 import { getNumberOfDays } from '@components/tidslinje/timeline/index'
 
 export function useTimelineState(earliestDate: Dayjs, latestDate: Dayjs) {
@@ -39,7 +38,7 @@ export function useTimelineState(earliestDate: Dayjs, latestDate: Dayjs) {
     }
 }
 
-function useResizeObserver(ref: RefObject<Maybe<HTMLElement>>) {
+function useResizeObserver(ref: RefObject<HTMLElement | null>) {
     const [width, setWidth] = useState(0)
 
     useEffect(() => {

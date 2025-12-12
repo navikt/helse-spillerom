@@ -2,11 +2,10 @@ import React, { ReactElement } from 'react'
 import { BodyShort } from '@navikt/ds-react'
 
 import { YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
-import { Maybe } from '@utils/tsUtils'
 
 export function getInntektsforholdDisplayText(
     kategorisering: YrkesaktivitetKategorisering,
-    orgnavn: Maybe<string>,
+    orgnavn: string | null,
 ): ReactElement {
     let typeText: string
     let orgnummer: string | undefined

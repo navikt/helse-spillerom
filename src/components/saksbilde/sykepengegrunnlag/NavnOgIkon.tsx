@@ -3,12 +3,11 @@ import { BodyShort, HStack } from '@navikt/ds-react'
 import { BriefcaseIcon } from '@navikt/aksel-icons'
 
 import { maybeOrgnummer, YrkesaktivitetKategorisering } from '@schemas/yrkesaktivitetKategorisering'
-import { Maybe } from '@utils/tsUtils'
 import { OrgMedCopyButton } from '@components/organisasjon/OrgMedCopyButton'
 
 function getKategoriseringTekst(
     kategorisering: YrkesaktivitetKategorisering,
-    maybeOrgnavn: Maybe<string>,
+    maybeOrgnavn: string | null,
     medOrgnummer: boolean,
 ): ReactElement {
     const orgnummer = maybeOrgnummer(kategorisering)
@@ -36,7 +35,7 @@ function getKategoriseringTekst(
 
 interface NavnOgIkonProps {
     kategorisering: YrkesaktivitetKategorisering
-    orgnavn: Maybe<string>
+    orgnavn: string | null
     className?: string
     medOrgnummer?: boolean
 }

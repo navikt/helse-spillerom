@@ -1,12 +1,10 @@
 import { createContext, useContext } from 'react'
 
-import { Maybe } from '@utils/tsUtils'
-
 type PeriodContextType = {
     periodId: string
 }
 
-export const PeriodContext = createContext<Maybe<PeriodContextType>>(null)
+export const PeriodContext = createContext<PeriodContextType | null>(null)
 
 export function usePeriodContext(): PeriodContextType {
     const context = useContext(PeriodContext)

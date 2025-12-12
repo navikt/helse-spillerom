@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
-import { Maybe, notNull } from '@utils/tsUtils'
+import { notNull } from '@utils/tsUtils'
 import { InntektData } from '@schemas/inntektData'
 import { formaterBeløpKroner } from '@schemas/øreUtils'
 import { pensjonsgivendeSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/pensjonsgivende/PensjonsgivendeInntektFormFields'
@@ -11,7 +11,7 @@ import { PensjonsgivendeInntektView } from './PensjonsgivendeInntektView'
 
 type SelvstendigNæringsdrivendeInntektViewProps = {
     inntektRequest?: InntektRequestFor<'SELVSTENDIG_NÆRINGSDRIVENDE'>
-    inntektData?: Maybe<InntektData>
+    inntektData?: InntektData | null
 }
 
 export function SelvstendigNæringsdrivendeInntektView({

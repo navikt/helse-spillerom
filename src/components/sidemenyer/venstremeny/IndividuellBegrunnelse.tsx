@@ -5,7 +5,6 @@ import { Button, Heading, HStack, Modal, ReadMore, Textarea } from '@navikt/ds-r
 import { ExpandIcon, ShrinkIcon } from '@navikt/aksel-icons'
 import { ModalBody, ModalHeader } from '@navikt/ds-react/Modal'
 
-import { Maybe } from '@utils/tsUtils'
 import { Behandling } from '@schemas/behandling'
 
 interface IndividuellBegrunnelseProps {
@@ -14,7 +13,7 @@ interface IndividuellBegrunnelseProps {
 
 export function IndividuellBegrunnelse({
     aktivSaksbehandlingsperiode,
-}: IndividuellBegrunnelseProps): Maybe<ReactElement> {
+}: IndividuellBegrunnelseProps): ReactElement | null {
     const [begrunnelse, setBegrunnelse] = useState(() => getBegrunnelseFromStorage(aktivSaksbehandlingsperiode))
     const [openReadMore, setOpenReadMore] = useState(
         () => getBegrunnelseFromStorage(aktivSaksbehandlingsperiode) !== '',

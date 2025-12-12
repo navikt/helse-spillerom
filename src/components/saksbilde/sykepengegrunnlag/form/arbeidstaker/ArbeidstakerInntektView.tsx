@@ -15,7 +15,7 @@ import {
     RefusjonInfo,
 } from '@schemas/inntektRequest'
 import { InntektData } from '@schemas/inntektData'
-import { Maybe, notNull } from '@utils/tsUtils'
+import { notNull } from '@utils/tsUtils'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
 import { InntektsmeldingKildeTag, InntektTag, SaksbehandlerKildeTag } from '@components/ikoner/kilde/kildeTags'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
@@ -24,7 +24,7 @@ import { OpenDocumentInSidebarButton } from '@components/sidemenyer/høyremeny/d
 
 type ArbeidstakerInntektViewProps = {
     inntektRequest?: InntektRequestFor<'ARBEIDSTAKER'>
-    inntektData?: Maybe<InntektData>
+    inntektData?: InntektData | null
 }
 
 export function ArbeidstakerInntektView({ inntektRequest, inntektData }: ArbeidstakerInntektViewProps): ReactElement {
@@ -136,7 +136,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
     )
 }
 
-function normalize(data: InntektRequest['data'], inntektData?: Maybe<InntektData>) {
+function normalize(data: InntektRequest['data'], inntektData?: InntektData | null) {
     return {
         type: data.type as ArbeidstakerInntektType,
         inntektsmelding: inntektData && 'inntektsmelding' in inntektData ? inntektData.inntektsmelding : undefined,

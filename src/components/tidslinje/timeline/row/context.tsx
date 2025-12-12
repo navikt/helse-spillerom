@@ -1,6 +1,5 @@
 import { createContext, useContext } from 'react'
 
-import { Maybe } from '@utils/tsUtils'
 import { ParsedRow } from '@components/tidslinje/timeline'
 
 type RowContextType = {
@@ -10,9 +9,9 @@ type RowContextType = {
     rowIndex: number
 }
 
-const RowContext = createContext<Maybe<RowContextType>>(null)
-const ExpandedRowsContext = createContext<Maybe<Set<number>>>(null)
-const ToggleRowContext = createContext<Maybe<(index: number) => void>>(null)
+const RowContext = createContext<RowContextType | null>(null)
+const ExpandedRowsContext = createContext<Set<number> | null>(null)
+const ToggleRowContext = createContext<((index: number) => void) | null>(null)
 
 export function useRowContext(): RowContextType {
     const context = useContext(RowContext)
