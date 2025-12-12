@@ -45,7 +45,7 @@ export default function TestscenarioDetaljerPage(): ReactElement {
     }
 
     const scenario = scenarioer.find((s) => s.testperson.spilleromId === pseudoId)
-
+    //debugger
     if (!scenario) {
         return (
             <section className="flex-auto p-8">
