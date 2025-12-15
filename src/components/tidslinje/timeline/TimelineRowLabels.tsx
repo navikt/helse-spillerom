@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronRightIcon } from '@navikt/aksel-icons'
 
 import { RowLabels } from '@components/tidslinje/timeline/index'
@@ -15,7 +15,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
     const toggleRowExpanded = useToggleRow()
 
     return (
-        <VStack className="w-[254px] min-w-[254px]">
+        <VStack className="w-[254px] min-w-[254px] -ml-2">
             <div className="h-[20px]" />
             {labels.map((label) => {
                 const isExpandable = label.generationLevels > 0
@@ -46,7 +46,11 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                                 <div className="w-5" />
                             )}
                             {label.icon}
-                            <BodyShort className="group-hover:underline">{label.label}</BodyShort>
+                            <Tooltip content={label.label} describesChild>
+                                <BodyShort truncate className="group-hover:underline max-w-[194px]">
+                                    {label.label}
+                                </BodyShort>
+                            </Tooltip>
                         </HStack>
                     </div>
                 )
