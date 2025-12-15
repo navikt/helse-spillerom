@@ -40,6 +40,7 @@ export const allowedAPIs = [
     'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/inntektsmeldinger',
     'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/pensjonsgivendeinntekt',
     'GET /v1/[uuid]/behandlinger/[uuid]/yrkesaktivitet/[uuid]/ainntekt',
+    'GET /v1/[uuid]/behandlinger/[uuid]/validering',
     'GET /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt',
     'POST /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt',
     'PUT /v1/[uuid]/behandlinger/[uuid]/tilkommeninntekt/[uuid]',

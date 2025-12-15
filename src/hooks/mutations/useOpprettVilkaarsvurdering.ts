@@ -7,7 +7,12 @@ import {
     Vurdering,
     VilkaarsvurderingUnderspørsmål,
 } from '@/schemas/vilkaarsvurdering'
-import { invaliderVilkaarsvurderinger, invaliderQuery, invaliderTidslinje } from '@utils/queryInvalidation'
+import {
+    invaliderVilkaarsvurderinger,
+    invaliderQuery,
+    invaliderTidslinje,
+    invaliderValideringer,
+} from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 import { queryKeys } from '@utils/queryKeys'
 
@@ -56,8 +61,8 @@ export function useOpprettVilkaarsvurdering() {
                 }
             })
 
-            // Invalider alltid vilkårsvurderinger
             invaliderVilkaarsvurderinger(queryClient, pseudoId, behandlingId)
+            invaliderValideringer(queryClient, pseudoId, behandlingId)
         },
     })
 }

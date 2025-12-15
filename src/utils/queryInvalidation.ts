@@ -98,6 +98,12 @@ export function invaliderVilkaarsvurderinger(
     })
 }
 
+export function invaliderValideringer(queryClient: QueryClient, pseudoId: string, behandlingId: string): Promise<void> {
+    return queryClient.invalidateQueries({
+        queryKey: queryKeys.valideringer(pseudoId, behandlingId),
+    })
+}
+
 /**
  * Invaliderer dokumenter queries for en spesifikk periode
  */

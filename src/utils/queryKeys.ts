@@ -36,6 +36,8 @@ export const queryKeys = {
 
     // Dokumenter
     dokumenter: (personId: string, behandlingId: string) => ['dokumenter', personId, behandlingId] as const,
+    // Valideringer
+    valideringer: (personId: string, behandlingId: string) => ['valideringer', personId, behandlingId] as const,
 
     // Inntektsmeldinger
     inntektsmeldinger: (personId: string, behandlingId: string, yrkesaktivitetId: string) =>

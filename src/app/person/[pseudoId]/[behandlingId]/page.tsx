@@ -13,6 +13,7 @@ import { useHash } from '@hooks/useHash'
 import { Sykepengegrunnlag } from '@components/saksbilde/sykepengegrunnlag/Sykepengegrunnlag'
 import { RefusjonTab } from '@components/saksbilde/refusjon/RefusjonTab'
 import { FrihåndSykepengegrunnlagTab } from '@components/saksbilde/frihand-sykepengegrunnlag/FrihåndSykepengegrunnlagTab'
+import { Valideringer } from '@components/valideringer/Valideringer'
 
 const VALID_TABS = [
     'yrkesaktivitet',
@@ -42,6 +43,7 @@ export default function PersonPage(): ReactElement {
     return (
         <section className="flex-auto">
             <BehandlingHeading />
+            <Valideringer />
             <Tabs value={activeTab} onChange={handleTabChange}>
                 <HStack
                     wrap={false}
