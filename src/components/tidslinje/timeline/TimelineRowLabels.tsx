@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { BodyShort, HStack, Tooltip, VStack } from '@navikt/ds-react'
+import { BodyShort, CopyButton, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronRightIcon } from '@navikt/aksel-icons'
 
 import { RowLabels } from '@components/tidslinje/timeline/index'
@@ -23,7 +23,14 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                 const expandedExtraHeight = isExpanded ? label.generationLevels * 32 : 0
 
                 return (
-                    <div key={label.rowIndex} className="my-4" style={{ height: `${24 + expandedExtraHeight}px` }}>
+                    <HStack
+                        key={label.rowIndex}
+                        gap="1"
+                        wrap={false}
+                        align="start"
+                        className="my-4"
+                        style={{ height: `${24 + expandedExtraHeight}px` }}
+                    >
                         <HStack
                             as={isExpandable ? 'button' : 'div'}
                             role={isExpandable ? 'button' : undefined}
@@ -47,12 +54,21 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                             )}
                             {label.icon}
                             <Tooltip content={label.label} describesChild>
-                                <BodyShort truncate className="group-hover:underline max-w-[194px]">
+                                <BodyShort
+                                    size="small"
+                                    className="group-hover:underline max-w-[168px] leading-6"
+                                    truncate
+                                >
                                     {label.label}
                                 </BodyShort>
                             </Tooltip>
                         </HStack>
-                    </div>
+                        {label.copyLabelButton && (
+                            <Tooltip content="Kopier arbeidsgivernavn">
+                                <CopyButton copyText={label.label} size="xsmall" />
+                            </Tooltip>
+                        )}
+                    </HStack>
                 )
             })}
         </VStack>

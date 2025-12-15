@@ -28,6 +28,7 @@ export type RowLabels = {
     icon: ReactElement
     rowIndex: number
     generationLevels: number
+    copyLabelButton: boolean
 }[]
 
 type ParsedRowsResult = {
@@ -57,6 +58,7 @@ export function useParsedRows(children: ReactNode): ParsedRowsResult {
             icon: row.icon,
             rowIndex,
             generationLevels: row.generasjonPeriodsByLevel?.size ?? 0,
+            copyLabelButton: row.copyLabelButton,
         }
     })
     const allPeriods = parsedRows.map((row) => row.periods).flat()
@@ -72,6 +74,7 @@ export type ParsedRow = {
     icon: ReactElement
     periods: Period[]
     generasjonPeriodsByLevel: Map<number, Period[]>
+    copyLabelButton: boolean
 }
 
 export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
@@ -147,6 +150,7 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
             icon: row.props?.icon,
             periods,
             generasjonPeriodsByLevel: sortedGenerasjonPeriodsByLevel,
+            copyLabelButton: row.props?.copyLabelButton ?? false,
         })
     })
 

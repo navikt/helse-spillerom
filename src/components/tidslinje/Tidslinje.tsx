@@ -39,7 +39,12 @@ export function Tidslinje(): ReactElement {
         <>
             <Timeline>
                 {behandlinger.map((rad) => (
-                    <TimelineRow key={rad.id} label={rad.navn} icon={rad.icon}>
+                    <TimelineRow
+                        key={rad.id}
+                        label={rad.navn}
+                        icon={rad.icon}
+                        copyLabelButton={rad.navn !== 'Opprett behandling'}
+                    >
                         {rad.tidslinjeElementer.map((periode) => (
                             <TimelinePeriod
                                 key={rad.id + periode.fom + periode.tom}

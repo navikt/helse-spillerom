@@ -10,6 +10,7 @@ import { PeriodContext } from '@components/tidslinje/timeline/period/context'
 export interface TimelineRowProps extends PropsWithChildren {
     label: string
     icon: ReactElement
+    copyLabelButton?: boolean
 }
 
 export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement => {

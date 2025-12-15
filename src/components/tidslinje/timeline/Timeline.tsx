@@ -39,7 +39,7 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
             <ExpandedRowsContext.Provider value={expandedRows}>
                 <ToggleRowContext.Provider value={toggleRowExpanded}>
                     <VStack gap="4" className="ignore-axe w-full border-b border-ax-border-neutral-subtle p-8 pb-4">
-                        <HStack gap="2" wrap={false}>
+                        <HStack gap="3" wrap={false}>
                             <TimelineRowLabels labels={rowLabels} />
                             <TimelineScrollableRows ref={timelineScrollableContainerRef}>
                                 {parsedRows.map((row, rowIndex) => (
