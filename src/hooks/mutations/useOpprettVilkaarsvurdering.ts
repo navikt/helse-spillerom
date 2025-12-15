@@ -13,6 +13,7 @@ import { queryKeys } from '@utils/queryKeys'
 
 type MutationProps = {
     kode: string
+    vilkårskode: string
     vurdering: Vurdering
     underspørsmål: VilkaarsvurderingUnderspørsmål[]
     notat?: string
@@ -23,12 +24,13 @@ export function useOpprettVilkaarsvurdering() {
     const queryClient = useQueryClient()
 
     return useMutation<OppdaterVilkaarsvurderingResponse, Error, MutationProps>({
-        mutationFn: async ({ kode, vurdering, underspørsmål, notat }) => {
+        mutationFn: async ({ kode, vurdering, vilkårskode, underspørsmål, notat }) => {
             return await putAndParse<OppdaterVilkaarsvurderingResponse>(
                 `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/vilkaarsvurdering/${kode}`,
                 oppdaterVilkaarsvurderingResponseSchema,
                 {
                     vurdering,
+                    vilkårskode,
                     underspørsmål,
                     notat,
                 },

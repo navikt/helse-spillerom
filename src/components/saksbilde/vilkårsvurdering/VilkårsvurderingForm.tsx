@@ -185,12 +185,13 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
     const onSubmit = async (data: FormValues) => {
         // Bestem samlet vurdering
         const samletVurdering = bestemSamletVurdering(data)
-
-        // Opprett underspørsmål array
         const underspørsmål = opprettUnderspørsmålFraFormData(data)
+        const vilkårskode = bestemVilkårskode(underspørsmål)
+        // Opprett underspørsmål array
 
         await mutation.mutateAsync({
             kode: vilkår.kode,
+            vilkårskode: vilkårskode,
             vurdering: samletVurdering,
             underspørsmål,
             notat: data.notat || '',
@@ -219,6 +220,21 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
         if (harIkkeOppfylt) return 'IKKE_OPPFYLT'
         if (harOppfylt) return 'OPPFYLT'
         return 'IKKE_RELEVANT'
+    }
+
+    const bestemVilkårskode = (data: VilkaarsvurderingUnderspørsmål[]): string => {
+        const svarKoder = new Set(data.map((entry) => entry.svar).filter((svar) => svar))
+
+        for (const vilkårEntry of kodeverk) {
+            const harMatchIkkeOppfylt = vilkårEntry.ikkeOppfylt.some((årsak) => svarKoder.has(årsak.kode))
+            const harMatchOppfylt = vilkårEntry.oppfylt.some((årsak) => svarKoder.has(årsak.kode))
+
+            if (harMatchIkkeOppfylt || harMatchOppfylt) {
+                return vilkårEntry.vilkårskode
+            }
+        }
+
+        throw Error('Kunne ikke bestemme vilkårskode fra valgte svar')
     }
 
     const opprettUnderspørsmålFraFormData = (data: FormValues): VilkaarsvurderingUnderspørsmål[] => {
