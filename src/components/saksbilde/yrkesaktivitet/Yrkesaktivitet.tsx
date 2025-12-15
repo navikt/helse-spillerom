@@ -224,7 +224,7 @@ export function Yrkesaktivitet(): ReactElement {
                     </div>
                 ) : (
                     <Alert variant="info">
-                        <BodyShort>Ingen yrkesaktivitet registrert for denne saksbehandlingsperioden.</BodyShort>
+                        <BodyShort>Ingen yrkesaktivitet registrert for denne behandlingen.</BodyShort>
                     </Alert>
                 )}
                 {!visOpprettForm && kanSaksbehandles && (

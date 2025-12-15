@@ -26,7 +26,7 @@ import { useSoknad } from '@hooks/queries/useSoknad'
 import { Søknad } from '@/schemas/søknad'
 import { getFormattedDateString } from '@utils/date-format'
 import { formaterArbeidssituasjon } from '@utils/arbeidssituasjon'
-import { useOpprettSaksbehandlingsperiode } from '@hooks/mutations/useOpprettSaksbehandlingsperiode'
+import { useOpprettBehandling } from '@hooks/mutations/useOpprettBehandling'
 import { SøknadsInnhold } from '@components/søknad/SøknadsInnhold'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { usePersonRouteParams } from '@hooks/useRouteParams'
@@ -78,7 +78,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
     const [activeSoknadId, setActiveSoknadId] = useState<string | undefined>(undefined)
     const { data: aktivSøknad, isLoading: lasterSoknad } = useSoknad(activeSoknadId)
 
-    const { mutate: opprettSaksbehandlingsperiode, isPending, error } = useOpprettSaksbehandlingsperiode()
+    const { mutate: opprettSaksbehandlingsperiode, isPending, error } = useOpprettBehandling()
 
     // Funksjon for å få feilmelding fra error
     const getErrorMessage = (error: unknown): string => {

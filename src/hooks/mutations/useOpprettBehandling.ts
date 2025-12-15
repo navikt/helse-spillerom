@@ -4,8 +4,8 @@ import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Behandling, behandlingSchema } from '@schemas/behandling'
 import {
-    invaliderAlleSaksbehandlingsperioder,
-    invaliderSaksbehandlingsperiodeHistorikk,
+    invaliderAlleBehandlinger,
+    invaliderBehandlingHistorikk,
     invaliderTidslinje,
     refetchQuery,
 } from '@utils/queryInvalidation'
@@ -21,7 +21,7 @@ interface MutationProps {
     callback: (periode: Behandling) => void
 }
 
-export function useOpprettSaksbehandlingsperiode() {
+export function useOpprettBehandling() {
     const { pseudoId } = usePersonRouteParams()
     const queryClient = useQueryClient()
 
@@ -30,9 +30,9 @@ export function useOpprettSaksbehandlingsperiode() {
             postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger`, behandlingSchema, request),
         onSuccess: async (periode, r) => {
             // Invalidate all saksbehandlingsperioder caches
-            await invaliderAlleSaksbehandlingsperioder(queryClient)
+            await invaliderAlleBehandlinger(queryClient)
             await refetchQuery(queryClient, queryKeys.behandlinger(pseudoId))
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, periode.id)
+            await invaliderBehandlingHistorikk(queryClient, pseudoId, periode.id)
             await invaliderTidslinje(queryClient, pseudoId)
             r.callback(periode)
         },

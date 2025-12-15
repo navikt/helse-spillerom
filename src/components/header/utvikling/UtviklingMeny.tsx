@@ -109,7 +109,6 @@ export function UtviklingMeny(): ReactElement | null {
                 </InternalHeaderButton>
             </Tooltip>
 
-            {/* Utvikling knapper for saksbehandlingsperiode */}
             {showUtviklingButtons && (
                 <>
                     <Tooltip content="Vilkårsvurderinger">

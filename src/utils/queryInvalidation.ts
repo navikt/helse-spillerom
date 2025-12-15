@@ -12,21 +12,18 @@ import { queryKeys } from './queryKeys'
 /**
  * Invaliderer alle saksbehandlingsperioder queries
  */
-export function invaliderAlleSaksbehandlingsperioder(queryClient: QueryClient): Promise<void> {
+export function invaliderAlleBehandlinger(queryClient: QueryClient): Promise<void> {
     return queryClient.invalidateQueries({ queryKey: queryKeys.alleBehandlinger() })
 }
 
 /**
  * Invaliderer saksbehandlingsperioder for en spesifikk person
  */
-export function invaliderSaksbehandlingsperioder(queryClient: QueryClient, pseudoId: string): Promise<void> {
+export function invaliderBehandlinger(queryClient: QueryClient, pseudoId: string): Promise<void> {
     return queryClient.invalidateQueries({ queryKey: queryKeys.behandlinger(pseudoId) })
 }
 
-/**
- * Invaliderer historikk for en spesifikk saksbehandlingsperiode
- */
-export function invaliderSaksbehandlingsperiodeHistorikk(
+export function invaliderBehandlingHistorikk(
     queryClient: QueryClient,
     pseudoId: string,
     behandlingId: string,
@@ -36,9 +33,6 @@ export function invaliderSaksbehandlingsperiodeHistorikk(
     })
 }
 
-/**
- * Invaliderer yrkesaktivitet queries for en spesifikk periode
- */
 export function invaliderYrkesaktivitet(
     queryClient: QueryClient,
     pseudoId: string,
@@ -47,9 +41,6 @@ export function invaliderYrkesaktivitet(
     return queryClient.invalidateQueries({ queryKey: queryKeys.yrkesaktivitet(pseudoId, behandlingId) })
 }
 
-/**
- * Invaliderer sykepengegrunnlag queries for en spesifikk periode
- */
 export function invaliderSykepengegrunnlag(
     queryClient: QueryClient,
     pseudoId: string,
@@ -60,9 +51,6 @@ export function invaliderSykepengegrunnlag(
     })
 }
 
-/**
- * Invaliderer utbetalingsberegning queries for en spesifikk periode
- */
 export function invaliderUtbetalingsberegning(
     queryClient: QueryClient,
     pseudoId: string,
@@ -73,9 +61,6 @@ export function invaliderUtbetalingsberegning(
     })
 }
 
-/**
- * Invaliderer tidslinje queries for en spesifikk person
- */
 export function invaliderTidslinje(queryClient: QueryClient, pseudoId: string): Promise<void> {
     return queryClient.invalidateQueries({ queryKey: queryKeys.tidslinje(pseudoId) })
 }
@@ -134,7 +119,7 @@ export function invaliderAllePeriodeQueries(
         invaliderSykepengegrunnlag(queryClient, pseudoId, behandlingId),
         invaliderUtbetalingsberegning(queryClient, pseudoId, behandlingId),
         invaliderHistory(queryClient, pseudoId, behandlingId),
-        invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId),
+        invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId),
         invaliderTidslinje(queryClient, pseudoId),
     ])
 }
@@ -148,9 +133,9 @@ export function invaliderAlleSaksbehandlingsperiodeQueries(
     behandlingId: string,
 ): Promise<void[]> {
     return Promise.all([
-        invaliderAlleSaksbehandlingsperioder(queryClient),
-        invaliderSaksbehandlingsperioder(queryClient, pseudoId),
-        invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId),
+        invaliderAlleBehandlinger(queryClient),
+        invaliderBehandlinger(queryClient, pseudoId),
+        invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId),
         invaliderTidslinje(queryClient, pseudoId),
     ])
 }
@@ -220,9 +205,9 @@ export function invaliderSaksbehandlingsperiodeStatusQueries(
     behandlingId: string,
 ): Promise<void[]> {
     return Promise.all([
-        invaliderAlleSaksbehandlingsperioder(queryClient),
-        invaliderSaksbehandlingsperioder(queryClient, pseudoId),
-        invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId),
+        invaliderAlleBehandlinger(queryClient),
+        invaliderBehandlinger(queryClient, pseudoId),
+        invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId),
         invaliderTidslinje(queryClient, pseudoId),
     ])
 }

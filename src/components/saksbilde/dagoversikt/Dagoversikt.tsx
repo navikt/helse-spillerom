@@ -151,9 +151,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
             <SaksbildePanel value={value}>
                 <Alert variant="info">
                     <Heading size="small">Ingen dagoversikt funnet</Heading>
-                    <BodyShort>
-                        Det finnes ingen yrkesaktivitet for denne saksbehandlingsperioden med dagoversikt.
-                    </BodyShort>
+                    <BodyShort>Det finnes ingen yrkesaktivitet for denne behandlingen med dagoversikt.</BodyShort>
                 </Alert>
             </SaksbildePanel>
         )

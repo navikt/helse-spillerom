@@ -5,9 +5,9 @@ import { postAndParse } from '@utils/fetch'
 import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { Behandling, behandlingSchema } from '@schemas/behandling'
 import {
-    invaliderAlleSaksbehandlingsperioder,
-    invaliderSaksbehandlingsperioder,
-    invaliderSaksbehandlingsperiodeHistorikk,
+    invaliderAlleBehandlinger,
+    invaliderBehandlinger,
+    invaliderBehandlingHistorikk,
     invaliderTidslinje,
 } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
@@ -26,11 +26,11 @@ export function useRevurder() {
             postAndParse(`/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/revurder`, behandlingSchema, {}),
         onSuccess: async (nyPeriode) => {
             // Invalidate all saksbehandlingsperioder caches
-            await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await invaliderSaksbehandlingsperioder(queryClient, pseudoId)
+            await invaliderAlleBehandlinger(queryClient)
+            await invaliderBehandlinger(queryClient, pseudoId)
             // Invalider historikk for både gammel og ny periode
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, gammelSaksbehandlingsperiodeId)
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, nyPeriode.id)
+            await invaliderBehandlingHistorikk(queryClient, pseudoId, gammelSaksbehandlingsperiodeId)
+            await invaliderBehandlingHistorikk(queryClient, pseudoId, nyPeriode.id)
             await invaliderTidslinje(queryClient, pseudoId)
 
             // Naviger til den nye perioden

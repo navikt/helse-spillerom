@@ -7,7 +7,7 @@ import {
     Vurdering,
     VilkaarsvurderingUnderspørsmål,
 } from '@/schemas/vilkaarsvurdering'
-import { invaliderVilkaarsvurderinger, invaliderQuery } from '@utils/queryInvalidation'
+import { invaliderVilkaarsvurderinger, invaliderQuery, invaliderTidslinje } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 import { queryKeys } from '@utils/queryKeys'
 
@@ -46,6 +46,7 @@ export function useOpprettVilkaarsvurdering() {
                         break
                     case 'yrkesaktiviteter':
                         invaliderQuery(queryClient, queryKeys.yrkesaktivitet(pseudoId, behandlingId))
+                        invaliderTidslinje(queryClient, pseudoId)
                         break
                     case 'sykepengegrunnlag':
                         invaliderQuery(queryClient, queryKeys.sykepengegrunnlag(pseudoId, behandlingId))

@@ -27,10 +27,10 @@ export function Oppgaveliste(): ReactElement {
     const [filters, setFilters] = useState<Filter[]>(filterList)
     const [showFilters, setShowFilters] = useState<boolean>(false)
     const [activeTab, setActiveTab] = useState<SakerTabs>('ALLE')
-    const { data: saksbehandlingsperioder = [], isLoading, error, refetch } = useAlleBehandlinger()
+    const { data: behandlinger = [], isLoading, error, refetch } = useAlleBehandlinger()
     const { data: aktivBruker } = useBrukerinfo()
 
-    const { mine, behandlet, alle } = splitPerioderForTabs(saksbehandlingsperioder, aktivBruker)
+    const { mine, behandlet, alle } = splitPerioderForTabs(behandlinger, aktivBruker)
 
     const handleTabChange = (value: string) => {
         setActiveTab(value as SakerTabs)

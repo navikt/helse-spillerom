@@ -40,7 +40,7 @@ export function Venstremeny(): ReactElement {
     const erBeslutter = useErBeslutter()
     const { data: brukerRoller } = useBrukerRoller()
     const { data: brukerinfo } = useBrukerinfo()
-    const { data: saksbehandlingsperioder } = useBehandlinger()
+    const { data: behandlinger } = useBehandlinger()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
 
@@ -60,8 +60,8 @@ export function Venstremeny(): ReactElement {
 
     const kanRevurderes =
         aktivBehandling?.status === 'GODKJENT' &&
-        saksbehandlingsperioder &&
-        !saksbehandlingsperioder.some(
+        behandlinger &&
+        !behandlinger.some(
             (periode) =>
                 periode.id !== aktivBehandling.id && periode.revurdererSaksbehandlingsperiodeId === aktivBehandling.id,
         )

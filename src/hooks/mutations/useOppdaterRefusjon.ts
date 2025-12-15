@@ -2,10 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { putNoContent } from '@utils/fetch'
 import { RefusjonInfo } from '@schemas/inntektRequest'
-import {
-    invaliderYrkesaktivitetRelaterteQueries,
-    invaliderSaksbehandlingsperiodeHistorikk,
-} from '@utils/queryInvalidation'
+import { invaliderYrkesaktivitetRelaterteQueries, invaliderBehandlingHistorikk } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 type MutationProps = {
@@ -27,7 +24,7 @@ export function useOppdaterRefusjon() {
         onSuccess: () => {
             invaliderYrkesaktivitetRelaterteQueries(queryClient, pseudoId, behandlingId)
             // Invalider historikk siden refusjon endring kan legge til ny historikkinnslag
-            invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId)
+            invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId)
         },
     })
 }

@@ -4,10 +4,7 @@ import { putNoContent } from '@utils/fetch'
 import { Dagoversikt } from '@/schemas/dagoversikt'
 import { Perioder } from '@/schemas/yrkesaktivitet'
 import { YrkesaktivitetKategorisering, yrkesaktivitetKategoriseringSchema } from '@schemas/yrkesaktivitetKategorisering'
-import {
-    invaliderYrkesaktivitetRelaterteQueries,
-    invaliderSaksbehandlingsperiodeHistorikk,
-} from '@utils/queryInvalidation'
+import { invaliderYrkesaktivitetRelaterteQueries, invaliderBehandlingHistorikk } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 
 type KategoriseringMutationProps = {
@@ -42,7 +39,7 @@ export function useOppdaterYrkesaktivitetKategorisering() {
         onSuccess: () => {
             invaliderYrkesaktivitetRelaterteQueries(queryClient, pseudoId, behandlingId)
             // Invalider historikk siden kategorisering endring kan legge til ny historikkinnslag
-            invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId)
+            invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId)
         },
     })
 }

@@ -69,9 +69,7 @@ export function navigerTilYrkesaktivitetFane() {
 export function verifiserIngenYrkesaktiviteter() {
     return async (page: Page) => {
         await test.step('Verifiser at ingen yrkesaktivitet er registrert', async () => {
-            const ingenYrkesaktiviteter = page.getByText(
-                'Ingen yrkesaktivitet registrert for denne saksbehandlingsperioden.',
-            )
+            const ingenYrkesaktiviteter = page.getByText('Ingen yrkesaktivitet registrert for denne behandlingen.')
             await ingenYrkesaktiviteter.waitFor({ state: 'visible' })
         })
     }
@@ -394,9 +392,9 @@ export function verifiserSøknaderTilgjengelige() {
     }
 }
 
-export function navigerTilOpprettSaksbehandlingsperiode() {
+export function navigerTilOpprettBehandling() {
     return async (page: Page) => {
-        await test.step('Naviger til opprett saksbehandlingsperiode', async () => {
+        await test.step('Naviger til opprett behandling', async () => {
             const startBehandlingButton = page.getByRole('button', { name: 'Start ny behandling' })
             await startBehandlingButton.click()
             await page.waitForURL('**/opprett-saksbehandlingsperiode')
@@ -407,7 +405,7 @@ export function navigerTilOpprettSaksbehandlingsperiode() {
 export function opprettManuellBehandling(fom: string, tom: string) {
     return async (page: Page) => {
         await test.step(`Opprett manuell behandling fra ${fom} til ${tom}`, async () => {
-            await navigerTilOpprettSaksbehandlingsperiode()(page)
+            await navigerTilOpprettBehandling()(page)
 
             const manuellPeriodeCheckbox = page.getByRole('checkbox', { name: 'Manuell periode' })
             await manuellPeriodeCheckbox.check()

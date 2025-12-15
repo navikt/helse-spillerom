@@ -5,9 +5,9 @@ import { ProblemDetailsError } from '@utils/ProblemDetailsError'
 import { OppdaterSkjæringstidspunkt, Behandling, behandlingSchema } from '@schemas/behandling'
 import { SkjæringstidspunktSchema } from '@schemas/skjæringstidspunkt'
 import {
-    invaliderAlleSaksbehandlingsperioder,
-    invaliderSaksbehandlingsperioder,
-    invaliderSaksbehandlingsperiodeHistorikk,
+    invaliderAlleBehandlinger,
+    invaliderBehandlinger,
+    invaliderBehandlingHistorikk,
 } from '@utils/queryInvalidation'
 import { useRouteParams } from '@hooks/useRouteParams'
 
@@ -28,9 +28,9 @@ export function useOppdaterSkjæringstidspunkt({ onSuccess }: UseOppdaterSkjæri
             ),
         onSuccess: async () => {
             // Invalidate all saksbehandlingsperioder caches
-            await invaliderAlleSaksbehandlingsperioder(queryClient)
-            await invaliderSaksbehandlingsperioder(queryClient, pseudoId)
-            await invaliderSaksbehandlingsperiodeHistorikk(queryClient, pseudoId, behandlingId)
+            await invaliderAlleBehandlinger(queryClient)
+            await invaliderBehandlinger(queryClient, pseudoId)
+            await invaliderBehandlingHistorikk(queryClient, pseudoId, behandlingId)
 
             // Kjør callback etter at cache invalidation er ferdig
             onSuccess?.()
