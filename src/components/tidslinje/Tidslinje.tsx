@@ -3,8 +3,8 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon } from '@navikt/aksel-icons'
-import { useParams, useRouter } from 'next/navigation'
+import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -36,7 +36,7 @@ export function Tidslinje(): ReactElement {
     const { behandlinger, tilkomneInntekter } = groupTidslinjeData(data)
 
     return (
-        <>
+        <div className="relative">
             <Timeline>
                 {behandlinger.map((rad) => (
                     <TimelineRow
@@ -94,7 +94,7 @@ export function Tidslinje(): ReactElement {
                 <TimelineZoom />
             </Timeline>
             <TilkommenInntektKnapp />
-        </>
+        </div>
     )
 }
 
@@ -153,25 +153,34 @@ function TilkommenInntektKnapp(): ReactElement {
     const router = useRouter()
     const { pseudoId } = usePersonRouteParams()
     const params = useParams() // Brukes kun for behandlingId som kan være undefined
+    const pathname = usePathname()
+
+    const isOnOpprettPage = pathname.includes('/tilkommen-inntekt/opprett')
 
     if (!kanSaksbehandles || !aktivSaksbehandlingsperiode) {
         return <></>
     }
 
-    const handleLeggTilTilkommenInntekt = () => {
+    const handleClick = () => {
+        if (isOnOpprettPage) {
+            router.back()
+            return
+        }
         if (pseudoId && params.behandlingId) {
             router.push(`/person/${pseudoId}/${params.behandlingId}/tilkommen-inntekt/opprett`)
         }
     }
 
     return (
-        <div className="border-b border-ax-border-neutral-subtle px-8 py-4">
-            <HStack gap="4" align="center" justify="space-between">
-                <Button variant="tertiary" size="small" onClick={handleLeggTilTilkommenInntekt}>
-                    + Legg til tilkommen inntekt
-                </Button>
-            </HStack>
-        </div>
+        <Button
+            variant="tertiary"
+            size="small"
+            onClick={handleClick}
+            className="absolute bottom-4 left-4.5"
+            icon={isOnOpprettPage ? <XMarkIcon aria-hidden /> : <PlusIcon aria-hidden />}
+        >
+            {isOnOpprettPage ? 'Avbryt oppretting av tilkommen inntekt' : 'Legg til tilkommen inntekt'}
+        </Button>
     )
 }
 
