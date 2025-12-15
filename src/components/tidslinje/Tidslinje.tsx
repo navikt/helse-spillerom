@@ -3,8 +3,8 @@
 import React, { PropsWithChildren, ReactElement } from 'react'
 import { BodyShort, Button, Heading, HGrid, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
-import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons'
-import { useParams, usePathname, useRouter } from 'next/navigation'
+import { CheckmarkCircleFillIcon, PencilFillIcon, PlusCircleFillIcon } from '@navikt/aksel-icons'
+import { useParams, useRouter } from 'next/navigation'
 
 import { usePersonRouteParams } from '@hooks/useRouteParams'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
@@ -15,12 +15,11 @@ import { TimelineZoom } from '@components/tidslinje/timeline/zoom/TimelineZoom'
 import { Timeline } from '@components/tidslinje/timeline/Timeline'
 import { BehandlingStatus } from '@schemas/behandling'
 import { statusTilTekst } from '@components/statustag/StatusTag'
-import { useKanSaksbehandles } from '@hooks/queries/useKanSaksbehandles'
-import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 import { useTidslinje } from '@hooks/queries/useTidslinje'
 import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingsperiode'
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
 import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
+import { TilkommenInntektKnapp } from '@components/tidslinje/TilkommenInntektKnapp'
 
 export function Tidslinje(): ReactElement {
     const router = useRouter()
@@ -144,43 +143,6 @@ function TilkommenInntektPopover({
             <BodyShort size="small">Opprettet:</BodyShort>
             <BodyShort size="small">{getFormattedDatetimeString(tilkommenInntekt.opprettet)}</BodyShort>
         </PopoverContentWrapper>
-    )
-}
-
-function TilkommenInntektKnapp(): ReactElement {
-    const kanSaksbehandles = useKanSaksbehandles()
-    const aktivSaksbehandlingsperiode = useAktivBehandling()
-    const router = useRouter()
-    const { pseudoId } = usePersonRouteParams()
-    const params = useParams() // Brukes kun for behandlingId som kan være undefined
-    const pathname = usePathname()
-
-    const isOnOpprettPage = pathname.includes('/tilkommen-inntekt/opprett')
-
-    if (!kanSaksbehandles || !aktivSaksbehandlingsperiode) {
-        return <></>
-    }
-
-    const handleClick = () => {
-        if (isOnOpprettPage) {
-            router.back()
-            return
-        }
-        if (pseudoId && params.behandlingId) {
-            router.push(`/person/${pseudoId}/${params.behandlingId}/tilkommen-inntekt/opprett`)
-        }
-    }
-
-    return (
-        <Button
-            variant="tertiary"
-            size="small"
-            onClick={handleClick}
-            className="absolute bottom-4 left-4.5"
-            icon={isOnOpprettPage ? <XMarkIcon aria-hidden /> : <PlusIcon aria-hidden />}
-        >
-            {isOnOpprettPage ? 'Avbryt oppretting av tilkommen inntekt' : 'Legg til tilkommen inntekt'}
-        </Button>
     )
 }
 
