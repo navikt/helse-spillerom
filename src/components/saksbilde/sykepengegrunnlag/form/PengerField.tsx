@@ -3,7 +3,7 @@ import { useController } from 'react-hook-form'
 import { TextField } from '@navikt/ds-react'
 
 import { cn } from '@utils/tw'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 
 interface PengerFieldProps {
     name: string

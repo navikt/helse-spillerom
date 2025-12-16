@@ -19,7 +19,7 @@ import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateFiel
 import { PengerField } from '@components/saksbilde/sykepengegrunnlag/form/PengerField'
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { useAktivBehandling } from '@hooks/queries/useAktivBehandling'
 
 const yrkesaktivitetTypeLabels: Record<TilkommenInntektYrkesaktivitetType, string> = {

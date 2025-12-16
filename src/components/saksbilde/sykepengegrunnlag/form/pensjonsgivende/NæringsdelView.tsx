@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Table } from '@navikt/ds-react'
 
 import { Næringsdel } from '@schemas/sykepengegrunnlag'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 
 type NæringsdelViewProps = {
     næringsdel?: Næringsdel | null

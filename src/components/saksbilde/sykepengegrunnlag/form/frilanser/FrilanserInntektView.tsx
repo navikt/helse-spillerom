@@ -4,7 +4,7 @@ import { BodyShort, HStack, Tag, VStack } from '@navikt/ds-react'
 import { InntektRequestFor } from '@components/saksbilde/sykepengegrunnlag/form/defaultValues'
 import { InntektData } from '@schemas/inntektData'
 import { SykepengegrunnlagBase } from '@schemas/sykepengegrunnlag'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { frilanserSkjønnsfastsettelseÅrsakLabels } from '@components/saksbilde/sykepengegrunnlag/form/frilanser/FrilanserInntektFormFields'
 import { AinntektInntektDataView } from '@components/saksbilde/sykepengegrunnlag/form/ainntekt/AinntektInntektDataView'
 

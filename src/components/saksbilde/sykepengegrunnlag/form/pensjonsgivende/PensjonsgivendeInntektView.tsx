@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { BodyShort, HelpText, HStack, Label, Table } from '@navikt/ds-react'
 
 import { InaktivPensjonsgivende, SelvstendigNæringsdrivendePensjonsgivende } from '@schemas/inntektData'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 
 type PensjonsgivendeInntektViewProps = {
     inntektData: InaktivPensjonsgivende | SelvstendigNæringsdrivendePensjonsgivende

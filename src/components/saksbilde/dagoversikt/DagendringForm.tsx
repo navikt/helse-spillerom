@@ -220,7 +220,6 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                                     Teksten vises ikke til den sykmeldte, med mindre hen ber om innsyn.
                                 </span>
                             }
-                            maxLength={1000}
                             minRows={6}
                             disabled={valgteDataer.size === 0}
                             error={fieldState.error?.message}

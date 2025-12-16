@@ -12,7 +12,7 @@ export function øreTilDisplay(øre?: number): string {
 }
 
 export function formaterBeløpØre(ører: number | undefined, desimaler: number = 2): string {
-    if (ører === undefined) return '-'
+    if (ører == null) return '-'
     return new Intl.NumberFormat('nb-NO', {
         style: 'currency',
         currency: 'NOK',
@@ -26,7 +26,7 @@ export function formaterBeløpKroner(
     desimaler: number = 2,
     style: 'currency' | 'decimal' = 'currency',
 ): string {
-    if (kroner === undefined || kroner === null) return '-'
+    if (kroner == null) return '-'
     return new Intl.NumberFormat('nb-NO', {
         style: style,
         currency: 'NOK',

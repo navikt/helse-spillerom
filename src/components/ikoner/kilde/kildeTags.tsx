@@ -4,6 +4,12 @@ import { PersonPencilFillIcon } from '@navikt/aksel-icons'
 import { ArbeidstakerInntektType } from '@schemas/inntektRequest'
 import { cn } from '@utils/tw'
 import { Dokumenttype } from '@schemas/dokument'
+import { Kilde } from '@schemas/dagoversikt'
+
+export const DagoversiktKildeTag: Record<Kilde, ReactElement> = {
+    Søknad: <SøknadKildeTag />,
+    Saksbehandler: <SaksbehandlerKildeTag />,
+}
 
 export const InntektTag: Record<ArbeidstakerInntektType, ReactElement> = {
     DEFAULT: <></>,

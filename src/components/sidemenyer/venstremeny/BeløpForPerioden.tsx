@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
-import { VStack, HStack, BodyShort } from '@navikt/ds-react'
+import { BodyShort, HStack, VStack } from '@navikt/ds-react'
 import { BriefcaseIcon, PersonIcon } from '@navikt/aksel-icons'
 
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
 import { usePersoninfo } from '@hooks/queries/usePersoninfo'
 import { useOrganisasjonsnavn } from '@hooks/queries/useOrganisasjonsnavn'
-import { formaterBeløpØre } from '@schemas/øreUtils'
+import { formaterBeløpØre } from '@schemas/pengerUtils'
 
 interface ArbeidsgiverRadProps {
     orgnummer: string

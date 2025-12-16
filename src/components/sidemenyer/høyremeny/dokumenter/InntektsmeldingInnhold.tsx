@@ -13,7 +13,7 @@ import {
 } from '@schemas/inntektsmelding'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { useDokumentVisningContext } from '@/app/person/[pseudoId]/dokumentVisningContext'
 import { notNull } from '@utils/tsUtils'
 

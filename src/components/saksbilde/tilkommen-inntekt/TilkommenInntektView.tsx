@@ -6,7 +6,7 @@ import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
 
 import { TilkommenInntektResponse, TilkommenInntektYrkesaktivitetType } from '@schemas/tilkommenInntekt'
 import { getFormattedDateString, getFormattedDatetimeString } from '@utils/date-format'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { Organisasjonsnavn } from '@components/organisasjon/Organisasjonsnavn'
 import { useSlettTilkommenInntekt } from '@hooks/mutations/useSlettTilkommenInntekt'
 

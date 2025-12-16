@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { Bleed, BodyLong, BodyShort, BoxNew, HStack, VStack } from '@navikt/ds-react'
 
 import { FrihåndSykepengegrunnlag } from '@schemas/sykepengegrunnlag'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { getFormattedNorwegianLongDate } from '@utils/date-format'
 import { useBeregningsregler } from '@hooks/queries/useBeregningsregler'
 

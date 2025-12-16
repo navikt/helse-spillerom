@@ -4,7 +4,7 @@ import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from
 import { capitalize } from 'remeda'
 
 import { ArbeidstakerAinntekt, FrilanserAinntekt } from '@schemas/inntektData'
-import { formaterBeløpKroner } from '@schemas/øreUtils'
+import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { InntektTag } from '@components/ikoner/kilde/kildeTags'
 import { getFormattedMonthYear } from '@utils/date-format'
 
