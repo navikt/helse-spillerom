@@ -4,6 +4,7 @@ import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { Sidemeny } from '@components/sidemenyer/Sidemeny'
 import { useAktivBehandlingMedLoading } from '@hooks/queries/useAktivBehandling'
@@ -22,6 +23,8 @@ import { useToast } from '@components/ToastProvider'
 import { Skjæringstidspunkt } from '@components/sidemenyer/venstremeny/skjæringstidspunkt/Skjæringstidspunkt'
 import { VenstremenySkeleton } from '@components/sidemenyer/venstremeny/VenstremenySkeleton'
 import { StatusTag } from '@components/statustag/StatusTag'
+import { invaliderValideringer } from '@utils/queryInvalidation'
+import { useRouteParams } from '@hooks/useRouteParams'
 
 import { SendTilGodkjenningModal } from './SendTilGodkjenningModal'
 import { KategoriTag } from './KategoriTag'
@@ -43,6 +46,8 @@ export function Venstremeny(): ReactElement {
     const { data: behandlinger } = useBehandlinger()
     const [visGodkjenningModal, setVisGodkjenningModal] = useState(false)
     const [visSendTilbakeModal, setVisSendTilbakeModal] = useState(false)
+    const { pseudoId, behandlingId } = useRouteParams()
+    const queryClient = useQueryClient()
 
     const sendTilBeslutning = useSendTilBeslutning({
         onSuccess: () => {
@@ -176,7 +181,10 @@ export function Venstremeny(): ReactElement {
                                     variant="primary"
                                     size="small"
                                     className="w-fit"
-                                    onClick={() => setVisGodkjenningModal(true)}
+                                    onClick={() => {
+                                        invaliderValideringer(queryClient, pseudoId, behandlingId, true)
+                                        setVisGodkjenningModal(true)
+                                    }}
                                     loading={sendTilBeslutning.isPending}
                                     disabled={sendTilBeslutning.isPending}
                                 >

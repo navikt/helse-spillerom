@@ -62,7 +62,7 @@ export function useOpprettVilkaarsvurdering() {
             })
 
             invaliderVilkaarsvurderinger(queryClient, pseudoId, behandlingId)
-            invaliderValideringer(queryClient, pseudoId, behandlingId)
+            invaliderValideringer(queryClient, pseudoId, behandlingId, false)
         },
     })
 }

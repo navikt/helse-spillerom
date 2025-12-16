@@ -98,9 +98,14 @@ export function invaliderVilkaarsvurderinger(
     })
 }
 
-export function invaliderValideringer(queryClient: QueryClient, pseudoId: string, behandlingId: string): Promise<void> {
+export function invaliderValideringer(
+    queryClient: QueryClient,
+    pseudoId: string,
+    behandlingId: string,
+    sluttValidering: boolean,
+): Promise<void> {
     return queryClient.invalidateQueries({
-        queryKey: queryKeys.valideringer(pseudoId, behandlingId),
+        queryKey: queryKeys.valideringer(pseudoId, behandlingId, sluttValidering),
     })
 }
 

@@ -5,8 +5,8 @@ import { InfoCard, VStack } from '@navikt/ds-react'
 
 import { useValideringer } from '@hooks/queries/useValideringer'
 
-export function Valideringer(): ReactElement | null {
-    const { data } = useValideringer()
+export function Valideringer({ sluttvalidering }: { sluttvalidering: boolean }): ReactElement | null {
+    const { data } = useValideringer(sluttvalidering)
 
     if (data == null || data.length === 0) return null
 

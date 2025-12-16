@@ -43,7 +43,7 @@ export default function PersonPage(): ReactElement {
     return (
         <section className="flex-auto">
             <BehandlingHeading />
-            <Valideringer />
+            <Valideringer sluttvalidering={false} />
             <Tabs value={activeTab} onChange={handleTabChange}>
                 <HStack
                     wrap={false}
