@@ -115,7 +115,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             await expect(helgeDager).toHaveCount(8)
 
             // Verifiser at hver sykedag viser 1 800 kr i utbetaling
-            const utbetalingBeløp = dagoversiktTabell.locator('text=1 152 kr')
+            const utbetalingBeløp = dagoversiktTabell.locator('text=1 152,00 kr')
             await expect(utbetalingBeløp).toHaveCount(23)
 
             // Verifiser total utbetaling før endring til ferie
@@ -174,7 +174,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
                 await expect(utbetalingCell).toContainText('0 kr')
             }
 
-            const sykUtbetaling = dagoversiktTabell.locator('text=1 152 kr')
+            const sykUtbetaling = dagoversiktTabell.locator('text=1 152,00 kr')
             await expect(sykUtbetaling).toHaveCount(15)
         })
 

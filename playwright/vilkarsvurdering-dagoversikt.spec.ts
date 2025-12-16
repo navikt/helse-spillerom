@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { validerAxe } from './actions/uuvalidering'
 
+import { validerAxe } from './actions/uuvalidering'
 import {
     fyllUtArbeidstakerYrkesaktivitet,
     lagreYrkesaktivitet,
@@ -51,11 +51,9 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
         // Utvid Kapittel 2 - Medlemskap i folketrygden
         await test.step('Utvid Kapittel 2 - Medlemskap i folketrygden', async () => {
             // Klikk på "Vis mer" knappen for Kapittel 2
-            const kapittel2Row = page
-                .getByRole('row', {
-                    name: 'Medlemskap i folketrygden Ikke vurdert Vis mer',
-                })
-                .click()
+            page.getByRole('row', {
+                name: 'Medlemskap i folketrygden Ikke vurdert Vis mer',
+            }).click()
 
             // Vent på at innholdet blir synlig
             await expect(page.getByText('Er den sykmeldte medlem i folketrygden?')).toBeVisible()
@@ -125,12 +123,12 @@ test.describe('Vilkårsvurdering og Dagoversikt', () => {
 
             // Verifiser at 01.09.2025 nå vises som "Avslått"
             const avslåttRow = page.getByRole('row', {
-                name: /01\.09\.2025.*Avslått.*SB/,
+                name: /01\.09\.2025.*Avslått.*Saksbehandler/,
             })
             await expect(avslåttRow).toBeVisible()
 
-            // Verifiser at kilde er "SB" (Saksbehandler)
-            await expect(avslåttRow.getByText('SB')).toBeVisible()
+            // Verifiser at kilde er saksbehandler
+            await expect(avslåttRow.getByRole('img', { name: 'Saksbehandler' })).toBeVisible()
 
             // Verifiser at paragraf-referansen vises som en lenke (i stedet for direkte beskrivelse)
             // Dette kan være "Kapittel 2" (kun kapittel) eller "§2-1" (kapittel-paragraf)

@@ -61,7 +61,7 @@ export function ArbeidsforholdKildeTag(): ReactElement {
 export function SaksbehandlerKildeTag(): ReactElement {
     return (
         <KildeTag>
-            <PersonPencilFillIcon />
+            <PersonPencilFillIcon aria-label="Saksbehandler" />
         </KildeTag>
     )
 }
