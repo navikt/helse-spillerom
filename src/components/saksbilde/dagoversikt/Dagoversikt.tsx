@@ -192,10 +192,10 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             >
                                                 Total grad
                                             </TableHeaderCell>
-                                            <TableHeaderCell align="right" className="w-24 min-w-24">
+                                            <TableHeaderCell align="right" className="w-28 min-w-28">
                                                 Refusjon
                                             </TableHeaderCell>
-                                            <TableHeaderCell align="right" className="w-24 min-w-24">
+                                            <TableHeaderCell align="right" className="w-28 min-w-28">
                                                 Utbetaling
                                             </TableHeaderCell>
                                             <TableHeaderCell
