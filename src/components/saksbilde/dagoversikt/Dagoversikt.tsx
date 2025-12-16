@@ -269,10 +269,18 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     <TableDataCell align="right">
                                                         {formaterBeløpKroner(
                                                             utbetalingsdata?.økonomi.arbeidsgiverbeløp,
+                                                            2,
+                                                            'currency',
+                                                            false,
                                                         )}
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
-                                                        {formaterBeløpKroner(utbetalingsdata?.økonomi.personbeløp)}
+                                                        {formaterBeløpKroner(
+                                                            utbetalingsdata?.økonomi.personbeløp,
+                                                            2,
+                                                            'currency',
+                                                            false,
+                                                        )}
                                                     </TableDataCell>
                                                     <TableDataCell align="right" className="hidden md:table-cell">
                                                         -

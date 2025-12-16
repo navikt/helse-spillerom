@@ -25,10 +25,11 @@ export function formaterBeløpKroner(
     kroner: number | string | null | undefined,
     desimaler: number = 2,
     style: 'currency' | 'decimal' = 'currency',
+    showZeroAsNumber: boolean = true,
 ): string {
-    if (kroner == null) return '-'
+    if (kroner == null || (!showZeroAsNumber && Number(kroner) === 0)) return '-'
     return new Intl.NumberFormat('nb-NO', {
-        style: style,
+        style,
         currency: 'NOK',
         minimumFractionDigits: desimaler,
         maximumFractionDigits: desimaler,
