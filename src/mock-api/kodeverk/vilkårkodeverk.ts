@@ -372,9 +372,22 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     bokstav: null,
                 },
             },
+            {
+                kode: 'IKKE_ARBUFOR_BEHANDLING',
+                beskrivelse: 'Ikke godkjent behandlingsdag',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2021-06-01',
+                    kapittel: '8',
+                    paragraf: '4',
+                    ledd: '2',
+                    setning: null,
+                    bokstav: 'b',
+                },
+            },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-10-21T12:31:32.913Z',
+        sistEndretDato: '2025-12-10T13:19:47.344Z',
     },
     {
         vilkårshjemmel: {
@@ -876,7 +889,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
             setning: null,
             bokstav: null,
         },
-        vilkårskode: 'INAKTIV',
+        vilkårskode: 'SYK_INAKTIV',
         beskrivelse: 'Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
         oppfylt: [
             {
@@ -1001,7 +1014,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                 },
             },
             {
-                kode: 'I_ARBEID_UTEN_OPPTJENNING',
+                kode: 'I_ARBEID_UTEN_OPPTJENING',
                 beskrivelse: 'Har nylig begynt i arbeid uten å fylle vilkåret i § 8-2 om fire ukers opptjeningstid',
                 vilkårshjemmel: {
                     lovverk: 'Folketrygdloven',
@@ -1034,7 +1047,7 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     lovverksversjon: '2020-01-01',
                     kapittel: '8',
                     paragraf: '47',
-                    ledd: '',
+                    ledd: '5',
                     setning: null,
                     bokstav: null,
                 },
@@ -1080,9 +1093,37 @@ export const lokalUtviklingKodeverk: Kodeverk = [
                     bokstav: null,
                 },
             },
+            {
+                kode: 'UTE_AV_ARBEID_MER_ENN_6MND',
+                beskrivelse:
+                    'Hvis den sykmeldte mottar eller har mottatt sluttvederlag eller etterlønn i forbindelse med opphør av et arbeidsforhold, utvides fristen i første ledd til seks måneder',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2020-01-01',
+                    kapittel: '8',
+                    paragraf: '47',
+                    ledd: '4',
+                    setning: '1',
+                    bokstav: null,
+                },
+            },
+            {
+                kode: 'UTE_AV_ARBEID_MER_ENN_1AAR',
+                beskrivelse:
+                    'Ved utdanningspermisjon fra et arbeidsforhold i opptil ett år utvides fristen i første ledd til tolv måneder dersom utdanningen må avbrytes på grunn av sykdom',
+                vilkårshjemmel: {
+                    lovverk: 'Folketrygdloven',
+                    lovverksversjon: '2020-01-01',
+                    kapittel: '8',
+                    paragraf: '47',
+                    ledd: '4',
+                    setning: '2',
+                    bokstav: null,
+                },
+            },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-11-19T08:14:34.984Z',
+        sistEndretDato: '2025-12-15T13:46:27.449Z',
     },
     {
         vilkårshjemmel: {

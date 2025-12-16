@@ -768,7 +768,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
     },
     {
         kode: 'ba5019eb-ee9d-475d-8d08-3ff9fbfa9896',
-        beskrivelse: 'Yrkesaktive medlemmer som midlertidig har vært ute av inntektsgivende arbeid',
+        beskrivelse: 'Inaktiv',
         kategori: 'særskilte_grupper',
         paragrafTag: '§ 8-47',
         underspørsmål: [
@@ -778,7 +778,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                 variant: 'RADIO',
                 alternativer: [
                     {
-                        kode: 'UTE_AV_ARBEID_HOVED',
+                        kode: 'UTE_AV_ARBEID_SISTE_JOBB',
                         navn: 'Ja, og den sykmeldte er fremdeles ute av arbeid (bokstav a)',
                         harUnderspørsmål: true,
                         underspørsmål: [
@@ -788,7 +788,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                 variant: 'RADIO',
                                 alternativer: [
                                     {
-                                        kode: 'UTE_AV_ARBEID_SISTE_JOBB',
+                                        kode: 'UTE_AV_ARBEID_HOVED',
                                         navn: 'Den sykmeldte har vært ute av inntektsgivende arbeid i mindre enn en måned og har tidligere opptjening etter § 8-2',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
@@ -878,7 +878,7 @@ export const saksbehandlerUi: HovedspørsmålArray = [
                                 variant: 'RADIO',
                                 alternativer: [
                                     {
-                                        kode: 'I_ARBEID_UTEN_OPPTJENING',
+                                        kode: 'UTE_AV_ARBEID_HOVED',
                                         navn: 'Den sykmeldte har vært ute av inntektsgivende arbeid i mindre enn en måned, er i arbeid uten å oppfylle vilkåret i § 8-2 om fire ukers opptjening og har tidligere opptjening etter § 8-2',
                                         harUnderspørsmål: false,
                                         underspørsmål: [],
@@ -993,6 +993,54 @@ export const saksbehandlerUi: HovedspørsmålArray = [
             },
         ],
         sistEndretAv: 'Redacted Redactesen',
-        sistEndretDato: '2025-12-10T14:48:22.467Z',
+        sistEndretDato: '2025-12-16T09:00:46.994Z',
+    },
+    {
+        kode: 'b2abc98c-3d3a-407c-ad09-c6a29cf39692',
+        beskrivelse: 'Inaktiv - inntektstap og minste sykepengegrunnlag',
+        kategori: 'særskilte_grupper',
+        paragrafTag: '§ 8-47 ',
+        underspørsmål: [
+            {
+                kode: 'e0c0cc02-7001-428f-9f26-e52cd5bbbb3a',
+                navn: 'Kan den sykmeldte godtgjøre inntektstap?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'UTE_AV_ARBEID_INNEKTSTAP',
+                        navn: 'Ja',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'UTE_AV_ARBEID_IKKE_INNTEKTSTAP',
+                        navn: 'Nei',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+            {
+                kode: '6c4dc0d2-928a-49a0-a03d-8656ef7f644b',
+                navn: 'Har den sykmeldte et sykepengegrunnlag som minst svarer til grunnbeløpet?',
+                variant: 'RADIO',
+                alternativer: [
+                    {
+                        kode: 'UTE_AV_ARBEID_MINST_1G',
+                        navn: 'Ja',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                    {
+                        kode: 'UTE_AV_ARBEID_MINDRE_ENN_1G',
+                        navn: 'Nei',
+                        harUnderspørsmål: false,
+                        underspørsmål: [],
+                    },
+                ],
+            },
+        ],
+        sistEndretAv: 'Redacted Redactesen',
+        sistEndretDato: '2025-12-16T08:57:40.254Z',
     },
 ]
