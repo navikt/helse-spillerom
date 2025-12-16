@@ -171,7 +171,7 @@ test.describe('Manuell behandling - Inaktiv med 65% dekning', () => {
             for (let i = 0; i < 10; i++) {
                 const rad = ferieRader.nth(i)
                 const utbetalingCell = rad.locator('td').nth(6) // Utbetaling kolonne
-                await expect(utbetalingCell).toContainText('0 kr')
+                await expect(utbetalingCell).toContainText('-')
             }
 
             const sykUtbetaling = dagoversiktTabell.locator('text=1 152,00 kr')
