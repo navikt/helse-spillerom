@@ -10,14 +10,30 @@ import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { useTilgjengeligeAvslagsdager } from '@components/saksbilde/vilkårsvurdering/useTilgjengeligeAvslagsdager'
 
 export type DagendringSchema = z.infer<typeof dagendringSchema>
-export const dagendringSchema = z.object({
-    dagtype: dagtypeSchema,
-    grad: z.string(),
-    notat: z.string(),
-    andreYtelserType: andreYtelserBegrunnelseSchema,
-    avslåttBegrunnelse: z.string().optional(),
-    avslåttBegrunnelser: z.array(z.string()).optional(),
-})
+export const dagendringSchema = z
+    .object({
+        dagtype: dagtypeSchema,
+        grad: z.string(),
+        notat: z.string(),
+        andreYtelserType: andreYtelserBegrunnelseSchema,
+        avslåttBegrunnelse: z.string().optional(),
+        avslåttBegrunnelser: z.array(z.string()).optional(),
+    })
+    .refine(
+        (data) => {
+            // Hvis dagtype er 'Avslått', må enten avslåttBegrunnelse eller avslåttBegrunnelser være satt med minst ett element
+            if (data.dagtype === 'Avslått') {
+                const harAvslåttBegrunnelse = data.avslåttBegrunnelse && data.avslåttBegrunnelse.length > 0
+                const harAvslåttBegrunnelser = data.avslåttBegrunnelser && data.avslåttBegrunnelser.length > 0
+                return harAvslåttBegrunnelse || harAvslåttBegrunnelser
+            }
+            return true
+        },
+        {
+            message: 'Du må velge minst én avslagsbegrunnelse',
+            path: ['avslåttBegrunnelser'],
+        },
+    )
 
 type DagendringFormProps = {
     aktivtInntektsForhold?: Yrkesaktivitet
@@ -178,11 +194,6 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                     <Controller
                         control={form.control}
                         name="avslåttBegrunnelser"
-                        rules={{
-                            required: 'Du må velge minst én avslagsbegrunnelse',
-                            validate: (value) =>
-                                (value && value.length > 0) || 'Du må velge minst én avslagsbegrunnelse',
-                        }}
                         render={({ field, fieldState }) => (
                             <CheckboxGroup
                                 className="mt-2"
