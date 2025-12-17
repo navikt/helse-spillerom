@@ -19,7 +19,9 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
         <HStack justify="space-between">
             <HStack gap="2" align="center">
                 <BriefcaseIcon aria-hidden fontSize="1rem" />
-                <BodyShort size="small">{organisasjonsnavn || orgnummer}</BodyShort>
+                <BodyShort data-sensitive size="small">
+                    {organisasjonsnavn || orgnummer}
+                </BodyShort>
             </HStack>
             <BodyShort size="small">{refusjon}</BodyShort>
         </HStack>
@@ -73,7 +75,9 @@ export function BeløpForPerioden(): ReactElement {
                     <HStack justify="space-between">
                         <HStack gap="2" align="center">
                             <PersonIcon aria-hidden fontSize="1rem" />
-                            <BodyShort size="small">{personinfo?.navn || 'Ukjent person'}</BodyShort>
+                            <BodyShort data-sensitive size="small">
+                                {personinfo?.navn || 'Ukjent person'}
+                            </BodyShort>
                         </HStack>
                         <BodyShort size="small">{formaterBeløpØre(totalPersonUtbetaling * 100)}</BodyShort>
                     </HStack>

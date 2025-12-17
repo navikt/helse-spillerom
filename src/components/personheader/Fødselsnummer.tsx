@@ -16,7 +16,7 @@ export function Fødselsnummer({ fødselsnummer }: FødselsnummerProps): ReactEl
 
     return (
         <HStack gap="1" align="center">
-            <BodyShort>{fødselsnummer}</BodyShort>
+            <BodyShort data-sensitive>{fødselsnummer}</BodyShort>
             <Tooltip content="Kopier fødselsnummer" keys={keys}>
                 <CopyButton copyText={fødselsnummer} size="xsmall" ref={ref} />
             </Tooltip>

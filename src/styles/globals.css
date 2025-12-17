@@ -20,6 +20,15 @@
         monospace !important;
 }
 
+/* Anonymization styling */
+.anonymized [data-sensitive] {
+    background-color: var(--ax-bg-neutral-moderate);
+    border-radius: 0.25rem;
+    color: transparent;
+    user-select: none;
+    pointer-events: none;
+}
+
 /* Tidslinjeperiode styling */
 [data-period-variant='behandles'] {
     --ax-bg-soft: var(--ax-bg-warning-soft);

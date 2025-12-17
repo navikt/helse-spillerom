@@ -17,11 +17,15 @@ function getKategoriseringTekst(
         case 'ARBEIDSTAKER':
             if (!orgnummer) return <>Arbeidstaker</>
             if (medOrgnummer) return <OrgMedCopyButton orgnummer={orgnummer} orgnavn={orgnavn} />
-            return <>{orgnavn}</>
+            return <span data-sensitive>{orgnavn}</span>
         case 'FRILANSER':
             if (!orgnummer) return <>Frilanser</>
             if (medOrgnummer) return <OrgMedCopyButton orgnummer={orgnummer} orgnavn={`Frilanser hos ${orgnavn}`} />
-            return <>Frilanser hos {orgnavn}</>
+            return (
+                <>
+                    Frilanser hos <span data-sensitive>{orgnavn}</span>
+                </>
+            )
         case 'SELVSTENDIG_NÆRINGSDRIVENDE':
             return <>Selvstendig næringsdrivende</>
         case 'ARBEIDSLEDIG':

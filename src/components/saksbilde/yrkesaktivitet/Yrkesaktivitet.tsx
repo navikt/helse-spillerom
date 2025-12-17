@@ -213,7 +213,9 @@ export function Yrkesaktivitet(): ReactElement {
                                         <TableDataCell>
                                             {getKategoriDisplayText(yrkesaktivitet.kategorisering)}
                                         </TableDataCell>
-                                        <TableDataCell>{getOrgnavnDisplayText(yrkesaktivitet)}</TableDataCell>
+                                        <TableDataCell>
+                                            <span data-sensitive>{getOrgnavnDisplayText(yrkesaktivitet)}</span>
+                                        </TableDataCell>
                                         <TableDataCell>
                                             {yrkesaktivitet.kategorisering.sykmeldt ? 'Ja' : 'Nei'}
                                         </TableDataCell>

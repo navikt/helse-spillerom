@@ -13,6 +13,7 @@ import { ThemeProvider } from '@components/ThemeProvider'
 import { ShortcutProvider } from '@components/tastatursnarveier/context'
 import { ToastProvider } from '@components/ToastProvider'
 import { MockSessionProvider } from '@components/providers/MockSessionProvider'
+import { AnonymizationProvider } from '@components/anonymization/context'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -39,13 +40,15 @@ export function Providers({ children }: PropsWithChildren): ReactElement {
 
     return (
         <ThemeProvider>
-            <QueryClientProvider client={queryClient}>
-                <ShortcutProvider>
-                    <ToastProvider>
-                        <MockSessionProvider>{children}</MockSessionProvider>
-                    </ToastProvider>
-                </ShortcutProvider>
-            </QueryClientProvider>
+            <AnonymizationProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ShortcutProvider>
+                        <ToastProvider>
+                            <MockSessionProvider>{children}</MockSessionProvider>
+                        </ToastProvider>
+                    </ShortcutProvider>
+                </QueryClientProvider>
+            </AnonymizationProvider>
         </ThemeProvider>
     )
 }

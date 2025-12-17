@@ -55,6 +55,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                             {label.icon}
                             <Tooltip content={label.label} describesChild>
                                 <BodyShort
+                                    data-sensitive
                                     size="small"
                                     className="group-hover:underline max-w-[168px] leading-6"
                                     truncate

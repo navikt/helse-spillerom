@@ -1,6 +1,6 @@
 'use client'
 
-import { BodyShort, Detail, Dropdown, Skeleton, Spacer, HStack } from '@navikt/ds-react'
+import { BodyShort, Detail, Dropdown, HStack, Skeleton, Spacer } from '@navikt/ds-react'
 import { LeaveIcon, PersonPencilIcon, TasklistFillIcon } from '@navikt/aksel-icons'
 import React, { ReactElement } from 'react'
 import { InternalHeaderUserButton } from '@navikt/ds-react/InternalHeader'
@@ -16,6 +16,7 @@ import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { Tastatursnarveier } from '@components/header/brukermeny/Tastatursnarveier'
 import { DarkModeToggle } from '@components/header/brukermeny/DarkModeToggle'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
+import { AnonymiserToggle } from '@components/header/brukermeny/AnonymiserToggle'
 
 export function BrukerMeny(): ReactElement {
     const { data: aktivBruker } = useBrukerinfo()
@@ -37,16 +38,10 @@ export function BrukerMeny(): ReactElement {
                         {aktivBruker.navn}
                     </BodyShort>
                     <Detail as="dd">{aktivBruker.navIdent}</Detail>
-                    <Detail as="dd" size="small">
-                        {aktivBruker.preferredUsername}
-                    </Detail>
+                    <Detail as="dd">{aktivBruker.preferredUsername}</Detail>
 
                     {/* Vis roller under kontaktinformasjonen */}
-                    {visLeserolle && (
-                        <Detail as="dd" size="small">
-                            Leserolle
-                        </Detail>
-                    )}
+                    {visLeserolle && <Detail as="dd">Leserolle</Detail>}
                     {roller.saksbehandler && (
                         <Detail as="dd">
                             <HStack gap="2" align="center">
@@ -65,6 +60,8 @@ export function BrukerMeny(): ReactElement {
                     )}
                 </dl>
 
+                <DropdownMenuDivider />
+                <AnonymiserToggle />
                 <DropdownMenuDivider />
                 <Tastatursnarveier />
                 <DropdownMenuDivider />

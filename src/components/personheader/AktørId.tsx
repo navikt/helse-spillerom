@@ -16,7 +16,7 @@ export function AktørId({ aktørId }: AktorIdProps): ReactElement {
 
     return (
         <HStack gap="1" align="center">
-            <BodyShort>Aktør-ID: {aktørId}</BodyShort>
+            <BodyShort data-sensitive>Aktør-ID: {aktørId}</BodyShort>
             <Tooltip content="Kopier aktør-ID" keys={keys}>
                 <CopyButton copyText={aktørId} size="xsmall" ref={ref} />
             </Tooltip>

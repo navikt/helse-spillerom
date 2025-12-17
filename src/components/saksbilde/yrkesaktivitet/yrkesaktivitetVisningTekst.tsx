@@ -72,7 +72,7 @@ export function getInntektsforholdDisplayText(
     if (orgnummer) {
         return (
             <div className="text-center">
-                <BodyShort className="text-sm" weight="semibold">
+                <BodyShort data-sensitive className="text-sm" weight="semibold">
                     {orgnavn ?? `${orgnummer} (ukjent organisasjon)`}
                 </BodyShort>
                 <div className="text-gray-600 text-xs">{typeText}</div>
