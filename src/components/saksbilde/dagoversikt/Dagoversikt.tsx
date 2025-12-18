@@ -4,9 +4,9 @@ import React, { ReactElement, useState } from 'react'
 import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
-import { BandageIcon, PersonPencilIcon } from '@navikt/aksel-icons'
+import { PersonPencilIcon } from '@navikt/aksel-icons'
 
-import { Dagoversikt as _Dagoversikt, Dagtype } from '@schemas/dagoversikt'
+import { Dagoversikt as _Dagoversikt } from '@schemas/dagoversikt'
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
@@ -22,11 +22,18 @@ import { Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { DagoversiktKildeTag } from '@components/ikoner/kilde/kildeTags'
 import { AvslåttBegrunnelser } from '@components/saksbilde/dagoversikt/AvslåttBegrunnelser'
-import { erDagIPeriode, finnUtbetalingsdata, getDagtypeText } from '@components/saksbilde/dagoversikt/dagoversiktUtils'
+import {
+    erDagIPeriode,
+    finnUtbetalingsdata,
+    formaterTotalGrad,
+    getDagtypeIcon,
+    getDagtypeText,
+} from '@components/saksbilde/dagoversikt/dagoversiktUtils'
+import { Overview } from '@components/saksbilde/dagoversikt/Overview'
 
 import { getInntektsforholdDisplayText } from '../yrkesaktivitet/yrkesaktivitetVisningTekst'
 
-type YrkesaktivitetMedDagoversikt = Yrkesaktivitet & { dagoversikt: NonNullable<_Dagoversikt> }
+export type YrkesaktivitetMedDagoversikt = Yrkesaktivitet & { dagoversikt: NonNullable<_Dagoversikt> }
 
 interface DagoversiktProps {
     value: string
@@ -126,8 +133,23 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                             label={getInntektsforholdDisplayText(forhold.kategorisering, forhold.orgnavn)}
                         />
                     ))}
+                    {yrkesaktivitetMedDagoversikt.length > 1 && (
+                        <TabsTab
+                            value="overview"
+                            label={
+                                <BodyShort size="small" weight="semibold">
+                                    Oversikt
+                                </BodyShort>
+                            }
+                        />
+                    )}
                 </TabsList>
-
+                <TabsPanel value="overview">
+                    <Overview
+                        yrkesaktiviteter={yrkesaktivitetMedDagoversikt}
+                        utbetalingsberegning={utbetalingsberegning}
+                    />
+                </TabsPanel>
                 {yrkesaktivitetMedDagoversikt.map((forhold) => (
                     <TabsPanel
                         className={cn('pb-8', {
@@ -224,8 +246,10 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     key={i}
                                                     className={cn(
                                                         dag.dagtype === 'Avslått' && 'bg-ax-bg-danger-moderate',
+                                                        (erAGP || erVentetid) &&
+                                                            'bg-ax-bg-neutral-soft hover:bg-ax-bg-neutral-moderate-hover shadow-[inset_3px_0_0_0_var(--ax-border-neutral-strong)]',
                                                         erHelgedag && 'bg-stripes',
-                                                        (erAGP || erVentetid) && 'bg-gray-100',
+                                                        erAGP && (erVentetid || erHelgedag) && 'bg-agp-helg',
                                                     )}
                                                 >
                                                     {erIRedigeringsmodus && (
@@ -319,29 +343,4 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
             </Tabs>
         </SaksbildePanel>
     )
-}
-
-function formaterTotalGrad(totalGrad: number | undefined | null): string {
-    if (totalGrad == null) {
-        return '-'
-    }
-    const prosent = Math.round(totalGrad * 100)
-    return `${prosent} %`
-}
-
-function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElement {
-    const spanMedBredde = <span className="w-[18px]" />
-
-    if (helgedag) {
-        return spanMedBredde
-    }
-
-    switch (dagtype) {
-        case 'Syk':
-        case 'SykNav':
-        case 'Behandlingsdag':
-            return <BandageIcon aria-hidden />
-        default:
-            return spanMedBredde
-    }
 }

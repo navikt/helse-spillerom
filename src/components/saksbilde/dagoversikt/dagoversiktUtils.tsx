@@ -1,4 +1,6 @@
-// dagoversiktUtils.ts
+import { ReactElement } from 'react'
+import { BandageIcon } from '@navikt/aksel-icons'
+
 import { Dagtype } from '@schemas/dagoversikt'
 import { Periode, Periodetype, Yrkesaktivitet } from '@schemas/yrkesaktivitet'
 import { BeregningResponse } from '@schemas/utbetalingsberegning'
@@ -50,4 +52,29 @@ export function getDagtypeText(
     if (erAGP) return `${baseText} (AGP)`
     if (erVentetid) return `${baseText} (Ventetid)`
     return baseText
+}
+
+export function formaterTotalGrad(totalGrad: number | undefined | null): string {
+    if (totalGrad == null) {
+        return '-'
+    }
+    const prosent = Math.round(totalGrad * 100)
+    return `${prosent} %`
+}
+
+export function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElement {
+    const spanMedBredde = <span className="w-[18px]" />
+
+    if (helgedag) {
+        return spanMedBredde
+    }
+
+    switch (dagtype) {
+        case 'Syk':
+        case 'SykNav':
+        case 'Behandlingsdag':
+            return <BandageIcon aria-hidden />
+        default:
+            return spanMedBredde
+    }
 }

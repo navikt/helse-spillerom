@@ -20,6 +20,15 @@
         monospace !important;
 }
 
+.bg-agp-helg {
+    background-color: var(--ax-bg-neutral-soft);
+    background-image: repeating-linear-gradient(123deg, var(--ax-border-neutral-subtle), var(--ax-border-neutral-subtle) 1px, transparent 1px, transparent 9px);
+}
+
+.bg-agp-helg:hover {
+    background-color: var(--ax-bg-neutral-moderate-hover);
+}
+
 /* Anonymization styling */
 .anonymized [data-sensitive] {
     background-color: var(--ax-bg-neutral-moderate);
