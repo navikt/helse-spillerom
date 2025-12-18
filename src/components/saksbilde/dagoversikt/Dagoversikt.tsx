@@ -29,7 +29,7 @@ import {
     getDagtypeIcon,
     getDagtypeText,
 } from '@components/saksbilde/dagoversikt/dagoversiktUtils'
-import { Overview } from '@components/saksbilde/dagoversikt/Overview'
+import { ComparisonTable } from '@components/saksbilde/dagoversikt/ComparisonTable'
 
 import { getInntektsforholdDisplayText } from '../yrkesaktivitet/yrkesaktivitetVisningTekst'
 
@@ -145,7 +145,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                     )}
                 </TabsList>
                 <TabsPanel value="overview">
-                    <Overview
+                    <ComparisonTable
                         yrkesaktiviteter={yrkesaktivitetMedDagoversikt}
                         utbetalingsberegning={utbetalingsberegning}
                     />

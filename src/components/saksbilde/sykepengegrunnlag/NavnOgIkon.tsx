@@ -53,7 +53,9 @@ export function NavnOgIkon({
     return (
         <HStack gap="2" className={className} wrap={false}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
-            <BodyShort as="span">{getKategoriseringTekst(kategorisering, orgnavn, medOrgnummer)}</BodyShort>
+            <BodyShort as="span" truncate>
+                {getKategoriseringTekst(kategorisering, orgnavn, medOrgnummer)}
+            </BodyShort>
         </HStack>
     )
 }

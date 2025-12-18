@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Heading, HStack, Table, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { YrkesaktivitetMedDagoversikt } from '@components/saksbilde/dagoversikt/Dagoversikt'
@@ -17,19 +17,18 @@ import { getFormattedDateString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
 
-interface OverviewProps {
+interface ComparisonTableProps {
     yrkesaktiviteter: YrkesaktivitetMedDagoversikt[]
     utbetalingsberegning: BeregningResponse | null | undefined
 }
 
-export function Overview({ yrkesaktiviteter, utbetalingsberegning }: OverviewProps): ReactElement {
-    const anyYrkesaktivitet = yrkesaktiviteter[0]
+export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: ComparisonTableProps): ReactElement {
+    const yrkesaktivitetMedFlestGråDager = finnYrkesaktivitetMedFlestGråDager(yrkesaktiviteter)
+
     return (
         <HStack wrap={false} className="py-8">
             <VStack gap="2" className="w-min">
-                <Heading level="3" size="xsmall" className="pl-2 invisible">
-                    Felles
-                </Heading>
+                <BodyShort className="pl-2 invisible">Felles</BodyShort>
                 <Table size="small" className="border-t border-ax-border-neutral-subtle">
                     <TableHeader>
                         <TableRow>
@@ -50,16 +49,16 @@ export function Overview({ yrkesaktiviteter, utbetalingsberegning }: OverviewPro
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {anyYrkesaktivitet.dagoversikt.map((dag, i) => {
+                        {yrkesaktivitetMedFlestGråDager.dagoversikt.map((dag, i) => {
                             const utbetalingsdata = utbetalingsberegning
-                                ? finnUtbetalingsdata(utbetalingsberegning, anyYrkesaktivitet.id, dag.dato)
+                                ? finnUtbetalingsdata(utbetalingsberegning, yrkesaktivitetMedFlestGråDager.id, dag.dato)
                                 : null
 
                             const erHelgedag = erHelg(new Date(dag.dato))
-                            const erAGP = erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', anyYrkesaktivitet)
+                            const erAGP = erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', yrkesaktivitetMedFlestGråDager)
                             const erVentetid =
-                                erDagIPeriode(dag.dato, 'VENTETID', anyYrkesaktivitet) ||
-                                erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', anyYrkesaktivitet)
+                                erDagIPeriode(dag.dato, 'VENTETID', yrkesaktivitetMedFlestGråDager) ||
+                                erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', yrkesaktivitetMedFlestGråDager)
 
                             return (
                                 <TableRow
@@ -174,4 +173,18 @@ export function Overview({ yrkesaktiviteter, utbetalingsberegning }: OverviewPro
             ))}
         </HStack>
     )
+}
+
+function finnYrkesaktivitetMedFlestGråDager(yrkesaktiviteter: YrkesaktivitetMedDagoversikt[]) {
+    return yrkesaktiviteter.reduce((max, current) => {
+        const countAgpVentetidDays = (ya: YrkesaktivitetMedDagoversikt) =>
+            ya.dagoversikt.filter(
+                (dag) =>
+                    erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', ya) ||
+                    erDagIPeriode(dag.dato, 'VENTETID', ya) ||
+                    erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', ya),
+            ).length
+
+        return countAgpVentetidDays(current) > countAgpVentetidDays(max) ? current : max
+    }, yrkesaktiviteter[0])
 }
