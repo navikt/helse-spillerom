@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Box, Button, HStack, Modal, Table, VStack } from '@navikt/ds-react'
+import React, { ReactElement, useState } from 'react'
+import { Alert, BodyShort, Box, Button, ErrorSummary, HStack, Modal, Table, VStack } from '@navikt/ds-react'
 import {
     TableBody,
     TableDataCell,
@@ -12,6 +12,7 @@ import {
 } from '@navikt/ds-react/Table'
 import { PencilIcon, PlusIcon, TrashIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
+import { ErrorSummaryItem } from '@navikt/ds-react/ErrorSummary'
 
 import { useOppdaterYrkesaktivitetKategorisering } from '@hooks/mutations/useOppdaterYrkesaktivitet'
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
@@ -157,18 +158,28 @@ export function Yrkesaktivitet(): ReactElement {
                                         expandOnRowClick
                                         content={
                                             redigererId === yrkesaktivitet.id ? (
-                                                <YrkesaktivitetForm
-                                                    key={`edit-${yrkesaktivitet.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
-                                                    closeForm={handleAvbrytRedigering}
-                                                    disabled={false}
-                                                    initialValues={yrkesaktivitet.kategorisering}
-                                                    onSubmit={(kategorisering) =>
-                                                        handleLagreRedigering(yrkesaktivitet.id, kategorisering)
-                                                    }
-                                                    isLoading={oppdaterMutation.isPending}
-                                                    avbrytLabel="Avbryt"
-                                                    lagreLabel="Lagre"
-                                                />
+                                                <>
+                                                    <YrkesaktivitetForm
+                                                        key={`edit-${yrkesaktivitet.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
+                                                        closeForm={handleAvbrytRedigering}
+                                                        disabled={false}
+                                                        initialValues={yrkesaktivitet.kategorisering}
+                                                        onSubmit={(kategorisering) =>
+                                                            handleLagreRedigering(yrkesaktivitet.id, kategorisering)
+                                                        }
+                                                        isLoading={oppdaterMutation.isPending}
+                                                        avbrytLabel="Avbryt"
+                                                        lagreLabel="Lagre"
+                                                    />
+                                                    {oppdaterMutation.error && (
+                                                        <ErrorSummary className="mt-4">
+                                                            <ErrorSummaryItem>
+                                                                {oppdaterMutation.error.message ||
+                                                                    'Noe gikk galt ved lagring av yrkesaktivitet.'}
+                                                            </ErrorSummaryItem>
+                                                        </ErrorSummary>
+                                                    )}
+                                                </>
                                             ) : (
                                                 <VStack gap="4" className="ignore-axe">
                                                     <YrkesaktivitetForm
@@ -178,6 +189,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                         title={undefined}
                                                         initialValues={yrkesaktivitet.kategorisering}
                                                     />
+
                                                     {kanSaksbehandles && (
                                                         <HStack gap="2">
                                                             <Button
@@ -229,6 +241,7 @@ export function Yrkesaktivitet(): ReactElement {
                         <BodyShort>Ingen yrkesaktivitet registrert for denne behandlingen.</BodyShort>
                     </Alert>
                 )}
+
                 {!visOpprettForm && kanSaksbehandles && (
                     <Button
                         className="w-fit"

@@ -1,8 +1,9 @@
-import { Fragment, ReactElement, useState } from 'react'
+import React, { Fragment, ReactElement, useState } from 'react'
 import {
     Button,
     Checkbox,
     CheckboxGroup,
+    ErrorSummary,
     Heading,
     HStack,
     Radio,
@@ -11,6 +12,7 @@ import {
     TextField,
     VStack,
 } from '@navikt/ds-react'
+import { ErrorSummaryItem } from '@navikt/ds-react/ErrorSummary'
 
 import { yrkesaktivitetKodeverk } from '@components/saksbilde/yrkesaktivitet/YrkesaktivitetKodeverk'
 import { useOpprettYrkesaktivitet } from '@hooks/mutations/useOpprettYrkesaktivitet'
@@ -333,7 +335,13 @@ export default function YrkesaktivitetForm({
             {selectedAlternativ?.underspørsmål?.map((spørsmål) => (
                 <Fragment key={spørsmål.kode}>{renderUnderspørsmål(toKodeverkSpørsmål(spørsmål))}</Fragment>
             ))}
-
+            {mutation.error && (
+                <ErrorSummary>
+                    <ErrorSummaryItem>
+                        {mutation.error.message || 'Noe gikk galt ved lagring av yrkesaktivitet.'}
+                    </ErrorSummaryItem>
+                </ErrorSummary>
+            )}
             {!disabled && kansaksbehandles && (
                 <HStack gap="4">
                     <Button
