@@ -66,6 +66,6 @@ test.describe('Kalle Kranfører', () => {
         // Sjekk antall dager i tabellen
         const rows = dagoversiktTable.locator('tbody tr')
         const rowCount = await rows.count()
-        await expect(rowCount).toBe(59)
+        await expect(rowCount).toBe(60)
     })
 })
