@@ -11,11 +11,17 @@ import {
     formaterTotalGrad,
     getDagtypeIcon,
     getDagtypeText,
+    sumArbeidsgiverbeløpForYrkesaktivitet,
+    sumPersonbeløpForYrkesaktivitet,
 } from '@components/saksbilde/dagoversikt/dagoversiktUtils'
 import { BeregningResponse } from '@schemas/utbetalingsberegning'
 import { getFormattedDateString } from '@utils/date-format'
 import { formaterBeløpKroner } from '@schemas/pengerUtils'
 import { NavnOgIkon } from '@components/saksbilde/sykepengegrunnlag/NavnOgIkon'
+import {
+    countUtbetalingsdagerForYrkesaktivitet,
+    formaterDager,
+} from '@components/sidemenyer/venstremeny/Utbetalingsdager'
 
 interface ComparisonTableProps {
     yrkesaktiviteter: YrkesaktivitetMedDagoversikt[]
@@ -49,6 +55,13 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                         </TableRow>
                     </TableHeader>
                     <TableBody>
+                        <TableRow>
+                            <TableHeaderCell className="border-b border-ax-border-neutral-strong text-ax-medium">
+                                TOTAL
+                            </TableHeaderCell>
+                            <TableDataCell className="border-b border-ax-border-neutral-strong" />
+                            <TableDataCell className="border-b border-ax-border-neutral-strong" />
+                        </TableRow>
                         {yrkesaktivitetMedFlestGråDager.dagoversikt.map((dag, i) => {
                             const utbetalingsdata = utbetalingsberegning
                                 ? finnUtbetalingsdata(utbetalingsberegning, yrkesaktivitetMedFlestGråDager.id, dag.dato)
@@ -110,6 +123,36 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                             </TableRow>
                         </TableHeader>
                         <TableBody>
+                            <TableRow>
+                                <TableDataCell className="border-b border-ax-border-neutral-strong text-ax-medium">
+                                    {formaterDager(
+                                        countUtbetalingsdagerForYrkesaktivitet(utbetalingsberegning, yrkesaktivitet.id),
+                                    )}
+                                </TableDataCell>
+                                <TableDataCell className="border-b border-ax-border-neutral-strong" />
+                                <TableDataCell
+                                    className="border-b border-ax-border-neutral-strong text-ax-medium"
+                                    align="right"
+                                >
+                                    {formaterBeløpKroner(
+                                        sumArbeidsgiverbeløpForYrkesaktivitet(utbetalingsberegning, yrkesaktivitet.id),
+                                        2,
+                                        'currency',
+                                        false,
+                                    )}
+                                </TableDataCell>
+                                <TableDataCell
+                                    className="border-b border-ax-border-neutral-strong text-ax-medium"
+                                    align="right"
+                                >
+                                    {formaterBeløpKroner(
+                                        sumPersonbeløpForYrkesaktivitet(utbetalingsberegning, yrkesaktivitet.id),
+                                        2,
+                                        'currency',
+                                        false,
+                                    )}
+                                </TableDataCell>
+                            </TableRow>
                             {yrkesaktivitet.dagoversikt.map((dag, i) => {
                                 const utbetalingsdata = utbetalingsberegning
                                     ? finnUtbetalingsdata(utbetalingsberegning, yrkesaktivitet.id, dag.dato)
