@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { BodyShort, Button, DatePicker, Heading, HStack, VStack, useRangeDatepicker } from '@navikt/ds-react'
+import { BodyShort, Button, DatePicker, Heading, HStack, useRangeDatepicker, VStack } from '@navikt/ds-react'
 import { CheckmarkIcon, PencilIcon, PlusIcon, XMarkIcon } from '@navikt/aksel-icons'
 import dayjs from 'dayjs'
 import { type Control, useController, useFieldArray, useForm } from 'react-hook-form'
@@ -120,18 +120,14 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
     }
 
     if (!kanSaksbehandles) {
-        return (
-            <div className="mt-6">
-                <PeriodeVisning perioder={yrkesaktivitet.perioder} periodeTypeText={periodeTypeText} />
-            </div>
-        )
+        return <PeriodeVisning perioder={yrkesaktivitet.perioder} periodeTypeText={periodeTypeText} />
     }
 
     if (!erIRedigeringsmodus) {
         // Hvis ingen perioder er registrert, vis "Legg til" knapp
         if (!yrkesaktivitet.perioder || yrkesaktivitet.perioder.perioder.length === 0) {
             return (
-                <Button size="small" variant="secondary" className="mt-6" onClick={handleStartRedigering}>
+                <Button size="small" variant="secondary" onClick={handleStartRedigering}>
                     Legg til {periodeTypeText.toLowerCase()}
                 </Button>
             )
@@ -139,96 +135,95 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
 
         // Hvis perioder er registrert, vis dem med redigeringsknapp
         return (
-            <div className="mt-6">
-                <PeriodeVisning
-                    perioder={yrkesaktivitet.perioder}
-                    periodeTypeText={periodeTypeText}
-                    onRediger={handleStartRedigering}
-                />
-            </div>
+            <PeriodeVisning
+                perioder={yrkesaktivitet.perioder}
+                periodeTypeText={periodeTypeText}
+                onRediger={handleStartRedigering}
+            />
         )
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mt-6 rounded-lg border bg-ax-bg-neutral-soft p-4">
-                <VStack gap="4">
-                    <HStack justify="space-between" align="center">
-                        <Heading size="small">Rediger {periodeTypeText.toLowerCase()}</Heading>
-                    </HStack>
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="rounded-lg border bg-ax-bg-neutral-soft p-4 max-w-[500px] w-full"
+        >
+            <VStack gap="4">
+                <HStack justify="space-between" align="center">
+                    <Heading size="small">Rediger {periodeTypeText.toLowerCase()}</Heading>
+                </HStack>
 
-                    <VStack gap="3">
-                        {fields.map((field, index) => (
-                            <div
-                                key={field.id}
-                                className="border-ax-border-default bg-white flex items-center gap-3 rounded border p-3"
-                            >
-                                <div className="flex-1">
-                                    <HStack gap="3">
-                                        <div className="flex-1">
-                                            <PeriodeRangePicker
-                                                control={control}
-                                                fomName={`perioder.${index}.fom`}
-                                                tomName={`perioder.${index}.tom`}
-                                                defaultMonth={defaultMonth}
-                                                errors={{
-                                                    fom: errors.perioder?.[index]?.fom?.message,
-                                                    tom: errors.perioder?.[index]?.tom?.message,
-                                                }}
-                                            />
-                                        </div>
-                                        <Button
-                                            size="small"
-                                            variant="tertiary"
-                                            icon={<XMarkIcon aria-hidden />}
-                                            onClick={() => handleFjernPeriode(index)}
-                                            disabled={mutation.isPending}
-                                            type="button"
-                                        >
-                                            Fjern
-                                        </Button>
-                                    </HStack>
-                                </div>
+                <VStack gap="3">
+                    {fields.map((field, index) => (
+                        <div
+                            key={field.id}
+                            className="border-ax-border-default bg-white flex items-center gap-3 rounded border p-3"
+                        >
+                            <div className="flex-1">
+                                <HStack gap="3">
+                                    <div className="flex-1">
+                                        <PeriodeRangePicker
+                                            control={control}
+                                            fomName={`perioder.${index}.fom`}
+                                            tomName={`perioder.${index}.tom`}
+                                            defaultMonth={defaultMonth}
+                                            errors={{
+                                                fom: errors.perioder?.[index]?.fom?.message,
+                                                tom: errors.perioder?.[index]?.tom?.message,
+                                            }}
+                                        />
+                                    </div>
+                                    <Button
+                                        size="small"
+                                        variant="tertiary"
+                                        icon={<XMarkIcon aria-hidden />}
+                                        onClick={() => handleFjernPeriode(index)}
+                                        disabled={mutation.isPending}
+                                        type="button"
+                                    >
+                                        Fjern
+                                    </Button>
+                                </HStack>
                             </div>
-                        ))}
+                        </div>
+                    ))}
 
-                        <HStack gap="2" align="center" className="h-8">
-                            <Button
-                                size="small"
-                                variant="tertiary"
-                                icon={<PlusIcon aria-hidden />}
-                                onClick={handleLeggTilPeriode}
-                                disabled={mutation.isPending}
-                                type="button"
-                            >
-                                Legg til periode
-                            </Button>
-                        </HStack>
-                        <HStack gap="2">
-                            <Button
-                                size="small"
-                                variant="tertiary"
-                                icon={<XMarkIcon aria-hidden />}
-                                onClick={handleAvbryt}
-                                disabled={mutation.isPending}
-                                type="button"
-                            >
-                                Avbryt
-                            </Button>
-                            <Button
-                                size="small"
-                                icon={<CheckmarkIcon aria-hidden />}
-                                type="submit"
-                                disabled={!isValid || mutation.isPending}
-                                loading={mutation.isPending}
-                            >
-                                Lagre
-                            </Button>
-                        </HStack>
-                        {errors.perioder && <BodyShort className="text-red-600">{errors.perioder.message}</BodyShort>}
-                    </VStack>
+                    <HStack gap="2" align="center" className="h-8">
+                        <Button
+                            size="small"
+                            variant="tertiary"
+                            icon={<PlusIcon aria-hidden />}
+                            onClick={handleLeggTilPeriode}
+                            disabled={mutation.isPending}
+                            type="button"
+                        >
+                            Legg til periode
+                        </Button>
+                    </HStack>
+                    <HStack gap="2">
+                        <Button
+                            size="small"
+                            variant="tertiary"
+                            icon={<XMarkIcon aria-hidden />}
+                            onClick={handleAvbryt}
+                            disabled={mutation.isPending}
+                            type="button"
+                        >
+                            Avbryt
+                        </Button>
+                        <Button
+                            size="small"
+                            icon={<CheckmarkIcon aria-hidden />}
+                            type="submit"
+                            disabled={!isValid || mutation.isPending}
+                            loading={mutation.isPending}
+                        >
+                            Lagre
+                        </Button>
+                    </HStack>
+                    {errors.perioder && <BodyShort className="text-red-600">{errors.perioder.message}</BodyShort>}
                 </VStack>
-            </div>
+            </VStack>
         </form>
     )
 }
@@ -247,15 +242,15 @@ function PeriodeVisning({
     }
 
     return (
-        <div>
-            <div className="mb-2 flex items-center">
+        <VStack gap="2">
+            <HStack gap="2" align="center">
                 <BodyShort>{periodeTypeText}</BodyShort>
                 {onRediger && (
                     <Button size="small" variant="tertiary" icon={<PencilIcon aria-hidden />} onClick={onRediger}>
                         Rediger
                     </Button>
                 )}
-            </div>
+            </HStack>
             <VStack gap="1">
                 {perioder.perioder.map((periode, index) => (
                     <BodyShort key={index}>
@@ -263,7 +258,7 @@ function PeriodeVisning({
                     </BodyShort>
                 ))}
             </VStack>
-        </div>
+        </VStack>
     )
 }
 

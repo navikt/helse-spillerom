@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, VStack } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { PersonPencilIcon } from '@navikt/aksel-icons'
@@ -144,7 +144,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         />
                     )}
                 </TabsList>
-                <TabsPanel value="overview">
+                <TabsPanel value="overview" className="pt-8">
                     <ComparisonTable
                         yrkesaktiviteter={yrkesaktivitetMedDagoversikt}
                         utbetalingsberegning={utbetalingsberegning}
@@ -152,7 +152,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 </TabsPanel>
                 {yrkesaktivitetMedDagoversikt.map((forhold) => (
                     <TabsPanel
-                        className={cn('pb-8', {
+                        className={cn('pb-8 pt-6', {
                             '-mx-8 border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pr-8 pl-[26px]':
                                 erIRedigeringsmodus,
                         })}
@@ -160,18 +160,15 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         value={forhold.id}
                     >
                         {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
-                            <>
+                            <VStack gap="6" align="start">
                                 {/* Periode-form for arbeidsgiverperiode/ventetid */}
-                                <div className="mb-6">
-                                    <PeriodeForm yrkesaktivitet={forhold} kanSaksbehandles={kanSaksbehandles} />
-                                </div>
+                                <PeriodeForm yrkesaktivitet={forhold} kanSaksbehandles={kanSaksbehandles} />
 
                                 {kanSaksbehandles && (
                                     <Button
                                         size="small"
                                         type="button"
                                         variant="tertiary"
-                                        className="my-6"
                                         icon={<PersonPencilIcon aria-hidden />}
                                         onClick={() =>
                                             erIRedigeringsmodus
@@ -182,15 +179,11 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         {erIRedigeringsmodus ? 'Avbryt' : 'Endre dager'}
                                     </Button>
                                 )}
-                                <Table
-                                    size="small"
-                                    // prettier-ignore
-                                    className="min-w-[800px] table-fixed xl:min-w-[1200px] lg:min-w-[1000px]"
-                                >
+                                <Table size="small">
                                     <TableHeader>
                                         <TableRow>
                                             {erIRedigeringsmodus && (
-                                                <TableHeaderCell className="w-12">
+                                                <TableHeaderCell className="w-px">
                                                     <Checkbox
                                                         checked={erAlleValgt}
                                                         indeterminate={erNoenValgt && !erAlleValgt}
@@ -201,32 +194,34 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     </Checkbox>
                                                 </TableHeaderCell>
                                             )}
-                                            <TableHeaderCell className="w-26 min-w-20">Dato</TableHeaderCell>
-                                            <TableHeaderCell className="w-46">Dagtype</TableHeaderCell>
-                                            <TableHeaderCell align="right" className="w-16 min-w-16">
+                                            <TableHeaderCell className="w-px whitespace-nowrap">Dato</TableHeaderCell>
+                                            <TableHeaderCell className="w-px whitespace-nowrap">
+                                                Dagtype
+                                            </TableHeaderCell>
+                                            <TableHeaderCell align="right" className="w-px whitespace-nowrap">
                                                 Grad
                                             </TableHeaderCell>
-                                            <TableHeaderCell className="w-14 min-w-14">Kilde</TableHeaderCell>
+                                            <TableHeaderCell className="w-px whitespace-nowrap">Kilde</TableHeaderCell>
                                             <TableHeaderCell
                                                 align="right"
-                                                className="w-24 min-w-20 whitespace-nowrap"
+                                                className="w-px whitespace-nowrap"
                                                 title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
                                             >
                                                 Total grad
                                             </TableHeaderCell>
-                                            <TableHeaderCell align="right" className="w-28 min-w-28">
+                                            <TableHeaderCell align="right" className="w-px whitespace-nowrap">
                                                 Refusjon
                                             </TableHeaderCell>
-                                            <TableHeaderCell align="right" className="w-28 min-w-28">
+                                            <TableHeaderCell align="right" className="w-px whitespace-nowrap">
                                                 Utbetaling
                                             </TableHeaderCell>
                                             <TableHeaderCell
                                                 align="right"
-                                                className="hidden w-28 min-w-20 whitespace-nowrap md:table-cell"
+                                                className="hidden w-px whitespace-nowrap md:table-cell"
                                             >
                                                 Dager igjen
                                             </TableHeaderCell>
-                                            <TableHeaderCell className="min-w-28">Merknader</TableHeaderCell>
+                                            <TableHeaderCell className="whitespace-nowrap">Merknader</TableHeaderCell>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -270,16 +265,18 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     <TableDataCell>
                                                         <HStack wrap={false} gap="2" align="center">
                                                             {getDagtypeIcon(dag.dagtype, erHelgedag)}
-                                                            {getDagtypeText(
-                                                                dag.dagtype,
-                                                                dag.andreYtelserBegrunnelse,
-                                                                erHelgedag,
-                                                                erAGP,
-                                                                erVentetid,
-                                                            )}
+                                                            <span className="whitespace-nowrap">
+                                                                {getDagtypeText(
+                                                                    dag.dagtype,
+                                                                    dag.andreYtelserBegrunnelse,
+                                                                    erHelgedag,
+                                                                    erAGP,
+                                                                    erVentetid,
+                                                                )}
+                                                            </span>
                                                         </HStack>
                                                     </TableDataCell>
-                                                    <TableDataCell align="right">
+                                                    <TableDataCell align="right" className="whitespace-nowrap">
                                                         {dag.grad ? `${dag.grad} %` : '-'}
                                                     </TableDataCell>
                                                     <TableDataCell>
@@ -287,7 +284,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             {dag.kilde && DagoversiktKildeTag[dag.kilde]}
                                                         </span>
                                                     </TableDataCell>
-                                                    <TableDataCell align="right">
+                                                    <TableDataCell align="right" className="w-px whitespace-nowrap">
                                                         {formaterTotalGrad(utbetalingsdata?.økonomi.totalGrad)}
                                                     </TableDataCell>
                                                     <TableDataCell align="right">
@@ -332,7 +329,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         aktivtInntektsForhold={aktivYrkesaktivitet}
                                     />
                                 )}
-                            </>
+                            </VStack>
                         )}
 
                         {(!forhold.dagoversikt || forhold.dagoversikt.length === 0) && (

@@ -26,7 +26,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
     const yrkesaktivitetMedFlestGråDager = finnYrkesaktivitetMedFlestGråDager(yrkesaktiviteter)
 
     return (
-        <HStack wrap={false} className="py-8">
+        <HStack wrap={false}>
             <VStack gap="2" className="w-min">
                 <BodyShort className="pl-2 invisible">Felles</BodyShort>
                 <Table size="small" className="border-t border-ax-border-neutral-subtle">
