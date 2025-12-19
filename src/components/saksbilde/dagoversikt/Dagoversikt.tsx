@@ -28,8 +28,15 @@ import {
     formaterTotalGrad,
     getDagtypeIcon,
     getDagtypeText,
+    sumArbeidsgiverbeløpForYrkesaktivitet,
+    sumPersonbeløpForYrkesaktivitet,
 } from '@components/saksbilde/dagoversikt/dagoversiktUtils'
 import { ComparisonTable } from '@components/saksbilde/dagoversikt/ComparisonTable'
+import {
+    countUtbetalingsdagerForYrkesaktivitet,
+    formaterDager,
+} from '@components/sidemenyer/venstremeny/Utbetalingsdager'
+import { BeregningResponse } from '@schemas/utbetalingsberegning'
 
 import { getInntektsforholdDisplayText } from '../yrkesaktivitet/yrkesaktivitetVisningTekst'
 
@@ -144,25 +151,25 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         />
                     )}
                 </TabsList>
-                <TabsPanel value="overview" className="pt-8">
+                <TabsPanel value="overview" className="py-8">
                     <ComparisonTable
                         yrkesaktiviteter={yrkesaktivitetMedDagoversikt}
                         utbetalingsberegning={utbetalingsberegning}
                     />
                 </TabsPanel>
-                {yrkesaktivitetMedDagoversikt.map((forhold) => (
+                {yrkesaktivitetMedDagoversikt.map((yrkesaktivitet) => (
                     <TabsPanel
                         className={cn('pb-8 pt-6', {
                             '-mx-8 border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pr-8 pl-[26px]':
                                 erIRedigeringsmodus,
                         })}
-                        key={forhold.id}
-                        value={forhold.id}
+                        key={yrkesaktivitet.id}
+                        value={yrkesaktivitet.id}
                     >
-                        {forhold.dagoversikt && forhold.dagoversikt.length > 0 && (
+                        {yrkesaktivitet.dagoversikt && yrkesaktivitet.dagoversikt.length > 0 && (
                             <VStack gap="6" align="start">
                                 {/* Periode-form for arbeidsgiverperiode/ventetid */}
-                                <PeriodeForm yrkesaktivitet={forhold} kanSaksbehandles={kanSaksbehandles} />
+                                <PeriodeForm yrkesaktivitet={yrkesaktivitet} kanSaksbehandles={kanSaksbehandles} />
 
                                 {kanSaksbehandles && (
                                     <Button
@@ -225,16 +232,20 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {forhold.dagoversikt.map((dag, i) => {
+                                        <TotalRow
+                                            utbetalingsberegning={utbetalingsberegning}
+                                            yrkesaktivitetId={yrkesaktivitet.id}
+                                        />
+                                        {yrkesaktivitet.dagoversikt.map((dag, i) => {
                                             const utbetalingsdata = utbetalingsberegning
-                                                ? finnUtbetalingsdata(utbetalingsberegning, forhold.id, dag.dato)
+                                                ? finnUtbetalingsdata(utbetalingsberegning, yrkesaktivitet.id, dag.dato)
                                                 : null
 
                                             const erHelgedag = erHelg(new Date(dag.dato))
-                                            const erAGP = erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', forhold)
+                                            const erAGP = erDagIPeriode(dag.dato, 'ARBEIDSGIVERPERIODE', yrkesaktivitet)
                                             const erVentetid =
-                                                erDagIPeriode(dag.dato, 'VENTETID', forhold) ||
-                                                erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', forhold)
+                                                erDagIPeriode(dag.dato, 'VENTETID', yrkesaktivitet) ||
+                                                erDagIPeriode(dag.dato, 'VENTETID_INAKTIV', yrkesaktivitet)
 
                                             return (
                                                 <TableRow
@@ -332,12 +343,49 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                             </VStack>
                         )}
 
-                        {(!forhold.dagoversikt || forhold.dagoversikt.length === 0) && (
+                        {(!yrkesaktivitet.dagoversikt || yrkesaktivitet.dagoversikt.length === 0) && (
                             <Alert variant="info">Ingen dagoversikt funnet for dette yrkesaktivitetet.</Alert>
                         )}
                     </TabsPanel>
                 ))}
             </Tabs>
         </SaksbildePanel>
+    )
+}
+
+interface TotalRowProps {
+    utbetalingsberegning: BeregningResponse | null | undefined
+    yrkesaktivitetId: string
+}
+
+function TotalRow({ utbetalingsberegning, yrkesaktivitetId }: TotalRowProps): ReactElement {
+    return (
+        <TableRow>
+            <TableHeaderCell className="border-b border-ax-border-neutral-strong">TOTAL</TableHeaderCell>
+            <TableDataCell className="border-b border-ax-border-neutral-strong">
+                {formaterDager(countUtbetalingsdagerForYrkesaktivitet(utbetalingsberegning, yrkesaktivitetId))}
+            </TableDataCell>
+            <TableDataCell className="border-b border-ax-border-neutral-strong" />
+            <TableDataCell className="border-b border-ax-border-neutral-strong" />
+            <TableDataCell className="border-b border-ax-border-neutral-strong" />
+            <TableDataCell className="border-b border-ax-border-neutral-strong" align="right">
+                {formaterBeløpKroner(
+                    sumArbeidsgiverbeløpForYrkesaktivitet(utbetalingsberegning, yrkesaktivitetId),
+                    2,
+                    'currency',
+                    false,
+                )}
+            </TableDataCell>
+            <TableDataCell className="border-b border-ax-border-neutral-strong" align="right">
+                {formaterBeløpKroner(
+                    sumPersonbeløpForYrkesaktivitet(utbetalingsberegning, yrkesaktivitetId),
+                    2,
+                    'currency',
+                    false,
+                )}
+            </TableDataCell>
+            <TableDataCell className="border-b border-ax-neutral-900" />
+            <TableDataCell className="border-b border-ax-neutral-900" />
+        </TableRow>
     )
 }

@@ -78,3 +78,27 @@ export function getDagtypeIcon(dagtype: Dagtype, helgedag: boolean): ReactElemen
             return spanMedBredde
     }
 }
+
+export function sumArbeidsgiverbeløpForYrkesaktivitet(
+    utbetalingsberegning: BeregningResponse | null | undefined,
+    yrkesaktivitetId: string,
+): number {
+    const yrkesaktivitet = utbetalingsberegning?.beregningData?.yrkesaktiviteter?.find(
+        (ya) => ya.yrkesaktivitetId === yrkesaktivitetId,
+    )
+    if (!yrkesaktivitet) return 0
+
+    return yrkesaktivitet.utbetalingstidslinje.dager.reduce((sum, dag) => sum + (dag.økonomi.arbeidsgiverbeløp ?? 0), 0)
+}
+
+export function sumPersonbeløpForYrkesaktivitet(
+    utbetalingsberegning: BeregningResponse | null | undefined,
+    yrkesaktivitetId: string,
+): number {
+    const yrkesaktivitet = utbetalingsberegning?.beregningData?.yrkesaktiviteter?.find(
+        (ya) => ya.yrkesaktivitetId === yrkesaktivitetId,
+    )
+    if (!yrkesaktivitet) return 0
+
+    return yrkesaktivitet.utbetalingstidslinje.dager.reduce((sum, dag) => sum + (dag.økonomi.personbeløp ?? 0), 0)
+}

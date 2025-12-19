@@ -70,3 +70,4 @@ export const beregningResponseSchema = z.object({
 })
 
 export type BeregningResponse = z.infer<typeof beregningResponseSchema>
+export type YrkesaktivitetUtbetalingsberegning = z.infer<typeof yrkesaktivitetUtbetalingsberegningSchema>
