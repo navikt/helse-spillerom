@@ -88,7 +88,7 @@ export function Vilkårsvurdering(): ReactElement {
                                                 togglePlacement="right"
                                                 expandOnRowClick
                                                 open={expandedRow === rowKey}
-                                                onClick={() =>
+                                                onOpenChange={() =>
                                                     setExpandedRow((prev) => (prev === rowKey ? undefined : rowKey))
                                                 }
                                                 content={
