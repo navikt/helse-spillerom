@@ -10,6 +10,31 @@
 - **Key Technologies**: Next.js 16, React 19, TypeScript, Tailwind CSS, NAV Design System (@navikt/ds-*), TanStack Query, Playwright, Vitest
 - **Deployment**: NAIS platform (Kubernetes) on GCP with Azure AD authentication
 
+## Custom Agents
+
+This repository includes custom agents for specialized tasks:
+
+### Playwright Tester Agent
+
+A specialized agent for writing, debugging, and fixing Playwright E2E tests. The agent is configured in `.github/agents/playwright-tester.agent.yml`.
+
+**To use the Playwright tester agent:**
+- Provide it with your NPM_AUTH_TOKEN (GitHub token with `read:packages` scope)
+- Ask it to write new tests, debug failing tests, or fix test issues
+- It has access to Playwright MCP tools and understands the repository's test patterns
+
+**Example usage:**
+- "Write a Playwright test for the user login flow"
+- "Debug the failing test in personsok.spec.ts"
+- "Fix flaky tests in the yrkesaktivitet tests"
+
+The agent automatically:
+- Sets up NPM authentication
+- Installs dependencies and Playwright browsers
+- Runs TypeScript checks before tests
+- Uses repository-specific test actions from `/playwright/actions`
+- Follows established test patterns and best practices
+
 ## Critical Prerequisites
 
 ### NPM Authentication Token Required

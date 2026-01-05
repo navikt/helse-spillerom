@@ -24,3 +24,14 @@ Interne henvendelser kan sendes via Slack i kanalen [#team-bømlo-værsågod](ht
 ## Kode generert av GitHub Copilot
 
 Dette repoet bruker GitHub Copilot til å generere kode.
+
+### Custom Agents
+
+Repoet har tilpassede agenter for spesialiserte oppgaver:
+
+- **Playwright Tester** (`.github/agents/playwright-tester.agent.yml`) - Skriver, debugger og fikser Playwright E2E-tester
+  - Krever NPM_AUTH_TOKEN med `read:packages` scope
+  - Forstår repoets testmønstre og bruker eksisterende test-actions
+  - Kan kjøre tester og analysere feil
+
+Se `.github/copilot-instructions.md` for mer informasjon om agentene.
