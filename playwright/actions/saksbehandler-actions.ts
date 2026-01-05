@@ -168,6 +168,13 @@ export function fyllUtInaktivYrkesaktivitet() {
         await test.step(`Fyll ut inaktiv yrkesaktivitet`, async () => {
             const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
             await typeSelect.selectOption('INAKTIV')
+
+            // Når INAKTIV velges, setter skjemaet automatisk "Er sykmeldt" til "Ja"
+            // Vi må vente på at denne radio-knappen er valgt før vi fortsetter
+            const sykmeldtRadio = page.getByRole('group', { name: 'Er sykmeldt fra yrkesaktiviteten' })
+            await sykmeldtRadio.waitFor({ state: 'visible' })
+            const jaRadio = sykmeldtRadio.getByRole('radio', { name: 'Ja' })
+            await expect(jaRadio).toBeChecked()
         })
     }
 }
