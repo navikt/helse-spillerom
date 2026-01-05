@@ -62,19 +62,21 @@ instructions: |
   
   **ALWAYS set NPM_AUTH_TOKEN before any pnpm command:**
   ```bash
-  export NPM_AUTH_TOKEN=<token-from-environment>
+  export NPM_AUTH_TOKEN=<your-token>
   ```
   
-  This token is required to access @navikt packages from GitHub Package Registry. The token should be available in the environment.
+  This token is required to access @navikt packages from GitHub Package Registry. The token should be provided by the user or available in the environment.
 
   ### Installation Steps (Run First)
   
   ```bash
-  # 1. Set token
-  export NPM_AUTH_TOKEN=<token>
+  # 1. Set authentication token (use token provided by user)
+  export NPM_AUTH_TOKEN=<your-token>
   
-  # 2. Navigate to repository root (if not already there)
-  cd /home/runner/work/helse-spillerom/helse-spillerom
+  # 2. Navigate to repository root
+  # Note: This path is specific to GitHub Actions CI environment.
+  # In local development, you may already be in the repository root.
+  cd /home/runner/work/helse-spillerom/helse-spillerom || cd "$(git rev-parse --show-toplevel)"
   
   # 3. Install dependencies
   pnpm install --frozen-lockfile
