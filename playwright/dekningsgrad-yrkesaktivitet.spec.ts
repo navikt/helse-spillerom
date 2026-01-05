@@ -79,9 +79,10 @@ async function verifiserDekningsgradIkkeSynlig(page: Page) {
 async function verifiserDekningsgradSynlig(page: Page, forventetProsent: string) {
     const venstremeny = await hentVenstremeny()(page)
     const dekningsgradTekst = venstremeny.getByText('Dekningsgrad:')
-    await dekningsgradTekst.waitFor({ state: 'visible' })
+    await dekningsgradTekst.waitFor({ state: 'visible', timeout: 15000 })
     await expect(dekningsgradTekst).toBeVisible()
 
     const dekningsgradProsent = venstremeny.getByText(forventetProsent)
+    await dekningsgradProsent.waitFor({ state: 'visible', timeout: 15000 })
     await expect(dekningsgradProsent).toBeVisible()
 }

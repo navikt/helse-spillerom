@@ -176,11 +176,11 @@ export function lagreYrkesaktivitet() {
     return async (page: Page) => {
         await test.step('Lagre yrkesaktivitet', async () => {
             const opprettButton = page.getByRole('button', { name: 'Opprett' })
-            opprettButton.waitFor({ state: 'visible' })
+            await opprettButton.waitFor({ state: 'visible' })
             await opprettButton.click()
 
             // Vent på at skjemaet lukkes
-            opprettButton.waitFor({ state: 'hidden' })
+            await opprettButton.waitFor({ state: 'hidden' })
         })
     }
 }
