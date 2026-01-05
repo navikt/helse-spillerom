@@ -39,7 +39,7 @@ tools:
 
 environment:
   NPM_AUTH_TOKEN:
-    description: "GitHub Personal Access Token with read:packages scope for accessing @navikt packages from GitHub Package Registry"
+    description: 'GitHub Personal Access Token with read:packages scope for accessing @navikt packages from GitHub Package Registry'
     required: true
 
 instructions: |
