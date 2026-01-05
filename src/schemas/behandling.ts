@@ -21,7 +21,6 @@ export const behandlingEndringTypeSchema = z.enum([
 ])
 
 export const behandlingEndringSchema = z.object({
-    saksbehandlingsperiodeId: z.uuid(),
     status: behandlingStatusSchema,
     beslutterNavIdent: z.string().nullable(),
     endretTidspunkt: z.string(), // ISO 8601 datetime string

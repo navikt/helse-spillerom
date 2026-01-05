@@ -62,7 +62,6 @@ export const utbetalingsberegningDataSchema = z.object({
 
 export const beregningResponseSchema = z.object({
     id: z.string(), // UUID som string
-    saksbehandlingsperiodeId: z.string(), // UUID som string
     beregningData: utbetalingsberegningDataSchema,
     opprettet: z.string(),
     opprettetAv: z.string(),
