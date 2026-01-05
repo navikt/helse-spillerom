@@ -109,7 +109,7 @@ instructions: |
      ```bash
      # First build E2E version (copies .env.playwright to .env.production)
      pnpm run build:e2e
-
+     
      # Then run tests against production build
      FAST=1 pnpm exec playwright test
      ```
@@ -171,11 +171,11 @@ instructions: |
       test('Should do something specific', async ({ page }) => {
           // Arrange - setup test data
           await søkPerson('12345678902')(page)
-
+          
           // Act - perform actions
           const button = page.getByRole('button', { name: 'Start ny behandling' })
           await button.click()
-
+          
           // Assert - verify results
           const message = page.getByText('Ingen søknader')
           await expect(message).toBeVisible()
@@ -355,11 +355,11 @@ instructions: |
       test('Should do something', async ({ page }) => {
           // Use existing actions
           await navigerTilPerson('12345678902', 'Hanna Andrea Johansen')(page)
-
+          
           // Add specific test logic
           const button = page.getByRole('button', { name: 'Action' })
           await button.click()
-
+          
           // Verify outcome
           await expect(page.getByText('Success')).toBeVisible()
       })
