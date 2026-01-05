@@ -73,11 +73,13 @@ instructions: |
   # 1. Set token
   export NPM_AUTH_TOKEN=<token>
   
-  # 2. Install dependencies
+  # 2. Navigate to repository root (if not already there)
   cd /home/runner/work/helse-spillerom/helse-spillerom
+  
+  # 3. Install dependencies
   pnpm install --frozen-lockfile
   
-  # 3. Install Playwright browsers
+  # 4. Install Playwright browsers
   pnpm exec playwright install chromium
   ```
 
@@ -103,14 +105,15 @@ instructions: |
 
   2. **Fast mode** - Uses production build:
      ```bash
-     # First build E2E version
+     # First build E2E version (copies .env.playwright to .env.production)
      pnpm run build:e2e
      
-     # Then run tests
+     # Then run tests against production build
      FAST=1 pnpm exec playwright test
      ```
      - Timeout: 30 seconds
      - Faster, more stable
+     - Requires prior build step
      - Best for debugging specific tests
 
   3. **CI mode** - Expects app already running:
@@ -263,8 +266,8 @@ instructions: |
   // Log current URL
   console.log('Current URL:', page.url())
   
-  // Take screenshot
-  await page.screenshot({ path: '/tmp/debug.png' })
+  // Take screenshot (saves to test-results directory by default)
+  await page.screenshot({ path: 'debug-screenshot.png' })
   
   // Get element count
   const count = await page.getByRole('button').count()
