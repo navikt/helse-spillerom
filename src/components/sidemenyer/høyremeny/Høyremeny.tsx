@@ -91,10 +91,7 @@ export function Høyremeny(): ReactElement {
                                 exit={{ width: 0 }}
                                 className="overflow-hidden"
                             >
-                                <Sidemeny
-                                    side="right"
-                                    className="h-full w-64 min-w-64 xl:w-64 xl:min-w-64 lg:w-64 lg:min-w-64"
-                                >
+                                <Sidemeny side="right" className="h-full w-64 min-w-64">
                                     <VStack gap="4">
                                         <HStack justify="space-between">
                                             <HStack gap="2" align="center">
