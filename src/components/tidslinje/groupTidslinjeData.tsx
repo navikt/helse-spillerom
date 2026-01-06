@@ -37,6 +37,7 @@ function toTidslinjeElement(
 
 function getYrkesaktivitetNavn(ya: TidslinjeYrkesaktivitet): string {
     if (ya.yrkesaktivitetType === 'INAKTIV') return 'Inaktiv'
+    if (ya.yrkesaktivitetType === 'SELVSTENDIG_NÆRINGSDRIVENDE') return 'Selvstendig næringsdrivende'
     return ya.orgnavn ?? 'Ukjent virksomhet'
 }
 

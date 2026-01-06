@@ -331,6 +331,11 @@ function getKategoriDisplayText(kategorisering: YrkesaktivitetKategorisering): s
 }
 
 function getOrgnavnDisplayText(yrkesaktivitet: _Yrkesaktivitet): string | null {
-    if (yrkesaktivitet.kategorisering.inntektskategori === 'INAKTIV') return null
+    if (
+        yrkesaktivitet.kategorisering.inntektskategori === 'INAKTIV' ||
+        yrkesaktivitet.kategorisering.inntektskategori === 'SELVSTENDIG_NÆRINGSDRIVENDE'
+    ) {
+        return null
+    }
     return yrkesaktivitet.orgnavn ?? 'Ukjent virksomhet'
 }
