@@ -159,7 +159,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                 </TabsPanel>
                 {yrkesaktivitetMedDagoversikt.map((yrkesaktivitet) => (
                     <TabsPanel
-                        className={cn('pb-8 pt-6', {
+                        className={cn('pt-6 pb-8', {
                             '-mx-8 border-l-6 border-ax-border-accent bg-ax-bg-neutral-soft pr-8 pl-[26px]':
                                 erIRedigeringsmodus,
                         })}
@@ -253,7 +253,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     className={cn(
                                                         dag.dagtype === 'Avslått' && 'bg-ax-bg-danger-moderate',
                                                         (erAGP || erVentetid) &&
-                                                            'bg-ax-bg-neutral-soft hover:bg-ax-bg-neutral-moderate-hover shadow-[inset_3px_0_0_0_var(--ax-border-neutral-strong)]',
+                                                            'bg-ax-bg-neutral-soft shadow-[inset_3px_0_0_0_var(--ax-border-neutral-strong)] hover:bg-ax-bg-neutral-moderate-hover',
                                                         erHelgedag && 'bg-stripes',
                                                         erAGP && (erVentetid || erHelgedag) && 'bg-agp-helg',
                                                     )}
