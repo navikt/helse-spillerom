@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { BodyShort, HStack, VStack } from '@navikt/ds-react'
+import { BodyShort, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { BriefcaseIcon, PersonIcon } from '@navikt/aksel-icons'
 
 import { useUtbetalingsberegning } from '@hooks/queries/useUtbetalingsberegning'
@@ -18,10 +18,12 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
     return (
         <HStack justify="space-between">
             <HStack gap="2" align="center">
-                <BriefcaseIcon aria-hidden fontSize="1rem" />
-                <BodyShort data-sensitive size="small">
-                    {organisasjonsnavn || orgnummer}
-                </BodyShort>
+                <BriefcaseIcon aria-hidden fontSize="1.25rem" />
+                <Tooltip content={organisasjonsnavn || orgnummer} describesChild>
+                    <BodyShort data-sensitive size="small" truncate className="max-w-[158px]">
+                        {organisasjonsnavn || orgnummer}
+                    </BodyShort>
+                </Tooltip>
             </HStack>
             <BodyShort size="small">{refusjon}</BodyShort>
         </HStack>
@@ -74,10 +76,12 @@ export function BeløpForPerioden(): ReactElement {
                 {totalPersonUtbetaling > 0 && (
                     <HStack justify="space-between">
                         <HStack gap="2" align="center">
-                            <PersonIcon aria-hidden fontSize="1rem" />
-                            <BodyShort data-sensitive size="small">
-                                {personinfo?.navn || 'Ukjent person'}
-                            </BodyShort>
+                            <PersonIcon aria-hidden fontSize="1.25rem" />
+                            <Tooltip content={personinfo?.navn || 'Ukjent person'} describesChild>
+                                <BodyShort data-sensitive size="small" truncate className="max-w-[158px]">
+                                    {personinfo?.navn || 'Ukjent person'}
+                                </BodyShort>
+                            </Tooltip>
                         </HStack>
                         <BodyShort size="small">{formaterBeløpØre(totalPersonUtbetaling * 100)}</BodyShort>
                     </HStack>
