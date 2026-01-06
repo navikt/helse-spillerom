@@ -146,7 +146,7 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="rounded-lg border bg-ax-bg-neutral-soft p-4 max-w-[500px] w-full"
+            className="w-full max-w-[500px] rounded-lg border bg-ax-bg-neutral-soft p-4"
         >
             <VStack gap="4">
                 <HStack justify="space-between" align="center">

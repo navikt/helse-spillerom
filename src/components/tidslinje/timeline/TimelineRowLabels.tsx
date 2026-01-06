@@ -15,7 +15,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
     const toggleRowExpanded = useToggleRow()
 
     return (
-        <VStack className="w-[254px] min-w-[254px] -ml-2">
+        <VStack className="-ml-2 w-[254px] min-w-[254px]">
             <div className="h-[20px]" />
             {labels.map((label) => {
                 const isExpandable = label.generationLevels > 0
@@ -37,7 +37,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                             onClick={isExpandable ? () => toggleRowExpanded(label.rowIndex) : undefined}
                             aria-expanded={isExpandable ? isExpanded : undefined}
                             className={cn('h-6', {
-                                'cursor-pointer text-ax-text-accent-subtle group': isExpandable,
+                                'group cursor-pointer text-ax-text-accent-subtle': isExpandable,
                             })}
                             gap="2"
                             wrap={false}
@@ -57,7 +57,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                                 <BodyShort
                                     data-sensitive
                                     size="small"
-                                    className="group-hover:underline max-w-[168px] leading-6"
+                                    className="max-w-[168px] leading-6 group-hover:underline"
                                     truncate
                                 >
                                     {label.label}

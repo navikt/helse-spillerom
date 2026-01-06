@@ -34,21 +34,21 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
     return (
         <HStack wrap={false}>
             <VStack gap="2" className="w-min">
-                <BodyShort className="pl-2 invisible">Felles</BodyShort>
+                <BodyShort className="invisible pl-2">Felles</BodyShort>
                 <Table size="small" className="border-t border-ax-border-neutral-subtle">
                     <TableHeader>
                         <TableRow>
-                            <TableHeaderCell className="w-px whitespace-nowrap text-ax-medium">Dato</TableHeaderCell>
+                            <TableHeaderCell className="w-px text-ax-medium whitespace-nowrap">Dato</TableHeaderCell>
                             <TableHeaderCell
                                 align="right"
-                                className="w-px whitespace-nowrap text-ax-medium"
+                                className="w-px text-ax-medium whitespace-nowrap"
                                 title="Total sykdomsgrad for alle yrkesaktiviteter denne dagen"
                             >
                                 Total grad
                             </TableHeaderCell>
                             <TableHeaderCell
                                 align="right"
-                                className="hidden w-px whitespace-nowrap md:table-cell text-ax-medium"
+                                className="hidden w-px text-ax-medium whitespace-nowrap md:table-cell"
                             >
                                 Dager igjen
                             </TableHeaderCell>
@@ -78,7 +78,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                                     key={i}
                                     className={cn(
                                         (erAGP || erVentetid) &&
-                                            'bg-ax-bg-neutral-soft hover:bg-ax-bg-neutral-moderate-hover shadow-[inset_3px_0_0_0_var(--ax-border-neutral-strong)]',
+                                            'bg-ax-bg-neutral-soft shadow-[inset_3px_0_0_0_var(--ax-border-neutral-strong)] hover:bg-ax-bg-neutral-moderate-hover',
                                         erHelgedag && 'bg-stripes',
                                         erAGP && (erVentetid || erHelgedag) && 'bg-agp-helg',
                                     )}
@@ -89,7 +89,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                                     <TableDataCell align="right" className="text-ax-medium">
                                         {formaterTotalGrad(utbetalingsdata?.økonomi.totalGrad)}
                                     </TableDataCell>
-                                    <TableDataCell align="right" className="hidden md:table-cell text-ax-medium">
+                                    <TableDataCell align="right" className="hidden text-ax-medium md:table-cell">
                                         -
                                     </TableDataCell>
                                 </TableRow>
@@ -99,7 +99,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                 </Table>
             </VStack>
             {yrkesaktiviteter.map((yrkesaktivitet) => (
-                <VStack key={yrkesaktivitet.id} gap="2" className="border-l border-ax-border-neutral-strong w-min">
+                <VStack key={yrkesaktivitet.id} gap="2" className="w-min border-l border-ax-border-neutral-strong">
                     <NavnOgIkon
                         kategorisering={yrkesaktivitet.kategorisering}
                         orgnavn={yrkesaktivitet.orgnavn}
@@ -108,16 +108,16 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                     <Table size="small" className="border-t border-ax-border-neutral-subtle">
                         <TableHeader>
                             <TableRow>
-                                <TableHeaderCell className="w-px whitespace-nowrap text-ax-medium">
+                                <TableHeaderCell className="w-px text-ax-medium whitespace-nowrap">
                                     Dagtype
                                 </TableHeaderCell>
-                                <TableHeaderCell align="right" className="w-px whitespace-nowrap text-ax-medium">
+                                <TableHeaderCell align="right" className="w-px text-ax-medium whitespace-nowrap">
                                     Grad
                                 </TableHeaderCell>
-                                <TableHeaderCell align="right" className="w-px whitespace-nowrap text-ax-medium">
+                                <TableHeaderCell align="right" className="w-px text-ax-medium whitespace-nowrap">
                                     Refusjon
                                 </TableHeaderCell>
-                                <TableHeaderCell align="right" className="w-px whitespace-nowrap text-ax-medium">
+                                <TableHeaderCell align="right" className="w-px text-ax-medium whitespace-nowrap">
                                     Utbetaling
                                 </TableHeaderCell>
                             </TableRow>
