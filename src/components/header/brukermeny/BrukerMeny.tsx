@@ -1,24 +1,21 @@
 'use client'
 
-import { BodyShort, Detail, Dropdown, HStack, Skeleton, Spacer } from '@navikt/ds-react'
+import { ActionMenu, BodyShort, Detail, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import { LeaveIcon, PersonPencilIcon, TasklistFillIcon } from '@navikt/aksel-icons'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { InternalHeaderUserButton } from '@navikt/ds-react/InternalHeader'
-import {
-    DropdownMenu,
-    DropdownMenuDivider,
-    DropdownMenuList,
-    DropdownMenuListItem,
-    DropdownToggle,
-} from '@navikt/ds-react/Dropdown'
+import { ActionMenuContent, ActionMenuDivider, ActionMenuItem, ActionMenuTrigger } from '@navikt/ds-react/ActionMenu'
 
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
-import { Tastatursnarveier } from '@components/header/brukermeny/Tastatursnarveier'
 import { DarkModeToggle } from '@components/header/brukermeny/DarkModeToggle'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { AnonymiserToggle } from '@components/header/brukermeny/AnonymiserToggle'
+import { useRegisterShortcutHandler } from '@components/tastatursnarveier/useRegisterShortcutHandler'
+import { TastatursnarveierModal } from '@components/header/brukermeny/TastatursnarveierModal'
 
 export function BrukerMeny(): ReactElement {
+    const [showTastatursnarveierModal, setShowTastatursnarveierModal] = useState(false)
+    useRegisterShortcutHandler('open_tastatursnarveier', () => setShowTastatursnarveierModal((prev) => !prev))
     const { data: aktivBruker } = useBrukerinfo()
     const { data: roller } = useBrukerRoller()
 
@@ -30,49 +27,47 @@ export function BrukerMeny(): ReactElement {
     const visLeserolle = roller.leserolle && !roller.saksbehandler && !roller.beslutter
 
     return (
-        <Dropdown>
-            <InternalHeaderUserButton as={DropdownToggle} name={aktivBruker.navn} />
-            <DropdownMenu>
-                <dl>
-                    <BodyShort as="dt" size="small">
-                        {aktivBruker.navn}
-                    </BodyShort>
-                    <Detail as="dd">{aktivBruker.navIdent}</Detail>
-                    <Detail as="dd">{aktivBruker.preferredUsername}</Detail>
+        <>
+            <ActionMenu>
+                <ActionMenuTrigger>
+                    <InternalHeaderUserButton name={aktivBruker.navn} />
+                </ActionMenuTrigger>
+                <ActionMenuContent>
+                    <VStack className="p-2">
+                        <BodyShort size="small">{aktivBruker.navn}</BodyShort>
+                        <Detail>{aktivBruker.navIdent}</Detail>
+                        <Detail>{aktivBruker.preferredUsername}</Detail>
 
-                    {/* Vis roller under kontaktinformasjonen */}
-                    {visLeserolle && <Detail as="dd">Leserolle</Detail>}
-                    {roller.saksbehandler && (
-                        <Detail as="dd">
+                        {visLeserolle && <Detail>Leserolle</Detail>}
+                        {roller.saksbehandler && (
                             <HStack gap="2" align="center">
                                 <PersonPencilIcon fontSize="1rem" />
-                                <span>Saksbehandler</span>
+                                <Detail>Saksbehandler</Detail>
                             </HStack>
-                        </Detail>
-                    )}
-                    {roller.beslutter && (
-                        <Detail as="dd">
+                        )}
+                        {roller.beslutter && (
                             <HStack gap="2" align="center">
                                 <TasklistFillIcon fontSize="1rem" />
-                                <span>Beslutter</span>
+                                <Detail>Beslutter</Detail>
                             </HStack>
-                        </Detail>
-                    )}
-                </dl>
+                        )}
+                    </VStack>
 
-                <DropdownMenuDivider />
-                <AnonymiserToggle />
-                <DropdownMenuDivider />
-                <Tastatursnarveier />
-                <DropdownMenuDivider />
-                <DarkModeToggle />
-                <DropdownMenuDivider />
-                <DropdownMenuList>
-                    <DropdownMenuListItem as="a" href="/oauth2/logout">
-                        Logg ut <Spacer /> <LeaveIcon aria-hidden fontSize="1.5rem" />
-                    </DropdownMenuListItem>
-                </DropdownMenuList>
-            </DropdownMenu>
-        </Dropdown>
+                    <ActionMenuDivider />
+                    <AnonymiserToggle />
+                    <ActionMenuDivider />
+                    <ActionMenuItem onSelect={() => setShowTastatursnarveierModal(true)}>
+                        Tastatursnarveier
+                    </ActionMenuItem>
+                    <ActionMenuDivider />
+                    <DarkModeToggle />
+                    <ActionMenuDivider />
+                    <ActionMenuItem as="a" href="/oauth2/logout" icon={<LeaveIcon aria-hidden />}>
+                        Logg ut
+                    </ActionMenuItem>
+                </ActionMenuContent>
+            </ActionMenu>
+            <TastatursnarveierModal onOpenChange={setShowTastatursnarveierModal} open={showTastatursnarveierModal} />
+        </>
     )
 }
