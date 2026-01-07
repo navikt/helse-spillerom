@@ -1,9 +1,8 @@
 'use client'
 
 import { ReactElement, useState } from 'react'
-import { Button, Heading, HStack, Modal, ReadMore, Textarea } from '@navikt/ds-react'
+import { Button, Dialog, HStack, ReadMore, Textarea } from '@navikt/ds-react'
 import { ExpandIcon, ShrinkIcon } from '@navikt/aksel-icons'
-import { ModalBody, ModalHeader } from '@navikt/ds-react/Modal'
 
 import { Behandling } from '@schemas/behandling'
 
@@ -18,7 +17,6 @@ export function IndividuellBegrunnelse({
     const [openReadMore, setOpenReadMore] = useState(
         () => getBegrunnelseFromStorage(aktivSaksbehandlingsperiode) !== '',
     )
-    const [openModal, setOpenModal] = useState(false)
 
     function handleChange(value: string) {
         setBegrunnelse(value)
@@ -38,42 +36,35 @@ export function IndividuellBegrunnelse({
                     <BegrunnelseTextArea begrunnelse={begrunnelse} handleChange={handleChange} />
                 </ReadMore>
                 {openReadMore && (
-                    <Button
-                        size="xsmall"
-                        variant="tertiary-neutral"
-                        className="absolute top-0 right-0"
-                        icon={<ExpandIcon />}
-                        onClick={() => setOpenModal(true)}
-                    />
+                    <Dialog>
+                        <Dialog.Trigger>
+                            <Button
+                                size="xsmall"
+                                variant="tertiary-neutral"
+                                className="absolute top-0 right-0"
+                                icon={<ExpandIcon />}
+                            />
+                        </Dialog.Trigger>
+                        <Dialog.Popup width="large" position="center">
+                            <Dialog.Header withClosebutton={false}>
+                                <HStack justify="space-between" align="center">
+                                    <Dialog.Title>Individuell begrunnelse</Dialog.Title>
+                                    <Dialog.CloseTrigger>
+                                        <Button size="small" variant="tertiary-neutral" icon={<ShrinkIcon />} />
+                                    </Dialog.CloseTrigger>
+                                </HStack>
+                            </Dialog.Header>
+                            <Dialog.Body>
+                                <BegrunnelseTextArea
+                                    begrunnelse={begrunnelse}
+                                    handleChange={handleChange}
+                                    minRows={12}
+                                />
+                            </Dialog.Body>
+                        </Dialog.Popup>
+                    </Dialog>
                 )}
             </div>
-            {openModal && (
-                <Modal
-                    aria-label="Tastatursnarveier modal"
-                    open={openModal}
-                    onClose={() => setOpenModal(false)}
-                    portal
-                    closeOnBackdropClick
-                    width="800px"
-                >
-                    <ModalHeader closeButton={false}>
-                        <HStack justify="space-between" align="center">
-                            <Heading level="1" size="medium">
-                                Individuell begrunnelse
-                            </Heading>
-                            <Button
-                                size="small"
-                                variant="tertiary-neutral"
-                                onClick={() => setOpenModal(false)}
-                                icon={<ShrinkIcon />}
-                            />
-                        </HStack>
-                    </ModalHeader>
-                    <ModalBody>
-                        <BegrunnelseTextArea begrunnelse={begrunnelse} handleChange={handleChange} minRows={12} />
-                    </ModalBody>
-                </Modal>
-            )}
         </>
     )
 }
