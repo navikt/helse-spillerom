@@ -8,8 +8,8 @@ import {
     Checkbox,
     CheckboxGroup,
     DatePicker,
+    Dialog,
     Label,
-    Modal,
     Switch,
     useDatepicker,
 } from '@navikt/ds-react'
@@ -275,6 +275,9 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                                         setActiveSoknadId(søknad.id)
                                                         setOpenSoknadModal(true)
                                                     }}
+                                                    aria-haspopup="dialog"
+                                                    aria-expanded={openSoknadModal}
+                                                    aria-controls={openSoknadModal ? 'soknad-dialog-popup' : undefined}
                                                 >
                                                     Se søknad
                                                 </Button>
@@ -327,27 +330,32 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                     Start behandling
                 </Button>
 
-                <Modal open={openSoknadModal} onClose={() => setOpenSoknadModal(false)} header={{ heading: 'Søknad' }}>
-                    <Modal.Body>
-                        {lasterSoknad ? (
-                            <div role="status" aria-live="polite">
-                                Laster søknad...
-                            </div>
-                        ) : aktivSøknad ? (
-                            <BoxNew
-                                background="raised"
-                                borderRadius="large"
-                                borderWidth="1"
-                                borderColor="neutral-subtle"
-                                className="flex flex-col gap-4 p-4"
-                            >
-                                <SøknadsInnhold søknad={aktivSøknad} />
-                            </BoxNew>
-                        ) : (
-                            <div>Fant ikke søknad</div>
-                        )}
-                    </Modal.Body>
-                </Modal>
+                <Dialog open={openSoknadModal} onOpenChange={setOpenSoknadModal}>
+                    <Dialog.Popup id="soknad-dialog-popup">
+                        <Dialog.Header>
+                            <Dialog.Title>Søknad</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            {lasterSoknad ? (
+                                <div role="status" aria-live="polite">
+                                    Laster søknad...
+                                </div>
+                            ) : aktivSøknad ? (
+                                <BoxNew
+                                    background="raised"
+                                    borderRadius="large"
+                                    borderWidth="1"
+                                    borderColor="neutral-subtle"
+                                    className="flex flex-col gap-4 p-4"
+                                >
+                                    <SøknadsInnhold søknad={aktivSøknad} />
+                                </BoxNew>
+                            ) : (
+                                <div>Fant ikke søknad</div>
+                            )}
+                        </Dialog.Body>
+                    </Dialog.Popup>
+                </Dialog>
             </form>
         </SaksbildePanel>
     )
