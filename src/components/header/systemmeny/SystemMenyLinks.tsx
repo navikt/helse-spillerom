@@ -2,12 +2,10 @@
 
 import React, { ReactElement } from 'react'
 import { ExternalLinkIcon } from '@navikt/aksel-icons'
-import { Spacer } from '@navikt/ds-react'
-import { DropdownMenuGroupedListItem } from '@navikt/ds-react/Dropdown'
+import { ActionMenuItem } from '@navikt/ds-react/ActionMenu'
 
 import { useGlobalHandlers } from '@components/tastatursnarveier/useGlobalHandlers'
-import { KeyCode, ModifierKey, shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
-import { Shortcut } from '@components/header/Shortcut'
+import { keyCodeLabel, modifierLabels, shortcutMetadata } from '@components/tastatursnarveier/shortcutMetadata'
 
 export function SystemMenyLinks(): ReactElement[] {
     const { externalLinks } = useGlobalHandlers()
@@ -15,30 +13,16 @@ export function SystemMenyLinks(): ReactElement[] {
     return shortcutMetadata
         .filter((meta) => meta.id in externalLinks)
         .map((meta) => {
+            const { id, key, modifier, externalLinkTekst } = meta
             return (
-                <ExternalLinkButton
-                    key={meta.id}
-                    tekst={meta.externalLinkTekst ?? meta.id}
-                    action={externalLinks[meta.id]!}
-                    keyCode={meta.key}
-                    modifier={meta.modifier}
-                />
+                <ActionMenuItem
+                    key={id}
+                    onSelect={externalLinks[id]!}
+                    icon={<ExternalLinkIcon aria-hidden />}
+                    shortcut={modifier ? `${modifierLabels[modifier]}+${keyCodeLabel(key)}` : keyCodeLabel(key)}
+                >
+                    {externalLinkTekst}
+                </ActionMenuItem>
             )
         })
 }
-
-interface ExternalLinkButtonProps {
-    action: () => void
-    tekst: string
-    keyCode: KeyCode
-    modifier?: ModifierKey
-}
-
-const ExternalLinkButton = ({ tekst, action, keyCode, modifier }: ExternalLinkButtonProps): ReactElement => (
-    <DropdownMenuGroupedListItem key={tekst} as="button" className="px-4 py-2 whitespace-nowrap" onClick={action}>
-        {tekst}
-        <ExternalLinkIcon fontSize="1.1rem" title="Åpne ekstern lenke" />
-        <Spacer />
-        <Shortcut keyCode={keyCode} modifier={modifier} />
-    </DropdownMenuGroupedListItem>
-)
