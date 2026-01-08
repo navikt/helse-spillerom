@@ -17,19 +17,19 @@ export function TastatursnarveierModal({ open, onOpenChange }: Tastatursnarveier
     )
     return (
         <Dialog open={open} onOpenChange={onOpenChange} aria-label="Tastatursnarveier modal">
-            <Dialog.Popup>
+            <Dialog.Popup width="small">
                 <Dialog.Header>
                     <Dialog.Title>Tastatursnarveier</Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                    <Table size="small" zebraStripes className="min-w-md">
+                    <Table size="small" zebraStripes>
                         <TableBody>
                             {shortcuts.map((shortcut) => (
                                 <TableRow key={shortcut.id}>
-                                    <TableDataCell>
+                                    <TableDataCell className="w-full">{shortcut.visningstekst}</TableDataCell>
+                                    <TableDataCell className="text-right">
                                         <Shortcut keyCode={shortcut.key} modifier={shortcut.modifier} />
                                     </TableDataCell>
-                                    <TableDataCell>{shortcut.visningstekst}</TableDataCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -39,14 +39,14 @@ export function TastatursnarveierModal({ open, onOpenChange }: Tastatursnarveier
                             <Heading level="2" size="xsmall" className="my-4">
                                 Utviklersnacks
                             </Heading>
-                            <Table size="small" zebraStripes className="min-w-md">
+                            <Table size="small" zebraStripes>
                                 <TableBody>
                                     {utviklerOnlyShortcuts.map((shortcut) => (
                                         <TableRow key={shortcut.id}>
-                                            <TableDataCell>
+                                            <TableDataCell className="w-full">{shortcut.visningstekst}</TableDataCell>
+                                            <TableDataCell className="text-right">
                                                 <Shortcut keyCode={shortcut.key} modifier={shortcut.modifier} />
                                             </TableDataCell>
-                                            <TableDataCell className="w-full">{shortcut.visningstekst}</TableDataCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

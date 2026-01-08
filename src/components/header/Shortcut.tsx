@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { HStack } from '@navikt/ds-react'
 
 import { KeyCode, keyCodeLabel, ModifierKey, modifierLabels } from '../tastatursnarveier/shortcutMetadata'
 
@@ -10,9 +9,9 @@ interface ShortcutProps {
 
 export function Shortcut({ keyCode, modifier }: ShortcutProps): ReactElement {
     return (
-        <HStack gap="05" className="text-ax-text-subtle text-medium justify-center" wrap={false}>
-            {modifier && <span className="flex w-4 justify-center">{modifierLabels[modifier]}</span>}
-            <span className="flex w-4 justify-center">{keyCodeLabel(keyCode)}</span>
-        </HStack>
+        <div className="aksel-action-menu__marker aksel-action-menu__marker--right inline-flex">
+            {modifier && <span className="aksel-action-menu__shortcut">{modifierLabels[modifier]}</span>}
+            <span className="aksel-action-menu__shortcut">{keyCodeLabel(keyCode)}</span>
+        </div>
     )
 }
