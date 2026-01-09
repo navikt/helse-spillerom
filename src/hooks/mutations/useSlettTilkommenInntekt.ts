@@ -11,14 +11,14 @@ export function useSlettTilkommenInntekt() {
     const router = useRouter()
     const queryClient = useQueryClient()
 
-    return useMutation<void, ProblemDetailsError, { tilkommenInntektId: string }>({
+    return useMutation<void, ProblemDetailsError, { tilkommenInntektId: string; begrunnelse: string }>({
         mutationFn: async ({ tilkommenInntektId }) => {
             await deleteNoContent(
                 `/api/bakrommet/v1/${pseudoId}/behandlinger/${behandlingId}/tilkommeninntekt/${tilkommenInntektId}`,
             )
         },
         onSuccess: () => {
-            invaliderTilkommenInntektRelaterteQueries(queryClient, pseudoId, behandlingId)
+            void invaliderTilkommenInntektRelaterteQueries(queryClient, pseudoId, behandlingId)
 
             // Naviger tilbake til hovedsiden for saksbehandlingsperioden
             router.push(`/person/${pseudoId}/${behandlingId}`)
