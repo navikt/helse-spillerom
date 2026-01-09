@@ -94,24 +94,24 @@ export function KafkaOutboxTabell(): ReactElement {
                                 key={entry.id}
                                 content={
                                     <div className="space-y-2">
-                                        <BodyShort size="small" className="break-words">
+                                        <BodyShort size="small" className="wrap-break-word">
                                             <span className="font-semibold">Kafka key: </span>
                                             {entry.kafkaKey}
                                         </BodyShort>
-                                        <pre className="bg-gray-50 overflow-auto rounded p-2 text-xs">
+                                        <pre className="overflow-auto rounded bg-ax-bg-neutral-soft p-2 text-xs">
                                             {JSON.stringify(entry.payload, null, 2)}
                                         </pre>
                                     </div>
                                 }
                             >
-                                <TableDataCell>{entry.id}</TableDataCell>
-                                <TableDataCell>{entry.topic}</TableDataCell>
-                                <TableDataCell className="text-xs">
+                                <TableDataCell className="text-sm">{entry.id}</TableDataCell>
+                                <TableDataCell className="text-sm">{entry.topic}</TableDataCell>
+                                <TableDataCell className="text-sm">
                                     {new Date(entry.opprettet).toLocaleString('no-NO')}
                                 </TableDataCell>
-                                <TableDataCell className="text-xs">{fnr ?? '-'}</TableDataCell>
-                                <TableDataCell className="text-xs">{fom ?? '-'}</TableDataCell>
-                                <TableDataCell className="text-xs">{tom ?? '-'}</TableDataCell>
+                                <TableDataCell className="text-sm">{fnr ?? '-'}</TableDataCell>
+                                <TableDataCell className="text-sm">{fom ?? '-'}</TableDataCell>
+                                <TableDataCell className="text-sm">{tom ?? '-'}</TableDataCell>
                             </Table.ExpandableRow>
                         )
                     })}
