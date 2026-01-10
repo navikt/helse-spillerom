@@ -172,6 +172,15 @@ export function fyllUtInaktivYrkesaktivitet() {
     }
 }
 
+export function fyllUtArbeidsledigYrkesaktivitet() {
+    return async (page: Page) => {
+        await test.step(`Fyll ut arbeidsledig yrkesaktivitet`, async () => {
+            const typeSelect = page.getByRole('combobox', { name: 'Velg type yrkesaktivitet' })
+            await typeSelect.selectOption('ARBEIDSLEDIG')
+        })
+    }
+}
+
 export function lagreYrkesaktivitet() {
     return async (page: Page) => {
         await test.step('Lagre yrkesaktivitet', async () => {
