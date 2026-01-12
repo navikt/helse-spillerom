@@ -13,7 +13,6 @@ import { useErBeslutter } from '@hooks/queries/useErBeslutter'
 import { useBrukerRoller } from '@hooks/queries/useBrukerRoller'
 import { useBrukerinfo } from '@hooks/queries/useBrukerinfo'
 import { useBehandlinger } from '@hooks/queries/useBehandlinger'
-import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
 import { useRevurder } from '@hooks/mutations/useRevurder'
@@ -48,15 +47,6 @@ export function Venstremeny(): ReactElement {
     const { pseudoId, behandlingId } = useRouteParams()
     const queryClient = useQueryClient()
 
-    const sendTilBeslutning = useSendTilBeslutning({
-        onSuccess: () => {
-            // Vis success toast og naviger etter at cache invalidation er ferdig
-            sessionStorage.removeItem(`${aktivBehandling!.id}-individuell-begrunnelse`)
-            visToast('Saken er sendt til beslutter', 'success')
-            router.push('/')
-        },
-    })
-
     const taTilBeslutning = useTaTilBeslutning()
     const godkjenn = useGodkjenn()
     const revurder = useRevurder()
@@ -70,15 +60,6 @@ export function Venstremeny(): ReactElement {
         )
 
     if (isLoading) return <VenstremenySkeleton />
-
-    const håndterSendTilGodkjenning = () => {
-        if (!aktivBehandling) return
-        const storageValue = sessionStorage.getItem(`${aktivBehandling.id}-individuell-begrunnelse`)
-        sendTilBeslutning.mutate({
-            behandlingId: aktivBehandling.id,
-            individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
-        })
-    }
 
     const håndterTaTilBeslutning = () => {
         if (!aktivBehandling) return
@@ -163,8 +144,6 @@ export function Venstremeny(): ReactElement {
                                         invaliderValideringer(queryClient, pseudoId, behandlingId, true)
                                         setVisGodkjenningModal(true)
                                     }}
-                                    loading={sendTilBeslutning.isPending}
-                                    disabled={sendTilBeslutning.isPending}
                                 >
                                     Send til godkjenning
                                 </Button>
@@ -246,20 +225,19 @@ export function Venstremeny(): ReactElement {
                 )}
             </VStack>
 
-            <SendTilGodkjenningModal
-                open={visGodkjenningModal}
-                setOpen={setVisGodkjenningModal}
-                sendTilGodkjenning={() => {
-                    håndterSendTilGodkjenning()
-                    setVisGodkjenningModal(false)
-                }}
-            />
             {aktivBehandling && (
-                <SendTilbakeModal
-                    open={visSendTilbakeModal}
-                    setOpen={() => setVisSendTilbakeModal(false)}
-                    aktivBehandlingId={aktivBehandling.id}
-                />
+                <>
+                    <SendTilGodkjenningModal
+                        open={visGodkjenningModal}
+                        setOpen={setVisGodkjenningModal}
+                        aktivBehandlingId={aktivBehandling.id}
+                    />
+                    <SendTilbakeModal
+                        open={visSendTilbakeModal}
+                        setOpen={setVisSendTilbakeModal}
+                        aktivBehandlingId={aktivBehandling.id}
+                    />
+                </>
             )}
         </Sidemeny>
     )

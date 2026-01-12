@@ -1,36 +1,55 @@
+'use client'
+
 import { Dispatch, ReactElement, SetStateAction } from 'react'
 import { BodyShort, Button, Dialog, VStack } from '@navikt/ds-react'
-import {
-    DialogBody,
-    DialogCloseTrigger,
-    DialogFooter,
-    DialogHeader,
-    DialogPopup,
-    DialogTitle,
-} from '@navikt/ds-react/Dialog'
+import { useRouter } from 'next/navigation'
 
 import { Valideringer } from '@components/valideringer/Valideringer'
+import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
+import { useToast } from '@components/ToastProvider'
 
 import { BeløpForPerioden } from './BeløpForPerioden'
 
 interface SendTilGodkjenningModalProps {
     open: boolean
     setOpen: Dispatch<SetStateAction<boolean>>
-    sendTilGodkjenning: () => void
+    aktivBehandlingId: string
 }
 
 export function SendTilGodkjenningModal({
     open,
     setOpen,
-    sendTilGodkjenning,
+    aktivBehandlingId,
 }: SendTilGodkjenningModalProps): ReactElement {
+    const router = useRouter()
+    const { visToast } = useToast()
+    const mutation = useSendTilBeslutning()
+
+    async function håndterSendTilGodkjenning() {
+        const storageValue = sessionStorage.getItem(`${aktivBehandlingId}-individuell-begrunnelse`)
+        await mutation.mutateAsync(
+            {
+                behandlingId: aktivBehandlingId,
+                individuellBegrunnelse: storageValue ? JSON.parse(storageValue) : undefined,
+            },
+            {
+                onSuccess: () => {
+                    // Vis success toast og naviger etter at cache invalidation er ferdig
+                    sessionStorage.removeItem(`${aktivBehandlingId}-individuell-begrunnelse`)
+                    visToast('Saken er sendt til beslutter', 'success')
+                    router.push('/')
+                },
+            },
+        )
+    }
+
     return (
         <Dialog aria-label="Send til godkjenning modal" open={open} onOpenChange={setOpen}>
-            <DialogPopup width="small">
-                <DialogHeader>
-                    <DialogTitle>Er du sikker?</DialogTitle>
-                </DialogHeader>
-                <DialogBody>
+            <Dialog.Popup width="small">
+                <Dialog.Header>
+                    <Dialog.Title>Er du sikker?</Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
                     <VStack gap="4">
                         <BeløpForPerioden />
                         <Valideringer sluttvalidering={true} />
@@ -38,18 +57,23 @@ export function SendTilGodkjenningModal({
                             Når du trykker ja sendes saken til beslutter for godkjenning.
                         </BodyShort>
                     </VStack>
-                </DialogBody>
-                <DialogFooter>
-                    <DialogCloseTrigger>
-                        <Button type="button" variant="secondary">
+                </Dialog.Body>
+                <Dialog.Footer>
+                    <Dialog.CloseTrigger>
+                        <Button type="button" variant="secondary" disabled={mutation.isPending}>
                             Avbryt
                         </Button>
-                    </DialogCloseTrigger>
-                    <Button type="button" variant="primary" onClick={sendTilGodkjenning}>
+                    </Dialog.CloseTrigger>
+                    <Button
+                        type="button"
+                        variant="primary"
+                        onClick={håndterSendTilGodkjenning}
+                        loading={mutation.isPending}
+                    >
                         Ja
                     </Button>
-                </DialogFooter>
-            </DialogPopup>
+                </Dialog.Footer>
+            </Dialog.Popup>
         </Dialog>
     )
 }
