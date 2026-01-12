@@ -16,7 +16,7 @@ type SykepengegrunnlagFormProps = {
     kategori: Inntektskategori
     inntektRequest: InntektRequest
     yrkesaktivitetId: string
-    avbryt: () => void
+    lukkForm: () => void
     erFørstegangsRedigering?: boolean
 }
 
@@ -24,7 +24,7 @@ export function SykepengegrunnlagForm({
     kategori,
     inntektRequest,
     yrkesaktivitetId,
-    avbryt,
+    lukkForm,
     erFørstegangsRedigering = false,
 }: SykepengegrunnlagFormProps): ReactElement {
     const mutation = useOppdaterInntekt()
@@ -36,10 +36,7 @@ export function SykepengegrunnlagForm({
     })
 
     async function onSubmit(inntektRequest: InntektRequestFor<typeof kategori>) {
-        await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }).then(() => {
-            form.reset()
-            avbryt()
-        })
+        await mutation.mutateAsync({ yrkesaktivitetId, inntektRequest }, { onSuccess: () => lukkForm() })
     }
 
     const FormFields = FormFieldsFor[kategori]
@@ -74,10 +71,7 @@ export function SykepengegrunnlagForm({
                             type="button"
                             size="small"
                             variant="secondary"
-                            onClick={() => {
-                                form.reset()
-                                avbryt()
-                            }}
+                            onClick={lukkForm}
                             disabled={form.formState.isSubmitting}
                         >
                             Avbryt

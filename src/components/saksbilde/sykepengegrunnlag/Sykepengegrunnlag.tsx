@@ -305,7 +305,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                 kategori={kategori}
                                 inntektRequest={inntektRequest}
                                 yrkesaktivitetId={aktivYrkesaktivitet.id}
-                                avbryt={() => {
+                                lukkForm={() => {
                                     setManuellRedigeringsmodus(false)
                                     hideSelectButtonForAll()
                                 }}
