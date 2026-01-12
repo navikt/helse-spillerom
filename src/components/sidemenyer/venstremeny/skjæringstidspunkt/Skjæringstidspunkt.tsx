@@ -20,7 +20,7 @@ export function Skjæringstidspunkt({ dato, behandlingId }: SkjæringstidspunktP
                 <SkjæringstidspunktIcon aria-hidden fontSize="1.25rem" className={cn({ 'mt-1.5': isEditing })} />
             </Tooltip>
             {isEditing ? (
-                <SkjæringstidspunktForm dato={dato} behandlingId={behandlingId} avbryt={() => setIsEditing(false)} />
+                <SkjæringstidspunktForm dato={dato} behandlingId={behandlingId} lukkForm={() => setIsEditing(false)} />
             ) : (
                 <>
                     <BodyShort size="small">{getFormattedDateString(dato)}</BodyShort>

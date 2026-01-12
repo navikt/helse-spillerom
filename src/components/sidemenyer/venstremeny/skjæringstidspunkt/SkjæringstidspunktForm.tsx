@@ -11,10 +11,10 @@ import { DateField } from '@components/saksbilde/sykepengegrunnlag/form/DateFiel
 interface SkjæringstidspunktFormProps {
     dato: string
     behandlingId: string
-    avbryt: () => void
+    lukkForm: () => void
 }
 
-export function SkjæringstidspunktForm({ dato, behandlingId, avbryt }: SkjæringstidspunktFormProps): ReactElement {
+export function SkjæringstidspunktForm({ dato, behandlingId, lukkForm }: SkjæringstidspunktFormProps): ReactElement {
     const mutation = useOppdaterSkjæringstidspunkt()
     const form = useForm<SkjæringstidspunktSchema>({
         resolver: zodResolver(skjæringstidspunktSchema),
@@ -24,13 +24,8 @@ export function SkjæringstidspunktForm({ dato, behandlingId, avbryt }: Skjærin
         },
     })
 
-    function lukkForm() {
-        form.reset()
-        avbryt()
-    }
-
     async function onSubmit(values: SkjæringstidspunktSchema) {
-        await mutation.mutateAsync(values).then(() => lukkForm())
+        await mutation.mutateAsync(values, { onSuccess: () => lukkForm() })
     }
 
     return (
