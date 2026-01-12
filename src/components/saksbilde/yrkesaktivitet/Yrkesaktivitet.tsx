@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactElement, useState } from 'react'
-import { Alert, BodyShort, Box, Button, ErrorSummary, HStack, Modal, Table, VStack } from '@navikt/ds-react'
+import { Alert, BodyShort, Box, Button, Dialog, ErrorSummary, HStack, Table, VStack } from '@navikt/ds-react'
 import {
     TableBody,
     TableDataCell,
@@ -42,10 +42,10 @@ export function Yrkesaktivitet(): ReactElement {
     const kanSaksbehandles = useKanSaksbehandles()
     const {
         isOpen: bekreftelsesModalOpen,
+        setIsOpen,
         modalProps,
         visBekreftelsesmodal,
         handleBekreft,
-        handleAvbryt,
     } = useBekreftelsesModal()
 
     if (isLoading) return <YrkesaktivitetSkeleton />
@@ -63,16 +63,18 @@ export function Yrkesaktivitet(): ReactElement {
     const showKombinasjonsAdvarsel =
         yrkesaktivitetSomIkkeKanKombineres.length > 0 && (yrkesaktiviteter?.length || 0) > 1
 
-    const handleSlett = async (yrkesaktivitetId: string) => {
-        // Sjekk om sykepengegrunnlag eksisterer
+    const handleSlett = (yrkesaktivitetId: string) => {
         if (sykepengegrunnlag) {
-            const bekreftet = await visBekreftelsesmodal({
+            visBekreftelsesmodal({
                 tittel: 'Slette yrkesaktivitet',
                 melding:
                     'Dette vil føre til at sykepengegrunnlaget slettes og må registreres på nytt. Er du sikker på at du vil fortsette?',
+                onBekreft: () => {
+                    setInntektsforholdTilSlett(yrkesaktivitetId)
+                    setSlettModalOpen(true)
+                },
             })
-
-            if (!bekreftet) return
+            return
         }
 
         setInntektsforholdTilSlett(yrkesaktivitetId)
@@ -87,11 +89,6 @@ export function Yrkesaktivitet(): ReactElement {
         }
     }
 
-    const cancelSlett = () => {
-        setSlettModalOpen(false)
-        setInntektsforholdTilSlett(null)
-    }
-
     const handleRediger = (id: string) => {
         setRedigererId(id)
     }
@@ -100,16 +97,20 @@ export function Yrkesaktivitet(): ReactElement {
         setRedigererId(null)
     }
 
-    const handleLagreRedigering = async (yrkesaktivitetId: string, kategorisering: YrkesaktivitetKategorisering) => {
-        // Sjekk om sykepengegrunnlag eksisterer
+    const handleLagreRedigering = (yrkesaktivitetId: string, kategorisering: YrkesaktivitetKategorisering) => {
         if (sykepengegrunnlag) {
-            const bekreftet = await visBekreftelsesmodal({
+            visBekreftelsesmodal({
                 tittel: 'Redigere yrkesaktivitet',
                 melding:
                     'Dette vil føre til at sykepengegrunnlaget slettes og må registreres på nytt. Er du sikker på at du vil fortsette?',
+                onBekreft: () => {
+                    oppdaterMutation.mutate(
+                        { yrkesaktivitetId, kategorisering },
+                        { onSuccess: () => setRedigererId(null) },
+                    )
+                },
             })
-
-            if (!bekreftet) return
+            return
         }
 
         oppdaterMutation.mutate({ yrkesaktivitetId, kategorisering }, { onSuccess: () => setRedigererId(null) })
@@ -286,34 +287,35 @@ export function Yrkesaktivitet(): ReactElement {
                 </AnimatePresenceWrapper>
             </VStack>
 
-            <Modal
-                open={slettModalOpen}
-                onClose={cancelSlett}
-                header={{
-                    heading: 'Slett yrkesaktivitet',
-                }}
-            >
-                <Modal.Body>
-                    <BodyShort>
-                        Er du sikker på at du vil slette denne yrkesaktiviteten? Denne handlingen kan ikke angres.
-                    </BodyShort>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="danger" onClick={confirmSlett} loading={slettMutation.isPending}>
-                        Slett
-                    </Button>
-                    <Button variant="secondary" onClick={cancelSlett} disabled={slettMutation.isPending}>
-                        Avbryt
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <Dialog open={slettModalOpen} onOpenChange={setSlettModalOpen}>
+                <Dialog.Popup>
+                    <Dialog.Header>
+                        <Dialog.Title>Slett yrkesaktivitet</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <BodyShort>
+                            Er du sikker på at du vil slette denne yrkesaktiviteten? Denne handlingen kan ikke angres.
+                        </BodyShort>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.CloseTrigger>
+                            <Button type="button" variant="secondary" disabled={slettMutation.isPending}>
+                                Avbryt
+                            </Button>
+                        </Dialog.CloseTrigger>
+                        <Button type="button" variant="danger" onClick={confirmSlett} loading={slettMutation.isPending}>
+                            Slett
+                        </Button>
+                    </Dialog.Footer>
+                </Dialog.Popup>
+            </Dialog>
 
             <BekreftelsesModal
-                isOpen={bekreftelsesModalOpen}
+                open={bekreftelsesModalOpen}
+                setOpen={setIsOpen}
                 tittel={modalProps?.tittel || ''}
                 melding={modalProps?.melding || ''}
                 onBekreft={handleBekreft}
-                onAvbryt={handleAvbryt}
             />
         </>
     )

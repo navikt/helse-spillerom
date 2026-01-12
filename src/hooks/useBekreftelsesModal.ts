@@ -1,38 +1,30 @@
 import { useState } from 'react'
 
-interface BekreftelsesModalProps {
+interface ModalProps {
     tittel: string
     melding: string
+    onBekreft: () => void
 }
 
 export const useBekreftelsesModal = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const [modalProps, setModalProps] = useState<BekreftelsesModalProps | null>(null)
-    const [resolvePromise, setResolvePromise] = useState<((value: boolean) => void) | null>(null)
+    const [modalProps, setModalProps] = useState<ModalProps | null>(null)
 
-    const visBekreftelsesmodal = (props: BekreftelsesModalProps): Promise<boolean> => {
-        return new Promise((resolve) => {
-            setModalProps(props)
-            setIsOpen(true)
-            setResolvePromise(() => resolve)
-        })
+    const visBekreftelsesmodal = (props: ModalProps) => {
+        setModalProps(props)
+        setIsOpen(true)
     }
 
     const handleBekreft = () => {
+        modalProps?.onBekreft()
         setIsOpen(false)
-        resolvePromise?.(true)
-    }
-
-    const handleAvbryt = () => {
-        setIsOpen(false)
-        resolvePromise?.(false)
     }
 
     return {
         isOpen,
+        setIsOpen,
         modalProps,
         visBekreftelsesmodal,
         handleBekreft,
-        handleAvbryt,
     }
 }

@@ -1,35 +1,43 @@
-import { Modal, Button, Alert } from '@navikt/ds-react'
-import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
+import { Alert, Button, Dialog } from '@navikt/ds-react'
+import {
+    DialogBody,
+    DialogCloseTrigger,
+    DialogFooter,
+    DialogHeader,
+    DialogPopup,
+    DialogTitle,
+} from '@navikt/ds-react/Dialog'
+import { Dispatch, ReactElement, SetStateAction } from 'react'
 
 interface BekreftelsesModalProps {
-    isOpen: boolean
+    open: boolean
+    setOpen: Dispatch<SetStateAction<boolean>>
     tittel: string
     melding: string
     onBekreft: () => void
-    onAvbryt: () => void
 }
 
-export const BekreftelsesModal = ({ isOpen, tittel, melding, onBekreft, onAvbryt }: BekreftelsesModalProps) => {
+export function BekreftelsesModal({ open, tittel, melding, onBekreft, setOpen }: BekreftelsesModalProps): ReactElement {
     return (
-        <Modal
-            open={isOpen}
-            onClose={onAvbryt}
-            aria-label={tittel}
-            header={{
-                heading: tittel,
-            }}
-        >
-            <ModalBody>
-                <Alert variant="warning">{melding}</Alert>
-            </ModalBody>
-            <ModalFooter>
-                <Button variant="secondary" onClick={onAvbryt}>
-                    Avbryt
-                </Button>
-                <Button variant="danger" onClick={onBekreft}>
-                    Bekreft
-                </Button>
-            </ModalFooter>
-        </Modal>
+        <Dialog open={open} onOpenChange={setOpen} aria-label={tittel}>
+            <DialogPopup>
+                <DialogHeader>
+                    <DialogTitle>{tittel}</DialogTitle>
+                </DialogHeader>
+                <DialogBody>
+                    <Alert variant="warning">{melding}</Alert>
+                </DialogBody>
+                <DialogFooter>
+                    <DialogCloseTrigger>
+                        <Button type="button" variant="secondary">
+                            Avbryt
+                        </Button>
+                    </DialogCloseTrigger>
+                    <Button type="button" variant="danger" onClick={onBekreft}>
+                        Bekreft
+                    </Button>
+                </DialogFooter>
+            </DialogPopup>
+        </Dialog>
     )
 }
