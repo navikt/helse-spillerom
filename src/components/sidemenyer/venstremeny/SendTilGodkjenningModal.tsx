@@ -1,51 +1,55 @@
-import { ReactElement } from 'react'
-import { Modal, VStack, HStack, BodyShort, Button, Heading } from '@navikt/ds-react'
-import { ModalBody, ModalHeader, ModalFooter } from '@navikt/ds-react/Modal'
+import { Dispatch, ReactElement, SetStateAction } from 'react'
+import { BodyShort, Button, Dialog, VStack } from '@navikt/ds-react'
+import {
+    DialogBody,
+    DialogCloseTrigger,
+    DialogFooter,
+    DialogHeader,
+    DialogPopup,
+    DialogTitle,
+} from '@navikt/ds-react/Dialog'
 
 import { Valideringer } from '@components/valideringer/Valideringer'
 
 import { BeløpForPerioden } from './BeløpForPerioden'
 
 interface SendTilGodkjenningModalProps {
-    åpen: boolean
-    onLukk: () => void
-    onSendTilGodkjenning: () => void
+    open: boolean
+    setOpen: Dispatch<SetStateAction<boolean>>
+    sendTilGodkjenning: () => void
 }
 
 export function SendTilGodkjenningModal({
-    åpen,
-    onLukk,
-    onSendTilGodkjenning,
+    open,
+    setOpen,
+    sendTilGodkjenning,
 }: SendTilGodkjenningModalProps): ReactElement {
-    const håndterJa = () => {
-        onSendTilGodkjenning()
-        onLukk()
-    }
-
     return (
-        <Modal aria-label="Send til godkjenning modal" open={åpen} onClose={onLukk} portal closeOnBackdropClick>
-            <ModalHeader>
-                <Heading size="medium">Er du sikker?</Heading>
-            </ModalHeader>
-            <ModalBody>
-                <VStack gap="4">
-                    <BeløpForPerioden />
-                    <Valideringer sluttvalidering={true} />
-                    <BodyShort size="small" className="text-gray-700">
-                        Når du trykker ja sendes saken til beslutter for godkjenning.
-                    </BodyShort>
-                </VStack>
-            </ModalBody>
-            <ModalFooter>
-                <HStack gap="2">
-                    <Button variant="primary" onClick={håndterJa}>
+        <Dialog aria-label="Send til godkjenning modal" open={open} onOpenChange={setOpen}>
+            <DialogPopup width="small">
+                <DialogHeader>
+                    <DialogTitle>Er du sikker?</DialogTitle>
+                </DialogHeader>
+                <DialogBody>
+                    <VStack gap="4">
+                        <BeløpForPerioden />
+                        <Valideringer sluttvalidering={true} />
+                        <BodyShort size="small" className="text-gray-700">
+                            Når du trykker ja sendes saken til beslutter for godkjenning.
+                        </BodyShort>
+                    </VStack>
+                </DialogBody>
+                <DialogFooter>
+                    <DialogCloseTrigger>
+                        <Button type="button" variant="secondary">
+                            Avbryt
+                        </Button>
+                    </DialogCloseTrigger>
+                    <Button type="button" variant="primary" onClick={sendTilGodkjenning}>
                         Ja
                     </Button>
-                    <Button variant="secondary" onClick={onLukk}>
-                        Avbryt
-                    </Button>
-                </HStack>
-            </ModalFooter>
-        </Modal>
+                </DialogFooter>
+            </DialogPopup>
+        </Dialog>
     )
 }

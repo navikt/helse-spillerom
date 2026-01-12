@@ -271,9 +271,12 @@ export function Venstremeny(): ReactElement {
             </VStack>
 
             <SendTilGodkjenningModal
-                åpen={visGodkjenningModal}
-                onLukk={() => setVisGodkjenningModal(false)}
-                onSendTilGodkjenning={håndterSendTilGodkjenning}
+                open={visGodkjenningModal}
+                setOpen={setVisGodkjenningModal}
+                sendTilGodkjenning={() => {
+                    håndterSendTilGodkjenning()
+                    setVisGodkjenningModal(false)
+                }}
             />
             <SendTilbakeModal
                 isOpen={visSendTilbakeModal}
