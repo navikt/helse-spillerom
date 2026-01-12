@@ -19,7 +19,7 @@ Your primary responsibilities are writing, debugging, and fixing Playwright E2E 
 - **Test Location**: `/playwright` directory
 - **Test Actions**: `/playwright/actions` directory (reusable test utilities)
 - **Configuration**: `playwright.config.ts`
-- **Package Manager**: pnpm 10.26.0
+- **Package Manager**: pnpm 10.28.0
 - **Node Version**: 24
 
 ## Critical Setup Requirements

@@ -6,7 +6,7 @@
 
 - **Type**: Next.js 16 web application with TypeScript
 - **Size**: ~25,000 lines of TypeScript/TSX code
-- **Runtime**: Node.js 24, pnpm 10.26.0
+- **Runtime**: Node.js 24, pnpm 10.28.0
 - **Key Technologies**: Next.js 16, React 19, TypeScript, Tailwind CSS, NAV Design System (@navikt/ds-*), TanStack Query, Playwright, Vitest
 - **Deployment**: NAIS platform (Kubernetes) on GCP with Azure AD authentication
 
@@ -184,7 +184,7 @@ pnpm run format
 
 ### Configuration Files
 
-- `package.json` - Dependencies and scripts (packageManager: pnpm@10.26.0)
+- `package.json` - Dependencies and scripts (packageManager: pnpm@10.28.0)
 - `tsconfig.json` - TypeScript config with path aliases (@/, @components/, etc.)
 - `next.config.ts` - Next.js config (standalone output, React compiler enabled)
 - `eslint.config.ts` - ESLint with Next.js + @navikt/tsm-eslint-react
