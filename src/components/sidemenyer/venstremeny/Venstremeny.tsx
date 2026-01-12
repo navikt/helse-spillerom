@@ -16,7 +16,6 @@ import { useBehandlinger } from '@hooks/queries/useBehandlinger'
 import { useSendTilBeslutning } from '@hooks/mutations/useSendTilBeslutning'
 import { useTaTilBeslutning } from '@hooks/mutations/useTaTilBeslutning'
 import { useGodkjenn } from '@hooks/mutations/useGodkjenn'
-import { useSendTilbake } from '@hooks/mutations/useSendTilbake'
 import { useRevurder } from '@hooks/mutations/useRevurder'
 import { getFormattedDateString } from '@utils/date-format'
 import { useToast } from '@components/ToastProvider'
@@ -60,7 +59,6 @@ export function Venstremeny(): ReactElement {
 
     const taTilBeslutning = useTaTilBeslutning()
     const godkjenn = useGodkjenn()
-    const sendTilbake = useSendTilbake()
     const revurder = useRevurder()
 
     const kanRevurderes =
@@ -106,26 +104,6 @@ export function Venstremeny(): ReactElement {
                 onSuccess: () => {
                     visToast('Saken er godkjent', 'success')
                     router.push('/')
-                },
-            },
-        )
-    }
-
-    const håndterSendTilbake = () => {
-        setVisSendTilbakeModal(true)
-    }
-
-    const håndterSendTilbakeBekreft = (kommentar: string) => {
-        if (!aktivBehandling) return
-        sendTilbake.mutate(
-            {
-                behandlingId: aktivBehandling.id,
-                kommentar,
-            },
-            {
-                onSuccess: () => {
-                    visToast('Saken er sendt tilbake til saksbehandler', 'success')
-                    setVisSendTilbakeModal(false)
                 },
             },
         )
@@ -243,9 +221,7 @@ export function Venstremeny(): ReactElement {
                                                 variant="secondary"
                                                 size="small"
                                                 className="w-fit"
-                                                onClick={håndterSendTilbake}
-                                                loading={sendTilbake.isPending}
-                                                disabled={sendTilbake.isPending}
+                                                onClick={() => setVisSendTilbakeModal(true)}
                                             >
                                                 Returner
                                             </Button>
@@ -278,12 +254,13 @@ export function Venstremeny(): ReactElement {
                     setVisGodkjenningModal(false)
                 }}
             />
-            <SendTilbakeModal
-                isOpen={visSendTilbakeModal}
-                onClose={() => setVisSendTilbakeModal(false)}
-                onConfirm={håndterSendTilbakeBekreft}
-                isLoading={sendTilbake.isPending}
-            />
+            {aktivBehandling && (
+                <SendTilbakeModal
+                    open={visSendTilbakeModal}
+                    setOpen={() => setVisSendTilbakeModal(false)}
+                    aktivBehandlingId={aktivBehandling.id}
+                />
+            )}
         </Sidemeny>
     )
 }
