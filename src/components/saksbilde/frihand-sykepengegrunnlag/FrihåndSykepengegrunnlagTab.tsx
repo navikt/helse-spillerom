@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { BodyShort, Button, Heading, HStack, Modal } from '@navikt/ds-react'
-import { ModalBody, ModalFooter } from '@navikt/ds-react/Modal'
+import { BodyShort, Button, Dialog, Heading, HStack } from '@navikt/ds-react'
 
 import { SaksbildePanel } from '@components/saksbilde/SaksbildePanel'
 import { useSykepengegrunnlag } from '@hooks/queries/useSykepengegrunnlag'
@@ -18,20 +17,12 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
     const slettMutation = useSlettSykepengegrunnlag()
     const [slettModalOpen, setSlettModalOpen] = useState(false)
 
-    const handleSlett = () => {
-        setSlettModalOpen(true)
-    }
-
     const handleBekreftSlett = () => {
         slettMutation.mutate(undefined, {
             onSuccess: () => {
                 setSlettModalOpen(false)
             },
         })
-    }
-
-    const handleAvbrytSlett = () => {
-        setSlettModalOpen(false)
     }
 
     return (
@@ -45,7 +36,7 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             <Heading size="small" level="2" spacing>
                                 Frihånd sykepengegrunnlag
                             </Heading>
-                            <Button variant="danger" size="small" onClick={handleSlett}>
+                            <Button variant="danger" size="small" onClick={() => setSlettModalOpen(true)}>
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -57,7 +48,7 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             <p>
                                 Sykepengegrunnlag er allerede opprettet, men det er ikke et frihånd sykepengegrunnlag.
                             </p>
-                            <Button variant="danger" size="small" onClick={handleSlett}>
+                            <Button variant="danger" size="small" onClick={() => setSlettModalOpen(true)}>
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -67,26 +58,34 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                 )}
             </SaksbildePanel>
 
-            <Modal open={slettModalOpen} onClose={handleAvbrytSlett} aria-label="Slett sykepengegrunnlag">
-                <Modal.Header>
-                    <Heading size="medium">Slett sykepengegrunnlag</Heading>
-                </Modal.Header>
-                <ModalBody>
-                    <BodyShort>
-                        Er du sikker på at du vil slette dette sykepengegrunnlaget? Denne handlingen kan ikke angres.
-                    </BodyShort>
-                </ModalBody>
-                <ModalFooter>
-                    <HStack gap="2">
-                        <Button variant="danger" onClick={handleBekreftSlett} loading={slettMutation.isPending}>
+            <Dialog open={slettModalOpen} onOpenChange={setSlettModalOpen} aria-label="Slett sykepengegrunnlag">
+                <Dialog.Popup>
+                    <Dialog.Header>
+                        <Dialog.Title>Slett sykepengegrunnlag</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                        <BodyShort>
+                            Er du sikker på at du vil slette dette sykepengegrunnlaget? Denne handlingen kan ikke
+                            angres.
+                        </BodyShort>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                        <Dialog.CloseTrigger>
+                            <Button type="button" variant="secondary" disabled={slettMutation.isPending}>
+                                Avbryt
+                            </Button>
+                        </Dialog.CloseTrigger>
+                        <Button
+                            type="button"
+                            variant="danger"
+                            onClick={handleBekreftSlett}
+                            loading={slettMutation.isPending}
+                        >
                             Slett
                         </Button>
-                        <Button variant="secondary" onClick={handleAvbrytSlett} disabled={slettMutation.isPending}>
-                            Avbryt
-                        </Button>
-                    </HStack>
-                </ModalFooter>
-            </Modal>
+                    </Dialog.Footer>
+                </Dialog.Popup>
+            </Dialog>
         </>
     )
 }
