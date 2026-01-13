@@ -38,10 +38,10 @@ export const dagendringSchema = z
 type DagendringFormProps = {
     aktivtInntektsForhold?: Yrkesaktivitet
     valgteDataer: Set<string>
-    avbryt: () => void
+    lukkForm: () => void
 }
 
-export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: DagendringFormProps): ReactElement {
+export function DagendringForm({ aktivtInntektsForhold, valgteDataer, lukkForm }: DagendringFormProps): ReactElement {
     const mutation = useOppdaterYrkesaktivitetDagoversikt()
     const tilgjengeligeAvslagsdager = useTilgjengeligeAvslagsdager()
     const form = useForm<DagendringSchema>({
@@ -83,16 +83,10 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
             }
         })
 
-        await mutation
-            .mutateAsync({
-                yrkesaktivitetId: aktivtInntektsForhold.id,
-                dager: oppdaterteDager,
-                notat,
-            })
-            .then(() => {
-                form.reset()
-                avbryt()
-            })
+        await mutation.mutateAsync(
+            { yrkesaktivitetId: aktivtInntektsForhold.id, dager: oppdaterteDager, notat },
+            { onSuccess: () => lukkForm() },
+        )
     }
 
     const nyGrad = useWatch({ control: form.control, name: 'grad' })
@@ -250,10 +244,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, avbryt }: 
                         size="small"
                         type="button"
                         variant="secondary"
-                        onClick={() => {
-                            form.reset()
-                            avbryt()
-                        }}
+                        onClick={lukkForm}
                         loading={form.formState.isSubmitting}
                     >
                         Avbryt

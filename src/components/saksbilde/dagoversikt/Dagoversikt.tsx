@@ -336,7 +336,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                 {erIRedigeringsmodus && (
                                     <DagendringForm
                                         valgteDataer={valgteDatoer}
-                                        avbryt={handleAvbrytRedigering}
+                                        lukkForm={handleAvbrytRedigering}
                                         aktivtInntektsForhold={aktivYrkesaktivitet}
                                     />
                                 )}
