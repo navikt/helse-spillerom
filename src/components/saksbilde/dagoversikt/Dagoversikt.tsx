@@ -1,6 +1,6 @@
 'use client'
 
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useRef, useState } from 'react'
 import { Alert, BodyShort, Button, Checkbox, Heading, HStack, Table, Tabs, VStack } from '@navikt/ds-react'
 import { TabsList, TabsPanel, TabsTab } from '@navikt/ds-react/Tabs'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
@@ -59,6 +59,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     const [aktivYrkesaktivitetId, setAktivYrkesaktivitetId] = useState<string>()
     const [erIRedigeringsmodus, setErIRedigeringsmodus] = useState(false)
     const [valgteDatoer, setValgteDatoer] = useState<Set<string>>(new Set())
+    const lastChecked = useRef<string | null>(null)
 
     // Filtrer kun yrkesaktiviteter som har dagoversikt med innhold
     const yrkesaktivitetMedDagoversikt =
@@ -81,16 +82,39 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
     // Sjekk om noen dager er valgt (for indeterminate state)
     const erNoenValgt = aktivYrkesaktivitetDagoversikt.some((dag) => valgteDatoer.has(dag.dato))
 
-    const handleDatoToggle = (dato: string, valgt: boolean) => {
-        setValgteDatoer((prev) => {
-            const nyeValgteDatoer = new Set(prev)
-            if (valgt) {
-                nyeValgteDatoer.add(dato)
+    const handleCheckboxClick = (dato: string, event: React.MouseEvent<HTMLInputElement>) => {
+        const checked = event.currentTarget.checked
+        const toggle = (set: Set<string>, date: string) => {
+            if (checked) {
+                set.add(date)
             } else {
-                nyeValgteDatoer.delete(dato)
+                set.delete(date)
             }
-            return nyeValgteDatoer
+        }
+
+        if (event.shiftKey && lastChecked.current) {
+            const dates = aktivYrkesaktivitetDagoversikt.map((dag) => dag.dato)
+            const startIndex = dates.indexOf(lastChecked.current)
+            const endIndex = dates.indexOf(dato)
+
+            if (startIndex !== -1 && endIndex !== -1) {
+                const [min, max] = [Math.min(startIndex, endIndex), Math.max(startIndex, endIndex)]
+                setValgteDatoer((prev) => {
+                    const newSet = new Set(prev)
+                    dates.slice(min, max + 1).forEach((date) => toggle(newSet, date))
+                    return newSet
+                })
+                lastChecked.current = dato
+                return
+            }
+        }
+
+        setValgteDatoer((prev) => {
+            const newSet = new Set(prev)
+            toggle(newSet, dato)
+            return newSet
         })
+        lastChecked.current = dato
     }
 
     const handleVelgAlle = (valgt: boolean) => {
@@ -263,9 +287,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             <Checkbox
                                                                 value={dag.dato}
                                                                 checked={valgteDatoer.has(dag.dato)}
-                                                                onChange={(e) =>
-                                                                    handleDatoToggle(dag.dato, e.target.checked)
-                                                                }
+                                                                onClick={(e) => handleCheckboxClick(dag.dato, e)}
                                                                 hideLabel
                                                             >
                                                                 Velg dag
