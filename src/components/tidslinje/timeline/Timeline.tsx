@@ -11,7 +11,7 @@ import { useExpandableRows, useTimelineState } from '@components/tidslinje/timel
 import { TimelineContext } from './context'
 
 export function Timeline({ children }: PropsWithChildren): ReactElement {
-    const { rowLabels, earliestDate, latestDate, parsedRows, zoomComponent } = useParsedRows(children)
+    const { rowLabels, earliestDate, latestDate, parsedRows, zoomComponent, pins } = useParsedRows(children)
     const { expandedRows, toggleRowExpanded } = useExpandableRows()
     const {
         startDate,
@@ -42,6 +42,7 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
                         <HStack gap="3" wrap={false}>
                             <TimelineRowLabels labels={rowLabels} />
                             <TimelineScrollableRows ref={timelineScrollableContainerRef}>
+                                {pins}
                                 {parsedRows.map((row, rowIndex) => (
                                     <RowContext.Provider
                                         key={rowIndex}

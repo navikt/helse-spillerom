@@ -20,6 +20,7 @@ import { useBehandlingsperiodeMedLoading } from '@hooks/queries/useBehandlingspe
 import { useTilkommenInntektById } from '@hooks/queries/useTilkommenInntektById'
 import { groupTidslinjeData } from '@components/tidslinje/groupTidslinjeData'
 import { TilkommenInntektKnapp } from '@components/tidslinje/TilkommenInntektKnapp'
+import { TimelinePin } from '@components/tidslinje/timeline/pin/TimelinePin'
 
 export function Tidslinje(): ReactElement {
     const router = useRouter()
@@ -34,9 +35,21 @@ export function Tidslinje(): ReactElement {
 
     const { behandlinger, tilkomneInntekter } = groupTidslinjeData(data)
 
+    // TODO bruke ekte maksdato - blir kanskje tilgjengelig i data fra useTidslinje?
+    // evt et eget kall for å hente maksdato. Skal vises i venstremeny også.
+    const fakeMaksdato = '2025-01-10'
+
     return (
         <div className="relative">
             <Timeline>
+                {fakeMaksdato && (
+                    <TimelinePin date={dayjs(fakeMaksdato)}>
+                        <HGrid columns="auto auto" gap="1 4">
+                            <BodyShort size="small">Fake maksdato:</BodyShort>
+                            <BodyShort size="small">{getFormattedDateString(fakeMaksdato)}</BodyShort>
+                        </HGrid>
+                    </TimelinePin>
+                )}
                 {behandlinger.map((rad) => (
                     <TimelineRow
                         key={rad.id}

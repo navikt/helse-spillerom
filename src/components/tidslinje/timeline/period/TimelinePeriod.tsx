@@ -31,7 +31,7 @@ export interface TimelinePeriodProps extends PropsWithChildren {
 
 export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactElement => {
     const buttonRef = useRef<HTMLButtonElement>(null)
-    const { onMouseOver, onMouseOut, ...popoverProps } = usePopoverAnchor()
+    const { onMouseOver, onMouseOut, anchorEl, open, onClose } = usePopoverAnchor()
     const { dayLength, endDate: timelineEnd } = useTimelineContext()
     const { allPeriods } = useRowContext()
     const { periodId } = usePeriodContext()
@@ -68,7 +68,7 @@ export const TimelinePeriod: ComponentWithType<TimelinePeriodProps> = (): ReactE
             >
                 {showIcon && <span className={cn('aksel-timeline__period--inner')}>{icon}</span>}
             </button>
-            <Popover strategy="fixed" {...popoverProps}>
+            <Popover strategy="fixed" anchorEl={anchorEl} open={open} onClose={onClose}>
                 <PopoverContent>{children}</PopoverContent>
             </Popover>
         </>

@@ -6,24 +6,32 @@ type PopoverAnchor = {
     onClose: () => void
     onMouseOver: (event: React.MouseEvent<HTMLElement>) => void
     onMouseOut: (event: React.MouseEvent<HTMLElement>) => void
+    toggle: (element: HTMLElement) => void
+    hide: () => void
 }
 
 export function usePopoverAnchor(): PopoverAnchor {
     const [anchor, setAnchor] = useState<HTMLElement | null>(null)
 
-    const assignAnchor = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchor(event.currentTarget)
+    const toggle = (element: HTMLElement) => {
+        setAnchor((prev) => (prev ? null : element))
     }
 
-    const removeAnchor = () => {
+    const hide = () => {
         setAnchor(null)
+    }
+
+    const assignAnchor = (event: React.MouseEvent<HTMLElement>) => {
+        toggle(event.currentTarget)
     }
 
     return {
         anchorEl: anchor,
         open: anchor !== null,
-        onClose: removeAnchor,
+        onClose: hide,
         onMouseOver: assignAnchor,
-        onMouseOut: removeAnchor,
+        onMouseOut: hide,
+        toggle,
+        hide,
     }
 }
