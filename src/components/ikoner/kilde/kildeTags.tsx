@@ -80,11 +80,7 @@ function KildeTag({ children, ...rest }: ComponentPropsWithoutRef<'div'>): React
             )}
             {...rest}
         >
-            {isString ? (
-                <span className="translate-x-[0.5px] translate-y-[0.5px] transform text-xs">{children}</span>
-            ) : (
-                children
-            )}
+            {isString ? <span className="translate-y-[0.5px] transform text-xs">{children}</span> : children}
         </div>
     )
 }
