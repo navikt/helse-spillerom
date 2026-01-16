@@ -53,17 +53,16 @@ export function Oppgaveliste(): ReactElement {
             <Heading level="1" size="large" className="sr-only">
                 Oppgaveliste
             </Heading>
-
             <HStack wrap={false} className="h-full">
                 <VStack className="h-full border-r border-r-ax-border-neutral-subtle pt-4">
                     <div className="border-b border-b-ax-border-neutral-subtle">
                         <Button
+                            data-color="neutral"
                             className="m-2 mb-[7px] self-start"
                             size="small"
-                            variant="tertiary-neutral"
+                            variant="tertiary"
                             icon={<FilterIcon aria-label="Filtrer saker" />}
-                            onClick={() => setShowFilters((prev) => !prev)}
-                        />
+                            onClick={() => setShowFilters((prev) => !prev)} />
                     </div>
                     <AnimatePresenceWrapper initial={false}>
                         {showFilters && (
@@ -104,7 +103,7 @@ export function Oppgaveliste(): ReactElement {
                 </Tabs>
             </HStack>
         </>
-    )
+    );
 }
 
 function splitPerioderForTabs(saksbehandlingsperioder: Behandling[], aktivBruker?: Bruker) {

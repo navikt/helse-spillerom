@@ -302,7 +302,12 @@ export function Yrkesaktivitet(): ReactElement {
                                 Avbryt
                             </Button>
                         </Dialog.CloseTrigger>
-                        <Button type="button" variant="danger" onClick={confirmSlett} loading={slettMutation.isPending}>
+                        <Button
+                            data-color="danger"
+                            type="button"
+                            variant="primary"
+                            onClick={confirmSlett}
+                            loading={slettMutation.isPending}>
                             Slett
                         </Button>
                     </Dialog.Footer>

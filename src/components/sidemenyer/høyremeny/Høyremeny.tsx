@@ -103,20 +103,20 @@ export function Høyremeny(): ReactElement {
                                                 </Heading>
                                             </HStack>
                                             <Button
-                                                variant="tertiary-neutral"
+                                                data-color="neutral"
+                                                variant="tertiary"
                                                 size="xsmall"
                                                 type="button"
                                                 icon={<XMarkIcon aria-hidden />}
                                                 onClick={() => updateDokumenter(dokument)}
-                                                aria-label="Lukk høyremeny"
-                                            />
+                                                aria-label="Lukk høyremeny" />
                                         </HStack>
                                         {isInntektsmelding && <InntektsmeldingInnhold inntektsmelding={dokument} />}
                                         {!isInntektsmelding && <SøknadsInnhold søknad={dokument} />}
                                     </VStack>
                                 </Sidemeny>
                             </motion.div>
-                        )
+                        );
                     })}
             </AnimatePresenceWrapper>
             <AnimatePresenceWrapper initial={false}>
@@ -140,13 +140,13 @@ export function Høyremeny(): ReactElement {
                                         {filter}
                                     </Heading>
                                     <Button
-                                        variant="tertiary-neutral"
+                                        data-color="neutral"
+                                        variant="tertiary"
                                         size="xsmall"
                                         type="button"
                                         icon={<XMarkIcon aria-hidden />}
                                         onClick={() => setShowSidemeny(false)}
-                                        aria-label="Lukk høyremeny"
-                                    />
+                                        aria-label="Lukk høyremeny" />
                                 </HStack>
                                 <div role="region" aria-label={`${filter.toLowerCase()} innhold`}>
                                     {høyremenyElementer[filter]}
@@ -180,7 +180,7 @@ export function Høyremeny(): ReactElement {
                 )}
             </VStack>
         </HStack>
-    )
+    );
 }
 
 const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {

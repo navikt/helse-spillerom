@@ -39,18 +39,22 @@ export function IndividuellBegrunnelse({
                     <Dialog>
                         <Dialog.Trigger>
                             <Button
+                                data-color="neutral"
                                 size="xsmall"
-                                variant="tertiary-neutral"
+                                variant="tertiary"
                                 className="absolute top-0 right-0"
-                                icon={<ExpandIcon />}
-                            />
+                                icon={<ExpandIcon />} />
                         </Dialog.Trigger>
                         <Dialog.Popup width="large" position="center">
                             <Dialog.Header withClosebutton={false}>
                                 <HStack justify="space-between" align="center">
                                     <Dialog.Title>Individuell begrunnelse</Dialog.Title>
                                     <Dialog.CloseTrigger>
-                                        <Button size="small" variant="tertiary-neutral" icon={<ShrinkIcon />} />
+                                        <Button
+                                            data-color="neutral"
+                                            size="small"
+                                            variant="tertiary"
+                                            icon={<ShrinkIcon />} />
                                     </Dialog.CloseTrigger>
                                 </HStack>
                             </Dialog.Header>
@@ -66,7 +70,7 @@ export function IndividuellBegrunnelse({
                 )}
             </div>
         </>
-    )
+    );
 }
 
 function getBegrunnelseFromStorage(periode: Behandling) {

@@ -131,22 +131,22 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                         Lagre
                                     </Button>
                                     <Button
-                                        variant="danger"
+                                        data-color="danger"
+                                        variant="primary"
                                         size="small"
                                         type="button"
                                         onClick={handleAvbryt}
-                                        disabled={oppdaterIsPending}
-                                    >
+                                        disabled={oppdaterIsPending}>
                                         Avbryt
                                     </Button>
                                     {ya.refusjon && ya.refusjon.length > 0 && (
                                         <Button
-                                            variant="danger"
+                                            data-color="danger"
+                                            variant="primary"
                                             size="small"
                                             type="button"
                                             onClick={handleFjernRefusjon}
-                                            disabled={oppdaterIsPending}
-                                        >
+                                            disabled={oppdaterIsPending}>
                                             Fjern refusjon
                                         </Button>
                                     )}
@@ -181,11 +181,11 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                         </Button>
                         {ya.refusjon && ya.refusjon.length > 0 && (
                             <Button
+                                data-color="danger"
                                 size="small"
-                                variant="danger"
+                                variant="primary"
                                 onClick={handleFjernRefusjon}
-                                disabled={oppdaterIsPending}
-                            >
+                                disabled={oppdaterIsPending}>
                                 Fjern refusjon
                             </Button>
                         )}
@@ -193,7 +193,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                 )}
             </Table.DataCell>
         </Table.Row>
-    )
+    );
 }
 
 export function Refusjon(): ReactElement {

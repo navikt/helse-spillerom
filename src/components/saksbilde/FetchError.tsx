@@ -11,10 +11,15 @@ export function FetchError({ refetch, message }: FetchErrorProps): ReactElement 
         <Alert variant="error">
             <HStack gap="4">
                 <BodyShort>{message}</BodyShort>
-                <Button type="button" size="xsmall" variant="secondary-neutral" onClick={refetch}>
+                <Button
+                    data-color="neutral"
+                    type="button"
+                    size="xsmall"
+                    variant="secondary"
+                    onClick={refetch}>
                     Prøv igjen
                 </Button>
             </HStack>
         </Alert>
-    )
+    );
 }

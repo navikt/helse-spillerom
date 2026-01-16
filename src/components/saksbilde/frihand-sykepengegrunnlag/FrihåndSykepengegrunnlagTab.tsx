@@ -36,7 +36,11 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             <Heading size="small" level="2" spacing>
                                 Frihånd sykepengegrunnlag
                             </Heading>
-                            <Button variant="danger" size="small" onClick={() => setSlettModalOpen(true)}>
+                            <Button
+                                data-color="danger"
+                                variant="primary"
+                                size="small"
+                                onClick={() => setSlettModalOpen(true)}>
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -48,7 +52,11 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             <p>
                                 Sykepengegrunnlag er allerede opprettet, men det er ikke et frihånd sykepengegrunnlag.
                             </p>
-                            <Button variant="danger" size="small" onClick={() => setSlettModalOpen(true)}>
+                            <Button
+                                data-color="danger"
+                                variant="primary"
+                                size="small"
+                                onClick={() => setSlettModalOpen(true)}>
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -57,7 +65,6 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                     <FrihåndSykepengegrunnlagForm />
                 )}
             </SaksbildePanel>
-
             <Dialog open={slettModalOpen} onOpenChange={setSlettModalOpen} aria-label="Slett sykepengegrunnlag">
                 <Dialog.Popup>
                     <Dialog.Header>
@@ -76,16 +83,16 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             </Button>
                         </Dialog.CloseTrigger>
                         <Button
+                            data-color="danger"
                             type="button"
-                            variant="danger"
+                            variant="primary"
                             onClick={handleBekreftSlett}
-                            loading={slettMutation.isPending}
-                        >
+                            loading={slettMutation.isPending}>
                             Slett
                         </Button>
                     </Dialog.Footer>
                 </Dialog.Popup>
             </Dialog>
         </>
-    )
+    );
 }

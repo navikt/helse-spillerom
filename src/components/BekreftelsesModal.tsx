@@ -33,11 +33,11 @@ export function BekreftelsesModal({ open, tittel, melding, onBekreft, setOpen }:
                             Avbryt
                         </Button>
                     </DialogCloseTrigger>
-                    <Button type="button" variant="danger" onClick={onBekreft}>
+                    <Button data-color="danger" type="button" variant="primary" onClick={onBekreft}>
                         Bekreft
                     </Button>
                 </DialogFooter>
             </DialogPopup>
         </Dialog>
-    )
+    );
 }

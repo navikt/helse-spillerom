@@ -10,11 +10,11 @@ export function OppgavelisteSkeleton(): ReactElement {
             <VStack className="h-full border-r border-r-ax-border-neutral-subtle pt-4">
                 <div className="border-b border-b-ax-border-neutral-subtle">
                     <Button
+                        data-color="neutral"
                         className="m-2 mb-[7px] self-start"
                         size="small"
-                        variant="tertiary-neutral"
-                        icon={<FilterIcon aria-label="Filtrer saker" />}
-                    />
+                        variant="tertiary"
+                        icon={<FilterIcon aria-label="Filtrer saker" />} />
                 </div>
             </VStack>
             <Tabs value="ALLE" className="mb-4 grow pt-4">
@@ -34,7 +34,7 @@ export function OppgavelisteSkeleton(): ReactElement {
                 </TabsPanel>
             </Tabs>
         </HStack>
-    )
+    );
 }
 
 function OppgaveTabellSkeleton(): ReactElement {
