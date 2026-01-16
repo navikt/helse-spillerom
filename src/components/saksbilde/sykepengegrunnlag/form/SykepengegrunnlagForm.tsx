@@ -43,7 +43,7 @@ export function SykepengegrunnlagForm({
 
     return (
         <FormProvider {...form}>
-            <VStack as="form" role="form" gap="6" onSubmit={form.handleSubmit(onSubmit)}>
+            <VStack as="form" role="form" gap="space-24" onSubmit={form.handleSubmit(onSubmit)}>
                 <FormFields yrkesaktivitetId={yrkesaktivitetId} kategori={kategori} />
                 <Controller
                     control={form.control}
@@ -62,7 +62,7 @@ export function SykepengegrunnlagForm({
                     )}
                 />
                 {Object.values(form.formState.errors).length > 0 && <Feiloppsummering errors={form.formState.errors} />}
-                <HStack gap="2" align="center" className="h-8" wrap={false}>
+                <HStack gap="space-8" align="center" className="h-8" wrap={false}>
                     <Button type="submit" size="small" loading={form.formState.isSubmitting}>
                         Lagre
                     </Button>

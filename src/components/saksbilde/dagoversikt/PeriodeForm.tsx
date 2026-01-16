@@ -148,19 +148,19 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
             onSubmit={handleSubmit(onSubmit)}
             className="w-full max-w-[500px] rounded-lg border bg-ax-bg-neutral-soft p-4"
         >
-            <VStack gap="4">
+            <VStack gap="space-16">
                 <HStack justify="space-between" align="center">
                     <Heading size="small">Rediger {periodeTypeText.toLowerCase()}</Heading>
                 </HStack>
 
-                <VStack gap="3">
+                <VStack gap="space-12">
                     {fields.map((field, index) => (
                         <div
                             key={field.id}
                             className="border-ax-border-default bg-white flex items-center gap-3 rounded border p-3"
                         >
                             <div className="flex-1">
-                                <HStack gap="3">
+                                <HStack gap="space-12">
                                     <div className="flex-1">
                                         <PeriodeRangePicker
                                             control={control}
@@ -188,7 +188,7 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
                         </div>
                     ))}
 
-                    <HStack gap="2" align="center" className="h-8">
+                    <HStack gap="space-8" align="center" className="h-8">
                         <Button
                             size="small"
                             variant="tertiary"
@@ -200,7 +200,7 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
                             Legg til periode
                         </Button>
                     </HStack>
-                    <HStack gap="2">
+                    <HStack gap="space-8">
                         <Button
                             size="small"
                             variant="tertiary"
@@ -242,8 +242,8 @@ function PeriodeVisning({
     }
 
     return (
-        <VStack gap="2">
-            <HStack gap="2" align="center">
+        <VStack gap="space-8">
+            <HStack gap="space-8" align="center">
                 <BodyShort>{periodeTypeText}</BodyShort>
                 {onRediger && (
                     <Button size="small" variant="tertiary" icon={<PencilIcon aria-hidden />} onClick={onRediger}>
@@ -251,7 +251,7 @@ function PeriodeVisning({
                     </Button>
                 )}
             </HStack>
-            <VStack gap="1">
+            <VStack gap="space-4">
                 {perioder.perioder.map((periode, index) => (
                     <BodyShort key={index}>
                         {getFormattedDateString(periode.fom)} - {getFormattedDateString(periode.tom)}
@@ -303,7 +303,7 @@ function PeriodeRangePicker({
 
     return (
         <DatePicker {...datepickerProps}>
-            <HStack gap="3" wrap>
+            <HStack gap="space-12" wrap>
                 <DatePicker.Input
                     {...fromInputProps}
                     label="Fra dato"

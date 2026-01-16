@@ -15,7 +15,7 @@ export function Skjæringstidspunkt({ dato, behandlingId }: SkjæringstidspunktP
     const [isEditing, setIsEditing] = useState(false)
 
     return (
-        <HStack gap="2" align={isEditing ? 'start' : 'center'} className="mb-4" wrap={false}>
+        <HStack gap="space-8" align={isEditing ? 'start' : 'center'} className="mb-4" wrap={false}>
             <Tooltip content="Skjæringstidspunkt">
                 <SkjæringstidspunktIcon aria-hidden fontSize="1.25rem" className={cn({ 'mt-1.5': isEditing })} />
             </Tooltip>

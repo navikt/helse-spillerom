@@ -48,7 +48,7 @@ export function SendTilbakeModal({ open, setOpen, aktivBehandlingId }: SendTilba
                             as="form"
                             role="form"
                             id="send-i-retur-form"
-                            gap="4"
+                            gap="space-16"
                             onSubmit={form.handleSubmit(onSubmit)}
                         >
                             <BodyShort size="small" className="text-ax-neutral-800">

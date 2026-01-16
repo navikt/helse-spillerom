@@ -22,7 +22,7 @@ export function SelvstendigNæringsdrivendeInntektView({
 
     if (!inntektRequestData) {
         return (
-            <VStack gap="2" className="w-fit">
+            <VStack gap="space-8" className="w-fit">
                 <BodyShort weight="semibold">Årsinntekt</BodyShort>
                 <BodyShort className="text-right">-</BodyShort>
             </VStack>
@@ -38,9 +38,9 @@ export function SelvstendigNæringsdrivendeInntektView({
         return (
             <>
                 {notNull(årsinntekt) && (
-                    <VStack gap="1">
+                    <VStack gap="space-4">
                         <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                        <HStack gap="2">
+                        <HStack gap="space-8">
                             <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                             <Tag data-color="neutral" variant="outline" size="xsmall">
                                 skjønnsfastsatt
@@ -49,19 +49,19 @@ export function SelvstendigNæringsdrivendeInntektView({
                     </VStack>
                 )}
                 {årsak && (
-                    <VStack gap="1">
+                    <VStack gap="space-4">
                         <BodyShort weight="semibold">Årsak</BodyShort>
                         <BodyShort>{pensjonsgivendeSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
                     </VStack>
                 )}
                 {begrunnelse && (
-                    <VStack gap="1">
+                    <VStack gap="space-4">
                         <BodyShort weight="semibold">Begrunnelse</BodyShort>
                         <BodyShort>{begrunnelse}</BodyShort>
                     </VStack>
                 )}
             </>
-        );
+        )
     }
     return <></>
 }

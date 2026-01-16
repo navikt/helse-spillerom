@@ -93,9 +93,9 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                 {edit ? (
                     <FormProvider {...methods}>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <VStack gap="4">
+                            <VStack gap="space-16">
                                 {refusjonFieldArray.fields.map((field, index) => (
-                                    <HStack key={field.id} gap="2" align="start" wrap={false}>
+                                    <HStack key={field.id} gap="space-8" align="start" wrap={false}>
                                         <DateField
                                             name={`refusjon.${index}.fom`}
                                             label="F.o.m. dato"
@@ -118,7 +118,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                         </Button>
                                     </HStack>
                                 ))}
-                                <HStack gap="2">
+                                <HStack gap="space-8">
                                     <Button
                                         size="xsmall"
                                         variant="tertiary"
@@ -136,7 +136,8 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                         size="small"
                                         type="button"
                                         onClick={handleAvbryt}
-                                        disabled={oppdaterIsPending}>
+                                        disabled={oppdaterIsPending}
+                                    >
                                         Avbryt
                                     </Button>
                                     {ya.refusjon && ya.refusjon.length > 0 && (
@@ -146,7 +147,8 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                             size="small"
                                             type="button"
                                             onClick={handleFjernRefusjon}
-                                            disabled={oppdaterIsPending}>
+                                            disabled={oppdaterIsPending}
+                                        >
                                             Fjern refusjon
                                         </Button>
                                     )}
@@ -157,7 +159,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                 ) : (
                     <div>
                         {ya.refusjon && ya.refusjon.length > 0 ? (
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 {ya.refusjon.map((ref, index) => (
                                     <div key={index} className="text-sm">
                                         {getFormattedDateString(ref.fom)} -{' '}
@@ -175,7 +177,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
             </Table.DataCell>
             <Table.DataCell>
                 {!edit && (
-                    <HStack gap="2">
+                    <HStack gap="space-8">
                         <Button size="small" variant="secondary" onClick={() => setEdit(true)}>
                             Rediger
                         </Button>
@@ -185,7 +187,8 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                 size="small"
                                 variant="primary"
                                 onClick={handleFjernRefusjon}
-                                disabled={oppdaterIsPending}>
+                                disabled={oppdaterIsPending}
+                            >
                                 Fjern refusjon
                             </Button>
                         )}
@@ -193,7 +196,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                 )}
             </Table.DataCell>
         </Table.Row>
-    );
+    )
 }
 
 export function Refusjon(): ReactElement {
@@ -201,20 +204,20 @@ export function Refusjon(): ReactElement {
 
     if (!data || isLoading) {
         return (
-            <Box padding="0">
+            <Box padding="space-0">
                 <Skeleton width="100%" height={200} />
             </Box>
-        );
+        )
     }
 
     const arbeidstakere = data.filter((ya) => ya.kategorisering.inntektskategori === 'ARBEIDSTAKER')
 
     if (arbeidstakere.length === 0) {
         return (
-            <Box padding="4">
+            <Box padding="space-16">
                 <p>Ingen arbeidstakere funnet. Refusjon kan kun settes for arbeidstakere.</p>
             </Box>
-        );
+        )
     }
 
     return (

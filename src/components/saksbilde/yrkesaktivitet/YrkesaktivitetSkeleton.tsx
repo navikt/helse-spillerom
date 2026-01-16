@@ -11,7 +11,7 @@ import {
 
 export function YrkesaktivitetSkeleton(): ReactElement {
     return (
-        <VStack gap="6">
+        <VStack gap="space-24">
             <Table>
                 <TableHeader>
                     <TableRow>

@@ -30,7 +30,9 @@ export function RetroTemaToggle(): ReactElement {
             <InternalHeaderButton
                 onClick={handleRetroToggle}
                 aria-label="Toggle retro tema"
-                className={isRetroTema ? 'bg-ax-meta-purple-700 text-white border-ax-meta-purple-700' : ''}
+                className={
+                    isRetroTema ? 'border-ax-meta-purple-700 bg-ax-meta-purple-700 text-ax-text-neutral-contrast' : ''
+                }
             >
                 <CodeIcon aria-hidden fontSize="1.5rem" />
             </InternalHeaderButton>

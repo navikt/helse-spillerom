@@ -38,8 +38,11 @@ export function Timeline({ children }: PropsWithChildren): ReactElement {
         >
             <ExpandedRowsContext.Provider value={expandedRows}>
                 <ToggleRowContext.Provider value={toggleRowExpanded}>
-                    <VStack gap="4" className="ignore-axe w-full border-b border-ax-border-neutral-subtle p-8 pb-4">
-                        <HStack gap="3" wrap={false}>
+                    <VStack
+                        gap="space-16"
+                        className="ignore-axe w-full border-b border-ax-border-neutral-subtle p-8 pb-4"
+                    >
+                        <HStack gap="space-12" wrap={false}>
                             <TimelineRowLabels labels={rowLabels} />
                             <TimelineScrollableRows ref={timelineScrollableContainerRef}>
                                 {pins}

@@ -17,7 +17,7 @@ function ArbeidsgiverRad({ orgnummer, refusjon }: ArbeidsgiverRadProps): ReactEl
 
     return (
         <HStack justify="space-between">
-            <HStack gap="2" align="center">
+            <HStack gap="space-8" align="center">
                 <BriefcaseIcon aria-hidden fontSize="1.25rem" />
                 <Tooltip content={organisasjonsnavn || orgnummer} describesChild>
                     <BodyShort data-sensitive size="small" truncate className="max-w-[158px]">
@@ -52,7 +52,7 @@ export function BeløpForPerioden(): ReactElement {
 
     return (
         <div>
-            <VStack gap="3">
+            <VStack gap="space-12">
                 <HStack justify="space-between">
                     <BodyShort weight="semibold" size="small">
                         Beløp for perioden
@@ -75,7 +75,7 @@ export function BeløpForPerioden(): ReactElement {
                 {/* Vis direkteutbetaling til person */}
                 {totalPersonUtbetaling > 0 && (
                     <HStack justify="space-between">
-                        <HStack gap="2" align="center">
+                        <HStack gap="space-8" align="center">
                             <PersonIcon aria-hidden fontSize="1.25rem" />
                             <Tooltip content={personinfo?.navn || 'Ukjent person'} describesChild>
                                 <BodyShort data-sensitive size="small" truncate className="max-w-[158px]">

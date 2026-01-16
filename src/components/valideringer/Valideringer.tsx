@@ -11,7 +11,7 @@ export function Valideringer({ sluttvalidering }: { sluttvalidering: boolean }):
     if (data == null || data.length === 0) return null
 
     return (
-        <VStack gap="1" className="px-2 pt-1">
+        <VStack gap="space-4" className="px-2 pt-1">
             {data.map((v) => {
                 return (
                     <InfoCard size="small" key={v.id} data-color="warning">

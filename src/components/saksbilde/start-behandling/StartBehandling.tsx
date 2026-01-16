@@ -287,7 +287,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                 </div>
                             ))}
                         {errors.selectedSøknader?.message && (
-                            <div className="text-ax-danger-700 mt-2 text-sm">{errors.selectedSøknader.message}</div>
+                            <div className="mt-2 text-sm text-ax-danger-700">{errors.selectedSøknader.message}</div>
                         )}
                     </>
                 )}
@@ -343,7 +343,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                             ) : aktivSøknad ? (
                                 <Box
                                     background="raised"
-                                    borderRadius="large"
+                                    borderRadius="8"
                                     borderWidth="1"
                                     borderColor="neutral-subtle"
                                     className="flex flex-col gap-4 p-4"
@@ -358,5 +358,5 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 </Dialog>
             </form>
         </SaksbildePanel>
-    );
+    )
 }

@@ -146,30 +146,34 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                             {isMonthExpanded && (
                                 <Table.Row className="bg-ax-neutral-100">
                                     <Table.DataCell colSpan={4}>
-                                        <VStack gap="2" className="p-2">
+                                        <VStack gap="space-2" className="p-2">
                                             {maaned.inntektListe.map((inntekt, index) => (
                                                 <div key={index} className="border-l-4 border-ax-border-info pl-3">
-                                                    <HStack gap="4" className="mb-2">
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">Beløp</Detail>
+                                                    <HStack gap="space-4" className="mb-2">
+                                                        <VStack gap="space-1">
+                                                            <Detail className="text-xs text-ax-neutral-700">
+                                                                Beløp
+                                                            </Detail>
                                                             <BodyShort size="small" className="font-medium">
                                                                 {formatCurrency(inntekt.beloep)}
                                                             </BodyShort>
                                                         </VStack>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">Type</Detail>
+                                                        <VStack gap="space-1">
+                                                            <Detail className="text-xs text-ax-neutral-700">
+                                                                Type
+                                                            </Detail>
                                                             <BodyShort size="small">{inntekt.type}</BodyShort>
                                                         </VStack>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                        <VStack gap="space-1">
+                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                 Beskrivelse
                                                             </Detail>
                                                             <BodyShort size="small">{inntekt.beskrivelse}</BodyShort>
                                                         </VStack>
                                                     </HStack>
-                                                    <HStack gap="4">
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                    <HStack gap="space-4">
+                                                        <VStack gap="space-1">
+                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                 Virksomhet
                                                             </Detail>
                                                             <BodyShort size="small">
@@ -179,8 +183,10 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                 {maaned.underenhet}
                                                             </BodyShort>
                                                         </VStack>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">Fordel</Detail>
+                                                        <VStack gap="space-1">
+                                                            <Detail className="text-xs text-ax-neutral-700">
+                                                                Fordel
+                                                            </Detail>
                                                             <BodyShort size="small">{inntekt.fordel}</BodyShort>
                                                         </VStack>
                                                     </HStack>
@@ -219,7 +225,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                         <Fragment key={employer}>
                             <Table.Row className="bg-ax-success-100">
                                 <Table.DataCell colSpan={2}>
-                                    <VStack gap="0">
+                                    <VStack gap="space-0">
                                         <BodyShort size="small" className="font-semibold">
                                             <Organisasjonsnavn orgnummer={employer} />
                                         </BodyShort>
@@ -271,15 +277,15 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                             {isMonthExpanded && (
                                                 <Table.Row className="bg-ax-neutral-100">
                                                     <Table.DataCell colSpan={3}>
-                                                        <VStack gap="2" className="p-2">
+                                                        <VStack gap="space-2" className="p-2">
                                                             {maaned.inntektListe.map((inntekt, index) => (
                                                                 <div
                                                                     key={index}
                                                                     className="border-l-4 border-ax-border-info pl-3"
                                                                 >
-                                                                    <HStack gap="4" className="mb-2">
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <HStack gap="space-4" className="mb-2">
+                                                                        <VStack gap="space-1">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Beløp
                                                                             </Detail>
                                                                             <BodyShort
@@ -289,16 +295,16 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                                 {formatCurrency(inntekt.beloep)}
                                                                             </BodyShort>
                                                                         </VStack>
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                        <VStack gap="space-1">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Type
                                                                             </Detail>
                                                                             <BodyShort size="small">
                                                                                 {inntekt.type}
                                                                             </BodyShort>
                                                                         </VStack>
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                        <VStack gap="space-1">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Beskrivelse
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -306,9 +312,9 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
                                                                             </BodyShort>
                                                                         </VStack>
                                                                     </HStack>
-                                                                    <HStack gap="4">
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <HStack gap="space-4">
+                                                                        <VStack gap="space-1">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Fordel
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -333,7 +339,7 @@ export function AinntektVisning({ ainntekt }: AinntektVisningProps): ReactElemen
     )
 
     return (
-        <VStack gap="4" className="mt-2">
+        <VStack gap="space-4" className="mt-2">
             <Switch checked={groupByEmployer} onChange={(event) => setGroupByEmployer(event.target.checked)}>
                 Gruppering per arbeidsgiver
             </Switch>

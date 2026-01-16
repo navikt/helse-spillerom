@@ -62,7 +62,8 @@ export function Oppgaveliste(): ReactElement {
                             size="small"
                             variant="tertiary"
                             icon={<FilterIcon aria-label="Filtrer saker" />}
-                            onClick={() => setShowFilters((prev) => !prev)} />
+                            onClick={() => setShowFilters((prev) => !prev)}
+                        />
                     </div>
                     <AnimatePresenceWrapper initial={false}>
                         {showFilters && (
@@ -103,7 +104,7 @@ export function Oppgaveliste(): ReactElement {
                 </Tabs>
             </HStack>
         </>
-    );
+    )
 }
 
 function splitPerioderForTabs(saksbehandlingsperioder: Behandling[], aktivBruker?: Bruker) {
@@ -146,7 +147,7 @@ function FilterRow({
     return (
         <HStack className="w-60 border-b border-b-ax-border-neutral-subtle pb-4" justify="space-between" wrap={false}>
             <BodyShort className="whitespace-nowrap">{filter.label}</BodyShort>
-            <HStack gap="2" wrap={false}>
+            <HStack gap="space-8" wrap={false}>
                 <Button
                     size="xsmall"
                     variant={filter.status === FilterStatus.PLUS ? 'primary' : 'secondary'}
@@ -193,7 +194,7 @@ function OppgaveTabell({ perioder }: { perioder: Behandling[] }): ReactElement {
                     <TableRow
                         key={periode.id}
                         onClick={() => handleRadKlikk(periode)}
-                        className="hover:bg-ax-neutral-100 cursor-pointer"
+                        className="cursor-pointer hover:bg-ax-neutral-100"
                     >
                         <TableDataCell>{periode.opprettetAvNavn}</TableDataCell>
                         <TableDataCell>

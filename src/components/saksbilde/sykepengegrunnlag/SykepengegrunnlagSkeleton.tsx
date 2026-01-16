@@ -3,14 +3,14 @@ import { Bleed, BodyShort, Box, Heading, HStack, Skeleton, VStack } from '@navik
 
 export function SykepengegrunnlagSkeleton(): ReactElement {
     return (
-        <VStack gap="6" className="max-w-[508px] pr-16">
-            <HStack gap="4" align="center">
+        <VStack gap="space-24" className="max-w-[508px] pr-16">
+            <HStack gap="space-16" align="center">
                 <Heading size="small" level="1">
                     Inntekter
                 </Heading>
                 <Skeleton width={100} height={40} />
             </HStack>
-            <VStack gap="3">
+            <VStack gap="space-12">
                 <YrkesaktivitetRad />
                 <span className="h-px bg-ax-border-neutral-subtle" />
                 <YrkesaktivitetRad />
@@ -20,8 +20,8 @@ export function SykepengegrunnlagSkeleton(): ReactElement {
                 <BodyShort weight="semibold">Totalt</BodyShort>
                 <Skeleton width={100} />
             </HStack>
-            <Bleed marginInline="4 32" asChild reflectivePadding>
-                <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+            <Bleed marginInline="space-16 space-128" asChild reflectivePadding>
+                <Box background="neutral-soft" className="py-4" borderRadius="8" marginBlock="space-16 space-0">
                     <HStack justify="space-between">
                         <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                         <Skeleton width={100} />
@@ -29,13 +29,13 @@ export function SykepengegrunnlagSkeleton(): ReactElement {
                 </Box>
             </Bleed>
         </VStack>
-    );
+    )
 }
 
 function YrkesaktivitetRad(): ReactElement {
     return (
         <HStack justify="space-between">
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <Skeleton variant="rectangle" height={24} width={24} />
                 <Skeleton width={160} />
             </HStack>

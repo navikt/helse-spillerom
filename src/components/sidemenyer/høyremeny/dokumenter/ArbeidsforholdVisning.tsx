@@ -1,5 +1,5 @@
-import { ReactElement, useState, Fragment } from 'react'
-import { Table, BodyShort, Detail, VStack, HStack, Button, Tag } from '@navikt/ds-react'
+import { Fragment, ReactElement, useState } from 'react'
+import { BodyShort, Button, Detail, HStack, Table, Tag, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
 import { Arbeidsforhold } from '@schemas/aareg'
@@ -51,7 +51,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
     }
 
     return (
-        <VStack gap="2" className="mt-2">
+        <VStack gap="space-8" className="mt-2">
             <Detail className="text-ax-neutral-700">Viser {arbeidsforhold.length} arbeidsforhold</Detail>
 
             <Table size="small" className="w-full">
@@ -98,23 +98,25 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                 {isExpanded && (
                                     <Table.Row className="bg-ax-neutral-100">
                                         <Table.DataCell colSpan={4}>
-                                            <VStack gap="3" className="p-3">
+                                            <VStack gap="space-12" className="p-3">
                                                 {/* Ansettelsesperiode */}
                                                 {forhold.type.beskrivelse}
                                                 <div className="border-l-4 border-ax-border-info pl-3">
-                                                    <Detail className="text-ax-neutral-700 mb-1 text-xs">
+                                                    <Detail className="mb-1 text-xs text-ax-neutral-700">
                                                         Ansettelsesperiode
                                                     </Detail>
-                                                    <HStack gap="4">
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">Fra</Detail>
+                                                    <HStack gap="space-16">
+                                                        <VStack gap="space-4">
+                                                            <Detail className="text-xs text-ax-neutral-700">Fra</Detail>
                                                             <BodyShort size="small">
                                                                 {formatDate(forhold.ansettelsesperiode.startdato)}
                                                             </BodyShort>
                                                         </VStack>
                                                         {forhold.ansettelsesperiode.sluttdato && (
-                                                            <VStack gap="1">
-                                                                <Detail className="text-ax-neutral-700 text-xs">Til</Detail>
+                                                            <VStack gap="space-4">
+                                                                <Detail className="text-xs text-ax-neutral-700">
+                                                                    Til
+                                                                </Detail>
                                                                 <BodyShort size="small">
                                                                     {formatDate(forhold.ansettelsesperiode.sluttdato)}
                                                                 </BodyShort>
@@ -129,14 +131,14 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                         key={index}
                                                         className="border-l-4 border-ax-border-success pl-3"
                                                     >
-                                                        <Detail className="text-ax-neutral-700 mb-2 text-xs">
+                                                        <Detail className="mb-2 text-xs text-ax-neutral-700">
                                                             Ansettelsesdetaljer ({detalj.type})
                                                         </Detail>
-                                                        <VStack gap="2">
-                                                            <HStack gap="4" wrap>
+                                                        <VStack gap="space-8">
+                                                            <HStack gap="space-16" wrap>
                                                                 {detalj.yrke && (
-                                                                    <VStack gap="1">
-                                                                        <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <VStack gap="space-4">
+                                                                        <Detail className="text-xs text-ax-neutral-700">
                                                                             Yrke
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -145,8 +147,8 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                     </VStack>
                                                                 )}
                                                                 {detalj.ansettelsesform && (
-                                                                    <VStack gap="1">
-                                                                        <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <VStack gap="space-4">
+                                                                        <Detail className="text-xs text-ax-neutral-700">
                                                                             Ansettelsesform
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -155,8 +157,8 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                     </VStack>
                                                                 )}
                                                                 {detalj.avtaltStillingsprosent && (
-                                                                    <VStack gap="1">
-                                                                        <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <VStack gap="space-4">
+                                                                        <Detail className="text-xs text-ax-neutral-700">
                                                                             Stillingsprosent
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -165,10 +167,10 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                     </VStack>
                                                                 )}
                                                             </HStack>
-                                                            <HStack gap="4" wrap>
+                                                            <HStack gap="space-16" wrap>
                                                                 {detalj.antallTimerPrUke && (
-                                                                    <VStack gap="1">
-                                                                        <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <VStack gap="space-4">
+                                                                        <Detail className="text-xs text-ax-neutral-700">
                                                                             Timer pr. uke
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -177,8 +179,8 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                     </VStack>
                                                                 )}
                                                                 {detalj.arbeidstidsordning && (
-                                                                    <VStack gap="1">
-                                                                        <Detail className="text-ax-neutral-700 text-xs">
+                                                                    <VStack gap="space-4">
+                                                                        <Detail className="text-xs text-ax-neutral-700">
                                                                             Arbeidstidsordning
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -189,10 +191,10 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                             </HStack>
                                                             {/* Spesielle felt for maritime arbeidsforhold */}
                                                             {detalj.type === 'Maritim' && (
-                                                                <HStack gap="4" wrap>
+                                                                <HStack gap="space-16" wrap>
                                                                     {detalj.fartsomraade && (
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                        <VStack gap="space-4">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Fartsområde
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -201,8 +203,8 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                         </VStack>
                                                                     )}
                                                                     {detalj.fartoeystype && (
-                                                                        <VStack gap="1">
-                                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                                        <VStack gap="space-4">
+                                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                                 Fartøystype
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -218,26 +220,28 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
 
                                                 {/* Metadata */}
                                                 <div className="border-l-4 border-ax-border-neutral-subtle pl-3">
-                                                    <Detail className="text-ax-neutral-700 mb-2 text-xs">Metadata</Detail>
-                                                    <HStack gap="4" wrap>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                    <Detail className="mb-2 text-xs text-ax-neutral-700">
+                                                        Metadata
+                                                    </Detail>
+                                                    <HStack gap="space-16" wrap>
+                                                        <VStack gap="space-4">
+                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                 NAV Arbeidsforhold ID
                                                             </Detail>
                                                             <BodyShort size="small">
                                                                 {forhold.navArbeidsforholdId}
                                                             </BodyShort>
                                                         </VStack>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                        <VStack gap="space-4">
+                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                 Rapporteringsordning
                                                             </Detail>
                                                             <BodyShort size="small">
                                                                 {forhold.rapporteringsordning.beskrivelse}
                                                             </BodyShort>
                                                         </VStack>
-                                                        <VStack gap="1">
-                                                            <Detail className="text-ax-neutral-700 text-xs">
+                                                        <VStack gap="space-4">
+                                                            <Detail className="text-xs text-ax-neutral-700">
                                                                 Sist bekreftet
                                                             </Detail>
                                                             <BodyShort size="small">

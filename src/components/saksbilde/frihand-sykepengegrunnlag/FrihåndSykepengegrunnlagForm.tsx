@@ -97,13 +97,13 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
 
     return (
         <FormProvider {...form}>
-            <VStack gap="6" className="p-8">
+            <VStack gap="space-24" className="p-8">
                 <Heading size="small" level="2" spacing>
                     Opprett frihånd sykepengegrunnlag
                 </Heading>
 
-                <VStack as="form" role="form" gap="6" onSubmit={form.handleSubmit(onSubmit)}>
-                    <VStack gap="4">
+                <VStack as="form" role="form" gap="space-24" onSubmit={form.handleSubmit(onSubmit)}>
+                    <VStack gap="space-16">
                         <Combobox
                             label="Beregningskoder"
                             options={sykepengegrunnlagKoder}
@@ -112,7 +112,7 @@ export function FrihåndSykepengegrunnlagForm(): ReactElement {
                             }}
                         />
                         {valgteÅrsaker.length > 0 && (
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <Chips>
                                     {valgteÅrsaker.map((årsak) => (
                                         <Chips.Removable key={årsak.kode} onDelete={() => handleFjernÅrsak(årsak.kode)}>

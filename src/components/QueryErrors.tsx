@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactElement, useEffect, useState } from 'react'
-import { Alert, BodyShort, Button, VStack, ReadMore } from '@navikt/ds-react'
+import { Alert, BodyShort, Button, ReadMore, VStack } from '@navikt/ds-react'
 import { Query, useQueryClient } from '@tanstack/react-query'
 
 export function QueryErrors(): ReactElement | null {
@@ -38,14 +38,14 @@ export function QueryErrors(): ReactElement | null {
 
     return (
         <div className="m-4">
-            <VStack gap="2">
+            <VStack gap="space-8">
                 {failedQueries.map((query, index) => {
                     const error = query.state.error as Error
                     const queryKey = query.queryKey
 
                     return (
                         <Alert key={`${JSON.stringify(queryKey)}-${index}`} variant="error">
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <BodyShort>
                                     <strong>Query feilet:</strong> {JSON.stringify(queryKey)}
                                 </BodyShort>
@@ -59,7 +59,7 @@ export function QueryErrors(): ReactElement | null {
 
                 {failedQueries.length > 1 && (
                     <Alert variant="warning">
-                        <VStack gap="2">
+                        <VStack gap="space-8">
                             <BodyShort>
                                 <strong>{failedQueries.length} queries feilet</strong>
                             </BodyShort>

@@ -39,11 +39,11 @@ export function VisAinntekt({ yrkesaktivitetId, setValue }: VisAinntektProps): R
 function VisAinntektSkeleton(): ReactElement {
     return (
         <VStack>
-            <HStack gap="2" align="center">
+            <HStack gap="space-8" align="center">
                 <BodyShort weight="semibold">Rapportert siste 3 måneder</BodyShort>
                 {InntektTag['AINNTEKT']}
             </HStack>
-            <Bleed marginInline="2" asChild>
+            <Bleed marginInline="space-8" asChild>
                 <Box>
                     <Table size="small">
                         <TableHeader>
@@ -79,5 +79,5 @@ function VisAinntektSkeleton(): ReactElement {
                 </Box>
             </Bleed>
         </VStack>
-    );
+    )
 }

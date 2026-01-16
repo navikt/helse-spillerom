@@ -44,7 +44,7 @@ export function Tidslinje(): ReactElement {
             <Timeline>
                 {fakeMaksdato && (
                     <TimelinePin date={dayjs(fakeMaksdato)}>
-                        <HGrid columns="auto auto" gap="1 4">
+                        <HGrid columns="auto auto" gap="space-4 space-16">
                             <BodyShort size="small">Fake maksdato:</BodyShort>
                             <BodyShort size="small">{getFormattedDateString(fakeMaksdato)}</BodyShort>
                         </HGrid>
@@ -199,11 +199,11 @@ function BehandlingPopover({ behandlingId }: { behandlingId: string }): ReactEle
 
 function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ heading: string }>): ReactElement {
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <Heading size="xsmall" level="3">
                 {heading}
             </Heading>
-            <HGrid columns={2} gap="1 6">
+            <HGrid columns={2} gap="space-4 space-24">
                 {children}
             </HGrid>
         </VStack>
@@ -212,7 +212,7 @@ function PopoverContentWrapper({ heading, children }: PropsWithChildren<{ headin
 
 function TimelineSkeleton(): ReactElement {
     return (
-        <VStack className="mt-7 border-b border-ax-border-neutral-subtle p-8 pb-4" gap="3">
+        <VStack className="mt-7 border-b border-ax-border-neutral-subtle p-8 pb-4" gap="space-12">
             <TimelineRowSkeleton />
             <TimelineRowSkeleton />
             <Skeleton variant="rectangle" height={14} className="mt-[15px] ml-[265px] grow" />
@@ -223,7 +223,7 @@ function TimelineSkeleton(): ReactElement {
 
 function TimelineRowSkeleton(): ReactElement {
     return (
-        <HStack gap="4" align="center">
+        <HStack gap="space-16" align="center">
             <Skeleton variant="text" width={248} height={42} />
             <Skeleton variant="text" height={42} className="grow" />
         </HStack>
@@ -236,7 +236,7 @@ function TimelineError({ refetch }: { refetch: () => void }): ReactElement {
             className="h-60 w-full border-b border-ax-border-neutral-subtle"
             align="center"
             justify="center"
-            gap="4"
+            gap="space-16"
         >
             <BodyShort>Kunne ikke hente data for å vise tidslinjen akkurat nå.</BodyShort>
             <Button type="button" size="xsmall" variant="secondary" onClick={refetch}>
@@ -252,7 +252,7 @@ function TimelineEmpty(): ReactElement {
             className="h-60 w-full border-b border-ax-border-neutral-subtle"
             align="center"
             justify="center"
-            gap="4"
+            gap="space-16"
         >
             <BodyShort>Fant ingen søknader/behandlinger.</BodyShort>
         </HStack>

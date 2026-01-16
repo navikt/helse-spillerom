@@ -14,7 +14,7 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
 
     if (!inntektRequestData) {
         return (
-            <VStack gap="2" className="w-fit">
+            <VStack gap="space-8" className="w-fit">
                 <BodyShort weight="semibold">Dagbeløp</BodyShort>
                 <BodyShort className="text-right">-</BodyShort>
             </VStack>
@@ -26,9 +26,9 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
     return (
         <>
             {årsinntekt && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                    <HStack gap="2">
+                    <HStack gap="space-8">
                         <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                         <Tag data-color="neutral" variant="outline" size="xsmall">
                             manuelt beregnet
@@ -37,9 +37,9 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
                 </VStack>
             )}
             {dagbeløp && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Dagbeløp</BodyShort>
-                    <HStack gap="2">
+                    <HStack gap="space-8">
                         <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(dagbeløp)}</BodyShort>
                         <Tag data-color="neutral" variant="outline" size="xsmall">
                             manuelt beregnet
@@ -48,13 +48,13 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
                 </VStack>
             )}
             {begrunnelse && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
                     <BodyShort>{begrunnelse}</BodyShort>
                 </VStack>
             )}
         </>
-    );
+    )
 }
 
 function normalize(data?: InntektRequest['data']) {

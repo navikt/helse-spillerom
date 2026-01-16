@@ -191,7 +191,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                         value={yrkesaktivitet.id}
                     >
                         {yrkesaktivitet.dagoversikt && yrkesaktivitet.dagoversikt.length > 0 && (
-                            <VStack gap="6" align="start">
+                            <VStack gap="space-24" align="start">
                                 {/* Periode-form for arbeidsgiverperiode/ventetid */}
                                 <PeriodeForm yrkesaktivitet={yrkesaktivitet} kanSaksbehandles={kanSaksbehandles} />
 
@@ -296,7 +296,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                     )}
                                                     <TableDataCell>{getFormattedDateString(dag.dato)}</TableDataCell>
                                                     <TableDataCell>
-                                                        <HStack wrap={false} gap="2" align="center">
+                                                        <HStack wrap={false} gap="space-8" align="center">
                                                             {getDagtypeIcon(dag.dagtype, erHelgedag)}
                                                             <span className="whitespace-nowrap">
                                                                 {getDagtypeText(

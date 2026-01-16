@@ -112,7 +112,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
         <SaksbildePanel value={value} className="mb-8 p-0">
             <HStack wrap={false}>
                 {/*tabell*/}
-                <VStack gap="4" className="min-w-[500px] shrink-0 pt-8 pb-6">
+                <VStack gap="space-16" className="min-w-[500px] shrink-0 pt-8 pb-6">
                     <Table className="[&_td]:border-0 [&_th]:border-0">
                         <TableHeader>
                             <TableRow>
@@ -172,7 +172,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                                     }}
                                 >
                                     <TableDataCell className="pl-8 whitespace-nowrap">
-                                        <HStack gap="2" wrap={false}>
+                                        <HStack gap="space-8" wrap={false}>
                                             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
                                             <BodyShort>Næringsdel</BodyShort>
                                         </HStack>
@@ -208,9 +208,14 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                             )}
                         </tfoot>
                     </Table>
-                    <VStack gap="6" className="mt-6 pr-16 pl-8">
-                        <Bleed marginInline="4 12" asChild reflectivePadding>
-                            <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                    <VStack gap="space-24" className="mt-6 pr-16 pl-8">
+                        <Bleed marginInline="space-16 space-48" asChild reflectivePadding>
+                            <Box
+                                background="neutral-soft"
+                                className="py-4"
+                                borderRadius="8"
+                                marginBlock="space-16 space-0"
+                            >
                                 <HStack justify="space-between">
                                     <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                                     <BodyShort>{formaterBeløpKroner(sykepengegrunnlag?.sykepengegrunnlag)}</BodyShort>
@@ -324,7 +329,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 )}
             </HStack>
         </SaksbildePanel>
-    );
+    )
 }
 
 function resolveRefusjonSpørsmål(yrkesaktivitet: Yrkesaktivitet): string {
@@ -339,7 +344,7 @@ function resolveRefusjonSpørsmål(yrkesaktivitet: Yrkesaktivitet): string {
 function Høyrepanel({ children }: { children: React.ReactNode }): ReactElement {
     return (
         <VStack
-            gap="6"
+            gap="space-24"
             className="w-[686px] min-w-[507px] border-l-3 border-l-ax-bg-neutral-moderate bg-ax-bg-accent-soft px-8 pt-4 pb-8"
         >
             {children}

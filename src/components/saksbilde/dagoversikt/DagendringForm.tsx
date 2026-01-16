@@ -100,7 +100,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, lukkForm }
                         ? `Fyll inn hva de ${valgteDataer.size} valgte dagene skal endres til`
                         : 'Velg én eller flere dager du vil endre i tabellen ovenfor'}
                 </Heading>
-                <HStack gap="4">
+                <HStack gap="space-16">
                     <Controller
                         control={form.control}
                         name="dagtype"
@@ -231,7 +231,7 @@ export function DagendringForm({ aktivtInntektsForhold, valgteDataer, lukkForm }
                         />
                     )}
                 />
-                <HStack gap="2" className="mt-4">
+                <HStack gap="space-8" className="mt-4">
                     <Button
                         size="small"
                         type="submit"

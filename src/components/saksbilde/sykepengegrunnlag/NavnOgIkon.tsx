@@ -51,7 +51,7 @@ export function NavnOgIkon({
     medOrgnummer = false,
 }: NavnOgIkonProps): ReactElement {
     return (
-        <HStack gap="2" className={className} wrap={false}>
+        <HStack gap="space-8" className={className} wrap={false}>
             <BriefcaseIcon aria-hidden fontSize="1.5rem" />
             <BodyShort as="span" truncate>
                 {getKategoriseringTekst(kategorisering, orgnavn, medOrgnummer)}

@@ -9,17 +9,12 @@ interface FetchErrorProps {
 export function FetchError({ refetch, message }: FetchErrorProps): ReactElement {
     return (
         <Alert variant="error">
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <BodyShort>{message}</BodyShort>
-                <Button
-                    data-color="neutral"
-                    type="button"
-                    size="xsmall"
-                    variant="secondary"
-                    onClick={refetch}>
+                <Button data-color="neutral" type="button" size="xsmall" variant="secondary" onClick={refetch}>
                     Prøv igjen
                 </Button>
             </HStack>
         </Alert>
-    );
+    )
 }

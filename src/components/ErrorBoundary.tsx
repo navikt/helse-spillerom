@@ -1,9 +1,8 @@
 'use client'
 
-import { ReactElement, ReactNode, Component, ErrorInfo } from 'react'
+import { Component, ErrorInfo, ReactElement, ReactNode, useState } from 'react'
 import { Alert, BodyShort, Button, HStack, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
-import { useState } from 'react'
 
 interface ErrorBoundaryState {
     hasError: boolean
@@ -79,10 +78,10 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
 
     return (
         <Alert variant="error" className="m-4">
-            <VStack gap="4">
+            <VStack gap="space-16">
                 <BodyShort>{getErrorMessage()}</BodyShort>
 
-                <HStack gap="2">
+                <HStack gap="space-8">
                     <Button size="small" variant="secondary" onClick={onReset}>
                         Prøv igjen
                     </Button>
@@ -99,7 +98,7 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
                 {showDetails && (
                     <div className="mt-4">
                         <BodyShort className="mb-2 font-semibold">Feildetaljer:</BodyShort>
-                        <pre className="bg-ax-neutral-100 max-h-96 overflow-auto rounded border p-4 text-xs">
+                        <pre className="max-h-96 overflow-auto rounded border bg-ax-neutral-100 p-4 text-xs">
                             {JSON.stringify(getErrorDetails(), null, 2)}
                         </pre>
                     </div>

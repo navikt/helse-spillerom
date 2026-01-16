@@ -99,15 +99,15 @@ export function Venstremeny(): ReactElement {
 
     return (
         <Sidemeny side="left">
-            <VStack gap="4" className="pb-24">
-                <HStack gap="2" wrap role="region" aria-label="Saksinformasjon">
+            <VStack gap="space-16" className="pb-24">
+                <HStack gap="space-8" wrap role="region" aria-label="Saksinformasjon">
                     <KategoriTag />
                     <StatusTag periode={aktivBehandling} size="small" />
                 </HStack>
 
                 {aktivBehandling && (
                     <>
-                        <HStack gap="2" align="center">
+                        <HStack gap="space-8" align="center">
                             <Tooltip content="Sykmeldingsperiode">
                                 <CalendarIcon aria-hidden fontSize="1.25rem" />
                             </Tooltip>
@@ -150,8 +150,8 @@ export function Venstremeny(): ReactElement {
                             </>
                         ) : (
                             aktivBehandling.individuellBegrunnelse && (
-                                <Bleed asChild marginInline="4 4" reflectivePadding>
-                                    <VStack as={BoxNew} gap="4" background="neutral-soft" className="py-4">
+                                <Bleed asChild marginInline="space-16 space-16" reflectivePadding>
+                                    <VStack as={Box} gap="space-16" background="neutral-soft" className="py-4">
                                         <BodyShort size="small" weight="semibold">
                                             Individuell begrunnelse
                                         </BodyShort>

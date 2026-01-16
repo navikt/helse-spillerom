@@ -14,7 +14,7 @@ export function NavnOgAlder({ navn, alder }: NavnOgAlderProps): ReactElement {
     const { pseudoId } = usePersonRouteParams()
 
     return (
-        <HStack gap="1" align="center">
+        <HStack gap="space-4" align="center">
             <BodyShort
                 data-sensitive
                 weight="semibold"

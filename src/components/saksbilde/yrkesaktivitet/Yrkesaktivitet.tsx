@@ -122,7 +122,7 @@ export function Yrkesaktivitet(): ReactElement {
 
     return (
         <>
-            <VStack gap="6">
+            <VStack gap="space-24">
                 {showKombinasjonsAdvarsel && (
                     <Alert variant="warning">
                         <BodyShort>
@@ -182,7 +182,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                     )}
                                                 </>
                                             ) : (
-                                                <VStack gap="4" className="ignore-axe">
+                                                <VStack gap="space-16" className="ignore-axe">
                                                     <YrkesaktivitetForm
                                                         key={`view-${yrkesaktivitet.id}`} // For at formen skal re-initialiseres ved bytte av yrkesaktivitet
                                                         closeForm={() => {}}
@@ -192,7 +192,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                     />
 
                                                     {kanSaksbehandles && (
-                                                        <HStack gap="2">
+                                                        <HStack gap="space-8">
                                                             <Button
                                                                 variant="tertiary"
                                                                 size="small"
@@ -273,7 +273,7 @@ export function Yrkesaktivitet(): ReactElement {
                                 background="accent-soft"
                                 borderColor="neutral-subtle"
                                 borderWidth="1"
-                                borderRadius="medium"
+                                borderRadius="8"
                                 className="rounded-md p-8"
                             >
                                 <YrkesaktivitetForm
@@ -307,7 +307,8 @@ export function Yrkesaktivitet(): ReactElement {
                             type="button"
                             variant="primary"
                             onClick={confirmSlett}
-                            loading={slettMutation.isPending}>
+                            loading={slettMutation.isPending}
+                        >
                             Slett
                         </Button>
                     </Dialog.Footer>
@@ -321,7 +322,7 @@ export function Yrkesaktivitet(): ReactElement {
                 onBekreft={handleBekreft}
             />
         </>
-    );
+    )
 }
 
 function getKategoriDisplayText(kategorisering: YrkesaktivitetKategorisering): string {

@@ -32,7 +32,7 @@ export function ArbeidstakerInntektFormFields({ yrkesaktivitetId }: { yrkesaktiv
 
     return (
         <>
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <PengerField
                     className="w-[120px]"
                     name="data.årsinntekt"
@@ -168,11 +168,11 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
                     size="small"
                     error={fieldState.error?.message != undefined}
                 >
-                    <VStack gap="2">
+                    <VStack gap="space-8">
                         {inntektsmeldinger
                             .sort((a, b) => dayjs(b.mottattDato).diff(dayjs(a.mottattDato)))
                             .map((inntektsmelding, i) => (
-                                <HStack gap="2" key={inntektsmelding.inntektsmeldingId}>
+                                <HStack gap="space-8" key={inntektsmelding.inntektsmeldingId}>
                                     <Radio
                                         key={inntektsmelding.inntektsmeldingId}
                                         id={i === 0 ? 'data-inntektsmeldingId' : undefined}
@@ -202,12 +202,12 @@ function VelgInntektsmelding({ yrkesaktivitetId }: { yrkesaktivitetId: string })
 
 function VelgInntektsmeldingSkeleton(): ReactElement {
     return (
-        <VStack gap="4" className="my-1">
-            <HStack wrap={false} gap="3">
+        <VStack gap="space-16" className="my-1">
+            <HStack wrap={false} gap="space-12">
                 <Skeleton variant="circle" width={24} />
                 <Skeleton width={280} />
             </HStack>
-            <HStack wrap={false} gap="3">
+            <HStack wrap={false} gap="space-12">
                 <Skeleton variant="circle" width={24} />
                 <Skeleton width={280} />
             </HStack>

@@ -34,7 +34,7 @@ export function BrukerVelgerMeny(): ReactElement {
                             onSelect={() => handleBrukerValg(bruker.navIdent)}
                             className="mb-1 flex flex-col items-start gap-0"
                         >
-                            <HStack justify="space-between" gap="2" align="center" className="w-full">
+                            <HStack justify="space-between" gap="space-8" align="center" className="w-full">
                                 <BodyShort size="small" as="span" className="font-semibold">
                                     {bruker.navn}
                                 </BodyShort>

@@ -47,14 +47,14 @@ export function VilkårsvurderingSkeleton(): ReactElement {
                 </AccordionContent>
             </AccordionItem>
         </Accordion>
-    );
+    )
 }
 
 function TableRowSkeleton(): ReactElement {
     return (
         <TableExpandableRow content={null} togglePlacement="right">
             <TableDataCell align="center" className="pl-[13px]">
-                <HStack wrap={false} gap="4">
+                <HStack wrap={false} gap="space-16">
                     <Skeleton variant="circle" width={24} />
                     <Skeleton width={360} />
                 </HStack>

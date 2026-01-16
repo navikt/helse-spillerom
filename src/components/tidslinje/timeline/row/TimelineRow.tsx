@@ -19,7 +19,7 @@ export const TimelineRow: ComponentWithType<TimelineRowProps> = (): ReactElement
     const { periods, generasjonPeriodsByLevel, rowIndex } = useRowContext()
 
     return (
-        <VStack className="my-4 bg-ax-bg-accent-soft" gap="2" style={{ width }}>
+        <VStack className="my-4 bg-ax-bg-accent-soft" gap="space-8" style={{ width }}>
             <HStack className="relative h-[24px]">
                 {periods.map((period) => (
                     <PeriodContext.Provider key={period.id} value={{ periodId: period.id }}>

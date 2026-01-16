@@ -94,7 +94,7 @@ export function TilkommenInntektForm(): ReactElement {
 
     return (
         <FormProvider {...form}>
-            <VStack gap="6" className="p-8">
+            <VStack gap="space-24" className="p-8">
                 <HStack justify="space-between" align="center">
                     <h2 className="text-xl font-semibold">Tilkommen inntekt</h2>
                     <Button variant="tertiary" size="small" icon={<XMarkIcon aria-hidden />} onClick={handleAvbryt}>
@@ -102,13 +102,13 @@ export function TilkommenInntektForm(): ReactElement {
                     </Button>
                 </HStack>
 
-                <VStack as="form" role="form" gap="6" onSubmit={form.handleSubmit(onSubmit)}>
-                    <HStack gap="4" align="start">
+                <VStack as="form" role="form" gap="space-24" onSubmit={form.handleSubmit(onSubmit)}>
+                    <HStack gap="space-16" align="start">
                         <Controller
                             control={form.control}
                             name="ident"
                             render={({ field, fieldState }) => (
-                                <VStack gap="2">
+                                <VStack gap="space-8">
                                     <TextField
                                         {...field}
                                         id="ident"
@@ -150,7 +150,7 @@ export function TilkommenInntektForm(): ReactElement {
                         />
                     </HStack>
 
-                    <HStack gap="4">
+                    <HStack gap="space-16">
                         <DateField
                             name="fom"
                             label="Periode f.o.m"
@@ -165,7 +165,7 @@ export function TilkommenInntektForm(): ReactElement {
                         />
                     </HStack>
 
-                    <HStack gap="4">
+                    <HStack gap="space-16">
                         <PengerField
                             name="inntektForPerioden"
                             label="Inntekt for perioden"
@@ -236,7 +236,7 @@ export function TilkommenInntektForm(): ReactElement {
                         </ErrorSummary>
                     )}
 
-                    <HStack gap="2" align="center" className="h-8" wrap={false}>
+                    <HStack gap="space-8" align="center" className="h-8" wrap={false}>
                         <Button type="submit" size="small" loading={form.formState.isSubmitting || mutation.isPending}>
                             Lagre
                         </Button>

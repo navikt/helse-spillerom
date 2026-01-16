@@ -96,7 +96,7 @@ function VisPensjonsgivendeInntekt({ yrkesaktivitetId }: VisPensjonsgivendeInnte
 
     if (isLoading) {
         return (
-            <VStack gap="2" className="m-4 ml-6">
+            <VStack gap="space-8" className="m-4 ml-6">
                 <BodyShort>Laster pensjonsgivende inntekt...</BodyShort>
             </VStack>
         )
@@ -104,7 +104,7 @@ function VisPensjonsgivendeInntekt({ yrkesaktivitetId }: VisPensjonsgivendeInnte
 
     if (isError) {
         return (
-            <VStack gap="2" className="m-4 ml-6">
+            <VStack gap="space-8" className="m-4 ml-6">
                 <Alert variant="error" size="small">
                     Kunne ikke hente pensjonsgivende inntekt
                 </Alert>
@@ -114,7 +114,7 @@ function VisPensjonsgivendeInntekt({ yrkesaktivitetId }: VisPensjonsgivendeInnte
 
     if (!data) {
         return (
-            <VStack gap="2" className="m-4 ml-6">
+            <VStack gap="space-8" className="m-4 ml-6">
                 <BodyShort>Ingen data tilgjengelig</BodyShort>
             </VStack>
         )
@@ -122,7 +122,7 @@ function VisPensjonsgivendeInntekt({ yrkesaktivitetId }: VisPensjonsgivendeInnte
 
     if (!data.success) {
         return (
-            <VStack gap="2" className="m-4 ml-6">
+            <VStack gap="space-8" className="m-4 ml-6">
                 <Alert variant="warning" size="small">
                     {data.feilmelding}
                 </Alert>
@@ -131,7 +131,7 @@ function VisPensjonsgivendeInntekt({ yrkesaktivitetId }: VisPensjonsgivendeInnte
     }
 
     return (
-        <VStack gap="4" className="m-4 ml-6">
+        <VStack gap="space-16" className="m-4 ml-6">
             <PensjonsgivendeInntektView inntektData={data.data} />
         </VStack>
     )

@@ -33,7 +33,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
 
     return (
         <HStack wrap={false}>
-            <VStack gap="2" className="w-min">
+            <VStack gap="space-8" className="w-min">
                 <BodyShort className="invisible pl-2">Felles</BodyShort>
                 <Table size="small" className="border-t border-ax-border-neutral-subtle">
                     <TableHeader>
@@ -99,7 +99,11 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                 </Table>
             </VStack>
             {yrkesaktiviteter.map((yrkesaktivitet) => (
-                <VStack key={yrkesaktivitet.id} gap="2" className="w-min border-l border-ax-border-neutral-strong">
+                <VStack
+                    key={yrkesaktivitet.id}
+                    gap="space-8"
+                    className="w-min border-l border-ax-border-neutral-strong"
+                >
                     <NavnOgIkon
                         kategorisering={yrkesaktivitet.kategorisering}
                         orgnavn={yrkesaktivitet.orgnavn}
@@ -175,7 +179,12 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                                         )}
                                     >
                                         <TableDataCell>
-                                            <HStack wrap={false} gap="2" align="center" className="text-ax-medium">
+                                            <HStack
+                                                wrap={false}
+                                                gap="space-8"
+                                                align="center"
+                                                className="text-ax-medium"
+                                            >
                                                 {getDagtypeIcon(dag.dagtype, erHelgedag)}
                                                 <span className="whitespace-nowrap">
                                                     {getDagtypeText(

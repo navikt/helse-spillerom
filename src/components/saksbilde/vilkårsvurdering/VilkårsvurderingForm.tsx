@@ -287,7 +287,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                                     size="small"
                                     error={error?.message}
                                 >
-                                    <VStack gap="3">
+                                    <VStack gap="space-12">
                                         {spørsmål.alternativer?.map((alt) => {
                                             const isSelected = valgteVerdier.includes(alt.kode)
                                             return (
@@ -327,7 +327,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                                 size="small"
                                 error={error?.message}
                             >
-                                <VStack gap="3">
+                                <VStack gap="space-12">
                                     {spørsmål.alternativer?.map((alt) => {
                                         const isSelected = field.value === alt.kode
                                         return (
@@ -393,7 +393,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <VStack className="max-w-[800px] pb-4 pl-[46px]" gap="6">
+            <VStack className="max-w-[800px] pb-4 pl-[46px]" gap="space-24">
                 {vilkår.underspørsmål.map((spørsmål) => (
                     <Fragment key={spørsmål.kode}>{rendreUnderspørsmål(spørsmål)}</Fragment>
                 ))}
@@ -413,7 +413,7 @@ export function VilkårsvurderingForm({ vilkår, vurdering, onSuccess }: Vilkår
                     )}
                 />
 
-                <HStack gap="4">
+                <HStack gap="space-16">
                     <Button variant="primary" size="small" type="submit" loading={mutation.isPending}>
                         Lagre vurdering
                     </Button>

@@ -50,16 +50,16 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     const valgteRadioer = it.undersporsmal.filter((us) => us.svar?.[0]?.verdi === 'CHECKED')
                     return (
                         <div key={it.tag} className={wrapperClass}>
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
                                 {valgteRadioer.map((radio) => (
                                     <div key={radio.id} className="ml-4">
-                                        <VStack gap="2">
+                                        <VStack gap="space-8">
                                             {!(radio.svartype === 'CHECKBOX' || radio.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
+                                                <BodyShort size="small" className="font-semibold text-ax-neutral-900">
                                                     {radio.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -79,16 +79,16 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     const valgteCheckboxer = it.undersporsmal.filter((us) => us.svar?.[0]?.verdi === 'CHECKED')
                     return (
                         <div key={it.tag} className={wrapperClass}>
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
                                 {valgteCheckboxer.map((checkbox) => (
                                     <div key={checkbox.id} className="ml-4">
-                                        <VStack gap="2">
+                                        <VStack gap="space-8">
                                             {!(checkbox.svartype === 'CHECKBOX' || checkbox.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
+                                                <BodyShort size="small" className="font-semibold text-ax-neutral-900">
                                                     {checkbox.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -116,16 +116,16 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     )
                     return (
                         <div key={it.tag} className={wrapperClass}>
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
                                 {besvarteUndersporsmal.map((us, i) => (
                                     <div key={us.id || i} className="ml-4">
-                                        <VStack gap="2">
+                                        <VStack gap="space-8">
                                             {!(us.svartype === 'CHECKBOX' || us.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
+                                                <BodyShort size="small" className="font-semibold text-ax-neutral-900">
                                                     {us.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -144,7 +144,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                 const erCheckboxEllerRadio = it.svartype === 'CHECKBOX' || it.svartype === 'RADIO'
                 return (
                     <div key={it.tag} className={wrapperClass}>
-                        <VStack gap="2">
+                        <VStack gap="space-8">
                             {it.svar && it.svartype && (
                                 <>
                                     {!erCheckboxEllerRadio && (

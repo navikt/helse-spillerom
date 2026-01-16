@@ -15,11 +15,11 @@ export function AinntektInntektDataView({
 }): ReactElement {
     return (
         <VStack>
-            <HStack gap="2" align="center">
+            <HStack gap="space-8" align="center">
                 <BodyShort weight="semibold">Rapportert siste 3 måneder</BodyShort>
                 {InntektTag['AINNTEKT']}
             </HStack>
-            <Bleed marginInline="2" asChild>
+            <Bleed marginInline="space-8" asChild>
                 <Box>
                     <Table size="small">
                         <TableHeader>
@@ -55,7 +55,7 @@ export function AinntektInntektDataView({
                 </Box>
             </Bleed>
         </VStack>
-    );
+    )
 }
 
 function gjennomsnitt(inntektData: FrilanserAinntekt | ArbeidstakerAinntekt) {

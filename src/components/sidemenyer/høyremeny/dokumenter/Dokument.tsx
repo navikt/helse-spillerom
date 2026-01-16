@@ -75,7 +75,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         {dokument.dokumentType === 'søknad' ? (
                             <Box
                                 background="raised"
-                                borderRadius="large"
+                                borderRadius="8"
                                 borderWidth="1"
                                 borderColor="neutral-subtle"
                                 className="flex flex-col gap-4 p-4"
@@ -93,7 +93,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         ) : dokument.dokumentType === 'inntektsmelding' ? (
                             <Box
                                 background="raised"
-                                borderRadius="large"
+                                borderRadius="8"
                                 borderWidth="1"
                                 borderColor="neutral-subtle"
                                 className="flex flex-col gap-4 p-4"
@@ -101,7 +101,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 <InntektsmeldingInnhold inntektsmelding={dokument.innhold as Inntektsmelding} />
                             </Box>
                         ) : (
-                            <pre className="bg-ax-neutral-100 overflow-x-auto rounded p-2 text-xs">
+                            <pre className="overflow-x-auto rounded bg-ax-neutral-100 p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
                             </pre>
                         )}
@@ -109,7 +109,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                 )}
             </AnimatePresenceWrapper>
         </li>
-    );
+    )
 }
 
 const dokumentVisningstekst: Record<Dokumenttype, string> = {
@@ -138,7 +138,7 @@ export function DokumentSkeleton(): ReactElement {
 
 function DokumentContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="li" className="border-b border-ax-border-neutral-subtle py-2" gap="2">
+        <HStack as="li" className="border-b border-ax-border-neutral-subtle py-2" gap="space-8">
             {children}
         </HStack>
     )

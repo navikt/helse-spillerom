@@ -30,9 +30,9 @@ export function SkjæringstidspunktForm({ dato, behandlingId, lukkForm }: Skjær
 
     return (
         <FormProvider {...form}>
-            <HStack as="form" gap="2" role="form" onSubmit={form.handleSubmit(onSubmit)}>
+            <HStack as="form" gap="space-8" role="form" onSubmit={form.handleSubmit(onSubmit)}>
                 <DateField name="skjæringstidspunkt" label="Skjæringstidspunkt" hideLabel showErrorMessage />
-                <HStack gap="2" align="center" className="h-8" wrap={false}>
+                <HStack gap="space-8" align="center" className="h-8" wrap={false}>
                     <Button type="submit" size="small" variant="secondary" loading={form.formState.isSubmitting}>
                         Lagre
                     </Button>

@@ -92,13 +92,17 @@ export function Høyremeny(): ReactElement {
                                 className="overflow-hidden"
                             >
                                 <Sidemeny side="right" className="h-full w-64 min-w-64">
-                                    <VStack gap="4">
+                                    <VStack gap="space-16">
                                         <HStack justify="space-between">
-                                            <HStack gap="2" align="center">
+                                            <HStack gap="space-8" align="center">
                                                 <span className="px-0.5">
                                                     {DokumentTag[isInntektsmelding ? 'inntektsmelding' : 'søknad']}
                                                 </span>
-                                                <Heading level="1" size="xsmall" className="text-ax-neutral-700 font-medium">
+                                                <Heading
+                                                    level="1"
+                                                    size="xsmall"
+                                                    className="font-medium text-ax-neutral-700"
+                                                >
                                                     {getFormattedDatetimeString(getMottattDato(dokument))}
                                                 </Heading>
                                             </HStack>
@@ -109,14 +113,15 @@ export function Høyremeny(): ReactElement {
                                                 type="button"
                                                 icon={<XMarkIcon aria-hidden />}
                                                 onClick={() => updateDokumenter(dokument)}
-                                                aria-label="Lukk høyremeny" />
+                                                aria-label="Lukk høyremeny"
+                                            />
                                         </HStack>
                                         {isInntektsmelding && <InntektsmeldingInnhold inntektsmelding={dokument} />}
                                         {!isInntektsmelding && <SøknadsInnhold søknad={dokument} />}
                                     </VStack>
                                 </Sidemeny>
                             </motion.div>
-                        );
+                        )
                     })}
             </AnimatePresenceWrapper>
             <AnimatePresenceWrapper initial={false}>
@@ -134,9 +139,9 @@ export function Høyremeny(): ReactElement {
                         className="overflow-hidden"
                     >
                         <Sidemeny side="right" className="h-full">
-                            <VStack gap="4">
+                            <VStack gap="space-16">
                                 <HStack justify="space-between">
-                                    <Heading level="1" size="xsmall" className="text-ax-neutral-700 font-medium">
+                                    <Heading level="1" size="xsmall" className="font-medium text-ax-neutral-700">
                                         {filter}
                                     </Heading>
                                     <Button
@@ -146,7 +151,8 @@ export function Høyremeny(): ReactElement {
                                         type="button"
                                         icon={<XMarkIcon aria-hidden />}
                                         onClick={() => setShowSidemeny(false)}
-                                        aria-label="Lukk høyremeny" />
+                                        aria-label="Lukk høyremeny"
+                                    />
                                 </HStack>
                                 <div role="region" aria-label={`${filter.toLowerCase()} innhold`}>
                                     {høyremenyElementer[filter]}
@@ -158,7 +164,7 @@ export function Høyremeny(): ReactElement {
             </AnimatePresenceWrapper>
             <VStack
                 className="border-l border-ax-border-neutral-subtle px-3 py-6"
-                gap="6"
+                gap="space-24"
                 role="toolbar"
                 aria-label="Høyremeny navigasjon"
             >
@@ -180,14 +186,14 @@ export function Høyremeny(): ReactElement {
                 )}
             </VStack>
         </HStack>
-    );
+    )
 }
 
 const høyremenyElementer: Record<HøyremenyFilter, ReactElement> = {
     Dokumenter: (
         <>
             <Dokumenter />
-            <VStack gap="2" className="mt-4">
+            <VStack gap="space-8" className="mt-4">
                 <Ainntekt828Knapp />
                 <Ainntekt830Knapp />
                 <ArbeidsforholdKnapp />

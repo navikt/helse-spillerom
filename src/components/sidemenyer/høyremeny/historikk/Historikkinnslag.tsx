@@ -11,7 +11,7 @@ interface HistorikkinnslagProps {
 export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): ReactElement {
     return (
         <HistorikkinnslagContainer>
-            <VStack gap="2">
+            <VStack gap="space-8">
                 <VStack>
                     <BodyShort className="font-ax-bold">
                         {historikkinnslagVisningstekst[historikkinnslag.endringType]}
@@ -22,7 +22,7 @@ export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): R
                     </BodyShort>
                 </VStack>
                 {historikkinnslag.endringKommentar && (
-                    <BodyShort className="text-ax-neutral-800 bg-ax-neutral-100 border-l-ax-accent-600 rounded border-l-4 p-3">
+                    <BodyShort className="rounded border-l-4 border-l-ax-accent-600 bg-ax-neutral-100 p-3 text-ax-neutral-800">
                         {historikkinnslag.endringKommentar}
                     </BodyShort>
                 )}
@@ -57,7 +57,7 @@ export function HistorikkinnslagSkeleton(): ReactElement {
 
 function HistorikkinnslagContainer({ children }: PropsWithChildren): ReactElement {
     return (
-        <HStack as="li" className="border-b-1 border-ax-border-neutral-subtle py-2" gap="2">
+        <HStack as="li" className="border-b-1 border-ax-border-neutral-subtle py-2" gap="space-8">
             {children}
         </HStack>
     )

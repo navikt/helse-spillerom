@@ -229,7 +229,7 @@ export default function YrkesaktivitetForm({
                         size="small"
                         disabled={disabled}
                     >
-                        <VStack gap="3">
+                        <VStack gap="space-12">
                             {spørsmål.alternativer.map((alt) => {
                                 const isSelected = ((selectedValues[spørsmål.kode] as string[]) || []).includes(
                                     alt.kode,
@@ -260,7 +260,7 @@ export default function YrkesaktivitetForm({
                         size="small"
                         disabled={disabled}
                     >
-                        <VStack gap="3">
+                        <VStack gap="space-12">
                             {spørsmål.alternativer.map((alt) => {
                                 const isSelected = selectedValues[spørsmål.kode] === alt.kode
                                 return (
@@ -314,7 +314,7 @@ export default function YrkesaktivitetForm({
     })
 
     return (
-        <VStack gap="8">
+        <VStack gap="space-32">
             {title && <Heading size="small">{title}</Heading>}
 
             <Select
@@ -343,7 +343,7 @@ export default function YrkesaktivitetForm({
                 </ErrorSummary>
             )}
             {!disabled && kansaksbehandles && (
-                <HStack gap="4">
+                <HStack gap="space-16">
                     <Button
                         variant="primary"
                         size="small"

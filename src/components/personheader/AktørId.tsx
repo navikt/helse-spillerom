@@ -15,7 +15,7 @@ export function AktørId({ aktørId }: AktorIdProps): ReactElement {
     const keys = shortcut.modifier ? [modifierLabels[shortcut.modifier], keyLabel] : [keyLabel]
 
     return (
-        <HStack gap="1" align="center">
+        <HStack gap="space-4" align="center">
             <BodyShort data-sensitive>Aktør-ID: {aktørId}</BodyShort>
             <Tooltip content="Kopier aktør-ID" keys={keys}>
                 <CopyButton copyText={aktørId} size="xsmall" ref={ref} />

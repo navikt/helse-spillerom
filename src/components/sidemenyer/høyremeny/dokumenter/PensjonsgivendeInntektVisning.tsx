@@ -1,5 +1,5 @@
-import { ReactElement, useState, Fragment } from 'react'
-import { Table, BodyShort, Detail, VStack, Button } from '@navikt/ds-react'
+import { Fragment, ReactElement, useState } from 'react'
+import { BodyShort, Button, Detail, Table, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 
 import { PensjonsgivendeInntekt } from '@schemas/pensjonsgivende'
@@ -158,14 +158,14 @@ export function PensjonsgivendeInntektVisning({
 
     if (tableRader.length === 0) {
         return (
-            <VStack gap="2" className="mt-2">
+            <VStack gap="space-8" className="mt-2">
                 <Detail className="text-ax-neutral-700">Ingen pensjonsgivende inntekt funnet</Detail>
             </VStack>
         )
     }
 
     return (
-        <VStack gap="2" className="mt-2">
+        <VStack gap="space-8" className="mt-2">
             <Detail className="text-ax-neutral-700">Pensjonsgivende inntekt for {sortedYears.length} år</Detail>
 
             <Table size="small" className="w-full table-fixed">

@@ -48,7 +48,7 @@ export function SlettTilkommenDialog({ open, setOpen, tilkommenInntekt }: SlettT
                             as="form"
                             role="form"
                             id="slett-tilkommen-form"
-                            gap="4"
+                            gap="space-16"
                             onSubmit={form.handleSubmit(onSubmit)}
                         >
                             <BodyShort>Vil du fjerne perioden {periodeTekst}?</BodyShort>

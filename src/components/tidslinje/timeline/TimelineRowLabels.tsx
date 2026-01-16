@@ -25,7 +25,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                 return (
                     <HStack
                         key={label.rowIndex}
-                        gap="1"
+                        gap="space-4"
                         wrap={false}
                         align="start"
                         className="my-4"
@@ -39,7 +39,7 @@ export function TimelineRowLabels({ labels }: TimelineRowLabelsProps): ReactElem
                             className={cn('h-6', {
                                 'group cursor-pointer text-ax-text-accent-subtle': isExpandable,
                             })}
-                            gap="2"
+                            gap="space-8"
                             wrap={false}
                             align="start"
                         >

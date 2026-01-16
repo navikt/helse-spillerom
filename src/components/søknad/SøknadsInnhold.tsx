@@ -22,7 +22,7 @@ export function SøknadsInnhold({ søknad }: SøknadsinnholdProps): ReactElement
 
     return (
         <VStack
-            gap="4"
+            gap="space-16"
             role="region"
             aria-label={`Innhold for søknad opprettet: ${getFormattedDatetimeString(søknad.opprettet)}`}
         >
@@ -54,5 +54,5 @@ export function SøknadsInnhold({ søknad }: SøknadsinnholdProps): ReactElement
             </Details>
             {søknad.sporsmal && <Spørsmål spørsmål={søknad.sporsmal} />}
         </VStack>
-    );
+    )
 }

@@ -36,7 +36,7 @@ export function PensjonsgivendeInntektView({ inntektData }: PensjonsgivendeInnte
                                             <BodyShort className="text-xs font-semibold">
                                                 Snitt G-verdi {inntekt.år}: {formaterBeløpKroner(inntekt.snittG)}
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 Snitt G-verdi i året, justert for endringer i mai
                                             </BodyShort>
                                         </div>
@@ -44,16 +44,16 @@ export function PensjonsgivendeInntektView({ inntektData }: PensjonsgivendeInnte
                                             <BodyShort className="text-xs font-semibold">
                                                 Antall G kompensert: {inntekt.antallGKompensert.toFixed(2)}
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 • Inntekter opp til 6G: 100% kompensert
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 • Inntekter 6G-12G: 1/3 kompensert
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 • Inntekter over 12G: ikke kompensert
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 (Eksempel: 8G rå inntekt → 6G + (2G × 1/3) = 6,67G kompensert)
                                             </BodyShort>
                                         </div>
@@ -61,10 +61,10 @@ export function PensjonsgivendeInntektView({ inntektData }: PensjonsgivendeInnte
                                             <BodyShort className="text-xs font-semibold">
                                                 Justert årsgrunnlag:
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 Regnes ut som antall G kompensert × G-verdi på skjæringstidspunktet
                                             </BodyShort>
-                                            <BodyShort className="text-ax-neutral-700 text-xs">
+                                            <BodyShort className="text-xs text-ax-neutral-700">
                                                 {inntekt.antallGKompensert.toFixed(2)} ×{' '}
                                                 {formaterBeløpKroner(
                                                     inntektData.pensjonsgivendeInntekt.anvendtGrunnbeløp,
@@ -80,7 +80,7 @@ export function PensjonsgivendeInntektView({ inntektData }: PensjonsgivendeInnte
                 </Table.Body>
             </Table>
 
-            <HStack gap="4">
+            <HStack gap="space-16">
                 <Label className="text-sm">Snitt av G justerte inntekter:</Label>
                 <BodyShort className="text-sm">{formaterBeløpKroner(inntektData.omregnetÅrsinntekt)}</BodyShort>
             </HStack>

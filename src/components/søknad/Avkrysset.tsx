@@ -8,7 +8,7 @@ interface AvkryssetProps {
 
 const Avkrysset = ({ tekst }: AvkryssetProps) => {
     return (
-        <HStack gap="2" align="center">
+        <HStack gap="space-8" align="center">
             <CheckmarkIcon aria-hidden={true} className="h-4 min-h-4 w-4 min-w-4" title="Avkrysset" />
             <BodyShort size="small">{tekst}</BodyShort>
         </HStack>

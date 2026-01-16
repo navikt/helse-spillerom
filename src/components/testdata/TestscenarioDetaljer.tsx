@@ -2,7 +2,7 @@
 
 import { ReactElement } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Heading, VStack, BodyShort } from '@navikt/ds-react'
+import { BodyShort, Button, Heading, VStack } from '@navikt/ds-react'
 import { ChevronRightDoubleIcon } from '@navikt/aksel-icons'
 
 import { Testscenario } from '@/schemas/testscenario'
@@ -15,7 +15,7 @@ export function TestscenarioDetaljer({ scenario }: TestscenarioDetaljerProps): R
     const router = useRouter()
 
     return (
-        <VStack gap="6">
+        <VStack gap="space-24">
             <div>
                 <Button
                     variant="tertiary"
@@ -36,7 +36,7 @@ export function TestscenarioDetaljer({ scenario }: TestscenarioDetaljerProps): R
                 <Heading level="2" size="medium" className="mb-2">
                     Testperson
                 </Heading>
-                <VStack gap="2">
+                <VStack gap="space-8">
                     <BodyShort>
                         <strong>Navn:</strong> {scenario.testperson.navn}
                     </BodyShort>

@@ -25,18 +25,18 @@ export function FrihåndSykepengegrunnlagVisning({
     })
 
     return (
-        <VStack gap="6" className="p-8">
-            <VStack gap="4">
-                <Bleed marginInline="4 12" asChild reflectivePadding>
-                    <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+        <VStack gap="space-24" className="p-8">
+            <VStack gap="space-16">
+                <Bleed marginInline="space-16 space-48" asChild reflectivePadding>
+                    <Box background="neutral-soft" className="py-4" borderRadius="8" marginBlock="space-16 space-0">
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Beregningsgrunnlag</BodyShort>
                             <BodyShort>{formaterBeløpKroner(sykepengegrunnlag.beregningsgrunnlag)}</BodyShort>
                         </HStack>
                     </Box>
                 </Bleed>
-                <Bleed marginInline="4 12" asChild reflectivePadding>
-                    <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                <Bleed marginInline="space-16 space-48" asChild reflectivePadding>
+                    <Box background="neutral-soft" className="py-4" borderRadius="8" marginBlock="space-16 space-0">
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                             <BodyShort>{formaterBeløpKroner(sykepengegrunnlag.sykepengegrunnlag)}</BodyShort>
@@ -44,8 +44,8 @@ export function FrihåndSykepengegrunnlagVisning({
                     </Box>
                 </Bleed>
             </VStack>
-            <VStack gap="4">
-                <VStack gap="2">
+            <VStack gap="space-16">
+                <VStack gap="space-8">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
                     <BodyLong size="small" className="text-ax-text-neutral-subtle">
                         {sykepengegrunnlag.begrunnelse}
@@ -53,9 +53,9 @@ export function FrihåndSykepengegrunnlagVisning({
                 </VStack>
 
                 {beregningskoderMedBeskrivelse.length > 0 && (
-                    <VStack gap="2">
+                    <VStack gap="space-8">
                         <BodyShort weight="semibold">Beregningskoder</BodyShort>
-                        <VStack gap="1">
+                        <VStack gap="space-4">
                             {beregningskoderMedBeskrivelse.map(({ kode, beskrivelse }) => (
                                 <BodyLong key={kode} size="small" className="text-ax-text-neutral-subtle">
                                     <span className="font-mono font-medium">{kode}</span> - {beskrivelse}
@@ -76,5 +76,5 @@ export function FrihåndSykepengegrunnlagVisning({
                 {getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
             </BodyLong>
         </VStack>
-    );
+    )
 }

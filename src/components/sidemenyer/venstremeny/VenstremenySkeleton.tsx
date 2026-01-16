@@ -8,16 +8,16 @@ import { SkjæringstidspunktIcon } from '@components/ikoner/SkjæringstidspunktI
 export function VenstremenySkeleton(): ReactElement {
     return (
         <Sidemeny side="left">
-            <VStack gap="4">
-                <HStack gap="2">
+            <VStack gap="space-16">
+                <HStack gap="space-8">
                     <Skeleton width="40%" height={36} />
                     <Skeleton width="50%" height={36} />
                 </HStack>
-                <HStack align="center" gap="2">
+                <HStack align="center" gap="space-8">
                     <CalendarIcon aria-hidden fontSize="1.25rem" />
                     <Skeleton width={160} />
                 </HStack>
-                <HStack align="center" gap="2">
+                <HStack align="center" gap="space-8">
                     <SkjæringstidspunktIcon aria-hidden fontSize="1.25rem" />
                     <Skeleton width={160} />
                 </HStack>

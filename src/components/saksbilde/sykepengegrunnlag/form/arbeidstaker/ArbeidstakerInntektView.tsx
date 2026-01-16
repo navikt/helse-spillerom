@@ -32,7 +32,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
 
     if (!inntektRequestData) {
         return (
-            <VStack gap="2" className="w-fit">
+            <VStack gap="space-8" className="w-fit">
                 <BodyShort weight="semibold">Årsinntekt</BodyShort>
                 <BodyShort className="text-right">-</BodyShort>
             </VStack>
@@ -47,9 +47,9 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
     return (
         <>
             {notNull(årsinntekt) && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
-                    <HStack gap="2" align="center">
+                    <HStack gap="space-8" align="center">
                         <BodyShort size="small">{formaterBeløpKroner(årsinntekt)}</BodyShort>
                         {InntektTag[type]}
                     </HStack>
@@ -59,8 +59,8 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 <AinntektInntektDataView inntektData={inntektData} />
             )}
             {inntektsmelding && (
-                <VStack gap="1">
-                    <HStack gap="3" align="start" wrap={false}>
+                <VStack gap="space-4">
+                    <HStack gap="space-12" align="start" wrap={false}>
                         <BodyShort weight="semibold">Inntektsmelding</BodyShort>
                         <OpenDocumentInSidebarButton dokument={inntektsmelding} />
                     </HStack>
@@ -68,9 +68,9 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 </VStack>
             )}
             {årsak && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Årsak</BodyShort>
-                    <HStack gap="3" align="start">
+                    <HStack gap="space-12" align="start">
                         <BodyShort className="leading-[18px]">&bull;</BodyShort>
                         <BodyShort size="small">{arbeidstakerSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
                     </HStack>
@@ -78,14 +78,14 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
             )}
             {refusjon && refusjon.length > 0 && (
                 <>
-                    <VStack gap="1">
+                    <VStack gap="space-4">
                         <BodyShort weight="semibold">Refusjon</BodyShort>
-                        <HStack gap="3" align="start" wrap={false}>
+                        <HStack gap="space-12" align="start" wrap={false}>
                             <BodyShort className="leading-[18px]">&bull;</BodyShort>
                             <BodyShort size="small">Ja</BodyShort>
                         </HStack>
                     </VStack>
-                    <Bleed marginInline="2" asChild>
+                    <Bleed marginInline="space-8" asChild>
                         <Box>
                             <Table title="Refusjon" size="small">
                                 <TableHeader>
@@ -122,13 +122,13 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 </>
             )}
             {begrunnelse && (
-                <VStack gap="1">
+                <VStack gap="space-4">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
                     <BodyShort size="small">{begrunnelse}</BodyShort>
                 </VStack>
             )}
         </>
-    );
+    )
 }
 
 function normalize(data: InntektRequest['data'], inntektData?: InntektData | null) {

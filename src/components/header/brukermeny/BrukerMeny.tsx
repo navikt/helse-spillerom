@@ -40,13 +40,13 @@ export function BrukerMeny(): ReactElement {
 
                         {visLeserolle && <Detail>Leserolle</Detail>}
                         {roller.saksbehandler && (
-                            <HStack gap="2" align="center">
+                            <HStack gap="space-8" align="center">
                                 <PersonPencilIcon fontSize="1rem" />
                                 <Detail>Saksbehandler</Detail>
                             </HStack>
                         )}
                         {roller.beslutter && (
-                            <HStack gap="2" align="center">
+                            <HStack gap="space-8" align="center">
                                 <TasklistFillIcon fontSize="1rem" />
                                 <Detail>Beslutter</Detail>
                             </HStack>

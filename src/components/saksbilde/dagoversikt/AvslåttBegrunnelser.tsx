@@ -19,7 +19,7 @@ export function AvslåttBegrunnelser({ avslåttBegrunnelse, kodeverk }: Avslått
     if (begrunnelser.length === 0) return null
 
     return (
-        <HStack gap="1" wrap={false}>
+        <HStack gap="space-4" wrap={false}>
             {begrunnelser.map((begrunnelse, index) => (
                 <Fragment key={`${begrunnelse.paragraf}-${index}`}>
                     <Tooltip content={begrunnelse.beskrivelse}>

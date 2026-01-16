@@ -23,11 +23,11 @@ export function InntektsmeldingInnhold({ inntektsmelding }: { inntektsmelding: I
 
     return (
         <VStack
-            gap="4"
+            gap="space-16"
             role="region"
             aria-label={`Innhold for inntektsmelding mottat: ${getFormattedDatetimeString(inntektsmelding.mottattDato)}`}
         >
-            <HStack gap="2" wrap={false}>
+            <HStack gap="space-8" wrap={false}>
                 <BriefcaseIcon aria-hidden fontSize="1.5rem" />
                 {inntektsmelding.virksomhetsnummer ? (
                     <BodyShort>
@@ -98,7 +98,7 @@ export function Details({ label, children }: PropsWithChildren<{ label: string }
     if (children == null) return null
 
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 {label}
             </BodyShort>
@@ -110,14 +110,14 @@ export function Details({ label, children }: PropsWithChildren<{ label: string }
 function InntektEndringsÅrsaker({ årsaker }: { årsaker: InntektEndringÅrsak[] }): ReactElement | null {
     if (årsaker.length === 0) return null
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 Endringsårsaker
             </BodyShort>
             <ul className="[&_li:not(:last-child)]:mb-1">
                 {årsaker.map((årsak, i) => (
                     <li className="ml-4 list-item list-disc" key={i}>
-                        <VStack gap="1-alt">
+                        <VStack gap="space-6">
                             <BodyShort size="small">{årsakmapper(årsak.aarsak)}</BodyShort>
                             {årsak.perioder && (
                                 <VStack>
@@ -152,7 +152,7 @@ function Perioder({ label, perioder }: { label: string; perioder: Periode[] }): 
     if (perioder.length === 0) return null
 
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 {label}
             </BodyShort>
@@ -168,11 +168,11 @@ function Perioder({ label, perioder }: { label: string; perioder: Periode[] }): 
 function EndringIRefusjoner({ endringer }: { endringer: EndringIRefusjon[] }): ReactElement | null {
     if (endringer.length === 0) return null
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 Endring i refusjon
             </BodyShort>
-            <VStack gap="1-alt">
+            <VStack gap="space-6">
                 {endringer.map((endring, i) => (
                     <VStack key={i}>
                         {endring.endringsdato && (
@@ -192,7 +192,7 @@ function EndringIRefusjoner({ endringer }: { endringer: EndringIRefusjon[] }): R
 
 function Refusjon({ refusjon }: { refusjon: RefusjonType }): ReactElement | null {
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 Refusjon
             </BodyShort>
@@ -220,7 +220,7 @@ function Naturalytelser({
         beloepPrMnd: ytelse.beloepPrMnd,
     }))
     return (
-        <VStack gap="1">
+        <VStack gap="space-4">
             <BodyShort weight="semibold" size="small">
                 {label}
             </BodyShort>

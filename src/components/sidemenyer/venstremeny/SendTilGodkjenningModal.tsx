@@ -50,7 +50,7 @@ export function SendTilGodkjenningModal({
                     <Dialog.Title>Er du sikker?</Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                    <VStack gap="4">
+                    <VStack gap="space-16">
                         <BeløpForPerioden />
                         <Valideringer sluttvalidering={true} />
                         <BodyShort size="small" className="text-ax-neutral-800">

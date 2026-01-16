@@ -25,7 +25,7 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
     return (
         <>
             <div className="mb-8 p-8">
-                <VStack gap="6">
+                <VStack gap="space-24">
                     <HStack justify="space-between" align="center">
                         <Heading level="2" size="medium">
                             Tilkommen inntekt
@@ -42,9 +42,9 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                         </Button>
                     </HStack>
 
-                    <VStack gap="4">
-                        <HStack gap="4">
-                            <VStack gap="2" className="min-w-[200px]">
+                    <VStack gap="space-16">
+                        <HStack gap="space-16">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Organisasjonsnummer
                                 </BodyShort>
@@ -53,7 +53,7 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                                 </BodyShort>
                             </VStack>
 
-                            <VStack gap="2" className="min-w-[200px]">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Yrkesaktivitetstype
                                 </BodyShort>
@@ -61,15 +61,15 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                             </VStack>
                         </HStack>
 
-                        <HStack gap="4">
-                            <VStack gap="2" className="min-w-[200px]">
+                        <HStack gap="space-16">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Periode f.o.m
                                 </BodyShort>
                                 <BodyShort>{getFormattedDateString(tilkommenInntekt.fom)}</BodyShort>
                             </VStack>
 
-                            <VStack gap="2" className="min-w-[200px]">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Periode t.o.m
                                 </BodyShort>
@@ -77,8 +77,8 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                             </VStack>
                         </HStack>
 
-                        <HStack gap="4">
-                            <VStack gap="2" className="min-w-[200px]">
+                        <HStack gap="space-16">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Inntekt for perioden
                                 </BodyShort>
@@ -87,7 +87,7 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                         </HStack>
 
                         {tilkommenInntekt.notatTilBeslutter && (
-                            <VStack gap="2">
+                            <VStack gap="space-8">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Notat til beslutter
                                 </BodyShort>
@@ -97,15 +97,15 @@ export function TilkommenInntektView({ tilkommenInntekt }: TilkommenInntektViewP
                             </VStack>
                         )}
 
-                        <HStack gap="4">
-                            <VStack gap="2" className="min-w-[200px]">
+                        <HStack gap="space-16">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Opprettet
                                 </BodyShort>
                                 <BodyShort>{getFormattedDatetimeString(tilkommenInntekt.opprettet)}</BodyShort>
                             </VStack>
 
-                            <VStack gap="2" className="min-w-[200px]">
+                            <VStack gap="space-8" className="min-w-[200px]">
                                 <BodyShort size="small" className="text-ax-text-neutral-subtle">
                                     Opprettet av
                                 </BodyShort>
