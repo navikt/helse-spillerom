@@ -54,7 +54,7 @@ export function navigerTilPersonOgBehandling(ident: string, forventetNavn?: stri
             await behandlingLink.click()
             await page.waitForURL('**/person/*/*')
         })
-    }
+    };
 }
 
 export function navigerTilYrkesaktivitetFane() {
@@ -63,7 +63,7 @@ export function navigerTilYrkesaktivitetFane() {
             const yrkesaktivitetTab = page.getByRole('tab', { name: /Yrkesaktivitet/i })
             await yrkesaktivitetTab.click()
         })
-    }
+    };
 }
 
 export function verifiserIngenYrkesaktiviteter() {
@@ -228,7 +228,7 @@ export function utvidYrkesaktivitetRad(radIndex: number = 0) {
                 await toggle.click()
             }
         })
-    }
+    };
 }
 
 export function slettYrkesaktivitet(radIndex: number = 0) {
@@ -331,7 +331,7 @@ export function velgSøknad(søknadIndex: number = 0) {
             })
             await søknadCheckboxes.nth(søknadIndex).check()
         })
-    }
+    };
 }
 
 export function fjernSøknad(søknadIndex: number = 0) {
@@ -342,7 +342,7 @@ export function fjernSøknad(søknadIndex: number = 0) {
             })
             await søknadCheckboxes.nth(søknadIndex).uncheck()
         })
-    }
+    };
 }
 
 export function startBehandling() {
@@ -389,7 +389,7 @@ export function verifiserSøknaderTilgjengelige() {
             })
             await expect(søknadCheckboxes.first()).toBeVisible()
         })
-    }
+    };
 }
 
 export function navigerTilOpprettBehandling() {

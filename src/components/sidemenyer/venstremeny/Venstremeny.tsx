@@ -2,7 +2,7 @@
 
 import { ReactElement, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Bleed, BodyShort, BoxNew, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, Box, Button, HStack, Tooltip, VStack } from '@navikt/ds-react'
 import { CalendarIcon } from '@navikt/aksel-icons'
 import { useQueryClient } from '@tanstack/react-query'
 

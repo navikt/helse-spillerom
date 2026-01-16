@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
-import { Alert, Bleed, BodyShort, BoxNew, HStack, Skeleton, Table, VStack } from '@navikt/ds-react'
+import { Alert, Bleed, BodyShort, Box, HStack, Skeleton, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { useAinntektYrkesaktivitet } from '@hooks/queries/useAinntektYrkesaktivitet'
@@ -44,7 +44,7 @@ function VisAinntektSkeleton(): ReactElement {
                 {InntektTag['AINNTEKT']}
             </HStack>
             <Bleed marginInline="2" asChild>
-                <BoxNew>
+                <Box>
                     <Table size="small">
                         <TableHeader>
                             <TableRow>
@@ -76,8 +76,8 @@ function VisAinntektSkeleton(): ReactElement {
                             ))}
                         </TableBody>
                     </Table>
-                </BoxNew>
+                </Box>
             </Bleed>
         </VStack>
-    )
+    );
 }

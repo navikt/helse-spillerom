@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Bleed, BodyShort, BoxNew, Heading, HStack, Skeleton, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, Box, Heading, HStack, Skeleton, VStack } from '@navikt/ds-react'
 
 export function SykepengegrunnlagSkeleton(): ReactElement {
     return (
@@ -21,15 +21,15 @@ export function SykepengegrunnlagSkeleton(): ReactElement {
                 <Skeleton width={100} />
             </HStack>
             <Bleed marginInline="4 32" asChild reflectivePadding>
-                <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                     <HStack justify="space-between">
                         <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                         <Skeleton width={100} />
                     </HStack>
-                </BoxNew>
+                </Box>
             </Bleed>
         </VStack>
-    )
+    );
 }
 
 function YrkesaktivitetRad(): ReactElement {

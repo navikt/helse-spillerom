@@ -1,5 +1,5 @@
 import React, { Fragment, ReactElement } from 'react'
-import { Bleed, BodyShort, BoxNew, HGrid, HStack, Table, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, Box, HGrid, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 
 import { formaterBeløpKroner } from '@schemas/pengerUtils'
@@ -55,11 +55,9 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                     </HStack>
                 </VStack>
             )}
-
             {inntektData?.inntektstype === 'ARBEIDSTAKER_AINNTEKT' && (
                 <AinntektInntektDataView inntektData={inntektData} />
             )}
-
             {inntektsmelding && (
                 <VStack gap="1">
                     <HStack gap="3" align="start" wrap={false}>
@@ -69,7 +67,6 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                     <InntektsmeldingVisning inntektsmelding={inntektsmelding} />
                 </VStack>
             )}
-
             {årsak && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Årsak</BodyShort>
@@ -79,7 +76,6 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                     </HStack>
                 </VStack>
             )}
-
             {refusjon && refusjon.length > 0 && (
                 <>
                     <VStack gap="1">
@@ -90,7 +86,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                         </HStack>
                     </VStack>
                     <Bleed marginInline="2" asChild>
-                        <BoxNew>
+                        <Box>
                             <Table title="Refusjon" size="small">
                                 <TableHeader>
                                     <TableRow>
@@ -121,11 +117,10 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                                     ))}
                                 </TableBody>
                             </Table>
-                        </BoxNew>
+                        </Box>
                     </Bleed>
                 </>
             )}
-
             {begrunnelse && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
@@ -133,7 +128,7 @@ export function ArbeidstakerInntektView({ inntektRequest, inntektData }: Arbeids
                 </VStack>
             )}
         </>
-    )
+    );
 }
 
 function normalize(data: InntektRequest['data'], inntektData?: InntektData | null) {

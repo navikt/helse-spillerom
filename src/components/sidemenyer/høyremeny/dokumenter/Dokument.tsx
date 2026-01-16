@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement, useState } from 'react'
-import { BodyShort, BoxNew, HStack, Skeleton, VStack } from '@navikt/ds-react'
+import { BodyShort, Box, HStack, Skeleton, VStack } from '@navikt/ds-react'
 import { ChevronDownIcon, ChevronUpIcon } from '@navikt/aksel-icons'
 import { motion } from 'motion/react'
 
@@ -73,7 +73,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                         style={{ overflow: 'hidden' }}
                     >
                         {dokument.dokumentType === 'søknad' ? (
-                            <BoxNew
+                            <Box
                                 background="raised"
                                 borderRadius="large"
                                 borderWidth="1"
@@ -81,7 +81,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 className="flex flex-col gap-4 p-4"
                             >
                                 <SøknadsInnhold søknad={dokument.innhold as Søknad} />
-                            </BoxNew>
+                            </Box>
                         ) : ['ainntekt828', 'ainntekt830'].includes(dokument.dokumentType) ? (
                             <AinntektVisning ainntekt={dokument.innhold as Ainntekt} />
                         ) : dokument.dokumentType === 'arbeidsforhold' ? (
@@ -91,7 +91,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 pensjonsgivendeInntekt={dokument.innhold as PensjonsgivendeInntekt}
                             />
                         ) : dokument.dokumentType === 'inntektsmelding' ? (
-                            <BoxNew
+                            <Box
                                 background="raised"
                                 borderRadius="large"
                                 borderWidth="1"
@@ -99,7 +99,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 className="flex flex-col gap-4 p-4"
                             >
                                 <InntektsmeldingInnhold inntektsmelding={dokument.innhold as Inntektsmelding} />
-                            </BoxNew>
+                            </Box>
                         ) : (
                             <pre className="bg-ax-neutral-100 overflow-x-auto rounded p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
@@ -109,7 +109,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                 )}
             </AnimatePresenceWrapper>
         </li>
-    )
+    );
 }
 
 const dokumentVisningstekst: Record<Dokumenttype, string> = {

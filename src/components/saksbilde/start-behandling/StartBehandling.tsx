@@ -3,7 +3,7 @@
 import { ReactElement, useState } from 'react'
 import {
     Alert,
-    BoxNew,
+    Box,
     Button,
     Checkbox,
     CheckboxGroup,
@@ -341,7 +341,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                     Laster søknad...
                                 </div>
                             ) : aktivSøknad ? (
-                                <BoxNew
+                                <Box
                                     background="raised"
                                     borderRadius="large"
                                     borderWidth="1"
@@ -349,7 +349,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                                     className="flex flex-col gap-4 p-4"
                                 >
                                     <SøknadsInnhold søknad={aktivSøknad} />
-                                </BoxNew>
+                                </Box>
                             ) : (
                                 <div>Fant ikke søknad</div>
                             )}
@@ -358,5 +358,5 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
                 </Dialog>
             </form>
         </SaksbildePanel>
-    )
+    );
 }

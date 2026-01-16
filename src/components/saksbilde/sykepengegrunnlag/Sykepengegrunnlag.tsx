@@ -4,7 +4,7 @@ import {
     Bleed,
     BodyLong,
     BodyShort,
-    BoxNew,
+    Box,
     Button,
     Heading,
     HStack,
@@ -210,12 +210,12 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                     </Table>
                     <VStack gap="6" className="mt-6 pr-16 pl-8">
                         <Bleed marginInline="4 12" asChild reflectivePadding>
-                            <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                            <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                                 <HStack justify="space-between">
                                     <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                                     <BodyShort>{formaterBeløpKroner(sykepengegrunnlag?.sykepengegrunnlag)}</BodyShort>
                                 </HStack>
-                            </BoxNew>
+                            </Box>
                         </Bleed>
                         {sykepengegrunnlag && (
                             <BodyLong size="small" className="text-ax-text-neutral-subtle">
@@ -324,7 +324,7 @@ export function Sykepengegrunnlag({ value }: { value: string }): ReactElement {
                 )}
             </HStack>
         </SaksbildePanel>
-    )
+    );
 }
 
 function resolveRefusjonSpørsmål(yrkesaktivitet: Yrkesaktivitet): string {

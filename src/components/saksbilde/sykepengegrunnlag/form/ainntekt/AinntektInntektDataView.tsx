@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Bleed, BodyShort, BoxNew, HStack, Table, VStack } from '@navikt/ds-react'
+import { Bleed, BodyShort, Box, HStack, Table, VStack } from '@navikt/ds-react'
 import { TableBody, TableDataCell, TableHeader, TableHeaderCell, TableRow } from '@navikt/ds-react/Table'
 import { capitalize } from 'remeda'
 
@@ -20,7 +20,7 @@ export function AinntektInntektDataView({
                 {InntektTag['AINNTEKT']}
             </HStack>
             <Bleed marginInline="2" asChild>
-                <BoxNew>
+                <Box>
                     <Table size="small">
                         <TableHeader>
                             <TableRow>
@@ -52,10 +52,10 @@ export function AinntektInntektDataView({
                             ))}
                         </TableBody>
                     </Table>
-                </BoxNew>
+                </Box>
             </Bleed>
         </VStack>
-    )
+    );
 }
 
 function gjennomsnitt(inntektData: FrilanserAinntekt | ArbeidstakerAinntekt) {

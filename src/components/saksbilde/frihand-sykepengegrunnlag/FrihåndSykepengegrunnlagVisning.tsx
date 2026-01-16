@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Bleed, BodyLong, BodyShort, BoxNew, HStack, VStack } from '@navikt/ds-react'
+import { Bleed, BodyLong, BodyShort, Box, HStack, VStack } from '@navikt/ds-react'
 
 import { FrihåndSykepengegrunnlag } from '@schemas/sykepengegrunnlag'
 import { formaterBeløpKroner } from '@schemas/pengerUtils'
@@ -28,23 +28,22 @@ export function FrihåndSykepengegrunnlagVisning({
         <VStack gap="6" className="p-8">
             <VStack gap="4">
                 <Bleed marginInline="4 12" asChild reflectivePadding>
-                    <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                    <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Beregningsgrunnlag</BodyShort>
                             <BodyShort>{formaterBeløpKroner(sykepengegrunnlag.beregningsgrunnlag)}</BodyShort>
                         </HStack>
-                    </BoxNew>
+                    </Box>
                 </Bleed>
                 <Bleed marginInline="4 12" asChild reflectivePadding>
-                    <BoxNew background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
+                    <Box background="neutral-soft" className="py-4" borderRadius="large" marginBlock="4 0">
                         <HStack justify="space-between">
                             <BodyShort weight="semibold">Sykepengegrunnlag</BodyShort>
                             <BodyShort>{formaterBeløpKroner(sykepengegrunnlag.sykepengegrunnlag)}</BodyShort>
                         </HStack>
-                    </BoxNew>
+                    </Box>
                 </Bleed>
             </VStack>
-
             <VStack gap="4">
                 <VStack gap="2">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
@@ -66,7 +65,6 @@ export function FrihåndSykepengegrunnlagVisning({
                     </VStack>
                 )}
             </VStack>
-
             <BodyLong size="small" className="text-ax-text-neutral-subtle">
                 {sykepengegrunnlag.begrensetTil6G && (
                     <>
@@ -78,5 +76,5 @@ export function FrihåndSykepengegrunnlagVisning({
                 {getFormattedNorwegianLongDate(sykepengegrunnlag.grunnbeløpVirkningstidspunkt)})
             </BodyLong>
         </VStack>
-    )
+    );
 }

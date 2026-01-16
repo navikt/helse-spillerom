@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
-import { BoxNew, Button, HStack, Skeleton, Table, VStack } from '@navikt/ds-react'
+import { Box, Button, HStack, Skeleton, Table, VStack } from '@navikt/ds-react'
 import dayjs from 'dayjs'
 
 import { useYrkesaktivitet } from '@hooks/queries/useYrkesaktivitet'
@@ -201,20 +201,20 @@ export function Refusjon(): ReactElement {
 
     if (!data || isLoading) {
         return (
-            <BoxNew padding="0">
+            <Box padding="0">
                 <Skeleton width="100%" height={200} />
-            </BoxNew>
-        )
+            </Box>
+        );
     }
 
     const arbeidstakere = data.filter((ya) => ya.kategorisering.inntektskategori === 'ARBEIDSTAKER')
 
     if (arbeidstakere.length === 0) {
         return (
-            <BoxNew padding="4">
+            <Box padding="4">
                 <p>Ingen arbeidstakere funnet. Refusjon kan kun settes for arbeidstakere.</p>
-            </BoxNew>
-        )
+            </Box>
+        );
     }
 
     return (
