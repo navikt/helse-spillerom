@@ -20,5 +20,5 @@ export function useNullstillSession() {
                 window.location.reload()
             }
         },
-    })
+    });
 }
