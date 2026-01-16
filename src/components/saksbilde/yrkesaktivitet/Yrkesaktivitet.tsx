@@ -269,7 +269,7 @@ export function Yrkesaktivitet(): ReactElement {
                             exit={{ height: 0 }}
                             className="overflow-hidden"
                         >
-                            <Box.New
+                            <Box
                                 background="accent-soft"
                                 borderColor="neutral-subtle"
                                 borderWidth="1"
@@ -281,12 +281,11 @@ export function Yrkesaktivitet(): ReactElement {
                                     closeForm={() => setVisOpprettForm(false)}
                                     title="Legg til ny yrkesaktivitet"
                                 />
-                            </Box.New>
+                            </Box>
                         </motion.div>
                     )}
                 </AnimatePresenceWrapper>
             </VStack>
-
             <Dialog open={slettModalOpen} onOpenChange={setSlettModalOpen}>
                 <Dialog.Popup>
                     <Dialog.Header>
@@ -309,7 +308,6 @@ export function Yrkesaktivitet(): ReactElement {
                     </Dialog.Footer>
                 </Dialog.Popup>
             </Dialog>
-
             <BekreftelsesModal
                 open={bekreftelsesModalOpen}
                 setOpen={setIsOpen}
@@ -318,7 +316,7 @@ export function Yrkesaktivitet(): ReactElement {
                 onBekreft={handleBekreft}
             />
         </>
-    )
+    );
 }
 
 function getKategoriDisplayText(kategorisering: YrkesaktivitetKategorisering): string {
