@@ -1,4 +1,4 @@
-import '@navikt/ds-tokens/css'
+import '@navikt/ds-css'
 import '../styles/globals.css'
 import type { Metadata } from 'next'
 import React, { PropsWithChildren, ReactElement } from 'react'
