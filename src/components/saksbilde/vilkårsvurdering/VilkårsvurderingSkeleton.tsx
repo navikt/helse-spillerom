@@ -12,7 +12,7 @@ import {
 
 export function VilkårsvurderingSkeleton(): ReactElement {
     return (
-        <Accordion size="small" headingSize="xsmall" indent={false}>
+        <Accordion size="small" indent={false}>
             <AccordionItem defaultOpen>
                 <AccordionHeader>
                     <Skeleton variant="text" width={240} />
@@ -47,7 +47,7 @@ export function VilkårsvurderingSkeleton(): ReactElement {
                 </AccordionContent>
             </AccordionItem>
         </Accordion>
-    )
+    );
 }
 
 function TableRowSkeleton(): ReactElement {
