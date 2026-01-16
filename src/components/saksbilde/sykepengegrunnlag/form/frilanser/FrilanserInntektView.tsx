@@ -40,20 +40,18 @@ export function FrilanserInntektView({ inntektRequest, inntektData }: FrilanserI
                         <BodyShort weight="semibold">Årsinntekt</BodyShort>
                         <HStack gap="2">
                             <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
-                            <Tag variant="neutral" size="xsmall">
+                            <Tag data-color="neutral" variant="outline" size="xsmall">
                                 skjønnsfastsatt
                             </Tag>
                         </HStack>
                     </VStack>
                 )}
-
                 {årsak && (
                     <VStack gap="1">
                         <BodyShort weight="semibold">Årsak</BodyShort>
                         <BodyShort>{frilanserSkjønnsfastsettelseÅrsakLabels[årsak]}</BodyShort>
                     </VStack>
                 )}
-
                 {begrunnelse && (
                     <VStack gap="1">
                         <BodyShort weight="semibold">Begrunnelse</BodyShort>
@@ -61,7 +59,7 @@ export function FrilanserInntektView({ inntektRequest, inntektData }: FrilanserI
                     </VStack>
                 )}
             </>
-        )
+        );
     }
     return <></>
 }

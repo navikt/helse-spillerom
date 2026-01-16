@@ -30,25 +30,23 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
                     <BodyShort weight="semibold">Årsinntekt</BodyShort>
                     <HStack gap="2">
                         <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(årsinntekt)}</BodyShort>
-                        <Tag variant="neutral" size="xsmall">
+                        <Tag data-color="neutral" variant="outline" size="xsmall">
                             manuelt beregnet
                         </Tag>
                     </HStack>
                 </VStack>
             )}
-
             {dagbeløp && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Dagbeløp</BodyShort>
                     <HStack gap="2">
                         <BodyShort className="w-[103px] text-right">{formaterBeløpKroner(dagbeløp)}</BodyShort>
-                        <Tag variant="neutral" size="xsmall">
+                        <Tag data-color="neutral" variant="outline" size="xsmall">
                             manuelt beregnet
                         </Tag>
                     </HStack>
                 </VStack>
             )}
-
             {begrunnelse && (
                 <VStack gap="1">
                     <BodyShort weight="semibold">Begrunnelse</BodyShort>
@@ -56,7 +54,7 @@ export function ArbeidsledigInntektView({ inntektRequest }: ArbeidsledigInntektV
                 </VStack>
             )}
         </>
-    )
+    );
 }
 
 function normalize(data?: InntektRequest['data']) {
