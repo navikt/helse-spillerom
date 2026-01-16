@@ -27,6 +27,7 @@ export function SøknadsInnhold({ søknad }: SøknadsinnholdProps): ReactElement
             aria-label={`Innhold for søknad opprettet: ${getFormattedDatetimeString(søknad.opprettet)}`}
         >
             <Details label="Type">{søknad.type?.replace(/_/g, ' ')}</Details>
+
             {søknad.soknadsperioder?.map((periode) => (
                 <Details
                     key={periode.fom}
@@ -43,16 +44,20 @@ export function SøknadsInnhold({ søknad }: SøknadsinnholdProps): ReactElement
                     )}
                 </Details>
             ))}
+
             <Details label="Arbeid gjenopptatt">
                 {søknad.arbeidGjenopptatt && dayjs(søknad.arbeidGjenopptatt).format(NORSK_DATOFORMAT)}
             </Details>
+
             <Details label="Sykmelding skrevet">
                 {søknad.sykmeldingSkrevet && dayjs(søknad.sykmeldingSkrevet).format(NORSK_DATOFORMAT_MED_KLOKKESLETT)}
             </Details>
+
             <Details label="Egenmeldingsdager fra sykmelding">
                 {(søknad.egenmeldingsdagerFraSykmelding?.length ?? 0) > 0 ? formatEgenmeldingsdager() : null}
             </Details>
+
             {søknad.sporsmal && <Spørsmål spørsmål={søknad.sporsmal} />}
         </VStack>
-    );
+    )
 }
