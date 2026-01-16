@@ -39,5 +39,5 @@ export function BekreftelsesModal({ open, tittel, melding, onBekreft, setOpen }:
                 </DialogFooter>
             </DialogPopup>
         </Dialog>
-    );
+    )
 }

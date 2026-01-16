@@ -14,7 +14,8 @@ export function OppgavelisteSkeleton(): ReactElement {
                         className="m-2 mb-[7px] self-start"
                         size="small"
                         variant="tertiary"
-                        icon={<FilterIcon aria-label="Filtrer saker" />} />
+                        icon={<FilterIcon aria-label="Filtrer saker" />}
+                    />
                 </div>
             </VStack>
             <Tabs value="ALLE" className="mb-4 grow pt-4">
@@ -34,7 +35,7 @@ export function OppgavelisteSkeleton(): ReactElement {
                 </TabsPanel>
             </Tabs>
         </HStack>
-    );
+    )
 }
 
 function OppgaveTabellSkeleton(): ReactElement {
@@ -63,7 +64,7 @@ function OppgaveTabellSkeleton(): ReactElement {
 
 function OppgaveRowSkeleton(): ReactElement {
     return (
-        <TableRow className="hover:bg-ax-neutral-100 cursor-pointer">
+        <TableRow className="cursor-pointer hover:bg-ax-neutral-100">
             <TableDataCell>
                 <Skeleton width={226} height={30} />
             </TableDataCell>

@@ -52,7 +52,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                         <Table.DataCell>
                             <div>
                                 <div className="font-medium">{vilkår.vilkårskode}</div>
-                                <div className="text-ax-neutral-700 mb-2 text-sm">{vilkår.beskrivelse}</div>
+                                <div className="mb-2 text-sm text-ax-neutral-700">{vilkår.beskrivelse}</div>
                                 <Tag
                                     variant={samletStatus === 'oppfylt' ? 'success' : 'error'}
                                     size="small"
@@ -61,7 +61,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                     {samletStatus === 'oppfylt' ? 'Oppfylt' : 'Ikke oppfylt'}
                                 </Tag>
                                 {vilkår.vilkårshjemmel && (
-                                    <div className="text-ax-neutral-600 text-xs">
+                                    <div className="text-xs text-ax-neutral-600">
                                         {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.kapittel}-
                                         {vilkår.vilkårshjemmel.paragraf}
                                         {vilkår.vilkårshjemmel.ledd && ` ledd ${vilkår.vilkårshjemmel.ledd}`}
@@ -75,7 +75,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                             <div className="space-y-3">
                                 {alleVurderteÅrsaker.map((årsak) => {
                                     return (
-                                        <div key={årsak.kode} className="border-ax-neutral-300 border-l-2 pl-3">
+                                        <div key={årsak.kode} className="border-l-2 border-ax-neutral-300 pl-3">
                                             <div className="mb-1 flex items-center gap-2">
                                                 <span className="font-mono text-sm">{årsak.kode}</span>
                                             </div>
@@ -85,7 +85,7 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                                             <div className="mb-1 text-sm font-medium">{årsak.beskrivelse}</div>
 
                                             {årsak.vilkårshjemmel && (
-                                                <div className="text-ax-neutral-600 mb-1 text-xs">
+                                                <div className="mb-1 text-xs text-ax-neutral-600">
                                                     {vilkår.vilkårshjemmel.lovverk} §{vilkår.vilkårshjemmel.kapittel}-
                                                     {vilkår.vilkårshjemmel.paragraf}
                                                     {årsak.vilkårshjemmel.ledd && ` ledd ${årsak.vilkårshjemmel.ledd}`}
@@ -104,7 +104,9 @@ export function VilkårsvurderingInnsikt(): ReactElement {
                             <div className="space-y-1">
                                 {relaterteVurderinger.map((vurdering, index) => (
                                     <div key={index} className="text-sm">
-                                        {vurdering.notat && <div className="text-ax-neutral-700">{vurdering.notat}</div>}
+                                        {vurdering.notat && (
+                                            <div className="text-ax-neutral-700">{vurdering.notat}</div>
+                                        )}
                                     </div>
                                 ))}
                             </div>

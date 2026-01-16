@@ -19,7 +19,8 @@ export default function PersonPage(): ReactElement {
                     <Button
                         data-color="neutral"
                         variant="secondary"
-                        onClick={() => router.push(pathname + '/opprett-saksbehandlingsperiode')}>
+                        onClick={() => router.push(pathname + '/opprett-saksbehandlingsperiode')}
+                    >
                         Start ny behandling
                     </Button>
                 </div>
@@ -31,5 +32,5 @@ export default function PersonPage(): ReactElement {
                 <BehandlingerTabell />
             </div>
         </section>
-    );
+    )
 }

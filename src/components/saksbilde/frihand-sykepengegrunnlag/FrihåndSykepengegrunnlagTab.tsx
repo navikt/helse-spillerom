@@ -40,7 +40,8 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                                 data-color="danger"
                                 variant="primary"
                                 size="small"
-                                onClick={() => setSlettModalOpen(true)}>
+                                onClick={() => setSlettModalOpen(true)}
+                            >
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -56,7 +57,8 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                                 data-color="danger"
                                 variant="primary"
                                 size="small"
-                                onClick={() => setSlettModalOpen(true)}>
+                                onClick={() => setSlettModalOpen(true)}
+                            >
                                 Slett sykepengegrunnlag
                             </Button>
                         </HStack>
@@ -87,12 +89,13 @@ export function FrihåndSykepengegrunnlagTab({ value }: { value: string }): Reac
                             type="button"
                             variant="primary"
                             onClick={handleBekreftSlett}
-                            loading={slettMutation.isPending}>
+                            loading={slettMutation.isPending}
+                        >
                             Slett
                         </Button>
                     </Dialog.Footer>
                 </Dialog.Popup>
             </Dialog>
         </>
-    );
+    )
 }
