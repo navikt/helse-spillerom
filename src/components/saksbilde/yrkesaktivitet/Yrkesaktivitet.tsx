@@ -207,7 +207,7 @@ export function Yrkesaktivitet(): ReactElement {
                                                                 Rediger
                                                             </Button>
                                                             <Button
-                                                                className="text-text-danger"
+                                                                className="text-ax-text-danger-subtle"
                                                                 variant="tertiary"
                                                                 size="small"
                                                                 icon={<TrashIcon aria-hidden />}

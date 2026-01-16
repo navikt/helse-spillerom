@@ -221,7 +221,7 @@ export function PeriodeForm({ yrkesaktivitet, kanSaksbehandles }: PeriodeFormPro
                             Lagre
                         </Button>
                     </HStack>
-                    {errors.perioder && <BodyShort className="text-red-600">{errors.perioder.message}</BodyShort>}
+                    {errors.perioder && <BodyShort className="text-ax-danger-700">{errors.perioder.message}</BodyShort>}
                 </VStack>
             </VStack>
         </form>

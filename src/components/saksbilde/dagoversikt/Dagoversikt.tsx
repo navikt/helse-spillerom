@@ -248,7 +248,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                             </TableHeaderCell>
                                             <TableHeaderCell
                                                 align="right"
-                                                className="hidden w-px whitespace-nowrap md:table-cell"
+                                                className="hidden w-px whitespace-nowrap ax-md:table-cell"
                                             >
                                                 Dager igjen
                                             </TableHeaderCell>
@@ -336,7 +336,7 @@ export function Dagoversikt({ value }: DagoversiktProps): ReactElement {
                                                             false,
                                                         )}
                                                     </TableDataCell>
-                                                    <TableDataCell align="right" className="hidden md:table-cell">
+                                                    <TableDataCell align="right" className="hidden ax-md:table-cell">
                                                         -
                                                     </TableDataCell>
                                                     <TableDataCell>

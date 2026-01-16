@@ -51,7 +51,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     return (
                         <div key={it.tag} className={wrapperClass}>
                             <VStack gap="2">
-                                <BodyShort size="small" className="font-bold">
+                                <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
@@ -59,7 +59,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={radio.id} className="ml-4">
                                         <VStack gap="2">
                                             {!(radio.svartype === 'CHECKBOX' || radio.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-gray-800 font-semibold">
+                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
                                                     {radio.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -80,7 +80,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     return (
                         <div key={it.tag} className={wrapperClass}>
                             <VStack gap="2">
-                                <BodyShort size="small" className="font-bold">
+                                <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
@@ -88,7 +88,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={checkbox.id} className="ml-4">
                                         <VStack gap="2">
                                             {!(checkbox.svartype === 'CHECKBOX' || checkbox.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-gray-800 font-semibold">
+                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
                                                     {checkbox.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -117,7 +117,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                     return (
                         <div key={it.tag} className={wrapperClass}>
                             <VStack gap="2">
-                                <BodyShort size="small" className="font-bold">
+                                <BodyShort size="small" className="font-ax-bold">
                                     {it.sporsmalstekst ?? ''}
                                 </BodyShort>
                                 <SporsmalVarianter sporsmal={it} />
@@ -125,7 +125,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                                     <div key={us.id || i} className="ml-4">
                                         <VStack gap="2">
                                             {!(us.svartype === 'CHECKBOX' || us.svartype === 'RADIO') && (
-                                                <BodyShort size="small" className="text-gray-800 font-semibold">
+                                                <BodyShort size="small" className="text-ax-neutral-900 font-semibold">
                                                     {us.sporsmalstekst}
                                                 </BodyShort>
                                             )}
@@ -148,7 +148,7 @@ export const Spørsmål = ({ spørsmål, rotnivå = true }: SpørsmålProps): Re
                             {it.svar && it.svartype && (
                                 <>
                                     {!erCheckboxEllerRadio && (
-                                        <BodyShort size="small" className="font-bold">
+                                        <BodyShort size="small" className="font-ax-bold">
                                             {it.sporsmalstekst ?? ''}
                                         </BodyShort>
                                     )}

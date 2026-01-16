@@ -63,7 +63,7 @@ function OppgaveTabellSkeleton(): ReactElement {
 
 function OppgaveRowSkeleton(): ReactElement {
     return (
-        <TableRow className="hover:bg-gray-50 cursor-pointer">
+        <TableRow className="hover:bg-ax-neutral-100 cursor-pointer">
             <TableDataCell>
                 <Skeleton width={226} height={30} />
             </TableDataCell>

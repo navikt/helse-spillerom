@@ -13,16 +13,16 @@ export function Historikkinnslag({ historikkinnslag }: HistorikkinnslagProps): R
         <HistorikkinnslagContainer>
             <VStack gap="2">
                 <VStack>
-                    <BodyShort className="font-bold">
+                    <BodyShort className="font-ax-bold">
                         {historikkinnslagVisningstekst[historikkinnslag.endringType]}
                     </BodyShort>
-                    <BodyShort className="text-medium text-gray-600">
+                    <BodyShort className="text-ax-medium text-ax-neutral-700">
                         {getFormattedDatetimeString(historikkinnslag.endretTidspunkt)} av{' '}
                         {historikkinnslag.endretAvNavIdent}
                     </BodyShort>
                 </VStack>
                 {historikkinnslag.endringKommentar && (
-                    <BodyShort className="text-gray-700 bg-gray-50 border-l-blue-500 rounded border-l-4 p-3">
+                    <BodyShort className="text-ax-neutral-800 bg-ax-neutral-100 border-l-ax-accent-600 rounded border-l-4 p-3">
                         {historikkinnslag.endringKommentar}
                     </BodyShort>
                 )}
@@ -49,7 +49,7 @@ export function HistorikkinnslagSkeleton(): ReactElement {
             <Skeleton width={24} height={30} />
             <VStack>
                 <Skeleton width={180} className="text-lg" />
-                <Skeleton width={130} className="text-medium" />
+                <Skeleton width={130} className="text-ax-medium" />
             </VStack>
         </HistorikkinnslagContainer>
     )

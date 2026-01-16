@@ -53,7 +53,7 @@ export function SendTilGodkjenningModal({
                     <VStack gap="4">
                         <BeløpForPerioden />
                         <Valideringer sluttvalidering={true} />
-                        <BodyShort size="small" className="text-gray-700">
+                        <BodyShort size="small" className="text-ax-neutral-800">
                             Når du trykker ja sendes saken til beslutter for godkjenning.
                         </BodyShort>
                     </VStack>

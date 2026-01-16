@@ -194,7 +194,7 @@ function OppgaveTabell({ perioder }: { perioder: Behandling[] }): ReactElement {
                     <TableRow
                         key={periode.id}
                         onClick={() => handleRadKlikk(periode)}
-                        className="hover:bg-gray-50 cursor-pointer"
+                        className="hover:bg-ax-neutral-100 cursor-pointer"
                     >
                         <TableDataCell>{periode.opprettetAvNavn}</TableDataCell>
                         <TableDataCell>

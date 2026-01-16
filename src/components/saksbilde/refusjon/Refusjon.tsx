@@ -167,7 +167,7 @@ function RefusjonRad({ ya }: { ya: Yrkesaktivitet }) {
                                 ))}
                             </VStack>
                         ) : (
-                            <span className="text-gray-500">Ingen refusjon satt</span>
+                            <span className="text-ax-neutral-600">Ingen refusjon satt</span>
                         )}
                     </div>
                 )}

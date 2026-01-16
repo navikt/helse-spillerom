@@ -48,7 +48,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                             </TableHeaderCell>
                             <TableHeaderCell
                                 align="right"
-                                className="hidden w-px text-ax-medium whitespace-nowrap md:table-cell"
+                                className="hidden w-px text-ax-medium whitespace-nowrap ax-md:table-cell"
                             >
                                 Dager igjen
                             </TableHeaderCell>
@@ -89,7 +89,7 @@ export function ComparisonTable({ yrkesaktiviteter, utbetalingsberegning }: Comp
                                     <TableDataCell align="right" className="text-ax-medium">
                                         {formaterTotalGrad(utbetalingsdata?.økonomi.totalGrad)}
                                     </TableDataCell>
-                                    <TableDataCell align="right" className="hidden text-ax-medium md:table-cell">
+                                    <TableDataCell align="right" className="hidden text-ax-medium ax-md:table-cell">
                                         -
                                     </TableDataCell>
                                 </TableRow>

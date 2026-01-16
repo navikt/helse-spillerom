@@ -52,7 +52,7 @@ function TestdataMenyContent({ onClose }: { onClose: () => void }): ReactElement
 
         if (testpersoner.isError) {
             return (
-                <BodyShort size="small" className="text-red-600 p-3">
+                <BodyShort size="small" className="text-ax-danger-700 p-3">
                     Feil: {testpersoner.error?.message ?? 'Ukjent feil'}
                 </BodyShort>
             )

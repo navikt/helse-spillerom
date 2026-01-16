@@ -98,7 +98,7 @@ export function Høyremeny(): ReactElement {
                                                 <span className="px-0.5">
                                                     {DokumentTag[isInntektsmelding ? 'inntektsmelding' : 'søknad']}
                                                 </span>
-                                                <Heading level="1" size="xsmall" className="text-gray-600 font-medium">
+                                                <Heading level="1" size="xsmall" className="text-ax-neutral-700 font-medium">
                                                     {getFormattedDatetimeString(getMottattDato(dokument))}
                                                 </Heading>
                                             </HStack>
@@ -136,7 +136,7 @@ export function Høyremeny(): ReactElement {
                         <Sidemeny side="right" className="h-full">
                             <VStack gap="4">
                                 <HStack justify="space-between">
-                                    <Heading level="1" size="xsmall" className="text-gray-600 font-medium">
+                                    <Heading level="1" size="xsmall" className="text-ax-neutral-700 font-medium">
                                         {filter}
                                     </Heading>
                                     <Button

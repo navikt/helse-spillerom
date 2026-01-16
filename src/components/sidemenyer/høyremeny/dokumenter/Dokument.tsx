@@ -101,7 +101,7 @@ export function Dokument({ dokument }: DokumentProps): ReactElement {
                                 <InntektsmeldingInnhold inntektsmelding={dokument.innhold as Inntektsmelding} />
                             </BoxNew>
                         ) : (
-                            <pre className="bg-gray-50 overflow-x-auto rounded p-2 text-xs">
+                            <pre className="bg-ax-neutral-100 overflow-x-auto rounded p-2 text-xs">
                                 {JSON.stringify(dokument.innhold, null, 2)}
                             </pre>
                         )}
@@ -130,7 +130,7 @@ export function DokumentSkeleton(): ReactElement {
             <Skeleton width={24} height={30} />
             <VStack>
                 <Skeleton width={180} className="text-lg" />
-                <Skeleton width={130} className="text-medium" />
+                <Skeleton width={130} className="text-ax-medium" />
             </VStack>
         </DokumentContainer>
     )

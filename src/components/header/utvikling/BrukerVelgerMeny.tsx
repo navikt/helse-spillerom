@@ -39,7 +39,7 @@ export function BrukerVelgerMeny(): ReactElement {
                                     {bruker.navn}
                                 </BodyShort>
                                 {aktivBruker?.navIdent === bruker.navIdent && (
-                                    <CheckmarkIcon aria-hidden className="text-green-600" />
+                                    <CheckmarkIcon aria-hidden className="text-ax-success-700" />
                                 )}
                             </HStack>
                             <Detail>

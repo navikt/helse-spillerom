@@ -99,7 +99,7 @@ function ErrorDisplay({ error, errorInfo, onReset }: ErrorDisplayProps): ReactEl
                 {showDetails && (
                     <div className="mt-4">
                         <BodyShort className="mb-2 font-semibold">Feildetaljer:</BodyShort>
-                        <pre className="bg-gray-50 max-h-96 overflow-auto rounded border p-4 text-xs">
+                        <pre className="bg-ax-neutral-100 max-h-96 overflow-auto rounded border p-4 text-xs">
                             {JSON.stringify(getErrorDetails(), null, 2)}
                         </pre>
                     </div>

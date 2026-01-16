@@ -12,7 +12,7 @@ export function OppdragDebug(): ReactElement {
     if (!oppdrag || oppdrag.length === 0) {
         return (
             <div className="p-4">
-                <p className="text-gray-600">Ingen oppdrag funnet for denne saksbehandlingsperioden.</p>
+                <p className="text-ax-neutral-700">Ingen oppdrag funnet for denne saksbehandlingsperioden.</p>
             </div>
         )
     }
@@ -22,7 +22,7 @@ export function OppdragDebug(): ReactElement {
             <h3 className="mb-4 text-lg font-semibold">Oppdrag ({oppdrag.length})</h3>
             <div className="space-y-4">
                 {oppdrag.map((oppdrag, index) => (
-                    <div key={index} className="bg-gray-50 rounded border p-4">
+                    <div key={index} className="bg-ax-neutral-100 rounded border p-4">
                         <h4 className="mb-2 font-medium">Oppdrag {index + 1}</h4>
                         <pre className="bg-white overflow-auto rounded p-3 text-sm">
                             {JSON.stringify(oppdrag, null, 2)}

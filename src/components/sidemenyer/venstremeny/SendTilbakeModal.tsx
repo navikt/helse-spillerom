@@ -51,7 +51,7 @@ export function SendTilbakeModal({ open, setOpen, aktivBehandlingId }: SendTilba
                             gap="4"
                             onSubmit={form.handleSubmit(onSubmit)}
                         >
-                            <BodyShort size="small" className="text-gray-700">
+                            <BodyShort size="small" className="text-ax-neutral-800">
                                 Forklar hvorfor oppgaven sendes tilbake på en enkel måte, slik at det er lett å forstå
                                 hva som må vurderes og gjøres annerledes. (Blir ikke forevist den sykmeldte, med mindre
                                 hen ber om innsyn)

@@ -366,7 +366,7 @@ export function verifiserFeilmelding(forventetTekst: string) {
 export function verifiserIngenFeilmelding() {
     return async (page: Page) => {
         await test.step('Verifiser at ingen feilmelding vises', async () => {
-            const feilmeldinger = page.locator('.text-red-600')
+            const feilmeldinger = page.locator('.text-ax-danger-700')
             await expect(feilmeldinger).toHaveCount(0)
         })
     }

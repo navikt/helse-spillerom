@@ -159,14 +159,14 @@ export function PensjonsgivendeInntektVisning({
     if (tableRader.length === 0) {
         return (
             <VStack gap="2" className="mt-2">
-                <Detail className="text-gray-600">Ingen pensjonsgivende inntekt funnet</Detail>
+                <Detail className="text-ax-neutral-700">Ingen pensjonsgivende inntekt funnet</Detail>
             </VStack>
         )
     }
 
     return (
         <VStack gap="2" className="mt-2">
-            <Detail className="text-gray-600">Pensjonsgivende inntekt for {sortedYears.length} år</Detail>
+            <Detail className="text-ax-neutral-700">Pensjonsgivende inntekt for {sortedYears.length} år</Detail>
 
             <Table size="small" className="w-full table-fixed">
                 <Table.Header>
@@ -201,7 +201,7 @@ export function PensjonsgivendeInntektVisning({
 
                         return (
                             <Fragment key={year}>
-                                <Table.Row className="bg-blue-50">
+                                <Table.Row className="bg-ax-accent-100">
                                     <Table.DataCell className="w-20">
                                         <BodyShort size="small" className="font-semibold">
                                             {year}
@@ -240,7 +240,7 @@ export function PensjonsgivendeInntektVisning({
                                                     size="small"
                                                     className={
                                                         rad.beløp === null || rad.beløp === 0
-                                                            ? 'text-gray-500 italic'
+                                                            ? 'text-ax-neutral-600 italic'
                                                             : ''
                                                     }
                                                 >
@@ -250,7 +250,7 @@ export function PensjonsgivendeInntektVisning({
                                             <Table.DataCell className="w-32 text-right">
                                                 <BodyShort
                                                     size="small"
-                                                    className={`${rad.beløp && rad.beløp > 0 ? 'font-medium' : 'text-gray-500'}`}
+                                                    className={`${rad.beløp && rad.beløp > 0 ? 'font-medium' : 'text-ax-neutral-600'}`}
                                                 >
                                                     {rad.beløp === null || rad.beløp === 0
                                                         ? '-'

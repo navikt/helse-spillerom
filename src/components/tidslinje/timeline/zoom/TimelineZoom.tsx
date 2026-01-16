@@ -49,7 +49,7 @@ function TimelineZoomButton({ label, selected, onSelect }: TimelineZoomButtonPro
         <button
             onClick={onSelect}
             className={cn(
-                'leading-medium border-l border-ax-border-neutral p-[6px_9px_6px_8px] text-ax-medium first:border-l-0',
+                'leading-ax-medium border-l border-ax-border-neutral p-[6px_9px_6px_8px] text-ax-medium first:border-l-0',
                 {
                     'cursor-pointer hover:bg-ax-bg-accent-moderate-hover': !selected,
                     'bg-ax-bg-neutral-strong-pressed': selected,

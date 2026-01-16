@@ -11,7 +11,7 @@ export function TimelineDateLabels(): ReactElement {
     const dateLabels = generateLabelsBetween(startDate, endDate, showYears)
 
     return (
-        <HStack className="text-text-subtle relative h-[20px] text-ax-medium" style={{ width }}>
+        <HStack className="text-ax-text-neutral-subtle relative h-[20px] text-ax-medium" style={{ width }}>
             {dateLabels.map((date, i) => {
                 const daysFromEnd = endDate.diff(date, 'day')
                 const placement = daysFromEnd * dayLength

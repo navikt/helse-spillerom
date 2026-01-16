@@ -52,7 +52,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
 
     return (
         <VStack gap="2" className="mt-2">
-            <Detail className="text-gray-600">Viser {arbeidsforhold.length} arbeidsforhold</Detail>
+            <Detail className="text-ax-neutral-700">Viser {arbeidsforhold.length} arbeidsforhold</Detail>
 
             <Table size="small" className="w-full">
                 <Table.Header>
@@ -85,7 +85,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                 orgnummer={getOrganisasjonsnummer(forhold.arbeidssted)}
                                             />
                                         </BodyShort>
-                                        <BodyShort size="small" className="text-gray-800">
+                                        <BodyShort size="small" className="text-ax-neutral-900">
                                             {getOrganisasjonsnummer(forhold.arbeidssted)}
                                         </BodyShort>
                                     </Table.DataCell>
@@ -96,25 +96,25 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                     </Table.DataCell>
                                 </Table.Row>
                                 {isExpanded && (
-                                    <Table.Row className="bg-gray-50">
+                                    <Table.Row className="bg-ax-neutral-100">
                                         <Table.DataCell colSpan={4}>
                                             <VStack gap="3" className="p-3">
                                                 {/* Ansettelsesperiode */}
                                                 {forhold.type.beskrivelse}
                                                 <div className="border-l-4 border-ax-border-info pl-3">
-                                                    <Detail className="text-gray-600 mb-1 text-xs">
+                                                    <Detail className="text-ax-neutral-700 mb-1 text-xs">
                                                         Ansettelsesperiode
                                                     </Detail>
                                                     <HStack gap="4">
                                                         <VStack gap="1">
-                                                            <Detail className="text-gray-600 text-xs">Fra</Detail>
+                                                            <Detail className="text-ax-neutral-700 text-xs">Fra</Detail>
                                                             <BodyShort size="small">
                                                                 {formatDate(forhold.ansettelsesperiode.startdato)}
                                                             </BodyShort>
                                                         </VStack>
                                                         {forhold.ansettelsesperiode.sluttdato && (
                                                             <VStack gap="1">
-                                                                <Detail className="text-gray-600 text-xs">Til</Detail>
+                                                                <Detail className="text-ax-neutral-700 text-xs">Til</Detail>
                                                                 <BodyShort size="small">
                                                                     {formatDate(forhold.ansettelsesperiode.sluttdato)}
                                                                 </BodyShort>
@@ -129,14 +129,14 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                         key={index}
                                                         className="border-l-4 border-ax-border-success pl-3"
                                                     >
-                                                        <Detail className="text-gray-600 mb-2 text-xs">
+                                                        <Detail className="text-ax-neutral-700 mb-2 text-xs">
                                                             Ansettelsesdetaljer ({detalj.type})
                                                         </Detail>
                                                         <VStack gap="2">
                                                             <HStack gap="4" wrap>
                                                                 {detalj.yrke && (
                                                                     <VStack gap="1">
-                                                                        <Detail className="text-gray-600 text-xs">
+                                                                        <Detail className="text-ax-neutral-700 text-xs">
                                                                             Yrke
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -146,7 +146,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                 )}
                                                                 {detalj.ansettelsesform && (
                                                                     <VStack gap="1">
-                                                                        <Detail className="text-gray-600 text-xs">
+                                                                        <Detail className="text-ax-neutral-700 text-xs">
                                                                             Ansettelsesform
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -156,7 +156,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                 )}
                                                                 {detalj.avtaltStillingsprosent && (
                                                                     <VStack gap="1">
-                                                                        <Detail className="text-gray-600 text-xs">
+                                                                        <Detail className="text-ax-neutral-700 text-xs">
                                                                             Stillingsprosent
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -168,7 +168,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                             <HStack gap="4" wrap>
                                                                 {detalj.antallTimerPrUke && (
                                                                     <VStack gap="1">
-                                                                        <Detail className="text-gray-600 text-xs">
+                                                                        <Detail className="text-ax-neutral-700 text-xs">
                                                                             Timer pr. uke
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -178,7 +178,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                 )}
                                                                 {detalj.arbeidstidsordning && (
                                                                     <VStack gap="1">
-                                                                        <Detail className="text-gray-600 text-xs">
+                                                                        <Detail className="text-ax-neutral-700 text-xs">
                                                                             Arbeidstidsordning
                                                                         </Detail>
                                                                         <BodyShort size="small">
@@ -192,7 +192,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                 <HStack gap="4" wrap>
                                                                     {detalj.fartsomraade && (
                                                                         <VStack gap="1">
-                                                                            <Detail className="text-gray-600 text-xs">
+                                                                            <Detail className="text-ax-neutral-700 text-xs">
                                                                                 Fartsområde
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -202,7 +202,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                                     )}
                                                                     {detalj.fartoeystype && (
                                                                         <VStack gap="1">
-                                                                            <Detail className="text-gray-600 text-xs">
+                                                                            <Detail className="text-ax-neutral-700 text-xs">
                                                                                 Fartøystype
                                                                             </Detail>
                                                                             <BodyShort size="small">
@@ -218,10 +218,10 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
 
                                                 {/* Metadata */}
                                                 <div className="border-l-4 border-ax-border-neutral-subtle pl-3">
-                                                    <Detail className="text-gray-600 mb-2 text-xs">Metadata</Detail>
+                                                    <Detail className="text-ax-neutral-700 mb-2 text-xs">Metadata</Detail>
                                                     <HStack gap="4" wrap>
                                                         <VStack gap="1">
-                                                            <Detail className="text-gray-600 text-xs">
+                                                            <Detail className="text-ax-neutral-700 text-xs">
                                                                 NAV Arbeidsforhold ID
                                                             </Detail>
                                                             <BodyShort size="small">
@@ -229,7 +229,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                             </BodyShort>
                                                         </VStack>
                                                         <VStack gap="1">
-                                                            <Detail className="text-gray-600 text-xs">
+                                                            <Detail className="text-ax-neutral-700 text-xs">
                                                                 Rapporteringsordning
                                                             </Detail>
                                                             <BodyShort size="small">
@@ -237,7 +237,7 @@ export function ArbeidsforholdVisning({ arbeidsforhold }: ArbeidsforholdVisningP
                                                             </BodyShort>
                                                         </VStack>
                                                         <VStack gap="1">
-                                                            <Detail className="text-gray-600 text-xs">
+                                                            <Detail className="text-ax-neutral-700 text-xs">
                                                                 Sist bekreftet
                                                             </Detail>
                                                             <BodyShort size="small">

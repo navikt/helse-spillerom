@@ -54,7 +54,7 @@ export function KafkaOutboxTabell(): ReactElement {
     if (isError) {
         return (
             <div className="p-4">
-                <BodyShort className="text-red-600">
+                <BodyShort className="text-ax-danger-700">
                     Feil ved henting av Kafka outbox: {error?.message || 'Ukjent feil'}
                 </BodyShort>
             </div>
