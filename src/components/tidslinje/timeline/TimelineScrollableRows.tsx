@@ -8,7 +8,7 @@ export function TimelineScrollableRows({ ref, children }: ComponentPropsWithRef<
     const { width } = useTimelineContext()
 
     return (
-        <VStack ref={ref} className="relative grow overflow-x-scroll pb-4" style={{ width }}>
+        <VStack ref={ref} className="relative -mx-2 grow overflow-x-scroll px-2 pb-4" style={{ width }}>
             <TimelineDateLabels />
             {children}
         </VStack>

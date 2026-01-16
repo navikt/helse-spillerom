@@ -96,7 +96,7 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
                 React.isValidElement(child) && (child.type as ComponentWithType).componentType === 'TimelinePeriod',
         ) as ReactElement<TimelinePeriodProps>[]
 
-        const sortedPeriods = periodChildren.sort((a, b) => a.props.startDate.diff(b.props.startDate))
+        const sortedPeriods = periodChildren.sort((a, b) => b.props.startDate.diff(a.props.startDate))
 
         sortedPeriods.forEach((period, periodIndex) => {
             const startDate = period.props.startDate
@@ -112,15 +112,15 @@ export function parseRows(rows: ReactElement<TimelineRowProps>[]): ParsedRow[] {
             const nextPeriod = sameLevelPeriods[indexInSameLevel + 1]
 
             const cropLeft = Boolean(
-                nextPeriod?.props.startDate &&
-                dayjs(endDate).add(1, 'day').isSame(nextPeriod.props.startDate, 'day') &&
-                shouldCrop(skjæringstidspunkt, nextPeriod.props.skjæringstidspunkt),
+                prevPeriod?.props.startDate &&
+                dayjs(endDate).add(1, 'day').isSame(prevPeriod.props.startDate, 'day') &&
+                shouldCrop(skjæringstidspunkt, prevPeriod.props.skjæringstidspunkt),
             )
 
             const cropRight = Boolean(
-                prevPeriod?.props.endDate &&
-                dayjs(prevPeriod.props.endDate).add(1, 'day').isSame(startDate, 'day') &&
-                shouldCrop(skjæringstidspunkt, prevPeriod.props.skjæringstidspunkt),
+                nextPeriod?.props.endDate &&
+                dayjs(nextPeriod.props.endDate).add(1, 'day').isSame(startDate, 'day') &&
+                shouldCrop(skjæringstidspunkt, nextPeriod.props.skjæringstidspunkt),
             )
 
             const parsedPeriod: Period = {
