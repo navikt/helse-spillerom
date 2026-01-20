@@ -97,7 +97,7 @@ export function StartBehandling({ value }: StartBehandlingProps): ReactElement {
         resolver: zodResolver(startBehandlingSchema),
         defaultValues: {
             isManualMode: false,
-            validFromDate: dayjs().subtract(3, 'month').startOf('month').toDate(),
+            validFromDate: dayjs().subtract(1, 'year').startOf('month').toDate(),
             selectedSøknader: [],
             manualFom: undefined,
             manualTom: undefined,
