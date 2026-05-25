@@ -36,7 +36,7 @@ jobs:
           pnpm run build:e2e
       - run: cp -R .next/static .next/standalone/.next
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.1.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
